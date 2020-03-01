@@ -1,0 +1,128 @@
+@import './assets/styles/colors';
+@import './assets/styles/fonts';
+
+.input-main {
+  background: transparent;
+  border: 1.2px solid $white;
+  border-radius: 10px;
+  outline: none;
+}
+
+.input-main::placeholder {
+  font: $short-r;
+}
+
+.input-full {
+  width: 100%;
+  padding: 8px 20px;
+}
+
+.ticker-main {
+  display: block;
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+  line-height: 15px;
+  margin-bottom: 0;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color: #eee;
+
+    &-tick {
+      border-radius: 3px;
+    }
+    &-point {
+      border-radius: 50%;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      display: none;
+    }
+    &-tick:after {
+      left: 6px;
+      top: 3px;
+      width: 5px;
+      height: 9px;
+      border: solid $white;
+      border-width: 0 2px 2px 0;
+      -webkit-transform: rotate(31deg);
+      -ms-transform: rotate(31deg);
+      transform: rotate(31deg);
+    }
+    &-point:after {
+      top: 5px;
+      left: 5px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: $white;
+    }
+  }
+
+  &:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+
+  input:checked ~ .checkmark {
+    background-color: $blueMain;
+
+    &:after {
+      display: block;
+    }
+  }
+}
+
+.button {
+  padding: 12px 20px;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &-main {
+    background-color: $blueMain;
+
+    &:hover {
+      background-color: $blueMainBright;
+    }
+  }
+
+  &-frame {
+    border: 1.2px solid $white;
+    background-color: $blackMain;
+    transition: 0.1s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+
+  &-fb {
+    background-color: $blueFb;
+  }
+
+  &--fit {
+    display: inline-block;
+  }
+}
+
+.link {
+  &-bright-blue-main:hover {
+    color: $blueMainBright;
+    text-decoration: none;
+  }
+}
