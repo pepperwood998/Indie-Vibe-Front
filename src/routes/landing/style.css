@@ -1,0 +1,17 @@
+#home {
+  width: 100px;
+  height: 100px;
+  background-color: purple;
+}
+
+#login {
+  width: 100px;
+  height: 100px;
+  background-color: red;
+}
+
+#register {
+  width: 100px;
+  height: 100px;
+  background-color: green;
+}
