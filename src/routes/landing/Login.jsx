@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { ReactComponent as LogoSignIn } from '../../assets/svgs/logo-sign-in.svg';
 
@@ -10,11 +10,17 @@ import {
   ButtonFrame
 } from '../../components/buttons/';
 import Authentication from './Authentication';
+import { AuthContext } from '../../contexts/AuthContext';
+import { login } from '../../apis';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [remembered, setRemembered] = useState(false);
+  const [loginError, setLoginError] = useState('');
+
+  const { actions, dispatch } = useContext(AuthContext);
+  const { loginSuccess } = actions;
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
@@ -28,12 +34,20 @@ function Login() {
     setRemembered(e.target.checked);
   };
 
-  const handleLogIn = () => {};
+  const handleLogIn = () => {
+    login(email, pwd)
+      .then(response => response.json())
+      .then(json => {
+        dispatch(loginSuccess(json));
+      })
+      .catch(err => setLoginError('Fail to login'));
+  };
 
   const logo = () => <LogoSignIn height='60' />;
 
   const inputs = () => (
     <React.Fragment>
+      <h3>{loginError}</h3>
       <InputForm
         type='text'
         placeholder='Your email address'
@@ -48,7 +62,10 @@ function Login() {
 
       <div className='input-addition input-addition-span'>
         <Checkbox label='Remember me' onChange={handleRememberedChange} />
-        <a href='#' className='font-tall-b font-blue-main link link-bright-blue-main'>
+        <a
+          href='#'
+          className='font-tall-b font-blue-main link link-bright-blue-main'
+        >
           Forgot your password?
         </a>
       </div>
