@@ -5,6 +5,8 @@ $tall-r: 13px Roboto;
 $tall-b: bold 13px Roboto;
 $short-r: 13px Montserrat;
 $short-b: bolder 13px Montserrat;
+$banner: 3em Montserrat;
+$tip: 0.7em Montserrat;
 
 .font-tall-r {
   font: $tall-r;
@@ -16,6 +18,14 @@ $short-b: bolder 13px Montserrat;
 
 .font-short-b {
   font: $short-b;
+}
+
+.font-banner {
+  font: $banner;
+}
+
+.font-tip {
+  font: $tip;
 }
 
 .font-white {

@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 
-import { ReactComponent as LogoRegister } from '../../assets/svgs/logo-register.svg';
-
-import './style.scss';
 import { InputForm, RadioBox } from '../../components/inputs';
 import { ButtonMain, ButtonFacebook } from '../../components/buttons/';
 import Authentication from './Authentication';
+import ErrorCard from '../../components/cards/ErrorCard';
+
+import { ReactComponent as LogoRegister } from '../../assets/svgs/logo-register.svg';
+import './style.scss';
 
 function Register() {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [cfPwd, setCfPwd] = useState('');
-  const [displayName, setDisplayName] = useState(false);
+  const [displayName, setDisplayName] = useState('');
   const [gender, setGender] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
@@ -34,7 +37,11 @@ function Register() {
     setGender(e.target.value);
   };
 
-  const handleRegister = () => {};
+  const handleRegister = () => {
+    setSubmitted(true);
+    setLoginError('');
+    if (!email || !pwd || !cfPwd || !displayName) return;
+  };
 
   const logo = () => <LogoRegister height='60' />;
 
@@ -44,21 +51,29 @@ function Register() {
         type='text'
         placeholder='Enter your email address'
         onChange={handleEmailChange}
+        error={email === '' && submitted}
+        errMessage='Please enter your email'
       />
       <InputForm
         type='password'
         placeholder='Enter your password'
         onChange={handlePwdChange}
+        error={pwd === '' && submitted}
+        errMessage='Please enter your password'
       />
       <InputForm
         type='password'
         placeholder='Confirm your password'
         onChange={handleCfPwdChange}
+        error={cfPwd === '' && submitted}
+        errMessage='Please confirm your password'
       />
       <InputForm
         type='text'
         placeholder='Enter your display name'
         onChange={handleDisplayNameChange}
+        error={displayName === '' && submitted}
+        errMessage='Tell us your name'
       />
 
       <div className='input-addition input-addition-inline'>
@@ -81,6 +96,11 @@ function Register() {
           onChange={handleGenderChange}
         />
       </div>
+      {!gender && submitted ? (
+        <ErrorCard message={'Please provide your gender'} />
+      ) : (
+        ''
+      )}
     </React.Fragment>
   );
 
@@ -103,7 +123,7 @@ function Register() {
         style={{ textAlign: 'center', padding: '10px' }}
         className='font-short-b font-white'
       >
-        Already a member?
+        Already a member?&nbsp;
         <a
           href='/login'
           className='font-short-b font-blue-main link link-bright-blue-main'

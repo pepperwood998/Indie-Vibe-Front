@@ -3,12 +3,13 @@ import jwt_decode from 'jwt-decode';
 
 const AuthContext = createContext();
 
+const initState = {
+  id: '',
+  role: '',
+  token: ''
+};
+
 function AuthContextProvider(props) {
-  const initState = {
-    id: '',
-    role: '',
-    token: ''
-  };
   const [state, dispatch] = useReducer(reducer, initState, () => {
     let credentials = localStorage.getItem('credentials');
     if (credentials) return JSON.parse(credentials);
@@ -39,7 +40,14 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
       let { json } = action;
-      let decodedToken = jwt_decode(json['access_token']);
+      let decodedToken;
+      try {
+        decodedToken = jwt_decode(json['access_token']);
+      } catch (err) {
+        return {
+
+        }
+      }
       return {
         ...state,
         token: json['access_token'],
@@ -49,9 +57,7 @@ const reducer = (state, action) => {
     case 'LOGOUT':
       return {
         ...state,
-        id: '',
-        role: '',
-        token: ''
+        ...initState
       };
     default:
       return state;

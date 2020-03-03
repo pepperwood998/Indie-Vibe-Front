@@ -7,7 +7,7 @@ function Authentication(props) {
     <div className='page-authen'>
       <div className='page-authen__banner'>
         <div className='logo'>
-          {props.logo}
+          <a href='/home'>{props.logo}</a>
         </div>
       </div>
       <div className='page-authen__body'>
