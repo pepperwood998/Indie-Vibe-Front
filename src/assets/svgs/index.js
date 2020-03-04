@@ -4,3 +4,4 @@ export { ReactComponent as LogoRegister } from './logo-register.svg';
 export { ReactComponent as Facebook } from './facebook.svg';
 export { ReactComponent as Twitter } from './twitter.svg';
 export { ReactComponent as Instagram } from './instagram.svg';
+export { ReactComponent as ArrowDown } from './arrow-down.svg';
