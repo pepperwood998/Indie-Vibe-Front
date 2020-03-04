@@ -11,7 +11,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { login } from '../../apis';
 import ErrorCard from '../../components/cards/ErrorCard';
 
-import { ReactComponent as LogoSignIn } from '../../assets/svgs/logo-sign-in.svg';
+import { LogoSignIn } from '../../assets/svgs';
 import './style.scss';
 
 function Login() {
@@ -47,12 +47,16 @@ function Login() {
         return response.json();
       })
       .then(json => {
-        dispatch(loginSuccess(json));
+        dispatch(loginSuccess({ ...json, remembered }));
       })
       .catch(err => {
         setPwd('');
         setLoginError(err);
       });
+  };
+
+  const responseFacebook = response => {
+    console.log(response);
   };
 
   const logo = () => <LogoSignIn height='60' />;
@@ -99,7 +103,12 @@ function Login() {
       >
         or
       </div>
-      <ButtonFacebook label='Sign in with Facebook' isFitted={false} />
+      <ButtonFacebook
+        label='Sign in with Facebook'
+        isFitted={false}
+        responseFacebook={responseFacebook}
+      />
+      />
     </React.Fragment>
   );
 

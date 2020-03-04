@@ -131,7 +131,7 @@ function Home() {
               <Logo />
               <div className='d-flex w-100 pt-5 justify-content-center'>
                 <div className='pr-3'>
-                  <Instagram clas />
+                  <Instagram />
                 </div>
                 <div className='pr-3'>
                   <Facebook />
@@ -144,7 +144,9 @@ function Home() {
           </div>
         </div>
         <div className='container d-flex justify-content-between'>
-          <div className='font-tip font-gray-light'>&#9400; 2020 Indie Vibe</div>
+          <div className='font-tip font-gray-light'>
+            &#9400; 2020 Indie Vibe
+          </div>
           <div className='font-tip font-gray-light'>
             <span className='pr-3'>Privacy Policy</span>
             <span className='pr-3'>Terms and Condiions</span>

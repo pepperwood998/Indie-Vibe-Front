@@ -6,18 +6,28 @@ const AuthContext = createContext();
 const initState = {
   id: '',
   role: '',
-  token: ''
+  token: '',
+  remembered: false
 };
 
 function AuthContextProvider(props) {
   const [state, dispatch] = useReducer(reducer, initState, () => {
     let credentials = localStorage.getItem('credentials');
     if (credentials) return JSON.parse(credentials);
-    else return initState;
+    else {
+      credentials = sessionStorage.getItem('credentials');
+      if (credentials) return JSON.parse(credentials);
+    }
+
+    return initState;
   });
 
   useEffect(() => {
-    localStorage.setItem('credentials', JSON.stringify(state));
+    if (state.remembered)
+      localStorage.setItem('credentials', JSON.stringify(state));
+    else {
+      sessionStorage.setItem('credentials', JSON.stringify(state));
+    }
   }, [state]);
 
   const actions = {
@@ -40,19 +50,19 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
       let { json } = action;
+      console.log(json);
       let decodedToken;
       try {
         decodedToken = jwt_decode(json['access_token']);
       } catch (err) {
-        return {
-
-        }
+        return {};
       }
       return {
         ...state,
         token: json['access_token'],
         id: decodedToken['client_id'],
-        role: decodedToken['authorities'][0]
+        role: decodedToken['authorities'][0],
+        remembered: json.remembered
       };
     case 'LOGOUT':
       return {

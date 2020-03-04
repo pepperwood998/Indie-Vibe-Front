@@ -5,7 +5,7 @@ import { ButtonMain, ButtonFacebook } from '../../components/buttons/';
 import Authentication from './Authentication';
 import ErrorCard from '../../components/cards/ErrorCard';
 
-import { ReactComponent as LogoRegister } from '../../assets/svgs/logo-register.svg';
+import { LogoRegister } from '../../assets/svgs';
 import './style.scss';
 
 function Register() {
