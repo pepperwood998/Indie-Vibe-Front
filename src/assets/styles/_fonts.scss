@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+$tall-r: 13px Roboto;
+$tall-b: bold 13px Roboto;
+$short-r: 13px Montserrat;
+$short-b: bolder 13px Montserrat;
+$banner: 3em Montserrat;
+$tip: 0.7em Montserrat;
+
+.font-tall-r {
+  font: $tall-r;
+}
+
+.font-tall-b {
+  font: $tall-b;
+}
+
+.font-short-b {
+  font: $short-b;
+}
+
+.font-banner {
+  font: $banner;
+}
+
+.font-tip {
+  font: $tip;
+}
+
+.font-white {
+  color: $white;
+}
+
+.font-blue-main {
+  color: $blueMain;
+}
+
+.font-gray-light {
+  color: $grayLight;
+}
