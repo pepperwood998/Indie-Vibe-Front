@@ -75,10 +75,10 @@ function Home() {
       <div className='page-landing__body side-space'>
         <div className='container body-grid'>
           <div className='row pb-5'>
-            <a href='#' className='col-3'>
+            <a href='#' className='col-md-3'>
               <img src={cell1} />
             </a>
-            <div className='col-6 text-center'>
+            <div className='col-md-6 text-center'>
               <h4 className='pt-4 pb-4 font-white'>
                 Million of songs ready to be discovered
               </h4>
@@ -89,21 +89,21 @@ function Home() {
               </div>
               <h4 className='pb-4 font-white'>Become and Artist</h4>
             </div>
-            <a href='#' className='col-3'>
+            <a href='#' className='col-md-3 pb-sm-3 pb-md-0'>
               <img src={cell2} />
             </a>
           </div>
           <div className='row'>
-            <a href='#' className='col-3'>
+            <a href='#' className='col-md-3 pb-sm-3 pb-md-0'>
               <img src={cell3} />
             </a>
-            <a href='#' className='col-3'>
+            <a href='#' className='col-md-3 pb-sm-3 pb-md-0'>
               <img src={cell4} />
             </a>
-            <a href='#' className='col-3'>
+            <a href='#' className='col-md-3 pb-sm-3 pb-md-0'>
               <img src={cell5} />
             </a>
-            <a href='#' className='col-3'>
+            <a href='#' className='col-md-3 pb-sm-3 pb-md-0'>
               <img src={cell6} />
             </a>
           </div>
