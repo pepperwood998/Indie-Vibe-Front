@@ -13,10 +13,15 @@ const initState = {
 function AuthContextProvider(props) {
   const [state, dispatch] = useReducer(reducer, initState, () => {
     let credentials = localStorage.getItem('credentials');
-    if (credentials) return JSON.parse(credentials);
-    else {
+    if (credentials) {
+      credentials = JSON.parse(credentials);
+      if (credentials['token']) return credentials;
+    } else {
       credentials = sessionStorage.getItem('credentials');
-      if (credentials) return JSON.parse(credentials);
+      if (credentials) {
+        credentials = JSON.parse(credentials);
+        if (credentials['token']) return credentials;
+      }
     }
 
     return initState;
@@ -30,15 +35,6 @@ function AuthContextProvider(props) {
     }
   }, [state]);
 
-  const actions = {
-    loginSuccess: payload => {
-      return {
-        type: 'LOGIN_SUCCESS',
-        json: { ...payload }
-      };
-    }
-  };
-
   return (
     <AuthContext.Provider value={{ state, actions, dispatch }}>
       {props.children}
@@ -46,16 +42,32 @@ function AuthContextProvider(props) {
   );
 }
 
+const actions = {
+  loginSuccess: payload => {
+    return {
+      type: 'LOGIN_SUCCESS',
+      json: { ...payload }
+    };
+  },
+  logout: () => {
+    return {
+      type: 'LOGOUT'
+    };
+  }
+};
+
 const reducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN_SUCCESS':
       let { json } = action;
-      console.log(json);
       let decodedToken;
       try {
         decodedToken = jwt_decode(json['access_token']);
       } catch (err) {
-        return {};
+        return {
+          ...state,
+          ...initState
+        };
       }
       return {
         ...state,
@@ -65,6 +77,9 @@ const reducer = (state, action) => {
         remembered: json.remembered
       };
     case 'LOGOUT':
+      localStorage.removeItem('credentials');
+      sessionStorage.removeItem('credentials');
+      sessionStorage.removeItem('me');
       return {
         ...state,
         ...initState

@@ -151,3 +151,23 @@
     }
   }
 }
+
+.dropdown-menu {
+  padding: 0px;
+  border: 0px;
+  background-color: $blackGray;
+
+  &--fixed {
+    margin-top: 10px;
+  }
+}
+
+.context-menu {
+  border-radius: 5px;
+
+  &__item {
+    display: block;
+    padding: 15px 30px;
+    cursor: pointer;
+  }
+}

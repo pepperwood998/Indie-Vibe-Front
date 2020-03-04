@@ -5,11 +5,11 @@ import {
   ButtonMain,
   ButtonFacebook,
   ButtonFrame
-} from '../../components/buttons/';
+} from '../../components/buttons';
 import Authentication from './Authentication';
-import { AuthContext } from '../../contexts/AuthContext';
 import { login } from '../../apis';
 import ErrorCard from '../../components/cards/ErrorCard';
+import { AuthContext } from '../../contexts';
 
 import { LogoSignIn } from '../../assets/svgs';
 import './style.scss';
