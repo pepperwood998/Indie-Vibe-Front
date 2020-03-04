@@ -104,7 +104,7 @@ function Home() {
             <img src={cell5} />
           </a>
           <a href='#' className='col-md-3 pb-sm-3 pb-md-0'>
-            <img src={cell6} />
+            <img src={cell8} />
           </a>
         </div>
       </div>

@@ -1,15 +1,35 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { LinkColor } from '../../../components/links';
 import { ButtonFrame } from '../../../components/buttons';
 import { AccountContextMenu } from '../../../components/content-menu';
+import { getMeSimple } from '../../../apis';
+import { MeContext, AuthContext } from '../../../contexts';
 
 import { Logo, ArrowDown } from '../../../assets/svgs';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
-import { MeContext } from '../../../contexts';
 
 function NavBar(props) {
-  const { state: meState } = useContext(MeContext);
+  const { state: authState } = useContext(AuthContext);
+  const {
+    state: meState,
+    actions: meActions,
+    dispatch: meDispatch
+  } = useContext(MeContext);
+
+  useEffect(() => {
+    if (authState.token && !meState.id) {
+      getMeSimple(authState.token)
+        .then(response => response.json())
+        .then(json => {
+          if (json.status === 'success') {
+            meDispatch(meActions.loadMe(json.data));
+          }
+        });
+    } else if (!authState.token && meState.id) {
+      meDispatch(meActions.unloadMe());
+    }
+  });
 
   return (
     <div className='content'>
@@ -34,7 +54,7 @@ function NavBar(props) {
         </nav>
       </div>
       <div className='nav-right'>
-        {!props.loggedIn ? (
+        {!authState.token ? (
           <React.Fragment>
             <a href='/register'>
               <ButtonFrame label='Register' />
