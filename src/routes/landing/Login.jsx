@@ -46,6 +46,7 @@ function Login() {
     login(email, pwd)
       .then(response => {
         if (response.status !== 200) throw 'Wrong email or password!';
+        setLoggingIn(false);
         return response.json();
       })
       .then(json => {
@@ -54,6 +55,7 @@ function Login() {
       .catch(err => {
         setPwd('');
         setLoginError(err);
+        setLoggingIn(false);
       });
   };
 

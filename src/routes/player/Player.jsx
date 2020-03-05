@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { UserRoute } from '../../components/custom-routes';
 
 import './player.scss';
@@ -21,16 +22,18 @@ function Player() {
       </div>
       <div className='player__bottom'></div>
       <div className='player__content'>
-        <UserRoute
-          exact
-          path={['/player', '/player/home']}
-          component={Home}
-        ></UserRoute>
-        <UserRoute path='/player/browse' component={Browse}></UserRoute>
-        <UserRoute path='/player/browse' component={Library}></UserRoute>
-        <UserRoute path='/player/account' component={Account}></UserRoute>
-        <UserRoute path='/player/artist' component={Artist}></UserRoute>
-        <UserRoute path='/player/search' component={Search}></UserRoute>
+        <BrowserRouter basename='/player'>
+          <UserRoute
+            exact
+            path={['/', '/home']}
+            component={Home}
+          ></UserRoute>
+          <UserRoute path='/browse' component={Browse}></UserRoute>
+          <UserRoute path='/browse' component={Library}></UserRoute>
+          <UserRoute path='/account' component={Account}></UserRoute>
+          <UserRoute path='/artist' component={Artist}></UserRoute>
+          <UserRoute path='/search' component={Search}></UserRoute>
+        </BrowserRouter>
       </div>
     </div>
   );
