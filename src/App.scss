@@ -22,6 +22,25 @@
   box-shadow: 0px 0px 5px $red;
 }
 
+.input-search {
+  background-color: $grayDark;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  height: 25px;
+
+  svg {
+    height: inherit;
+  }
+
+  input {
+    border: 0px;
+    height: inherit;
+    background-color: transparent;
+    outline: none;
+  }
+}
+
 .ticker-main {
   display: block;
   position: relative;
@@ -139,8 +158,6 @@
   }
 
   &-blue-main {
-    color: $white;
-
     &:hover {
       color: $blueMain;
       text-decoration: none;
@@ -148,6 +165,17 @@
 
     &.active {
       color: $blueMain;
+
+      svg > path {
+        fill: $blueMain;
+      }
+    }
+  }
+
+  &-underline {
+    &:hover {
+      text-decoration: underline;
+      color: $white;
     }
   }
 }
@@ -165,7 +193,8 @@
 .context-menu {
   border-radius: 5px;
 
-  &__item {
+  a,
+  span {
     display: block;
     padding: 15px 30px;
     cursor: pointer;

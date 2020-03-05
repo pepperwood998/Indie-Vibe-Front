@@ -42,13 +42,19 @@ function NavBar(props) {
         <nav className='nav-left__menu-container'>
           <ul className='nav-left__menu'>
             <li className='nav-menu__item'>
-              <LinkColor label='Home' href='/home' />
+              <LinkColor href='/home' className='font-regular font-white'>
+                Home
+              </LinkColor>
             </li>
             <li className='nav-menu__item'>
-              <LinkColor label='Premium' href='#' />
+              <LinkColor href='#' className='font-regular font-white'>
+                Premium
+              </LinkColor>
             </li>
             <li className='nav-menu__item'>
-              <LinkColor label='About' href='#' />
+              <LinkColor href='#' className='font-regular font-white'>
+                About
+              </LinkColor>
             </li>
           </ul>
         </nav>
@@ -60,7 +66,9 @@ function NavBar(props) {
               <ButtonFrame label='Register' />
             </a>
             <div className='nav-menu__item'>
-              <LinkColor label='Sign in' href='/login' />
+              <LinkColor href='/login' className='font-regular font-white'>
+                Sign in
+              </LinkColor>
             </div>
           </React.Fragment>
         ) : (

@@ -18,10 +18,14 @@ function AccountContextMenu() {
   return (
     <ul className='context-menu d-flex flex-column'>
       <li>
-        <LinkColor label='Account' href='/player/account' />
+        <LinkColor href='/player/account' className='font-regular font-white'>
+          Account
+        </LinkColor>
       </li>
       <li>
-        <LinkColor label='Logout' onClick={handleLogout} />
+        <LinkColor onClick={handleLogout} className='font-regular font-white'>
+          Logout
+        </LinkColor>
       </li>
     </ul>
   );

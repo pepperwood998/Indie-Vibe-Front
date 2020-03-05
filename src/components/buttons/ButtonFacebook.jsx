@@ -6,7 +6,7 @@ function ButtonFacebook({
   isFitted = true,
   responseFacebook = response => {}
 }) {
-  let classes = 'button button-fb font-white font-short-b';
+  let classes = 'button button-fb font-white font-regular';
   if (isFitted) {
     classes += ' button--fit';
   }

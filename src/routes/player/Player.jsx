@@ -1,29 +1,34 @@
 import React from 'react';
-import { Route, NavLink } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
-import { HomePlayer } from './home';
-import { Browse } from './browse';
+import './player.scss';
+import Top from './Top';
+import NavBar from './NavBar';
+import { Browse, Library, Home, Account, Artist, Search } from './pages';
 
 function Player() {
   return (
-    <div>
-      <ul>
-        <li>
-          <NavLink to='/player/home'>Home</NavLink>
-        </li>
-        <li>
-          <NavLink to='/player/browse'>Browse</NavLink>
-        </li>
-        <li>
-          <a href='/home'>Index</a>
-        </li>
-      </ul>
-      <Route
-        exact
-        path={['/player', '/player/home']}
-        component={HomePlayer}
-      ></Route>
-      <Route path='/player/browse' component={Browse}></Route>
+    <div className='player'>
+      <div className='player__top'>
+        <Top />
+      </div>
+      <div className='player__nav'>
+        <NavBar />
+      </div>
+      <div className='player__quick-access'></div>
+      <div className='player__bottom'></div>
+      <div className='player__content'>
+        <Route
+          exact
+          path={['/player', '/player/home']}
+          component={Home}
+        ></Route>
+        <Route path='/player/browse' component={Browse}></Route>
+        <Route path='/player/browse' component={Library}></Route>
+        <Route path='/player/account' component={Account}></Route>
+        <Route path='/player/artist' component={Artist}></Route>
+        <Route path='/player/search' component={Search}></Route>
+      </div>
     </div>
   );
 }

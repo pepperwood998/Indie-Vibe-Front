@@ -109,7 +109,7 @@ function Register() {
       <ButtonMain label='Register' isFitted={false} onClick={handleRegister} />
       <div
         style={{ padding: '7px', textAlign: 'center' }}
-        className='font-short-b font-gray-light'
+        className='font-regular font-gray-light'
       >
         or
       </div>
@@ -121,12 +121,12 @@ function Register() {
     <React.Fragment>
       <div
         style={{ textAlign: 'center', padding: '10px' }}
-        className='font-short-b font-white'
+        className='font-regular font-white'
       >
         Already a member?&nbsp;
         <a
           href='/login'
-          className='font-short-b font-blue-main link link-bright-blue-main'
+          className='font-regular font-blue-main link link-bright-blue-main'
         >
           Sign in
         </a>

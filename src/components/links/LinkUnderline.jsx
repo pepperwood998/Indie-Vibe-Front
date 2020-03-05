@@ -1,7 +1,7 @@
 import React from 'react';
 
-function LinkColor(props) {
-  let classes = ['link-blue-main', props.className].join(' ');
+function LinkUnderline(props) {
+  let classes = ['link-underline', props.className].join(' ');
   if (props.active) {
     classes += ' active';
   }
@@ -14,11 +14,11 @@ function LinkColor(props) {
     );
   } else {
     return (
-      <span className={classes} onClick={props.onClick}>
+      <div className={classes} onClick={props.onClick}>
         {props.children}
-      </span>
+      </div>
     );
   }
 }
 
-export default LinkColor;
+export default LinkUnderline;

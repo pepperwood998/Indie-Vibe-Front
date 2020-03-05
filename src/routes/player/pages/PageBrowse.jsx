@@ -1,9 +1,7 @@
 import React from 'react';
 
-import './style.css';
-
 function Browse() {
-  return <div id='browse'></div>;
+  return <div class='browse-page'></div>;
 }
 
 export default Browse;

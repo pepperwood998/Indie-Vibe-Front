@@ -99,7 +99,7 @@ function Login() {
       <ButtonMain label='Enter' isFitted={false} onClick={handleLogIn} />
       <div
         style={{ padding: '7px', textAlign: 'center' }}
-        className='font-short-b font-gray-light'
+        className='font-regular font-gray-light'
       >
         or
       </div>
@@ -116,7 +116,7 @@ function Login() {
     <React.Fragment>
       <div
         style={{ textAlign: 'center', padding: '10px' }}
-        className='font-short-b font-white'
+        className='font-regular font-white'
       >
         Not a member yet?
       </div>
