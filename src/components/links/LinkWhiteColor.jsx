@@ -1,6 +1,6 @@
 import React from 'react';
 
-function LinkColor(props) {
+function LinkWhiteColor(props) {
   let classes = ['link-blue-main', props.className].join(' ');
   if (props.active) {
     classes += ' active';
@@ -21,4 +21,4 @@ function LinkColor(props) {
   }
 }
 
-export default LinkColor;
+export default LinkWhiteColor;

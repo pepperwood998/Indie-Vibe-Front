@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
-import { LinkUnderline, NavLinkColor } from '../../components/links';
+import { NavLinkColor, NavLinkUnderline } from '../../components/links';
 
 import { HomeIcon, BrowseIcon, LibraryIcon } from '../../assets/svgs';
+import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
 function NavBar() {
   return (
@@ -13,12 +13,12 @@ function NavBar() {
           <img src={AvatarPlaceholder} />
         </div>
         <span className='user-title'>
-          <LinkUnderline
+          <NavLinkUnderline
             href='/player/account'
             className='font-regular font-white'
           >
             Tuan Dao
-          </LinkUnderline>
+          </NavLinkUnderline>
         </span>
       </div>
       <ul className='menu'>

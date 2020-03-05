@@ -126,7 +126,7 @@ function Register() {
         Already a member?&nbsp;
         <a
           href='/login'
-          className='font-regular font-blue-main link link-bright-blue-main'
+          className='font-blue-main link link-bright-blue-main'
         >
           Sign in
         </a>

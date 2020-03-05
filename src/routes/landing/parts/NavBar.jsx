@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 
-import { LinkColor } from '../../../components/links';
+import { LinkWhiteColor } from '../../../components/links';
 import { ButtonFrame } from '../../../components/buttons';
 import { AccountContextMenu } from '../../../components/content-menu';
 import { getMeSimple } from '../../../apis';
@@ -42,19 +42,19 @@ function NavBar(props) {
         <nav className='nav-left__menu-container'>
           <ul className='nav-left__menu'>
             <li className='nav-menu__item'>
-              <LinkColor href='/home' className='font-regular font-white'>
+              <LinkWhiteColor href='/home' className='font-regular font-white'>
                 Home
-              </LinkColor>
+              </LinkWhiteColor>
             </li>
             <li className='nav-menu__item'>
-              <LinkColor href='#' className='font-regular font-white'>
+              <LinkWhiteColor href='#' className='font-regular font-white'>
                 Premium
-              </LinkColor>
+              </LinkWhiteColor>
             </li>
             <li className='nav-menu__item'>
-              <LinkColor href='#' className='font-regular font-white'>
+              <LinkWhiteColor href='#' className='font-regular font-white'>
                 About
-              </LinkColor>
+              </LinkWhiteColor>
             </li>
           </ul>
         </nav>
@@ -66,9 +66,9 @@ function NavBar(props) {
               <ButtonFrame label='Register' />
             </a>
             <div className='nav-menu__item'>
-              <LinkColor href='/login' className='font-regular font-white'>
+              <LinkWhiteColor href='/login' className='font-regular font-white'>
                 Sign in
-              </LinkColor>
+              </LinkWhiteColor>
             </div>
           </React.Fragment>
         ) : (

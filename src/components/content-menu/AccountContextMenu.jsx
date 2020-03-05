@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 
-import { LinkColor } from '../links';
+import { LinkWhiteColor } from '../links';
 import { AuthContext } from '../../contexts';
 
 function AccountContextMenu() {
@@ -18,14 +18,14 @@ function AccountContextMenu() {
   return (
     <ul className='context-menu d-flex flex-column'>
       <li>
-        <LinkColor href='/player/account' className='font-regular font-white'>
+        <LinkWhiteColor href='/player/account' className='font-regular font-white'>
           Account
-        </LinkColor>
+        </LinkWhiteColor>
       </li>
       <li>
-        <LinkColor onClick={handleLogout} className='font-regular font-white'>
+        <LinkWhiteColor onClick={handleLogout} className='font-regular font-white'>
           Logout
-        </LinkColor>
+        </LinkWhiteColor>
       </li>
     </ul>
   );
