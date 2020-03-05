@@ -20,6 +20,7 @@ function Login() {
   const [remembered, setRemembered] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
 
   const { actions, dispatch } = useContext(AuthContext);
   const { loginSuccess } = actions;
@@ -41,6 +42,7 @@ function Login() {
     setLoginError('');
     if (!email || !pwd) return;
 
+    setLoggingIn(true);
     login(email, pwd)
       .then(response => {
         if (response.status !== 200) throw 'Wrong email or password!';
@@ -86,7 +88,7 @@ function Login() {
         <Checkbox label='Remember me' onChange={handleRememberedChange} />
         <a
           href='#'
-          className='font-tall-b font-blue-main link link-bright-blue-main'
+          className='font-tall-r font-weight-bold font-blue-main link link-bright-blue-main'
         >
           Forgot your password?
         </a>
@@ -96,19 +98,18 @@ function Login() {
 
   const submits = () => (
     <React.Fragment>
-      <ButtonMain label='Enter' isFitted={false} onClick={handleLogIn} />
+      <ButtonMain isFitted={false} onClick={handleLogIn} disabled={loggingIn}>
+        Enter
+      </ButtonMain>
       <div
         style={{ padding: '7px', textAlign: 'center' }}
-        className='font-regular font-gray-light'
+        className='font-short-regular font-weight-bold font-gray-light'
       >
         or
       </div>
-      <ButtonFacebook
-        label='Sign in with Facebook'
-        isFitted={false}
-        responseFacebook={responseFacebook}
-      />
-      />
+      <ButtonFacebook isFitted={false} responseFacebook={responseFacebook}>
+        Sign in with Facebook
+      </ButtonFacebook>
     </React.Fragment>
   );
 
@@ -116,12 +117,12 @@ function Login() {
     <React.Fragment>
       <div
         style={{ textAlign: 'center', padding: '10px' }}
-        className='font-regular font-white'
+        className='font-short-regular font-weight-bold font-white'
       >
         Not a member yet?
       </div>
       <a href='/register'>
-        <ButtonFrame label='Join Indie Vibe' />
+        <ButtonFrame isFitted={true}>Join Indie Vibe</ButtonFrame>
       </a>
     </React.Fragment>
   );

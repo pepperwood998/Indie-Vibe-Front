@@ -8,7 +8,7 @@
   outline: none;
 
   &::placeholder {
-    font: $short-r;
+    font: $shortRegular;
   }
 }
 
@@ -142,6 +142,11 @@
   &--fit {
     display: inline-block;
   }
+
+  &.disabled {
+    opacity: 0.7;
+    pointer-events: none;
+  }
 }
 
 .card-error {
@@ -151,9 +156,21 @@
   border-color: $white;
 }
 
+.card-success {
+  padding: 12px 20px;
+  color: $white;
+  background-color: $green;
+  border-color: $white;
+}
+
 .link {
   &-bright-blue-main:hover {
     color: $blueMainBright;
+    text-decoration: none;
+  }
+
+  &-bright-gray:hover {
+    color: $white;
     text-decoration: none;
   }
 
@@ -183,7 +200,7 @@
 .dropdown-menu {
   padding: 0px;
   border: 0px;
-  background-color: $blackGray;
+  background: transparent;
 
   &--fixed {
     margin-top: 10px;
@@ -191,6 +208,7 @@
 }
 
 .context-menu {
+  background-color: $blackGray;
   border-radius: 5px;
 
   a,

@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 
-import { LinkWhiteColor } from '../links';
+import { LinkWhiteColor, NavLinkColor } from '../links';
 import { AuthContext } from '../../contexts';
 
-function AccountContextMenu() {
+function AccountContextMenu(props) {
   const { actions: authAction, dispatch: authDispatch } = useContext(
     AuthContext
   );
@@ -18,12 +18,27 @@ function AccountContextMenu() {
   return (
     <ul className='context-menu d-flex flex-column'>
       <li>
-        <LinkWhiteColor href='/player/account' className='font-regular font-white'>
-          Account
-        </LinkWhiteColor>
+        {props.fromLanding ? (
+          <LinkWhiteColor
+            href='/player/account'
+            className='font-short-regular font-weight-bold font-white'
+          >
+            Account
+          </LinkWhiteColor>
+        ) : (
+          <NavLinkColor
+            href='/player/account'
+            className='font-short-regular font-weight-bold font-white'
+          >
+            Account
+          </NavLinkColor>
+        )}
       </li>
       <li>
-        <LinkWhiteColor onClick={handleLogout} className='font-regular font-white'>
+        <LinkWhiteColor
+          onClick={handleLogout}
+          className='font-short-regular font-weight-bold font-white'
+        >
           Logout
         </LinkWhiteColor>
       </li>

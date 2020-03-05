@@ -1,31 +1,26 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
-$tall-r: 13px Roboto;
-$tall-b: bold 13px Roboto;
-$short-r: 0.7em Montserrat;
-$shortRegular: bolder 0.8em Montserrat;
-$shortBig: bolder 0.9em Montserrat;
+$tallRegular: 0.8em Roboto;
+$shortSmall: 0.7em Montserrat;
+$shortRegular: 0.8em Montserrat;
+$shortBig: 0.9em Montserrat;
 $banner: 3em Montserrat;
 $tip: 0.7em Montserrat;
 
 .font-tall-r {
-  font: $tall-r;
+  font: $tallRegular;
 }
 
-.font-tall-b {
-  font: $tall-b;
+.font-short-s {
+  font: $shortSmall;
 }
 
-.font-short-r {
-  font: $short-r;
-}
-
-.font-regular {
+.font-short-regular {
   font: $shortRegular;
 }
 
-.font-big {
+.font-short-big {
   font: $shortBig;
 }
 

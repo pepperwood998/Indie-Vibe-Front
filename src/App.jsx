@@ -14,10 +14,10 @@ class App extends Component {
           <AuthContextProvider>
             <MeContextProvider>
               <Route exact path={['/', '/home']} component={Home} />
+              <GuestRoute path='/login' component={Login} />
+              <GuestRoute path='/register' component={Register} />
+              <UserRoute path='/player' component={Player} />
             </MeContextProvider>
-            <GuestRoute path='/login' component={Login} />
-            <GuestRoute path='/register' component={Register} />
-            <UserRoute path='/player' component={Player} />
           </AuthContextProvider>
         </div>
       </Router>

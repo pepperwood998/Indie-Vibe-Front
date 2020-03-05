@@ -30,7 +30,7 @@ function Home() {
             {!state.token ? (
               <React.Fragment>
                 <a href='/register'>
-                  <ButtonMain label='Join free' />
+                  <ButtonMain>Join free</ButtonMain>
                 </a>
                 <div className='pl-4 font-tip font-gray-light'>
                   No credit card requried
@@ -41,15 +41,15 @@ function Home() {
                 {state.role === 'r-free' ? (
                   <div className='pb-3'>
                     <a href='/premium'>
-                      <ButtonMain label='Go Premium' />
+                      <ButtonMain>Go Premium</ButtonMain>
                     </a>
                   </div>
                 ) : (
                   ''
                 )}
                 <div>
-                  <a href='/player'>
-                    <ButtonFrame label='Player' />
+                  <a href='/player/home'>
+                    <ButtonFrame>Player</ButtonFrame>
                   </a>
                 </div>
               </div>
@@ -74,7 +74,7 @@ function Home() {
               </h4>
               <div className='pb-4'>
                 <a href='/register'>
-                  <ButtonFrame label='Sign up' />
+                  <ButtonFrame>Sign up</ButtonFrame>
                 </a>
               </div>
               <h4 className='pb-4 font-white'>Become and Artist</h4>

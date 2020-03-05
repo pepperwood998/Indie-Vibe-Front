@@ -42,17 +42,26 @@ function NavBar(props) {
         <nav className='nav-left__menu-container'>
           <ul className='nav-left__menu'>
             <li className='nav-menu__item'>
-              <LinkWhiteColor href='/home' className='font-regular font-white'>
+              <LinkWhiteColor
+                href='/home'
+                className='font-short-regular font-weight-bold font-white'
+              >
                 Home
               </LinkWhiteColor>
             </li>
             <li className='nav-menu__item'>
-              <LinkWhiteColor href='#' className='font-regular font-white'>
+              <LinkWhiteColor
+                href='#'
+                className='font-short-regular font-weight-bold font-white'
+              >
                 Premium
               </LinkWhiteColor>
             </li>
             <li className='nav-menu__item'>
-              <LinkWhiteColor href='#' className='font-regular font-white'>
+              <LinkWhiteColor
+                href='#'
+                className='font-short-regular font-weight-bold font-white'
+              >
                 About
               </LinkWhiteColor>
             </li>
@@ -63,10 +72,13 @@ function NavBar(props) {
         {!authState.token ? (
           <React.Fragment>
             <a href='/register'>
-              <ButtonFrame label='Register' />
+              <ButtonFrame isFitted={true}>Register</ButtonFrame>
             </a>
             <div className='nav-menu__item'>
-              <LinkWhiteColor href='/login' className='font-regular font-white'>
+              <LinkWhiteColor
+                href='/login'
+                className='font-short-regular font-weight-bold font-white'
+              >
                 Sign in
               </LinkWhiteColor>
             </div>
@@ -82,7 +94,7 @@ function NavBar(props) {
               <ArrowDown />
             </div>
             <div className='dropdown-menu dropdown-menu--fixed dropdown-menu-right'>
-              <AccountContextMenu />
+              <AccountContextMenu fromLanding={true} />
             </div>
           </div>
         )}

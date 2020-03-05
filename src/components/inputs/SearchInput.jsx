@@ -8,7 +8,7 @@ function SearchInput({ placeholder = 'Search', onChange = () => {} }) {
       <SearchIcon />
       <input
         type='text'
-        className='font-white font-short-r'
+        className='font-white font-short-s'
         placeholder={placeholder}
         onChange={onChange}
       />

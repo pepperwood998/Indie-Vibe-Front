@@ -1,13 +1,12 @@
 import React from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
-function ButtonFacebook({
-  label = 'Enter',
-  isFitted = true,
-  responseFacebook = response => {}
-}) {
-  let classes = 'button button-fb font-white font-regular';
-  if (isFitted) {
+function ButtonFacebook(props) {
+  let classes = [
+    'button button-fb font-white font-short-regular font-weight-bold',
+    props.className
+  ].join(' ');
+  if (props.isFitted) {
     classes += ' button--fit';
   }
 
@@ -15,10 +14,10 @@ function ButtonFacebook({
     <FacebookLogin
       appId='130595185046801'
       fields='name,email,picture'
-      callback={responseFacebook}
+      callback={props.responseFacebook}
       render={renderProps => (
         <div className={classes} onClick={renderProps.onClick}>
-          {label}
+          {props.children}
         </div>
       )}
     />

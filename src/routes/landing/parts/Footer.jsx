@@ -15,12 +15,12 @@ function Footer(props) {
         <div className='row'>
           {Object.keys(footer).map((key, index) => (
             <div className='col-3' key={index}>
-              <div className='more__header font-regular font-gray-light'>
+              <div className='more__header font-short-regular font-weight-bold font-gray-light'>
                 {key}
               </div>
               {footer[key].map((val, childIndex) => (
                 <div
-                  className='more__item font-regular font-white'
+                  className='more__item font-short-regular font-weight-bold font-white'
                   key={childIndex}
                 >
                   {val}

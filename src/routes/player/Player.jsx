@@ -1,9 +1,10 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { UserRoute } from '../../components/custom-routes';
 
 import './player.scss';
 import Top from './Top';
 import NavBar from './NavBar';
+import QuickAccess from './QuickAccess';
 import { Browse, Library, Home, Account, Artist, Search } from './pages';
 
 function Player() {
@@ -15,19 +16,21 @@ function Player() {
       <div className='player__nav'>
         <NavBar />
       </div>
-      <div className='player__quick-access'></div>
+      <div className='player__quick-access'>
+        <QuickAccess />
+      </div>
       <div className='player__bottom'></div>
       <div className='player__content'>
-        <Route
+        <UserRoute
           exact
           path={['/player', '/player/home']}
           component={Home}
-        ></Route>
-        <Route path='/player/browse' component={Browse}></Route>
-        <Route path='/player/browse' component={Library}></Route>
-        <Route path='/player/account' component={Account}></Route>
-        <Route path='/player/artist' component={Artist}></Route>
-        <Route path='/player/search' component={Search}></Route>
+        ></UserRoute>
+        <UserRoute path='/player/browse' component={Browse}></UserRoute>
+        <UserRoute path='/player/browse' component={Library}></UserRoute>
+        <UserRoute path='/player/account' component={Account}></UserRoute>
+        <UserRoute path='/player/artist' component={Artist}></UserRoute>
+        <UserRoute path='/player/search' component={Search}></UserRoute>
       </div>
     </div>
   );

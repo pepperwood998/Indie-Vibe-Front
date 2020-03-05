@@ -7,7 +7,7 @@ function RadioBox({
   onChange = () => {}
 }) {
   return (
-    <label className='ticker-main font-tall-b font-white '>
+    <label className='ticker-main font-tall-r font-weight-bold font-white '>
       {label}
       <input type='radio' name={name} value={value} onChange={onChange} />
       <span className='checkmark checkmark-point'></span>

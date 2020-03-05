@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { InputForm, RadioBox } from '../../components/inputs';
 import { ButtonMain, ButtonFacebook } from '../../components/buttons/';
 import Authentication from './Authentication';
-import ErrorCard from '../../components/cards/ErrorCard';
+import { register } from '../../apis/AuthAPI';
 
 import { LogoRegister } from '../../assets/svgs';
 import './style.scss';
+import ErrorCard from '../../components/cards/ErrorCard';
+import SuccessCard from '../../components/cards/SuccessCard';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -14,8 +16,10 @@ function Register() {
   const [cfPwd, setCfPwd] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [gender, setGender] = useState(false);
-  const [loginError, setLoginError] = useState('');
+  const [registerError, setRegisterError] = useState('');
+  const [registerSuccess, setRegisterSuccess] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [registering, setRegistering] = useState(false);
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
@@ -30,7 +34,7 @@ function Register() {
   };
 
   const handleDisplayNameChange = e => {
-    setDisplayName(e.target.checked);
+    setDisplayName(e.target.value);
   };
 
   const handleGenderChange = e => {
@@ -39,20 +43,37 @@ function Register() {
 
   const handleRegister = () => {
     setSubmitted(true);
-    setLoginError('');
-    if (!email || !pwd || !cfPwd || !displayName) return;
+    setRegisterError('');
+    setRegisterSuccess('');
+    if (!email || !pwd || !cfPwd || !displayName || !gender) return;
+
+    setRegistering(true);
+    register(email, pwd, cfPwd, displayName, gender)
+      .then(response => response.json())
+      .then(json => {
+        if (json.status === 'failed') {
+          setRegisterError(json.data);
+        } else {
+          setRegisterSuccess(json.data);
+        }
+
+        setRegistering(false);
+      });
   };
 
   const logo = () => <LogoRegister height='60' />;
 
   const inputs = () => (
     <React.Fragment>
+      {registerError ? <ErrorCard message={registerError} /> : ''}
+      {registerSuccess ? <SuccessCard message={registerSuccess} /> : ''}
       <InputForm
         type='text'
         placeholder='Enter your email address'
         onChange={handleEmailChange}
         error={email === '' && submitted}
         errMessage='Please enter your email'
+        value={email}
       />
       <InputForm
         type='password'
@@ -60,6 +81,7 @@ function Register() {
         onChange={handlePwdChange}
         error={pwd === '' && submitted}
         errMessage='Please enter your password'
+        value={pwd}
       />
       <InputForm
         type='password'
@@ -67,6 +89,7 @@ function Register() {
         onChange={handleCfPwdChange}
         error={cfPwd === '' && submitted}
         errMessage='Please confirm your password'
+        value={cfPwd}
       />
       <InputForm
         type='text'
@@ -74,25 +97,26 @@ function Register() {
         onChange={handleDisplayNameChange}
         error={displayName === '' && submitted}
         errMessage='Tell us your name'
+        value={displayName}
       />
 
       <div className='input-addition input-addition-inline'>
         <RadioBox
           name='gender'
           label='Female'
-          value='female'
+          value='0'
           onChange={handleGenderChange}
         />
         <RadioBox
           name='gender'
           label='Male'
-          value='male'
+          value='1'
           onChange={handleGenderChange}
         />
         <RadioBox
           name='gender'
           label='Other'
-          value='other'
+          value='2'
           onChange={handleGenderChange}
         />
       </div>
@@ -106,14 +130,20 @@ function Register() {
 
   const submits = () => (
     <React.Fragment>
-      <ButtonMain label='Register' isFitted={false} onClick={handleRegister} />
+      <ButtonMain
+        isFitted={false}
+        onClick={handleRegister}
+        disabled={registering}
+      >
+        Register
+      </ButtonMain>
       <div
         style={{ padding: '7px', textAlign: 'center' }}
-        className='font-regular font-gray-light'
+        className='font-short-regular font-weight-bold font-gray-light'
       >
         or
       </div>
-      <ButtonFacebook label='Register with Facebook' isFitted={false} />
+      <ButtonFacebook isFitted={false}>Register with Facebook</ButtonFacebook>
     </React.Fragment>
   );
 
@@ -121,13 +151,10 @@ function Register() {
     <React.Fragment>
       <div
         style={{ textAlign: 'center', padding: '10px' }}
-        className='font-regular font-white'
+        className='font-short-regular font-weight-bold font-white'
       >
         Already a member?&nbsp;
-        <a
-          href='/login'
-          className='font-blue-main link link-bright-blue-main'
-        >
+        <a href='/login' className='font-blue-main link link-bright-blue-main'>
           Sign in
         </a>
       </div>
