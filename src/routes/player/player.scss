@@ -187,4 +187,70 @@
       }
     }
   }
+
+  .now-playing-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: inherit;
+    max-height: 100px;
+
+    &__left {
+      width: 20%;
+      min-width: 150px;
+      height: inherit;
+    }
+    &__middle {
+      width: 60%;
+      max-width: 800px;
+    }
+    &__right {
+      width: 20%;
+      min-width: 150px;
+    }
+
+    .now-playing {
+      height: 100%;
+      padding: 20px;
+      display: flex;
+
+      &__cover-container {
+        height: inherit;
+        max-width: 60px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      &__info {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        flex-direction: column;
+        flex: 1;
+        padding: 20px 15px;
+
+        > *:not(:last-child) {
+          margin-bottom: 5px;
+        }
+      }
+
+      &__action {
+        max-width: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
 }

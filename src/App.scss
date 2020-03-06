@@ -1,6 +1,14 @@
 @import './assets/styles/colors';
 @import './assets/styles/fonts';
 
+.App {
+  overflow: hidden;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
 .input-main {
   background: transparent;
   border: 1.2px solid $white;

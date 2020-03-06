@@ -13,3 +13,4 @@ export { ReactComponent as BrowseIcon } from './browse.svg';
 export { ReactComponent as LibraryIcon } from './library.svg';
 export { ReactComponent as SettingIcon } from './settings.svg';
 export { ReactComponent as AddPlaylistIcon } from './add-playlist.svg';
+export { ReactComponent as FavoriteIcon } from './favorite.svg';

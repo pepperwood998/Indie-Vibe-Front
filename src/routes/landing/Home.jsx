@@ -30,7 +30,7 @@ function Home() {
             {!state.token ? (
               <React.Fragment>
                 <a href='/register'>
-                  <ButtonMain>Join free</ButtonMain>
+                  <ButtonMain isFitted={true}>Join free</ButtonMain>
                 </a>
                 <div className='pl-4 font-tip font-gray-light'>
                   No credit card requried
@@ -74,7 +74,7 @@ function Home() {
               </h4>
               <div className='pb-4'>
                 <a href='/register'>
-                  <ButtonFrame>Sign up</ButtonFrame>
+                  <ButtonFrame isFitted={true}>Sign up</ButtonFrame>
                 </a>
               </div>
               <h4 className='pb-4 font-white'>Become and Artist</h4>

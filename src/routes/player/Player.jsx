@@ -7,6 +7,7 @@ import Top from './Top';
 import NavBar from './NavBar';
 import QuickAccess from './QuickAccess';
 import { Browse, Library, Home, Account, Artist, Search } from './pages';
+import Bottom from './Bottom';
 
 function Player() {
   return (
@@ -20,14 +21,12 @@ function Player() {
       <div className='player__quick-access'>
         <QuickAccess />
       </div>
-      <div className='player__bottom'></div>
+      <div className='player__bottom'>
+        <Bottom />
+      </div>
       <div className='player__content'>
         <BrowserRouter basename='/player'>
-          <UserRoute
-            exact
-            path={['/', '/home']}
-            component={Home}
-          ></UserRoute>
+          <UserRoute exact path={['/', '/home']} component={Home}></UserRoute>
           <UserRoute path='/browse' component={Browse}></UserRoute>
           <UserRoute path='/browse' component={Library}></UserRoute>
           <UserRoute path='/account' component={Account}></UserRoute>
