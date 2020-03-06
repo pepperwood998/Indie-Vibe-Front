@@ -54,6 +54,8 @@ function Register() {
   };
 
   const handleRegisterFb = () => {
+    setRegisterError('');
+    setRegisterSuccess('');
     setRegisteringFb(true);
   };
 
@@ -77,6 +79,10 @@ function Register() {
               setRegisterSuccess(json.data);
             }
 
+            setRegisteringFb(false);
+          })
+          .catch(err => {
+            setRegisterError(err);
             setRegisteringFb(false);
           });
       });

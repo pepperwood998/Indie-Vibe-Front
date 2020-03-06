@@ -81,6 +81,8 @@ function Login() {
         } else {
           dispatch(loginSuccess({ ...json, remembered }));
         }
+
+        setLoggingInFb(false);
       })
       .catch(err => {
         setLoginError(err);
