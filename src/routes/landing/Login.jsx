@@ -13,6 +13,7 @@ import { AuthContext } from '../../contexts';
 
 import { LogoSignIn } from '../../assets/svgs';
 import './style.scss';
+import { loginFb } from '../../apis/AuthAPI';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -21,6 +22,7 @@ function Login() {
   const [loginError, setLoginError] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [loggingIn, setLoggingIn] = useState(false);
+  const [loggingInFb, setLoggingInFb] = useState(false);
 
   const { actions, dispatch } = useContext(AuthContext);
   const { loginSuccess } = actions;
@@ -59,8 +61,31 @@ function Login() {
       });
   };
 
+  const handleLogInFb = () => {
+    setLoggingInFb(true);
+  };
+
   const responseFacebook = response => {
-    console.log(response);
+    const { status } = response;
+    if (status && status !== 'connected') {
+      setLoggingInFb(false);
+      return;
+    }
+
+    const { id, accessToken } = response;
+    loginFb(id, accessToken)
+      .then(response => response.json())
+      .then(json => {
+        if (json.status && json.status === 'failed') {
+          setLoginError(json.data);
+        } else {
+          dispatch(loginSuccess({ ...json, remembered }));
+        }
+      })
+      .catch(err => {
+        setLoginError(err);
+        setLoggingInFb(false);
+      });
   };
 
   const logo = () => <LogoSignIn height='60' />;
@@ -109,7 +134,12 @@ function Login() {
       >
         or
       </div>
-      <ButtonFacebook isFitted={false} responseFacebook={responseFacebook}>
+      <ButtonFacebook
+        isFitted={false}
+        responseFacebook={responseFacebook}
+        onClick={handleLogInFb}
+        disabled={loggingInFb}
+      >
         Sign in with Facebook
       </ButtonFacebook>
     </React.Fragment>

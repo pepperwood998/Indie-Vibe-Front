@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { InputForm, RadioBox } from '../../components/inputs';
 import { ButtonMain, ButtonFacebook } from '../../components/buttons/';
 import Authentication from './Authentication';
-import { register } from '../../apis/AuthAPI';
+import { register, registerWithFb, getFbPictureUrl } from '../../apis/AuthAPI';
 
 import { LogoRegister } from '../../assets/svgs';
 import './style.scss';
@@ -11,34 +11,26 @@ import ErrorCard from '../../components/cards/ErrorCard';
 import SuccessCard from '../../components/cards/SuccessCard';
 
 function Register() {
-  const [email, setEmail] = useState('');
-  const [pwd, setPwd] = useState('');
-  const [cfPwd, setCfPwd] = useState('');
-  const [displayName, setDisplayName] = useState('');
-  const [gender, setGender] = useState(false);
   const [registerError, setRegisterError] = useState('');
   const [registerSuccess, setRegisterSuccess] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [registering, setRegistering] = useState(false);
+  const [registeringFb, setRegisteringFb] = useState(false);
 
-  const handleEmailChange = e => {
-    setEmail(e.target.value);
-  };
+  const [registerInputs, setRegisterInputs] = useState({
+    email: '',
+    pwd: '',
+    cfPwd: '',
+    displayName: '',
+    gender: 0
+  });
+  const { email, pwd, cfPwd, displayName, gender } = registerInputs;
 
-  const handlePwdChange = e => {
-    setPwd(e.target.value);
-  };
-
-  const handleCfPwdChange = e => {
-    setCfPwd(e.target.value);
-  };
-
-  const handleDisplayNameChange = e => {
-    setDisplayName(e.target.value);
-  };
-
-  const handleGenderChange = e => {
-    setGender(e.target.value);
+  const handleInputsChange = e => {
+    setRegisterInputs({
+      ...registerInputs,
+      [e.target.getAttribute('name')]: e.target.value
+    });
   };
 
   const handleRegister = () => {
@@ -61,6 +53,35 @@ function Register() {
       });
   };
 
+  const handleRegisterFb = () => {
+    setRegisteringFb(true);
+  };
+
+  const responseFacebook = response => {
+    const { status } = response;
+    if (status && status !== 'connected') {
+      setRegisteringFb(false);
+      return;
+    }
+
+    const { email, name, id, accessToken } = response;
+    getFbPictureUrl(id)
+      .then(response => response.url)
+      .then(url => {
+        registerWithFb(email, name, url, id, accessToken)
+          .then(response => response.json())
+          .then(json => {
+            if (json.status === 'failed') {
+              setRegisterError(json.data);
+            } else {
+              setRegisterSuccess(json.data);
+            }
+
+            setRegisteringFb(false);
+          });
+      });
+  };
+
   const logo = () => <LogoRegister height='60' />;
 
   const inputs = () => (
@@ -70,34 +91,38 @@ function Register() {
       <InputForm
         type='text'
         placeholder='Enter your email address'
-        onChange={handleEmailChange}
+        onChange={handleInputsChange}
         error={email === '' && submitted}
         errMessage='Please enter your email'
         value={email}
+        name='email'
       />
       <InputForm
         type='password'
         placeholder='Enter your password'
-        onChange={handlePwdChange}
+        onChange={handleInputsChange}
         error={pwd === '' && submitted}
         errMessage='Please enter your password'
         value={pwd}
+        name='pwd'
       />
       <InputForm
         type='password'
         placeholder='Confirm your password'
-        onChange={handleCfPwdChange}
+        onChange={handleInputsChange}
         error={cfPwd === '' && submitted}
         errMessage='Please confirm your password'
         value={cfPwd}
+        name='cfPwd'
       />
       <InputForm
         type='text'
         placeholder='Enter your display name'
-        onChange={handleDisplayNameChange}
+        onChange={handleInputsChange}
         error={displayName === '' && submitted}
         errMessage='Tell us your name'
         value={displayName}
+        name='displayName'
       />
 
       <div className='input-addition input-addition-inline'>
@@ -105,19 +130,19 @@ function Register() {
           name='gender'
           label='Female'
           value='0'
-          onChange={handleGenderChange}
+          onChange={handleInputsChange}
         />
         <RadioBox
           name='gender'
           label='Male'
           value='1'
-          onChange={handleGenderChange}
+          onChange={handleInputsChange}
         />
         <RadioBox
           name='gender'
           label='Other'
           value='2'
-          onChange={handleGenderChange}
+          onChange={handleInputsChange}
         />
       </div>
       {!gender && submitted ? (
@@ -143,7 +168,14 @@ function Register() {
       >
         or
       </div>
-      <ButtonFacebook isFitted={false}>Register with Facebook</ButtonFacebook>
+      <ButtonFacebook
+        isFitted={false}
+        responseFacebook={responseFacebook}
+        disabled={registeringFb}
+        onClick={handleRegisterFb}
+      >
+        Register with Facebook
+      </ButtonFacebook>
     </React.Fragment>
   );
 

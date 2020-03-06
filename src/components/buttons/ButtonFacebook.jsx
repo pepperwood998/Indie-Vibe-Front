@@ -9,6 +9,9 @@ function ButtonFacebook(props) {
   if (props.isFitted) {
     classes += ' button--fit';
   }
+  if (props.disabled) {
+    classes += ' disabled';
+  }
 
   return (
     <FacebookLogin
@@ -16,7 +19,13 @@ function ButtonFacebook(props) {
       fields='name,email,picture'
       callback={props.responseFacebook}
       render={renderProps => (
-        <div className={classes} onClick={renderProps.onClick}>
+        <div
+          className={classes}
+          onClick={() => {
+            if (props.onClick) props.onClick();
+            renderProps.onClick();
+          }}
+        >
           {props.children}
         </div>
       )}

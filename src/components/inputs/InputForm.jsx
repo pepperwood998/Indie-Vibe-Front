@@ -6,7 +6,8 @@ function InputForm({
   onChange = () => {},
   error = false,
   errMessage = '',
-  value = ''
+  value = '',
+  name = ''
 }) {
   let classes = 'input-main input-full font-white';
   if (error) {
@@ -18,6 +19,7 @@ function InputForm({
     <input
       className={classes}
       type={type}
+      name={name}
       placeholder={placeholder}
       onChange={onChange}
       value={value}
