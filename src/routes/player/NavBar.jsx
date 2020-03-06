@@ -13,6 +13,7 @@ import {
   SettingIcon
 } from '../../assets/svgs';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
+import { ButtonFrame } from '../../components/buttons';
 
 function NavBar() {
   const { state: authState } = useContext(AuthContext);
@@ -38,7 +39,9 @@ function NavBar() {
     <div className='nav-menu'>
       <div className='user-box'>
         <div className='avatar-box'>
-          <img src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder} />
+          <img
+            src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
+          />
           <div className='avatar-box__layer'>
             <SettingIcon data-toggle='dropdown' />
             <div className='dropdown-menu'>
@@ -104,7 +107,15 @@ function NavBar() {
           Favorite songs
         </Link>
       </div>
-      <div className='artist-box'></div>
+      <div className='artist-box'>
+        {authState.role === 'r-artist' ? (
+          <Link to='/player/workspace'>
+            <ButtonFrame>Your workspace</ButtonFrame>
+          </Link>
+        ) : (
+          ''
+        )}
+      </div>
     </div>
   );
 }
