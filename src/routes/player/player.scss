@@ -9,6 +9,7 @@
   grid-template-areas:
     'nav-bar body quick-access'
     'play-bar play-bar play-bar';
+  overflow: hidden;
 
   &__top {
     grid-area: body;
@@ -196,64 +197,155 @@
     max-height: 100px;
 
     &__left {
-      width: 20%;
+      width: 16%;
       min-width: 150px;
       height: inherit;
     }
     &__middle {
-      width: 60%;
-      max-width: 800px;
+      width: 62%;
+      max-width: 900px;
     }
     &__right {
-      width: 20%;
+      width: 18%;
       min-width: 150px;
     }
 
-    .now-playing {
-      height: 100%;
-      padding: 20px;
+    svg {
+      cursor: pointer;
+
+      &:hover path {
+        fill: $white;
+      }
+    }
+  }
+
+  .now-playing {
+    height: 100%;
+    padding: 20px;
+    display: flex;
+
+    &__cover-container {
+      height: inherit;
+      width: 60px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &__info {
       display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      flex-direction: column;
+      flex: 1;
+      padding: 20px 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
-      &__cover-container {
-        height: inherit;
-        width: 60px;
+      > *:not(:last-child) {
+        margin-bottom: 5px;
+      }
+    }
 
-        img {
-          width: 100%;
-          height: 100%;
+    &__action {
+      max-width: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        &:hover {
+          transform: scale(1.1);
         }
       }
+    }
+  }
 
-      &__info {
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        flex-direction: column;
-        flex: 1;
-        padding: 20px 15px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+  .ivb-progress-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 0px 5px;
 
-        > *:not(:last-child) {
-          margin-bottom: 5px;
-        }
+    &:hover {
+      .ivb-progress-bar__full {
+        height: 0.4em;
       }
 
-      &__action {
-        max-width: 24px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        svg {
-          cursor: pointer;
-
-          &:hover {
-            transform: scale(1.1);
-          }
-        }
+      .ivb-progress-bar__thumb {
+        display: block;
       }
+    }
+    &__full {
+      width: 100%;
+      height: 0.25em;
+      background: $grayDark;
+      border-radius: 3px;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    &__progress {
+      position: absolute;
+      height: inherit;
+      background-color: $blueMain;
+      width: 100%;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    &__thumb {
+      position: absolute;
+      height: 10px;
+      width: 10px;
+      background-color: $grayLight;
+      border-radius: 50%;
+      left: -5px;
+      display: none;
+    }
+  }
+
+  .player-controls {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    max-height: 100px;
+
+    &__action {
+      display: flex;
+      flex-direction: row;
+      width: 150px;
+    }
+
+    &__progress {
+      display: flex;
+      flex: 1;
+    }
+  }
+
+  .extra-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 20px 40px;
+
+    .control-wrapper {
+      svg {
+        height: 22px;
+        width: auto;
+      }
+    }
+
+    .control-volume {
+      min-width: 100px;
+      display: flex;
+      align-items: center;
     }
   }
 }

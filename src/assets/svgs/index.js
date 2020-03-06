@@ -14,3 +14,14 @@ export { ReactComponent as LibraryIcon } from './library.svg';
 export { ReactComponent as SettingIcon } from './settings.svg';
 export { ReactComponent as AddPlaylistIcon } from './add-playlist.svg';
 export { ReactComponent as FavoriteIcon } from './favorite.svg';
+export { ReactComponent as PlayIcon } from './play.svg';
+export { ReactComponent as SkipPreviousIcon } from './skip-previous.svg';
+export { ReactComponent as SkipNextIcon } from './skip-next.svg';
+export { ReactComponent as RepeatOffIcon } from './repeat-off.svg';
+export { ReactComponent as RepeatListIcon } from './repeat-list.svg';
+export { ReactComponent as RepeatTrackIcon } from './repeat-track.svg';
+export { ReactComponent as ShuffleIcon } from './shuffle.svg';
+export { ReactComponent as MusicQueueIcon } from './music-queue.svg';
+export { ReactComponent as MuteIcon } from './volume-mute.svg';
+export { ReactComponent as UnmuteIcon } from './volume-unmute.svg';
+
