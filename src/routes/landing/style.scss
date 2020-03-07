@@ -22,41 +22,54 @@ ul {
 
   &__nav {
     background-image: $blackPop;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 
-    .nav-menu__item {
-      a {
-        display: block;
-        padding: 20px 20px;
-      }
-    }
-
-    .nav-left {
+    .content {
+      padding: 20px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
 
-      &__logo {
-        margin-right: 30px;
+      .nav-menu__item {
+        a, span {
+          display: block;
+          padding: 20px 20px;
+        }
       }
 
-      &__menu {
+      .nav-left {
         display: flex;
         align-items: center;
-      }
-    }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
+        &__logo {
+          margin-right: 30px;
+        }
+
+        &__menu {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+
+        .user-box {
+          cursor: pointer;
+
+          img {
+            border-radius: 5px;
+          }
+        }
+      }
     }
   }
 
   &__intro {
     position: relative;
     width: 100%;
+    padding-top: 100px;
+    padding-bottom: 100px;
 
     .intro-background {
       background: url('../../assets/imgs/bg.jpg') no-repeat center;
@@ -65,36 +78,43 @@ ul {
       height: 100%;
       width: 100%;
       position: absolute;
+      top: 0;
+      left: 0;
       z-index: -2;
     }
 
     .intro-layer {
       position: absolute;
+      top: 0;
+      left: 0;
       background-color: $blackBlur;
       height: 100%;
       width: 100%;
       z-index: -1;
     }
 
-    .intro-body {
-      padding-top: 100px;
-      padding-bottom: 100px;
-      width: 100%;
-      display: flex;
+    .content {
+      .intro-body {
+        width: 100%;
+        display: flex;
 
-      .intro-text {
-        padding: 30px 0px 0px 80px;
+        .intro-text {
+          padding: 30px 0px 0px 80px;
+        }
       }
     }
   }
 
   &__body {
     background-color: $blackGray;
-    padding: 100px;
+    padding-top: 100px;
+    padding-bottom: 100px;
 
-    .body-grid {
-      img {
-        width: 100%;
+    .content {
+      .body-grid {
+        img {
+          width: 100%;
+        }
       }
     }
   }
@@ -178,16 +198,4 @@ ul {
   .box-addition {
     text-align: center;
   }
-}
-
-#home {
-  width: 100px;
-  height: 100px;
-  background-color: purple;
-}
-
-#register {
-  width: 100px;
-  height: 100px;
-  background-color: green;
 }

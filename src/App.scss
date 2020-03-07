@@ -1,6 +1,10 @@
 @import './assets/styles/colors';
 @import './assets/styles/fonts';
 
+a:hover {
+  text-decoration: none;
+}
+
 .input-main {
   background: transparent;
   border: 1.2px solid $white;
@@ -8,7 +12,7 @@
   outline: none;
 
   &::placeholder {
-    font: $short-r;
+    font: $shortRegular;
   }
 }
 
@@ -20,6 +24,25 @@
 .input-error {
   border: 1px solid $red;
   box-shadow: 0px 0px 5px $red;
+}
+
+.input-search {
+  background-color: $grayDark;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  height: 25px;
+
+  svg {
+    height: inherit;
+  }
+
+  input {
+    border: 0px;
+    height: inherit;
+    background-color: transparent;
+    outline: none;
+  }
 }
 
 .ticker-main {
@@ -123,6 +146,11 @@
   &--fit {
     display: inline-block;
   }
+
+  &.disabled {
+    opacity: 0.7;
+    pointer-events: none;
+  }
 }
 
 .card-error {
@@ -132,15 +160,25 @@
   border-color: $white;
 }
 
+.card-success {
+  padding: 12px 20px;
+  color: $white;
+  background-color: $green;
+  border-color: $white;
+}
+
 .link {
   &-bright-blue-main:hover {
     color: $blueMainBright;
     text-decoration: none;
   }
 
-  &-blue-main {
+  &-bright-gray:hover {
     color: $white;
+    text-decoration: none;
+  }
 
+  &-blue-main {
     &:hover {
       color: $blueMain;
       text-decoration: none;
@@ -148,6 +186,39 @@
 
     &.active {
       color: $blueMain;
+
+      svg > path {
+        fill: $blueMain;
+      }
     }
+  }
+
+  &-underline {
+    &:hover {
+      text-decoration: underline;
+      color: $white;
+    }
+  }
+}
+
+.dropdown-menu {
+  padding: 0px;
+  border: 0px;
+  background: transparent;
+
+  &--fixed {
+    margin-top: 10px;
+  }
+}
+
+.context-menu {
+  background-color: $blackGray;
+  border-radius: 5px;
+
+  a,
+  span {
+    display: block;
+    padding: 15px 30px;
+    cursor: pointer;
   }
 }

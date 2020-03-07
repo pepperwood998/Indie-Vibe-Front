@@ -5,14 +5,15 @@ import {
   ButtonMain,
   ButtonFacebook,
   ButtonFrame
-} from '../../components/buttons/';
+} from '../../components/buttons';
 import Authentication from './Authentication';
-import { AuthContext } from '../../contexts/AuthContext';
 import { login } from '../../apis';
 import ErrorCard from '../../components/cards/ErrorCard';
+import { AuthContext } from '../../contexts';
 
 import { LogoSignIn } from '../../assets/svgs';
 import './style.scss';
+import { loginFb } from '../../apis/AuthAPI';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -20,6 +21,8 @@ function Login() {
   const [remembered, setRemembered] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loggingIn, setLoggingIn] = useState(false);
+  const [loggingInFb, setLoggingInFb] = useState(false);
 
   const { actions, dispatch } = useContext(AuthContext);
   const { loginSuccess } = actions;
@@ -41,9 +44,11 @@ function Login() {
     setLoginError('');
     if (!email || !pwd) return;
 
+    setLoggingIn(true);
     login(email, pwd)
       .then(response => {
         if (response.status !== 200) throw 'Wrong email or password!';
+        setLoggingIn(false);
         return response.json();
       })
       .then(json => {
@@ -52,11 +57,37 @@ function Login() {
       .catch(err => {
         setPwd('');
         setLoginError(err);
+        setLoggingIn(false);
       });
   };
 
+  const handleLogInFb = () => {
+    setLoggingInFb(true);
+  };
+
   const responseFacebook = response => {
-    console.log(response);
+    const { status } = response;
+    if (status && status !== 'connected') {
+      setLoggingInFb(false);
+      return;
+    }
+
+    const { id, accessToken } = response;
+    loginFb(id, accessToken)
+      .then(response => response.json())
+      .then(json => {
+        if (json.status && json.status === 'failed') {
+          setLoginError(json.data);
+        } else {
+          dispatch(loginSuccess({ ...json, remembered }));
+        }
+
+        setLoggingInFb(false);
+      })
+      .catch(err => {
+        setLoginError(err);
+        setLoggingInFb(false);
+      });
   };
 
   const logo = () => <LogoSignIn height='60' />;
@@ -86,7 +117,7 @@ function Login() {
         <Checkbox label='Remember me' onChange={handleRememberedChange} />
         <a
           href='#'
-          className='font-tall-b font-blue-main link link-bright-blue-main'
+          className='font-tall-r font-weight-bold font-blue-main link link-bright-blue-main'
         >
           Forgot your password?
         </a>
@@ -96,19 +127,23 @@ function Login() {
 
   const submits = () => (
     <React.Fragment>
-      <ButtonMain label='Enter' isFitted={false} onClick={handleLogIn} />
+      <ButtonMain isFitted={false} onClick={handleLogIn} disabled={loggingIn}>
+        Enter
+      </ButtonMain>
       <div
         style={{ padding: '7px', textAlign: 'center' }}
-        className='font-short-b font-gray-light'
+        className='font-short-regular font-weight-bold font-gray-light'
       >
         or
       </div>
       <ButtonFacebook
-        label='Sign in with Facebook'
         isFitted={false}
         responseFacebook={responseFacebook}
-      />
-      />
+        onClick={handleLogInFb}
+        disabled={loggingInFb}
+      >
+        Sign in with Facebook
+      </ButtonFacebook>
     </React.Fragment>
   );
 
@@ -116,12 +151,12 @@ function Login() {
     <React.Fragment>
       <div
         style={{ textAlign: 'center', padding: '10px' }}
-        className='font-short-b font-white'
+        className='font-short-regular font-weight-bold font-white'
       >
         Not a member yet?
       </div>
       <a href='/register'>
-        <ButtonFrame label='Join Indie Vibe' />
+        <ButtonFrame isFitted={true}>Join Indie Vibe</ButtonFrame>
       </a>
     </React.Fragment>
   );
