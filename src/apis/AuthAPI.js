@@ -1,6 +1,5 @@
 import fetch from 'cross-fetch';
-
-const host = 'http://localhost:8080';
+import { host } from './constant';
 
 export const login = (email, password) => {
   return fetch(`${host}/login`, {
