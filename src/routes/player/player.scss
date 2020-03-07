@@ -199,6 +199,7 @@
     justify-content: space-between;
     height: inherit;
     max-height: 100px;
+    padding: 0px 20px;
 
     &__left {
       width: 16%;
@@ -211,7 +212,7 @@
     }
     &__right {
       width: 18%;
-      min-width: 150px;
+      min-width: 180px;
     }
 
     svg {
@@ -225,7 +226,7 @@
 
   .now-playing {
     height: 100%;
-    padding: 20px;
+    padding: 20px 0px;
     display: flex;
 
     &__cover-container {
@@ -332,12 +333,18 @@
     }
   }
 
-  .extra-controls {
+  .extra-controls-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     height: 100%;
-    padding: 20px 40px;
+
+    .extra-controls {
+      width: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
 
     .control-wrapper {
       svg {
