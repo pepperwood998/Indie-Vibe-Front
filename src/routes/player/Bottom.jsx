@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { NavLinkUnderline } from '../../components/links';
+import { StreamContext } from '../../contexts/StreamContext';
 
 import AvatarPlaceholder from '../../assets/imgs/placeholder.png';
 import {
@@ -15,13 +16,28 @@ import {
 } from '../../assets/svgs';
 
 function Bottom() {
+  const {
+    state: streamState,
+    actions: streamActions,
+    dispatch: streamDispatch,
+    stream
+  } = useContext(StreamContext);
+
   return (
     <div className='now-playing-bar'>
       <div className='now-playing-bar__left'>
-        <NowPayingLeft />
+        <NowPayingLeft
+          streamActions={streamActions}
+          streamDispatch={streamDispatch}
+          stream={stream}
+        />
       </div>
       <div className='now-playing-bar__middle'>
-        <NowPayingMiddle />
+        <NowPayingMiddle
+          streamActions={streamActions}
+          streamDispatch={streamDispatch}
+          stream={stream}
+        />
       </div>
       <div className='now-playing-bar__right'>
         <NowPayingRight />
@@ -30,7 +46,7 @@ function Bottom() {
   );
 }
 
-function NowPayingLeft() {
+function NowPayingLeft(props) {
   return (
     <div className='now-playing'>
       <div className='now-playing__cover-container'>
@@ -59,34 +75,73 @@ function NowPayingLeft() {
   );
 }
 
-function NowPayingMiddle() {
+function NowPayingMiddle(props) {
+  const [progressTime, setProgressTime] = useState('0:00');
+  const [duration, setDuration] = useState('0:00');
+  const [progressPer, setProgressPer] = useState(0);
+  const [init, setInit] = useState(false);
+
+  const { stream, streamActions, streamDispatch } = props;
+
+  useEffect(() => {
+    if (!init) {
+      stream.onProgress = (timeProgress, per) => {
+        setProgressTime(timeProgress);
+        setProgressPer(per);
+      };
+      stream.onTrackFormatted = duration => {
+        setDuration(duration);
+      };
+      setInit(true);
+    }
+  }, [init]);
+
   return (
     <div className='player-controls'>
       <div className='player-controls__action'>
         <div className='player-action-wrapper'>
-          <SkipPreviousIcon />
+          <SkipPreviousIcon
+            onClick={() => {
+              streamDispatch(streamActions.skipBackward());
+              streamDispatch(streamActions.somePlay());
+            }}
+          />
         </div>
         <div className='player-action-wrapper'>
-          <PlayIcon />
+          <PlayIcon
+            onClick={() => {
+              streamDispatch(streamActions.togglePlay());
+            }}
+          />
         </div>
         <div className='player-action-wrapper'>
-          <SkipNextIcon />
+          <SkipNextIcon
+            onClick={() => {
+              streamDispatch(streamActions.skipForward());
+              streamDispatch(streamActions.somePlay());
+            }}
+          />
         </div>
       </div>
       <div className='player-controls__progress'>
         <div className='progress-time font-tall-r font-weight-bold font-gray-light'>
-          0:00
+          {progressTime}
         </div>
-        <ProgressBar />
+        <ProgressBar
+          progressPer={progressPer}
+          seek={per => {
+            streamDispatch(streamActions.seek(per));
+          }}
+        />
         <div className='progress-time font-tall-r font-weight-bold font-gray-light'>
-          3:59
+          {duration}
         </div>
       </div>
     </div>
   );
 }
 
-function ProgressBar() {
+function ProgressBar(props) {
   const [progress, setProgress] = useState({
     percent: 0,
     width: 0
@@ -110,7 +165,7 @@ function ProgressBar() {
 
   const handleMouseUp = e => {
     setClicked(false);
-    console.log('up');
+    if (props.seek) props.seek(progress.percent);
   };
 
   const handleMouseMove = e => {
@@ -144,11 +199,15 @@ function ProgressBar() {
       >
         <div
           className='ivb-progress-bar__progress'
-          style={{ width: progress.percent + '%' }}
+          style={{
+            width: (clicked ? progress.percent : props.progressPer) + '%'
+          }}
         ></div>
         <div
           className='ivb-progress-bar__thumb'
-          style={{ left: progress.width - 5 + 'px' }}
+          style={{
+            left: (clicked ? progress.percent : props.progressPer) + '%'
+          }}
         ></div>
       </div>
     </div>
@@ -157,19 +216,21 @@ function ProgressBar() {
 
 function NowPayingRight() {
   return (
-    <div className='extra-controls'>
-      <div className='control-wrapper'>
-        <RepeatOffIcon />
-      </div>
-      <div className='control-wrapper'>
-        <ShuffleIcon />
-      </div>
-      <div className='control-wrapper'>
-        <MusicQueueIcon />
-      </div>
-      <div className='control-wrapper control-volume'>
-        <UnmuteIcon />
-        <ProgressBar />
+    <div className='extra-controls-wrapper'>
+      <div className='extra-controls'>
+        <div className='control-wrapper'>
+          <RepeatOffIcon />
+        </div>
+        <div className='control-wrapper'>
+          <ShuffleIcon />
+        </div>
+        <div className='control-wrapper'>
+          <MusicQueueIcon />
+        </div>
+        <div className='control-wrapper control-volume'>
+          <UnmuteIcon />
+          <ProgressBar />
+        </div>
       </div>
     </div>
   );
