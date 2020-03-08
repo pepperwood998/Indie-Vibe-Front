@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "108e70b6e3fa43715f745e7c58f266cf",
+    "revision": "a21eb8c3694bbe9ace0283a50e66ee55",
     "url": "/Indie-Vibe-Front/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Indie-Vibe-Front/static/css/2.17e5ed98.chunk.css"
   },
   {
-    "revision": "9e7b981aeb9a160c0e2f",
+    "revision": "d00b2fa13bb29cf76109",
     "url": "/Indie-Vibe-Front/static/css/main.a4aa7759.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Indie-Vibe-Front/static/js/2.9d390cbd.chunk.js.LICENSE"
   },
   {
-    "revision": "9e7b981aeb9a160c0e2f",
-    "url": "/Indie-Vibe-Front/static/js/main.a722c41b.chunk.js"
+    "revision": "d00b2fa13bb29cf76109",
+    "url": "/Indie-Vibe-Front/static/js/main.34915411.chunk.js"
   },
   {
     "revision": "73a3a1601f4bd27a2961",
