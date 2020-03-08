@@ -33,16 +33,22 @@ class AudioStream {
     this.onBuffer = per => undefined;
     this.onProgress = (timeProgress, per) => undefined;
     this.onTrackFormatted = duration => undefined;
+
+    // internal event
+    this.eventSourceOpen = e => undefined;
+    this.eventTimeUpdate = e => undefined;
+    this.eventUpdateEnd = e => undefined;
   }
 
   init(apiInfo, apiData) {
     this.audio.src = URL.createObjectURL(this.media);
 
-    this.media.addEventListener('sourceopen', e => {
+    this.eventSourceOpen = e => {
       URL.revokeObjectURL(this.audio.src);
 
       this.buffer = this.media.addSourceBuffer(this.mime);
-      this.buffer.addEventListener('updateend', e => {
+
+      this.eventUpdateEnd = e => {
         if (this.isSkip) {
           this.isSkip = false;
           this.data.reset();
@@ -75,13 +81,16 @@ class AudioStream {
               this.reqInfo.status = true;
             }
           });
-      });
+      };
+      this.buffer.addEventListener('updateend', this.eventUpdateEnd);
 
       this.apiInfo = apiInfo;
       this.apiData = apiData;
-    });
+    };
 
-    this.audio.addEventListener('timeupdate', e => {
+    this.media.addEventListener('sourceopen', this.eventSourceOpen);
+
+    this.eventTimeUpdate = e => {
       var progressPer = (this.audio.currentTime / this.media.duration) * 100;
       this.onProgress(
         this.getFormattedTime(
@@ -111,7 +120,8 @@ class AudioStream {
       } else {
         this.isFromSeeked = false;
       }
-    });
+    };
+    this.audio.addEventListener('timeupdate', this.eventTimeUpdate);
 
     this.data.onInsert = chunk => {
       let bufferPer =
@@ -244,15 +254,6 @@ class AudioStream {
   resetForSkip() {
     this.buffer.abort();
     this.buffer.timestampOffset = 0;
-    // this.reqInfo = {
-    //   status: false,
-    //   start: 0,
-    //   end: 0,
-    //   threshold: 0
-    // };
-    // this.isFromClean = false;
-    // this.isFromSeeked = false;
-    // this.chunkIndicator = null;
 
     if (this.buffer.buffered.length) {
       this.isSkip = true;
@@ -264,6 +265,10 @@ class AudioStream {
   }
 
   clearAll() {
+    this.audio.removeEventListener('timeupdate', this.eventTimeUpdate);
+    this.media.removeEventListener('sourceopen', this.eventSourceOpen);
+    this.buffer.removeEventListener('updateend', this.eventUpdateEnd);
+
     this.audio.pause();
     this.audio.remove();
     if (this.buffer) {
@@ -272,7 +277,6 @@ class AudioStream {
         this.buffer.remove(this.buffer.start(0), this.buffer.end(0));
       this.media.removeSourceBuffer(this.buffer);
     }
-    this.media = null;
   }
 
   fetchInfo() {

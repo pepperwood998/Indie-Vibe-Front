@@ -16,28 +16,13 @@ import {
 } from '../../assets/svgs';
 
 function Bottom() {
-  const {
-    state: streamState,
-    actions: streamActions,
-    dispatch: streamDispatch,
-    stream
-  } = useContext(StreamContext);
-
   return (
     <div className='now-playing-bar'>
       <div className='now-playing-bar__left'>
-        <NowPayingLeft
-          streamActions={streamActions}
-          streamDispatch={streamDispatch}
-          stream={stream}
-        />
+        <NowPayingLeft />
       </div>
       <div className='now-playing-bar__middle'>
-        <NowPayingMiddle
-          streamActions={streamActions}
-          streamDispatch={streamDispatch}
-          stream={stream}
-        />
+        <NowPayingMiddle />
       </div>
       <div className='now-playing-bar__right'>
         <NowPayingRight />
@@ -46,7 +31,7 @@ function Bottom() {
   );
 }
 
-function NowPayingLeft(props) {
+function NowPayingLeft() {
   return (
     <div className='now-playing'>
       <div className='now-playing__cover-container'>
@@ -75,26 +60,30 @@ function NowPayingLeft(props) {
   );
 }
 
-function NowPayingMiddle(props) {
+function NowPayingMiddle() {
   const [progressTime, setProgressTime] = useState('0:00');
   const [duration, setDuration] = useState('0:00');
   const [progressPer, setProgressPer] = useState(0);
-  const [init, setInit] = useState(false);
 
-  const { stream, streamActions, streamDispatch } = props;
+  const {
+    stream,
+    actions: streamActions,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
 
   useEffect(() => {
-    if (!init) {
-      stream.onProgress = (timeProgress, per) => {
-        setProgressTime(timeProgress);
-        setProgressPer(per);
-      };
-      stream.onTrackFormatted = duration => {
-        setDuration(duration);
-      };
-      setInit(true);
-    }
-  }, [init]);
+    stream.onProgress = (timeProgress, per) => {
+      setProgressTime(timeProgress);
+      setProgressPer(per);
+    };
+    stream.onTrackFormatted = duration => {
+      setDuration(duration);
+    };
+
+    return () => {
+      stream.clearAll();
+    };
+  }, []);
 
   return (
     <div className='player-controls'>
