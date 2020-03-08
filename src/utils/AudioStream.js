@@ -36,6 +36,7 @@ class AudioStream {
     this.onBuffer = per => undefined;
     this.onProgress = (timeProgress, per) => undefined;
     this.onTrackFormatted = duration => undefined;
+    this.onInfo = info => undefined;
 
     // internal event
     this.eventSourceOpen = e => undefined;
@@ -43,7 +44,7 @@ class AudioStream {
     this.eventUpdateEnd = e => undefined;
   }
 
-  init(apiInfo, apiData, togglePaused, autoplay) {
+  init(apiInfo, apiData, togglePaused, autoplay, bitrate) {
     this.audio.src = URL.createObjectURL(this.media);
     this.audio.onplaying = () => {
       this.isPlaying = true;
@@ -54,6 +55,7 @@ class AudioStream {
       togglePaused(true);
     };
     this.audio.autoplay = autoplay;
+    this.bitrate = bitrate;
 
     this.eventSourceOpen = e => {
       URL.revokeObjectURL(this.audio.src);
@@ -311,30 +313,32 @@ class AudioStream {
   }
 
   fetchInfo() {
-    return this.apiInfo(this.trackId)
+    return this.apiInfo(this.trackId, this.bitrate)
       .then(response => response.json())
       .then(info => {
         let data = info.data;
         if (!data) throw 'info not found';
 
+        this.onInfo(data.info);
         this.offset = data.mp3Offset;
-        this.sizeTotal = data.fileSize128;
-        this.sizeData = data.fileSize128 - data.mp3Offset;
+        this.sizeTotal = data.fileSize;
+        this.sizeData = data.fileSize - data.mp3Offset;
         this.sizeChunk = ((128 * 1000) / 8) * 10;
 
-        this.media.duration = Math.round(data.duration128 / 1000);
-        this.data.size = data.fileSize128;
+        // internal audio object settings
+        this.media.duration = Math.round(data.duration / 1000);
+        this.data.size = data.fileSize;
         this.data.offset = data.mp3Offset;
 
         this.onTrackFormatted(
-          this.getFormattedTime(Math.round(data.duration128 / 1000))
+          this.getFormattedTime(Math.round(data.duration / 1000))
         );
       })
       .catch(error => console.log(error));
   }
 
   fetchChunk(start, end) {
-    return this.apiData(this.trackId, start, end)
+    return this.apiData(this.trackId, this.bitrate, start, end)
       .then(response => {
         return response.arrayBuffer();
       })

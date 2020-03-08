@@ -34,32 +34,55 @@ function Bottom() {
 }
 
 function NowPayingLeft() {
-  return (
-    <div className='now-playing'>
-      <div className='now-playing__cover-container'>
-        <Link to='/player'>
-          <img src={AvatarPlaceholder} />
-        </Link>
-      </div>
-      <div className='now-playing__info'>
-        <NavLinkUnderline
-          href='/player'
-          className='font-short-regular font-weight-bold font-white'
-        >
-          Muông Thú
-        </NavLinkUnderline>
-        <NavLinkUnderline
-          href='/player'
-          className='font-short-s font-gray-light'
-        >
-          Cá Hồi Hoang
-        </NavLinkUnderline>
-      </div>
-      <div className='now-playing__action'>
-        <FavoriteIcon />
-      </div>
-    </div>
+  const { state: streamState } = useContext(StreamContext);
+  const { id, title, artists, release } = streamState.info;
+  const { playType, collectionId } = streamState;
+
+  const artistSeparator = (
+    <span className='font-short-s font-gray-light'>, </span>
   );
+
+  if (id) {
+    return (
+      <div className='now-playing'>
+        <div className='now-playing__cover-container'>
+          <Link to={`/player/${playType}/${collectionId}`}>
+            <img
+              src={release.thumbnail ? release.thumbnail : AvatarPlaceholder}
+            />
+          </Link>
+        </div>
+        <div className='now-playing__info'>
+          <NavLinkUnderline
+            href={`/player/release/${release.id}`}
+            className='font-short-regular font-weight-bold font-white'
+          >
+            {title}
+          </NavLinkUnderline>
+          <div>
+            {artists
+              ? artists
+                  .map(artist => (
+                    <NavLinkUnderline
+                      href={`/player/artist/${artist.id}`}
+                      className='font-short-s font-gray-light'
+                      key={artist.id}
+                    >
+                      {artist.displayName}
+                    </NavLinkUnderline>
+                  ))
+                  .reduce((prev, curr) => [prev, artistSeparator, curr])
+              : ''}
+          </div>
+        </div>
+        <div className='now-playing__action'>
+          <FavoriteIcon />
+        </div>
+      </div>
+    );
+  } else {
+    return '';
+  }
 }
 
 function NowPayingMiddle() {

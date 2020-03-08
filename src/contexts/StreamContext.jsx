@@ -6,7 +6,7 @@ import React, {
   useState
 } from 'react';
 import AudioStream from '../utils/AudioStream';
-import { getTrackInfo, getTrackStream } from '../apis/API';
+import { getStreamInfo, getStream } from '../apis/API';
 import { AuthContext } from './AuthContext';
 
 const StreamContext = createContext();
@@ -17,13 +17,14 @@ const initState = {
   queue: ['g862fcs7osqy0apqx40k', 'skierp4k152acn129gcx'],
   shuffle: [],
   currentSong: 0,
-  bitrate: 0,
-  playType: '', // 'playlist' or 'release'
+  bitrate: 128,
+  playType: 'release', // 'playlist' or 'release'
   collectionId: '',
   volume: 50,
   muted: false,
   autoplay: false,
-  paused: true
+  paused: true,
+  info: {}
 };
 
 function StreamContextProvider(props) {
@@ -33,17 +34,23 @@ function StreamContextProvider(props) {
 
   useEffect(() => {
     stream.init(
-      id => {
-        return getTrackInfo(authState.token, id);
+      (id, bitrate) => {
+        return getStreamInfo(authState.token, id, bitrate);
       },
-      (id, start, end) => {
-        return getTrackStream(authState.token, id, start, end);
+      (id, bitrate, start, end) => {
+        return getStream(authState.token, id, bitrate, start, end);
       },
       paused => {
         dispatch(actions.setPaused(paused));
       },
-      state.autoplay
+      state.autoplay,
+      state.bitrate
     );
+
+    stream.onInfo = info => {
+      console.log(info);
+      dispatch(actions.setInfo(info));
+    };
   }, []);
 
   return (
@@ -93,6 +100,12 @@ const actions = {
       type: 'SET_MUTED',
       muted
     };
+  },
+  setInfo: info => {
+    return {
+      type: 'SET_INFO',
+      info
+    };
   }
 };
 
@@ -127,6 +140,7 @@ const reducer = (state, action) => {
     case 'VOLUME':
       const { per: volume } = action;
       stream.volume(volume);
+      stream.toggleMute(false);
       if (volume !== 0) return { ...state, volume, muted: false };
       else return { ...state, muted: true };
     case 'SET_MUTED':
@@ -134,6 +148,11 @@ const reducer = (state, action) => {
       if (!muted) stream.volume(state.volume);
       stream.toggleMute(muted);
       return { ...state, muted };
+    case 'SET_INFO':
+      return {
+        ...state,
+        info: action.info
+      };
     default:
       return state;
   }

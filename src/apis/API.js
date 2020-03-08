@@ -10,8 +10,8 @@ export const getMeSimple = token => {
   });
 };
 
-export const getTrackInfo = (token, id) => {
-  return fetch(`${host}/tracks/${id}`, {
+export const getStreamInfo = (token, id, bitrate) => {
+  return fetch(`${host}/stream/info/${bitrate}/${id}`, {
     method: 'GET',
     headers: {
       Authorization: 'Bearer ' + token
@@ -19,8 +19,8 @@ export const getTrackInfo = (token, id) => {
   });
 };
 
-export const getTrackStream = (token, id, start, end) => {
-  return fetch(`${host}/tracks/stream/${id}`, {
+export const getStream = (token, id, bitrate, start, end) => {
+  return fetch(`${host}/stream/${bitrate}/${id}`, {
     headers: {
       Range: getRangeStr(start, end),
       Authorization: 'Bearer ' + token
