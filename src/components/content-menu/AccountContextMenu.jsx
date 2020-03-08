@@ -9,9 +9,6 @@ function AccountContextMenu(props) {
   );
 
   const handleLogout = () => {
-    console.log('a');
-    // call back-end api
-    // if logout request get a success response
     authDispatch(authAction.logout());
   };
 
