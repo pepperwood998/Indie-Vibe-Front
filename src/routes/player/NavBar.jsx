@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 
 import { NavLinkColor, NavLinkUnderline } from '../../components/links';
 import { AccountContextMenu } from '../../components/content-menu';
@@ -109,9 +109,9 @@ function NavBar() {
       </div>
       <div className='artist-box'>
         {authState.role === 'r-artist' ? (
-          <Link to='/player/workspace'>
+          <NavLink to='/player/workspace'>
             <ButtonFrame>Your workspace</ButtonFrame>
-          </Link>
+          </NavLink>
         ) : (
           ''
         )}

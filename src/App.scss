@@ -115,6 +115,9 @@ a:hover {
   }
 }
 
+a.active .button {
+  border-color: $blueMain;
+}
 .button {
   padding: 12px 20px;
   text-align: center;
@@ -220,5 +223,24 @@ a:hover {
     display: block;
     padding: 15px 30px;
     cursor: pointer;
+  }
+}
+
+.tab-menu-wrapper {
+  padding: 0px 20px;
+  border-bottom: 1px solid $grayDark;
+
+  .tab-menu {
+    display: flex;
+
+    li a {
+      display: block;
+      padding: 15px 15px;
+
+      &.active {
+        border-bottom: 2px solid $blueMain;
+        color: $white;
+      }
+    }
   }
 }
