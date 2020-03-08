@@ -15,6 +15,7 @@ export { ReactComponent as SettingIcon } from './settings.svg';
 export { ReactComponent as AddPlaylistIcon } from './add-playlist.svg';
 export { ReactComponent as FavoriteIcon } from './favorite.svg';
 export { ReactComponent as PlayIcon } from './play.svg';
+export { ReactComponent as PauseIcon } from './pause.svg';
 export { ReactComponent as SkipPreviousIcon } from './skip-previous.svg';
 export { ReactComponent as SkipNextIcon } from './skip-next.svg';
 export { ReactComponent as RepeatOffIcon } from './repeat-off.svg';
