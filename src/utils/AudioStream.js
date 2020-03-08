@@ -6,6 +6,9 @@ class AudioStream {
     this.media = new MediaSource();
     this.buffer = null;
     this.mime = mime;
+    this.isPlaying = false;
+    this.wasPlaying = false;
+    this.isClearAll = false;
 
     this.trackId = '';
     this.apiInfo = trackId => undefined;
@@ -40,8 +43,17 @@ class AudioStream {
     this.eventUpdateEnd = e => undefined;
   }
 
-  init(apiInfo, apiData) {
+  init(apiInfo, apiData, togglePaused, autoplay) {
     this.audio.src = URL.createObjectURL(this.media);
+    this.audio.onplaying = () => {
+      this.isPlaying = true;
+      togglePaused(false);
+    };
+    this.audio.onpause = () => {
+      this.isPlaying = false;
+      togglePaused(true);
+    };
+    this.audio.autoplay = autoplay;
 
     this.eventSourceOpen = e => {
       URL.revokeObjectURL(this.audio.src);
@@ -76,8 +88,7 @@ class AudioStream {
             this.reqInfo.end = reqInfo.end;
             // !!! fcking hard-coded !!!!
             if (this.buffer.buffered.length) {
-              this.reqInfo.threshold =
-                this.buffer.buffered.end(this.buffer.buffered.length - 1) - 5;
+              this.reqInfo.threshold = this.buffer.buffered.end(0) - 5;
               this.reqInfo.status = true;
             }
           });
@@ -114,8 +125,10 @@ class AudioStream {
             chunk.end
           );
 
-          this.chunkIndicator = newIndicator;
-          this.buffer.appendBuffer(newIndicator.data);
+          if (!this.isClearAll) {
+            this.chunkIndicator = newIndicator;
+            this.buffer.appendBuffer(newIndicator.data);
+          }
         });
       } else {
         this.isFromSeeked = false;
@@ -145,9 +158,25 @@ class AudioStream {
     });
   }
 
-  togglePlay() {
-    if (this.audio.paused) this.audio.play();
-    else this.audio.pause();
+  volume(per) {
+    this.audio.volume = per / 100;
+  }
+
+  toggleMute(muted) {
+    this.audio.muted = muted;
+  }
+
+  togglePaused(paused) {
+    if (this.audio.paused && !this.isPlaying) this.audio.play();
+    else if (!this.audio.paused && this.isPlaying) this.audio.pause();
+  }
+
+  play() {
+    if (this.audio.paused && !this.isPlaying) this.audio.play();
+  }
+
+  pause() {
+    if (!this.audio.paused && this.isPlaying) this.audio.pause();
   }
 
   seek(per) {
@@ -156,7 +185,9 @@ class AudioStream {
     // prevent seeking before track info coming in
     //
     if (!this.trackId) return;
-    this.audio.pause();
+    if (this.isPlaying) this.wasPlaying = true;
+    else this.wasPlaying = false;
+    this.pause();
     let reqPoint = Math.round(this.sizeData * (per / 100)) + this.offset;
     let offsetTime = this.media.duration * (per / 100);
 
@@ -165,7 +196,6 @@ class AudioStream {
       .then(seeker => {
         this.fetchChunk(seeker.start, seeker.end)
           .then(chunk => {
-            this.audio.play();
             let newChunk = this.data.insert(
               seeker.before,
               seeker.after,
@@ -180,13 +210,13 @@ class AudioStream {
           .catch(error => console.log(error));
       })
       .catch(init => {
-        this.audio.play();
         // buffers ready to be appended, no insertion occurs
         this.beginStreamSequences(init, null, offsetTime);
       });
   }
 
   beginStreamSequences(init, newChunk, offsetTime) {
+    if (this.wasPlaying) this.play();
     let canClean = false;
     let ranges = this.buffer.buffered;
     if (ranges.length) {
@@ -265,6 +295,7 @@ class AudioStream {
   }
 
   clearAll() {
+    this.isClearAll = true;
     this.audio.removeEventListener('timeupdate', this.eventTimeUpdate);
     this.media.removeEventListener('sourceopen', this.eventSourceOpen);
     this.buffer.removeEventListener('updateend', this.eventUpdateEnd);

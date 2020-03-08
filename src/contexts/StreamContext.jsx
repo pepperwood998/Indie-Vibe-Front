@@ -19,28 +19,32 @@ const initState = {
   currentSong: 0,
   bitrate: 0,
   playType: '', // 'playlist' or 'release'
-  collectionId: ''
+  collectionId: '',
+  volume: 50,
+  muted: false,
+  autoplay: false,
+  paused: true
 };
 
 function StreamContextProvider(props) {
-  const [init, setInit] = useState(false);
   const [state, dispatch] = useReducer(reducer, initState);
 
   const { state: authState } = useContext(AuthContext);
 
   useEffect(() => {
-    if (!init) {
-      stream.init(
-        id => {
-          return getTrackInfo(authState.token, id);
-        },
-        (id, start, end) => {
-          return getTrackStream(authState.token, id, start, end);
-        }
-      );
-      setInit(true);
-    }
-  });
+    stream.init(
+      id => {
+        return getTrackInfo(authState.token, id);
+      },
+      (id, start, end) => {
+        return getTrackStream(authState.token, id, start, end);
+      },
+      paused => {
+        dispatch(actions.setPaused(paused));
+      },
+      state.autoplay
+    );
+  }, []);
 
   return (
     <StreamContext.Provider value={{ state, actions, dispatch, stream }}>
@@ -50,11 +54,6 @@ function StreamContextProvider(props) {
 }
 
 const actions = {
-  somePlay: () => {
-    return {
-      type: 'SOME_PLAY'
-    };
-  },
   skipBackward: () => {
     return {
       type: 'SKIP_BACKWARD'
@@ -65,9 +64,16 @@ const actions = {
       type: 'SKIP_FORWARD'
     };
   },
-  togglePlay: () => {
+  requestPaused: paused => {
     return {
-      type: 'TOGGLE_PLAY'
+      type: 'REQUEST_PAUSED',
+      paused
+    };
+  },
+  setPaused: paused => {
+    return {
+      type: 'SET_PAUSED',
+      paused
     };
   },
   seek: per => {
@@ -75,30 +81,59 @@ const actions = {
       type: 'SEEK',
       per
     };
+  },
+  volume: per => {
+    return {
+      type: 'VOLUME',
+      per
+    };
+  },
+  setMuted: muted => {
+    return {
+      type: 'SET_MUTED',
+      muted
+    };
   }
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'SOME_PLAY':
-      stream.start(state.queue[state.currentSong]);
-      return state;
     case 'SKIP_BACKWARD':
+      let index = Math.max(state.currentSong - 1, 0);
+      stream.start(state.queue[index]);
       return {
         ...state,
-        currentSong: Math.max(state.currentSong - 1, 0)
+        currentSong: index
       };
     case 'SKIP_FORWARD':
+      let ind = Math.min(state.currentSong + 1, state.queue.length - 1);
+      stream.start(state.queue[ind]);
       return {
         ...state,
-        currentSong: Math.min(state.currentSong + 1, state.queue.length - 1)
+        currentSong: ind
       };
-    case 'TOGGLE_PLAY':
-      stream.togglePlay();
+    case 'REQUEST_PAUSED':
+      const { paused } = action;
+      stream.togglePaused(paused);
       return state;
+    case 'SET_PAUSED':
+      return {
+        ...state,
+        paused: action.paused
+      };
     case 'SEEK':
       stream.seek(action.per);
       return state;
+    case 'VOLUME':
+      const { per: volume } = action;
+      stream.volume(volume);
+      if (volume !== 0) return { ...state, volume, muted: false };
+      else return { ...state, muted: true };
+    case 'SET_MUTED':
+      const { muted } = action;
+      if (!muted) stream.volume(state.volume);
+      stream.toggleMute(muted);
+      return { ...state, muted };
     default:
       return state;
   }
