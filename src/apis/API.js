@@ -37,6 +37,15 @@ export const getGenresList = token => {
   });
 };
 
+export const getReleaseTypeList = token => {
+  return fetch(`${host}/release-types`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  });
+};
+
 export const publishRelease = (token, info, thumbnail, audioFiles) => {
   let data = new FormData();
   data.append('info', JSON.stringify(info));

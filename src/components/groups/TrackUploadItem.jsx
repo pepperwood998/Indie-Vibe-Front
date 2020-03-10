@@ -14,7 +14,6 @@ function TrackUploadItem(props) {
 
   const { genreList, index: trackInd } = props;
 
-  console.log(info);
   useEffect(() => {
     props.handleItemChange(trackInd, info, audio, audioSrc);
   }, [info, audio, audioSrc]);
