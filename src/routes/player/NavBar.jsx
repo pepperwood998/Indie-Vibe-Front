@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
 import { NavLinkColor, NavLinkUnderline } from '../../components/links';
-import { AccountContextMenu } from '../../components/content-menu';
+import { AccountContextMenu } from '../../components/context-menu';
 import { MeContext, AuthContext } from '../../contexts';
 import { getMeSimple } from '../../apis';
 

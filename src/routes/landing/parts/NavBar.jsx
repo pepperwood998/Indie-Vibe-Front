@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 
 import { LinkWhiteColor } from '../../../components/links';
 import { ButtonFrame } from '../../../components/buttons';
-import { AccountContextMenu } from '../../../components/content-menu';
+import { AccountContextMenu } from '../../../components/context-menu';
 import { getMeSimple } from '../../../apis';
 import { MeContext, AuthContext } from '../../../contexts';
 

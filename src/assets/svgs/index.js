@@ -25,4 +25,6 @@ export { ReactComponent as ShuffleIcon } from './shuffle.svg';
 export { ReactComponent as MusicQueueIcon } from './music-queue.svg';
 export { ReactComponent as MuteIcon } from './volume-mute.svg';
 export { ReactComponent as UnmuteIcon } from './volume-unmute.svg';
+export { ReactComponent as AddIcon } from './add.svg';
+export { ReactComponent as CloseIcon } from './close.svg';
 
