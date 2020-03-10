@@ -3,7 +3,11 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import TrackUploadItem from '../../../components/groups/TrackUploadItem';
 import { InputForm } from '../../../components/inputs';
 import { ButtonMain, ButtonFrame } from '../../../components/buttons';
-import { getGenresList, publishRelease } from '../../../apis/API';
+import {
+  getGenresList,
+  publishRelease,
+  getReleaseTypeList
+} from '../../../apis/API';
 import { AuthContext } from '../../../contexts';
 
 import Placeholder from '../../../assets/imgs/placeholder.png';
@@ -27,6 +31,7 @@ function Upload() {
 
   const [thumbnailSrc, setThumbnailSrc] = useState('');
   const [audioSrc, setAudioSrc] = useState([Object.assign({}, audioModel)]);
+  const [releaseTypeList, setReleaseTypeList] = useState([]);
   const [genreList, setGenreList] = useState([]);
 
   useEffect(() => {
@@ -35,6 +40,14 @@ function Upload() {
       .then(res => {
         if (res.status === 'success') {
           setGenreList(res.data);
+        }
+      });
+
+    getReleaseTypeList(authState.token)
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === 'success') {
+          setReleaseTypeList(res.data);
         }
       });
   }, []);
@@ -154,9 +167,11 @@ function Upload() {
               className='custom-select release-type'
               onChange={handleReleaseChange}
             >
-              <option value='r-album'>Album</option>
-              <option value='r-single'>Single</option>
-              <option value='r-eps'>EPs</option>
+              {releaseTypeList.map((releaseType, index) => (
+                <option value={releaseType.id} key={index}>
+                  {releaseType.name}
+                </option>
+              ))}
             </select>
           </div>
           <div className='upload-body'>
