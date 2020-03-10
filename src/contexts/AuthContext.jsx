@@ -10,12 +10,12 @@ const initState = {
   token: '',
   refreshToken: '',
   expiry: 0,
-  remembered: false
+  remembered: false,
+  lastSessionTime: 0
 };
 
 let refresher = null;
 function AuthContextProvider(props) {
-  const [init, setInit] = useState(false);
   const [state, dispatch] = useReducer(reducer, initState, () => {
     let credentials = localStorage.getItem('credentials');
     if (credentials) {
@@ -33,6 +33,7 @@ function AuthContextProvider(props) {
   });
 
   const refreshFunc = () => {
+    localStorage.removeItem('lastTimeSession');
     getNewToken(state.refreshToken)
       .then(response => response.json())
       .then(json => {
@@ -46,7 +47,6 @@ function AuthContextProvider(props) {
             })
           );
         } else {
-          setInit(false);
           dispatch(actions.logout());
         }
       });
@@ -60,7 +60,15 @@ function AuthContextProvider(props) {
     }
 
     if (state.token) {
-      refresher = setTimeout(refreshFunc, state.expiry * 800);
+      let lastTimeSession = localStorage.getItem('lastTimeSession');
+      let btw = 0;
+      if (lastTimeSession) {
+        console.log('new page');
+        btw = Date.now() - parseInt(lastTimeSession);
+      } else {
+        localStorage.setItem('lastTimeSession', Date.now().toString());
+      }
+      refresher = setTimeout(refreshFunc, (state.expiry * 1000 - btw) * 0.8);
     }
   }, [state]);
 
@@ -87,6 +95,11 @@ const actions = {
     return {
       type: 'REFRESH_TOKEN',
       payload
+    };
+  },
+  setLastSessionTime: () => {
+    return {
+      type: 'SET_LAST_SESSION_TIME'
     };
   }
 };
@@ -115,6 +128,7 @@ const reducer = (state, action) => {
       };
     case 'LOGOUT':
       clearTimeout(refresher);
+      localStorage.removeItem('lastTimeSession');
       localStorage.removeItem('credentials');
       sessionStorage.removeItem('credentials');
       sessionStorage.removeItem('me');
@@ -126,6 +140,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         ...action.payload
+      };
+    case 'SET_LAST_SESSION_TIME':
+      return {
+        ...state,
+        lastSessionTime: Date.now()
       };
     default:
       return state;
