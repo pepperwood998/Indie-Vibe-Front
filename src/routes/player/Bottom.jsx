@@ -46,15 +46,13 @@ function NowPayingLeft() {
     return (
       <div className='now-playing'>
         <div className='now-playing__cover-container'>
-          <Link to={`/player/${playType}/${collectionId}`}>
-            <img
-              src={release.thumbnail ? release.thumbnail : Placeholder}
-            />
+          <Link to={`/player/release/${release.id}`}>
+            <img src={release.thumbnail ? release.thumbnail : Placeholder} />
           </Link>
         </div>
         <div className='now-playing__info'>
           <NavLinkUnderline
-            href={`/player/release/${release.id}`}
+            href={`/player/${playType}/${collectionId}`}
             className='font-short-regular font-weight-bold font-white'
           >
             {title}
