@@ -48,7 +48,6 @@ function StreamContextProvider(props) {
     );
 
     stream.onInfo = info => {
-      console.log(info);
       dispatch(actions.setInfo(info));
     };
   }, []);

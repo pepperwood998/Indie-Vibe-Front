@@ -38,7 +38,6 @@ function AuthContextProvider(props) {
       .then(json => {
         let { access_token, refresh_token, expires_in } = json;
         if (access_token) {
-          console.log(state.refreshToken);
           dispatch(
             actions.refreshToken({
               token: access_token,
