@@ -39,6 +39,15 @@ export const registerWithFb = (
   });
 };
 
+export const getNewToken = token => {
+  return fetch(`${host}/token`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  });
+};
+
 export const getFbPictureUrl = fbId => {
   return fetch(
     `https://graph.facebook.com/${fbId}/picture?type=square&redirect=false`

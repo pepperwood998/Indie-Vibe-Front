@@ -1,20 +1,14 @@
 import React from 'react';
-import { UserRoute, ArtistRoute } from '../../components/custom-routes';
 
-import './player.scss';
 import Top from './Top';
 import NavBar from './NavBar';
 import QuickAccess from './QuickAccess';
-import {
-  Browse,
-  Library,
-  Home,
-  Account,
-  Artist,
-  Search,
-  Workspace
-} from './pages';
 import Bottom from './Bottom';
+import { UserRoute, ArtistRoute } from '../../components/custom-routes';
+import { Browse, Library, Home, Account, Artist, Search } from './monopage';
+import { Workspace } from './workspace';
+
+import './css/player.scss';
 
 function Player() {
   return (

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { NavLinkUnderline } from '../../components/links';
 import { StreamContext } from '../../contexts/StreamContext';
 
-import AvatarPlaceholder from '../../assets/imgs/placeholder.png';
+import Placeholder from '../../assets/imgs/placeholder.png';
 import {
   FavoriteIcon,
   SkipPreviousIcon,
@@ -48,7 +48,7 @@ function NowPayingLeft() {
         <div className='now-playing__cover-container'>
           <Link to={`/player/${playType}/${collectionId}`}>
             <img
-              src={release.thumbnail ? release.thumbnail : AvatarPlaceholder}
+              src={release.thumbnail ? release.thumbnail : Placeholder}
             />
           </Link>
         </div>

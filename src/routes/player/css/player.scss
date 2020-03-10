@@ -1,0 +1,138 @@
+@import '../../../assets/styles/colors';
+@import '../../../assets/styles/fonts';
+
+@import './upload.scss';
+@import './player-control.scss';
+@import './nav-menu.scss';
+
+.player {
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas:
+    'nav-bar body quick-access'
+    'play-bar play-bar play-bar';
+  overflow: hidden;
+
+  &__top {
+    grid-area: body;
+    height: 40px;
+    background-color: $blackGray;
+    z-index: 2;
+  }
+
+  &__nav {
+    grid-area: nav-bar;
+    width: 200px;
+    background-color: $blackLight;
+  }
+
+  &__quick-access {
+    grid-area: quick-access;
+    width: 200px;
+    background-color: $blackLight;
+  }
+
+  &__bottom {
+    grid-area: play-bar;
+    height: 100px;
+    background-image: $blackPop;
+  }
+
+  &__content {
+    grid-area: body;
+    background-color: $blackGray;
+    margin-top: 40px;
+    display: flex;
+    overflow: hidden;
+
+    .artist-page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      .content-wrapper-scroll {
+        flex: 1;
+        overflow-y: auto;
+
+        .content-wrapper {
+          height: 100%;
+          overflow-y: auto;
+          padding: 20px;
+
+          > div {
+            background-color: $blackBlueLight;
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  .nav-search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: 0 20px;
+
+    .linear-nav {
+      display: flex;
+      align-items: center;
+      min-width: 60px;
+      justify-content: space-between;
+
+      .svg-nav {
+        height: 20px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .quick-access {
+    &__role {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .role-free {
+        margin: 10px 0;
+      }
+
+      .role-premium {
+        padding: 20px;
+        width: 100%;
+        text-align: center;
+        background-color: $blueMain;
+      }
+
+      .role-artist {
+        padding: 20px;
+        width: 100%;
+        text-align: center;
+        background-color: $purple;
+      }
+    }
+
+    &__playlists {
+      .banner {
+        display: flex;
+        padding: 10px 20px;
+        justify-content: space-between;
+        align-items: center;
+        background-color: $black;
+
+        svg {
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+  }
+}
