@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { InputForm } from '../inputs';
+import { InputForm, FileLabel, InputGenre } from '../inputs';
 import GenreDialog from './GenreDialog';
 
 import { AddIcon, CloseIcon } from '../../assets/svgs';
@@ -101,40 +101,49 @@ function TrackUploadItem(props) {
             name='title'
             onChange={handleChange}
             value={props.info.title}
+            error={props.info.title === '' && props.submitted}
+            errMessage='Missing song name'
           />
         </div>
         <div className='upload-field'>
           <span className='label'>Genres:</span>
-          <div className='genre-input'>
+          <div className='genre-input-wrapper'>
             {props.info.genres.length > 0
               ? props.info.genres
                   .map(g => g.name)
                   .reduce((prev, curr) => [prev, ', ', curr])
               : ''}
-            <AddIcon onClick={handleOpenGenreDialog} />
+            <InputGenre
+              onClick={handleOpenGenreDialog}
+              error={props.submitted && props.info.genres.length <= 0}
+            />
           </div>
         </div>
         <div className='upload-field'>
           <span className='label'>MP3 128:</span>
-          <label
-            className='link-bright-gray font-short-big font-gray-light'
-            htmlFor={'audio128' + props.index}
+          <FileLabel
+            for={'audio128' + props.index}
+            error={props.submitted && !props.audio.audio128}
+            errMessage='Missing 128kbps mp3 file'
+            keep={false}
           >
             {props.audioSrc.audio128
               ? props.audioSrc.audio128
               : 'Choose 128kbps file'}
-          </label>
+          </FileLabel>
         </div>
         <div className='upload-field'>
           <span className='label'>MP3 320:</span>
-          <label
-            className='link-bright-gray font-short-big font-gray-light'
-            htmlFor={'audio320' + props.index}
+          <FileLabel
+            for={'audio320' + props.index}
+            error={props.submitted && !props.audio.audio320}
+            errMessage='Missing 320kbps mp3 file'
+            keep={false}
           >
             {props.audioSrc.audio320
               ? props.audioSrc.audio320
               : 'Choose 320kbps file'}
-          </label>
+          </FileLabel>
         </div>
         <div className='upload-field'>
           <span className='label'>Produced by:</span>

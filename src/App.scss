@@ -5,6 +5,39 @@ a:hover {
   text-decoration: none;
 }
 
+.input-file {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.input-label {
+  cursor: pointer;
+
+  &.input-error {
+    color: $red;
+  }
+
+  &--img.input-error {
+    box-shadow: 0px 0px 5px $red;
+  }
+}
+
+.input-genre {
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &.input-error {
+    path {
+      fill: $red;
+    }
+  }
+}
+
 .input-main {
   background: transparent;
   border: 1.2px solid $white;
@@ -14,16 +47,16 @@ a:hover {
   &::placeholder {
     font: $shortRegular;
   }
+
+  &.input-error {
+    border: 1px solid $red;
+    box-shadow: 0px 0px 5px $red;
+  }
 }
 
 .input-full {
   width: 100%;
   padding: 8px 20px;
-}
-
-.input-error {
-  border: 1px solid $red;
-  box-shadow: 0px 0px 5px $red;
 }
 
 .input-search {
@@ -113,15 +146,6 @@ a:hover {
       display: block;
     }
   }
-}
-
-.input-file {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
 }
 
 a.active .button {

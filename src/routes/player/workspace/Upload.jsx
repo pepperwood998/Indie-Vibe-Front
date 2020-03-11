@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 
 import TrackUploadItem from '../../../components/groups/TrackUploadItem';
-import { InputForm } from '../../../components/inputs';
+import { InputForm, FileLabel } from '../../../components/inputs';
 import { ButtonMain, ButtonFrame } from '../../../components/buttons';
 import {
   getGenresList,
@@ -21,6 +21,12 @@ const audioModel = {
   audio128: null,
   audio320: null
 };
+const missingSomething = (info, audio) => {
+  return (
+    info.some(track => track.title === '' || track.genres.length === 0) ||
+    audio.some(a => !a.audio128 || !a.audio320)
+  );
+};
 function Upload() {
   const { state: authState } = useContext(AuthContext);
 
@@ -33,6 +39,7 @@ function Upload() {
   const [audioSrc, setAudioSrc] = useState([Object.assign({}, audioModel)]);
   const [releaseTypeList, setReleaseTypeList] = useState([]);
   const [genreList, setGenreList] = useState([]);
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     getGenresList(authState.token)
@@ -126,6 +133,13 @@ function Upload() {
   };
 
   const handlePublish = () => {
+    setSubmitted(false);
+    if (!release.title || !thumbnail || missingSomething(info, audio)) {
+      console.log('missing');
+      setSubmitted(true);
+      return;
+    }
+
     let resInfo = { ...release };
     let tracks = info.map(track => ({
       title: track.title,
@@ -140,7 +154,7 @@ function Upload() {
   return (
     <div className='workspace-upload'>
       <div className='release-upload'>
-        <div className='upload-cover'>
+        <div className='upload-cover-wrapper'>
           <input
             ref={thumbnailRef}
             type='file'
@@ -150,9 +164,14 @@ function Upload() {
             onChange={handleThumbnailChange}
             accept='image/*'
           />
-          <label htmlFor='thumbnail'>
+          <FileLabel
+            for='thumbnail'
+            error={submitted && !thumbnail}
+            keep={true}
+            className='input-label--img'
+          >
             <img src={thumbnailSrc ? thumbnailSrc : Placeholder} />
-          </label>
+          </FileLabel>
         </div>
         <div className='upload-content'>
           <div className='upload-item upload-header'>
@@ -161,6 +180,8 @@ function Upload() {
               onChange={handleReleaseChange}
               name='title'
               value={release.title}
+              error={submitted && !release.title}
+              errMessage='Missing release title'
             />
             <select
               name='typeId'
@@ -185,6 +206,7 @@ function Upload() {
                   audio={audio[index]}
                   audioSrc={audioSrc[index]}
                   genreList={genreList}
+                  submitted={submitted}
                 />
               </div>
             ))}
