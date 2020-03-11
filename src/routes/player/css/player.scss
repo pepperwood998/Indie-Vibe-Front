@@ -1,9 +1,9 @@
 @import '../../../assets/styles/colors';
 @import '../../../assets/styles/fonts';
 
-@import './upload.scss';
-@import './player-control.scss';
-@import './nav-menu.scss';
+@import './upload';
+@import './player-control';
+@import './nav-menu';
 
 .player {
   display: grid;

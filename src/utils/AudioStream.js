@@ -44,7 +44,7 @@ class AudioStream {
     this.eventUpdateEnd = e => undefined;
   }
 
-  init(apiInfo, apiData, togglePaused, autoplay, bitrate) {
+  init(togglePaused, autoplay, bitrate) {
     this.audio.src = URL.createObjectURL(this.media);
     this.audio.onplaying = () => {
       this.isPlaying = true;
@@ -96,9 +96,6 @@ class AudioStream {
           });
       };
       this.buffer.addEventListener('updateend', this.eventUpdateEnd);
-
-      this.apiInfo = apiInfo;
-      this.apiData = apiData;
     };
 
     this.media.addEventListener('sourceopen', this.eventSourceOpen);
@@ -144,6 +141,11 @@ class AudioStream {
       let offsetPer = ((chunk.byteStart - this.offset) / this.sizeData) * 100;
       this.onBuffer(offsetPer, bufferPer);
     };
+  }
+
+  refreshApi(apiInfo, apiData) {
+    this.apiInfo = apiInfo;
+    this.apiData = apiData;
   }
 
   start(id) {

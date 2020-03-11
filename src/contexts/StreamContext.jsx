@@ -14,7 +14,7 @@ const StreamContext = createContext();
 const stream = new AudioStream();
 
 const initState = {
-  queue: ['g862fcs7osqy0apqx40k', 'skierp4k152acn129gcx'],
+  queue: ['boAMD6WKT9dzcYY9ht8O'],
   shuffle: [],
   currentSong: 0,
   bitrate: 128,
@@ -32,14 +32,9 @@ function StreamContextProvider(props) {
 
   const { state: authState } = useContext(AuthContext);
 
+  // init stream states
   useEffect(() => {
     stream.init(
-      (id, bitrate) => {
-        return getStreamInfo(authState.token, id, bitrate);
-      },
-      (id, bitrate, start, end) => {
-        return getStream(authState.token, id, bitrate, start, end);
-      },
       paused => {
         dispatch(actions.setPaused(paused));
       },
@@ -51,6 +46,18 @@ function StreamContextProvider(props) {
       dispatch(actions.setInfo(info));
     };
   }, []);
+
+  // refresh stream api
+  useEffect(() => {
+    stream.refreshApi(
+      (id, bitrate) => {
+        return getStreamInfo(authState.token, id, bitrate);
+      },
+      (id, bitrate, start, end) => {
+        return getStream(authState.token, id, bitrate, start, end);
+      }
+    );
+  }, [authState]);
 
   return (
     <StreamContext.Provider value={{ state, actions, dispatch, stream }}>
