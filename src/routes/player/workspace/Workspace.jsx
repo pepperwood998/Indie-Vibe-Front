@@ -6,7 +6,7 @@ import Upload from './Upload';
 
 function Workspace() {
   return (
-    <div className='artist-page'>
+    <div className='content-page workspace-page'>
       <NavigationTab
         items={[
           {

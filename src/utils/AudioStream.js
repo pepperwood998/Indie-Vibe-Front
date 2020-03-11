@@ -302,11 +302,11 @@ class AudioStream {
     this.isClearAll = true;
     this.audio.removeEventListener('timeupdate', this.eventTimeUpdate);
     this.media.removeEventListener('sourceopen', this.eventSourceOpen);
-    this.buffer.removeEventListener('updateend', this.eventUpdateEnd);
-
+    
     this.audio.pause();
     this.audio.remove();
     if (this.buffer) {
+      this.buffer.removeEventListener('updateend', this.eventUpdateEnd);
       this.buffer.abort();
       if (this.buffer.length)
         this.buffer.remove(this.buffer.start(0), this.buffer.end(0));

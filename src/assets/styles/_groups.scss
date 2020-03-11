@@ -1,0 +1,15 @@
+.group-main {
+  padding: 20px 0px;
+
+  &__header {
+    padding: 0px 0px 20px;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-gap: 30px;
+
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}

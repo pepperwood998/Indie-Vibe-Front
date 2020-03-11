@@ -1,4 +1,6 @@
 import fetch from 'cross-fetch';
+import createFileList from 'create-file-list';
+
 import { host } from './constant';
 
 export const getMeSimple = token => {
@@ -50,17 +52,19 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
   let data = new FormData();
   data.append('info', JSON.stringify(info));
   data.append('thumbnail', thumbnail);
-  data.append('audioFiles', audioFiles);
 
-  console.log(info);
-  // return fetch(`${host}/artist/releases`, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Authorization': 'Bearer ' + token,
-  //     'Content-type': 'application/x-www-form-urlencoded'
-  //   },
-  //   body: data
-  // });
+  audioFiles.forEach(item => {
+    data.append('audioFiles', item.audio128);
+    data.append('audioFiles', item.audio320);
+  });
+
+  return fetch(`${host}/artist/releases`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: data
+  });
 };
 
 const getRangeStr = (start, end) => {

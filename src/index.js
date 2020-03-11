@@ -8,7 +8,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import * as serviceWorker from './serviceWorker';
 import App from './App';
 
-import './App.scss';
+import './assets/styles/App.scss';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

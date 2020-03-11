@@ -160,7 +160,7 @@ function Upload() {
             type='file'
             name='thumbnail'
             id='thumbnail'
-            className='input-file'
+            className='input-custom'
             onChange={handleThumbnailChange}
             accept='image/*'
           />

@@ -4,6 +4,7 @@
 @import './upload';
 @import './player-control';
 @import './nav-menu';
+@import './mono-page';
 
 .player {
   display: grid;
@@ -48,8 +49,16 @@
     display: flex;
     overflow: hidden;
 
-    .artist-page {
+    .content-page {
       flex: 1;
+
+      .mono-page {
+        height: 100%;
+        overflow-y: auto;
+      }
+    }
+
+    .workspace-page {
       display: flex;
       flex-direction: column;
 

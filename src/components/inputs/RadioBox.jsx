@@ -9,7 +9,7 @@ function RadioBox({
   return (
     <label className='ticker-main font-tall-r font-weight-bold font-white '>
       {label}
-      <input type='radio' name={name} value={value} onChange={onChange} />
+      <input type='radio' className='input-custom' name={name} value={value} onChange={onChange} />
       <span className='checkmark checkmark-point'></span>
     </label>
   );

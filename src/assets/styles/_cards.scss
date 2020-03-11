@@ -1,0 +1,64 @@
+.card-main {
+  height: 100%;
+
+  .card-main__cover-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 10px;
+    cursor: pointer;
+
+    .dummy {
+      margin-top: 100%;
+    }
+
+    .cover {
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .action {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: $blackBlur;
+      z-index: 999;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 10px;
+      opacity: 0;
+      transition: ease 0.1s;
+
+      &__extra {
+        display: flex;
+        justify-content: space-between;
+        min-width: 70px;
+      }
+    }
+
+    &:hover {
+      .action {
+        opacity: 1;
+      }
+    }
+  }
+
+  .card-main__info {
+    display: flex;
+    flex-direction: column;
+
+    .content {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      margin-top: 5px;
+    }
+  }
+}

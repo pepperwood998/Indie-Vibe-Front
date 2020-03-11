@@ -14,7 +14,7 @@ const StreamContext = createContext();
 const stream = new AudioStream();
 
 const initState = {
-  queue: ['boAMD6WKT9dzcYY9ht8O'],
+  queue: ['ikK5yIy3mxbUZw1T8hnF'],
   shuffle: [],
   currentSong: 0,
   bitrate: 128,
