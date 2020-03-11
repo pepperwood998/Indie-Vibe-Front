@@ -152,7 +152,7 @@ function Upload() {
   };
 
   return (
-    <div className='workspace-upload'>
+    <div className='workspace-upload body__bound'>
       <div className='release-upload'>
         <div className='upload-cover-wrapper'>
           <input

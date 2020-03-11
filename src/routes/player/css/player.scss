@@ -58,20 +58,20 @@
       }
     }
 
-    .workspace-page {
+    .compound-page {
       display: flex;
       flex-direction: column;
 
-      .content-wrapper-scroll {
+      .body-scroll {
         flex: 1;
         overflow-y: auto;
 
-        .content-wrapper {
+        .body {
           height: 100%;
           overflow-y: auto;
-          padding: 20px;
+          padding: 30px 40px;
 
-          > div {
+          &__bound {
             background-color: $blackBlueLight;
             padding: 10px;
           }

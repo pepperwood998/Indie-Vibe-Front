@@ -1,0 +1,41 @@
+a:hover {
+  text-decoration: none;
+}
+
+a.active .button {
+  border-color: $blueMain;
+}
+
+.link {
+  &-bright-blue-main:hover {
+    color: $blueMainBright;
+    text-decoration: none;
+  }
+
+  &-bright-gray:hover {
+    color: $white;
+    text-decoration: none;
+  }
+
+  &-blue-main {
+    &:hover {
+      color: $blueMain;
+      text-decoration: none;
+    }
+
+    &.active {
+      color: $blueMain;
+
+      svg > path {
+        fill: $blueMain;
+      }
+    }
+  }
+
+  &-underline {
+    &:hover {
+      text-decoration: underline;
+      color: $white;
+    }
+  }
+}

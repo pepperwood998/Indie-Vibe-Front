@@ -15,7 +15,7 @@ import {
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonFrame } from '../../components/buttons';
 
-function NavBar() {
+function NavMenu() {
   const { state: authState } = useContext(AuthContext);
   const {
     state: meState,
@@ -61,7 +61,7 @@ function NavBar() {
       <ul className='menu'>
         <li>
           <NavLinkColor
-            href='/player/home'
+            href={['/player', '/player/home']}
             className='font-short-big font-weight-bold font-white'
           >
             <HomeIcon />
@@ -120,4 +120,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default NavMenu;
