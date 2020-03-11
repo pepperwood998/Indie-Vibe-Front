@@ -69,6 +69,7 @@ function AuthContextProvider(props) {
         localStorage.setItem('lastTimeSession', Date.now().toString());
       }
       refresher = setTimeout(refreshFunc, (state.expiry * 1000 - btw) * 0.8);
+      // refresher = setTimeout(refreshFunc, 5000);
     }
   }, [state]);
 
