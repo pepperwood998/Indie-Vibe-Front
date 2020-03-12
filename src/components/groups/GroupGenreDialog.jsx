@@ -13,7 +13,7 @@ const addOrRemove = (array, genre) => {
     return [...array, genre];
   }
 };
-function GenreDialog(props) {
+function GroupGenreDialog(props) {
   const { items, handleGenreDialogSaved, handleGenreDialogClosed } = props;
   const [selected, setSelected] = useState([...props.selected]);
 
@@ -65,4 +65,4 @@ function GenreDialog(props) {
   );
 }
 
-export default GenreDialog;
+export default GroupGenreDialog;

@@ -134,17 +134,7 @@
         justify-content: space-between;
         align-items: center;
         background-color: $black;
-
-        svg {
-          cursor: pointer;
-
-          &:hover {
-            transform: scale(1.1);
-          }
-        }
       }
     }
   }
-
-  
 }

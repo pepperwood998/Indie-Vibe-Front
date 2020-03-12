@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { LinkWhiteColor, NavLinkColor } from '../links';
 import { AuthContext } from '../../contexts';
 
-function AccountContextMenu(props) {
+function ContextMenuAccount(props) {
   const { actions: authAction, dispatch: authDispatch } = useContext(
     AuthContext
   );
@@ -43,4 +43,4 @@ function AccountContextMenu(props) {
   );
 }
 
-export default AccountContextMenu;
+export default ContextMenuAccount;

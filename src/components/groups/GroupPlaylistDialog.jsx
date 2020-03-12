@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-import { FileLabel, InputText } from '../inputs';
+import { InputFileLabel, InputText } from '../inputs';
 import { ButtonMain } from '../buttons';
 
 import { CloseIcon } from '../../assets/svgs';
@@ -88,17 +88,17 @@ function GroupPlaylistDialog(props) {
                 ref={thumbnailRef}
                 name='playlistCover'
                 id='playlist-cover'
-                className='input-file'
+                className='input-custom'
                 accept='image/*'
                 onChange={handleChangeThumbnail}
               />
-              <FileLabel
+              <InputFileLabel
                 for='playlist-cover'
                 keep={true}
                 className='input-label--img'
               >
                 <img src={thumbnailSrc ? thumbnailSrc : PlaylistPlaceholder} />
-              </FileLabel>
+              </InputFileLabel>
             </div>
             <div className='right__button'>
               <ButtonMain onClick={handleSubmit}>

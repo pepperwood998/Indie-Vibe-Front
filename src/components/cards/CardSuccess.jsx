@@ -1,7 +1,7 @@
 import React from 'react';
 
-function SuccessCard({ message = 'Error' }) {
+function CardSuccess({ message = 'Error' }) {
   return <div className='card-success font-short-regular font-weight-bold'>{message}</div>;
 }
 
-export default SuccessCard;
+export default CardSuccess;

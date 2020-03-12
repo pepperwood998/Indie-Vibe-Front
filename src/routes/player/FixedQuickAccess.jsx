@@ -33,7 +33,10 @@ function QuickAccess() {
       <div className='quick-access__playlists'>
         <div className='banner'>
           <span className='font-short-regular font-gray-light'>Playlists</span>
-          <AddPlaylistIcon onClick={handleOpenDialog} />
+          <AddPlaylistIcon
+            className='svg--regular svg--cursor svg--scale'
+            onClick={handleOpenDialog}
+          />
         </div>
       </div>
     </div>

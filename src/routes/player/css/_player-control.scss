@@ -19,14 +19,6 @@
     width: 18%;
     min-width: 180px;
   }
-
-  svg {
-    cursor: pointer;
-
-    &:hover path {
-      fill: $white;
-    }
-  }
 }
 
 .now-playing {
@@ -150,13 +142,6 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-  }
-
-  .control-wrapper {
-    svg {
-      height: 22px;
-      width: auto;
-    }
   }
 
   .control-volume {

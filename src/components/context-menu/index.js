@@ -1,1 +1,1 @@
-export { default as AccountContextMenu } from './AccountContextMenu';
+export { default as ContextMenuAccount } from './ContextMenuAccount';

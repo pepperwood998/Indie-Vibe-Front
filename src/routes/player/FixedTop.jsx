@@ -1,15 +1,15 @@
 import React from 'react';
 
-import SearchInput from '../../components/inputs/SearchInput';
+import { InputSearch } from '../../components/inputs';
 import { ArrowBack, ArrowForward } from '../../assets/svgs';
 
 function Top() {
   return (
     <div className='nav-search'>
-      <SearchInput />
+      <InputSearch />
       <div className='linear-nav'>
-        <ArrowBack className='svg-nav'/>
-        <ArrowForward className='svg-nav'/>
+        <ArrowBack className='svg-nav' />
+        <ArrowForward className='svg-nav' />
       </div>
     </div>
   );

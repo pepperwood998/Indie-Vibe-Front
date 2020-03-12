@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 
-import { InputForm, FileLabel } from '../inputs';
+import { InputForm, InputFileLabel } from '../inputs';
 import { ButtonMain, ButtonFrame } from '../buttons';
 import {
   getGenresList,
@@ -8,7 +8,7 @@ import {
   getReleaseTypeList
 } from '../../apis/API';
 import { AuthContext } from '../../contexts';
-import TrackUploadItem from './TrackUploadItem';
+import { GroupTrackUpload } from '../groups';
 
 import Placeholder from '../../assets/imgs/placeholder.png';
 
@@ -148,7 +148,9 @@ function GroupReleaseUpload() {
     }));
     resInfo = { ...resInfo, tracks };
 
-    publishRelease(authState.token, resInfo, thumbnail, audio);
+    publishRelease(authState.token, resInfo, thumbnail, audio).then(response =>
+      response.json()
+    );
   };
 
   return (
@@ -159,18 +161,18 @@ function GroupReleaseUpload() {
           type='file'
           name='thumbnail'
           id='thumbnail'
-          className='input-file'
+          className='input-custom'
           onChange={handleThumbnailChange}
           accept='image/*'
         />
-        <FileLabel
+        <InputFileLabel
           for='thumbnail'
           error={submitted && !thumbnail}
           keep={true}
-          className='input-file__label--img'
+          className='input-custom__label--img'
         >
           <img src={thumbnailSrc ? thumbnailSrc : Placeholder} />
-        </FileLabel>
+        </InputFileLabel>
       </div>
       <div className='upload-content'>
         <div className='upload-item upload-header'>
@@ -197,7 +199,7 @@ function GroupReleaseUpload() {
         <div className='upload-body'>
           {info.map((track, index) => (
             <div className='upload-item' key={index}>
-              <TrackUploadItem
+              <GroupTrackUpload
                 index={index}
                 handleItemChange={handleItemChange}
                 handleItemDelete={handleItemDelete}

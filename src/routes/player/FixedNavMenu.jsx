@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
 import { NavLinkColor, NavLinkUnderline } from '../../components/links';
-import { AccountContextMenu } from '../../components/context-menu';
+import { ContextMenuAccount } from '../../components/context-menu';
 import { MeContext, AuthContext } from '../../contexts';
 import { getMeSimple } from '../../apis';
 
@@ -45,7 +45,7 @@ function NavMenu() {
           <div className='avatar-box__layer'>
             <SettingIcon data-toggle='dropdown' />
             <div className='dropdown-menu'>
-              <AccountContextMenu fromLanding={false} />
+              <ContextMenuAccount fromLanding={false} />
             </div>
           </div>
         </div>

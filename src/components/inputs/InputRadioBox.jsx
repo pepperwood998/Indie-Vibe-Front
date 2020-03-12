@@ -1,6 +1,6 @@
 import React from 'react';
 
-function RadioBox({
+function InputRadioBox({
   name = 'radio',
   value = 'female',
   label = 'Label',
@@ -15,4 +15,4 @@ function RadioBox({
   );
 }
 
-export default RadioBox;
+export default InputRadioBox;

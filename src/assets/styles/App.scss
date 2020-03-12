@@ -54,6 +54,11 @@ label {
 }
 
 .svg {
+  &--small {
+    width: 22px;
+    height: 22px;
+  }
+  
   &--regular {
     width: 24px;
     height: 24px;
@@ -66,6 +71,12 @@ label {
   &--scale {
     &:hover {
       transform: scale(1.1);
+    }
+  }
+
+  &--bright {
+    &:hover path {
+      fill: $white;
     }
   }
 }

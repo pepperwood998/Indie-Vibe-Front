@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 
-import { InputForm, RadioBox } from '../../components/inputs';
+import { InputForm, InputRadioBox } from '../../components/inputs';
 import { ButtonMain, ButtonFacebook } from '../../components/buttons/';
 import Authentication from './Authentication';
 import { register, registerWithFb, getFbPictureUrl } from '../../apis/AuthAPI';
 
 import { LogoRegister } from '../../assets/svgs';
 import './style.scss';
-import ErrorCard from '../../components/cards/ErrorCard';
-import SuccessCard from '../../components/cards/SuccessCard';
+import { CardError, CardSuccess } from '../../components/cards';
 
 function Register() {
   const [registerError, setRegisterError] = useState('');
@@ -92,8 +91,8 @@ function Register() {
 
   const inputs = () => (
     <React.Fragment>
-      {registerError ? <ErrorCard message={registerError} /> : ''}
-      {registerSuccess ? <SuccessCard message={registerSuccess} /> : ''}
+      {registerError ? <CardError message={registerError} /> : ''}
+      {registerSuccess ? <CardSuccess message={registerSuccess} /> : ''}
       <InputForm
         type='text'
         placeholder='Enter your email address'
@@ -132,19 +131,19 @@ function Register() {
       />
 
       <div className='input-addition input-addition-inline'>
-        <RadioBox
+        <InputRadioBox
           name='gender'
           label='Female'
           value='0'
           onChange={handleInputsChange}
         />
-        <RadioBox
+        <InputRadioBox
           name='gender'
           label='Male'
           value='1'
           onChange={handleInputsChange}
         />
-        <RadioBox
+        <InputRadioBox
           name='gender'
           label='Other'
           value='2'
@@ -152,7 +151,7 @@ function Register() {
         />
       </div>
       {!gender && submitted ? (
-        <ErrorCard message={'Please provide your gender'} />
+        <CardError message={'Please provide your gender'} />
       ) : (
         ''
       )}

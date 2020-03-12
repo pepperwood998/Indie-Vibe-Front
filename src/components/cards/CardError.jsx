@@ -1,7 +1,7 @@
 import React from 'react';
 
-function ErrorCard({ message = 'Error' }) {
+function CardError({ message = 'Error' }) {
   return <div className='card-error font-short-regular font-weight-bold'>{message}</div>;
 }
 
-export default ErrorCard;
+export default CardError;
