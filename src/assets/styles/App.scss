@@ -52,3 +52,20 @@ label {
     }
   }
 }
+
+.svg {
+  &--regular {
+    width: 24px;
+    height: 24px;
+  }
+
+  &--cursor {
+    cursor: pointer;
+  }
+
+  &--scale {
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function InputForm({
+function InputText({
   type = 'text',
   placeholder = 'Enter something',
   onChange = () => {},
@@ -9,7 +9,7 @@ function InputForm({
   value = '',
   name = ''
 }) {
-  let classes = 'input-text input-text--clear input-text--full font-white';
+  let classes = 'input-text input-text--full';
   if (error) {
     classes = error ? (classes += ' input-text--error') : classes;
     placeholder = errMessage;
@@ -27,4 +27,4 @@ function InputForm({
   );
 }
 
-export default InputForm;
+export default InputText;

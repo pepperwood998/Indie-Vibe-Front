@@ -82,7 +82,7 @@ function TrackUploadItem(props) {
           ref={ref.audio128}
           onChange={handleAudioChange}
           data-ref-type='audio128'
-          className='input-custom'
+          className='input-file'
         />
         <input
           id={'audio320' + props.index}
@@ -92,7 +92,7 @@ function TrackUploadItem(props) {
           ref={ref.audio320}
           onChange={handleAudioChange}
           data-ref-type='audio320'
-          className='input-custom'
+          className='input-file'
         />
         <div className='upload-field'>
           <span className='label'>Title:</span>

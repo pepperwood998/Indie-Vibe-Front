@@ -1,24 +1,4 @@
-.input-custom {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
-
-.input-label {
-  cursor: pointer;
-
-  &.input-error {
-    color: $red;
-  }
-
-  &--img.input-error {
-    box-shadow: 0px 0px 5px $red;
-  }
-}
-
+/* start of INPUT GENRE */
 .input-genre {
   &:hover {
     transform: scale(1.1);
@@ -30,28 +10,9 @@
     }
   }
 }
+/* end of INPUT GENRE */
 
-.input-main {
-  background: transparent;
-  border: 1.2px solid $white;
-  border-radius: 10px;
-  outline: none;
-
-  &::placeholder {
-    font: $shortRegular;
-  }
-
-  &.input-error {
-    border: 1px solid $red;
-    box-shadow: 0px 0px 5px $red;
-  }
-}
-
-.input-full {
-  width: 100%;
-  padding: 8px 20px;
-}
-
+/* start of INPUT SEARCH */
 .input-search {
   background-color: $grayDark;
   border-radius: 5px;
@@ -70,9 +31,11 @@
     outline: none;
   }
 }
+/* end of INPUT SEARCH */
 
+/* start of INPUT TEXT */
 input.input-text {
-  padding: 7px 15px;
+  padding: 8px 15px;
 }
 
 textarea.input-text {
@@ -85,15 +48,50 @@ textarea.input-text {
   border: none;
   outline: none;
 
-  &__full {
+  &--clear {
+    background: transparent;
+    border: 1.2px solid $white;
+    border-radius: 10px;
+  }
+
+  &--full {
     width: 100%;
     height: 100%;
+  }
+
+  &--error {
+    border: 1px solid $red;
+    box-shadow: 0px 0px 5px $red;
   }
 
   &::placeholder {
     font: $shortRegular;
   }
 }
+/* end of INPUT TEXT */
+
+/* start of INPUT FILE */
+.input-file {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+
+  &__label {
+    cursor: pointer;
+
+    &--error {
+      color: $red;
+    }
+
+    &--img.input-file__label--error {
+      box-shadow: 0px 0px 5px $red;
+    }
+  }
+}
+/* end of INPUT FILE */
 
 .ticker-main {
   display: block;

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { ButtonFrame } from '../../components/buttons';
 import { AuthContext } from '../../contexts';
@@ -10,18 +10,30 @@ function QuickAccess() {
   const { state: authState } = useContext(AuthContext);
   const { role } = authState;
 
-  const handleCreatePlaylist = () => {};
+  const [dialogOpened, setDialogOpened] = useState(false);
+
+  const handleOpenDialog = () => {
+    setDialogOpened(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpened(false);
+  };
 
   return (
     <div className='quick-access'>
-      {/* <GroupPlaylistDialog /> */}
+      {dialogOpened ? (
+        <GroupPlaylistDialog handleCloseDialog={handleCloseDialog} />
+      ) : (
+        ''
+      )}
       <div className='quick-access__role'>
         <RoleBanner role={role} />
       </div>
       <div className='quick-access__playlists'>
         <div className='banner'>
           <span className='font-short-regular font-gray-light'>Playlists</span>
-          <AddPlaylistIcon onClick={handleCreatePlaylist} />
+          <AddPlaylistIcon onClick={handleOpenDialog} />
         </div>
       </div>
     </div>

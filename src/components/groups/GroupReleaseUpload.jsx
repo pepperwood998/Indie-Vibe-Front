@@ -159,7 +159,7 @@ function GroupReleaseUpload() {
           type='file'
           name='thumbnail'
           id='thumbnail'
-          className='input-custom'
+          className='input-file'
           onChange={handleThumbnailChange}
           accept='image/*'
         />
@@ -167,7 +167,7 @@ function GroupReleaseUpload() {
           for='thumbnail'
           error={submitted && !thumbnail}
           keep={true}
-          className='input-label--img'
+          className='input-file__label--img'
         >
           <img src={thumbnailSrc ? thumbnailSrc : Placeholder} />
         </FileLabel>
