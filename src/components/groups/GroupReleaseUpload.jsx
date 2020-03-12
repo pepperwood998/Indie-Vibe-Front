@@ -9,6 +9,7 @@ import {
 } from '../../apis/API';
 import { AuthContext } from '../../contexts';
 import { GroupTrackUpload } from '../groups';
+import { CardSuccess, CardError } from '../cards';
 
 import Placeholder from '../../assets/imgs/placeholder.png';
 
@@ -40,6 +41,8 @@ function GroupReleaseUpload() {
   const [releaseTypeList, setReleaseTypeList] = useState([]);
   const [genreList, setGenreList] = useState([]);
   const [submitted, setSubmitted] = useState(false);
+  const [publishing, setPublishing] = useState(0);
+  const [success, setSuccess] = useState(false);
 
   const thumbnailRef = useRef();
 
@@ -60,6 +63,20 @@ function GroupReleaseUpload() {
         }
       });
   }, []);
+
+  useEffect(() => {
+    if (publishing === 2) {
+      if (success) {
+        setTimeout(() => {
+          window.location.href = '/player/workspace';
+        }, 1000);
+      } else {
+        setTimeout(() => {
+          setPublishing(0);
+        }, 1000);
+      }
+    }
+  }, [publishing]);
 
   const handleThumbnailChange = () => {
     let file = thumbnailRef.current.files[0];
@@ -148,13 +165,34 @@ function GroupReleaseUpload() {
     }));
     resInfo = { ...resInfo, tracks };
 
-    publishRelease(authState.token, resInfo, thumbnail, audio).then(response =>
-      response.json()
-    );
+    setPublishing(1);
+    publishRelease(authState.token, resInfo, thumbnail, audio)
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === 'success') {
+          setSuccess(true);
+        }
+        setPublishing(2);
+      });
   };
 
   return (
     <div className='release-upload'>
+      {publishing ? (
+        <div className='upload-layer'>
+          <span className='font-short-extra font-weight-bold font-white'>
+            {publishing === 1 ? (
+              'Pulbishing...'
+            ) : success ? (
+              <CardSuccess message='Your release has been published' />
+            ) : (
+              <CardError message='Failed to publish' />
+            )}
+          </span>
+        </div>
+      ) : (
+        ''
+      )}
       <div className='upload-cover-wrapper'>
         <input
           ref={thumbnailRef}

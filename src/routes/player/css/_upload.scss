@@ -2,6 +2,20 @@
   display: flex;
   justify-content: space-between;
 
+  .upload-layer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 18px rgb(10, 10, 13);
+    z-index: 50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+  }
+
   .upload-item {
     padding-bottom: 15px;
     border-bottom: 1px solid $grayDark;
