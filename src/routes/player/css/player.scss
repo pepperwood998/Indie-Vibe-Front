@@ -144,4 +144,70 @@
       }
     }
   }
+
+  .playlist-dialog-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: $blackHalf;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .playlist-dialog {
+      padding: 0 20px;
+      background-image: $blackPop;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.74);
+
+      &__header {
+        text-align: center;
+        padding: 20px 0 15px;
+      }
+
+      &__body {
+        flex: 1;
+        display: flex;
+        flex-direction: row;
+        padding: 0 0 20px;
+
+        .left {
+          flex: 2;
+          display: flex;
+          flex-direction: column;
+          padding-right: 10px;
+          width: 350px;
+
+          &__playlist-title-input {
+            margin-bottom: 10px;
+          }
+
+          &__playlist-desc-input {
+            flex: 1;
+          }
+        }
+
+        .right {
+          &__cover {
+            margin-bottom: 10px;
+            cursor: pointer;
+
+            &:hover {
+              opacity: 0.5;
+            }
+
+            img {
+              width: 150px;
+              height: 150px;
+            }
+          }
+        }
+      }
+    }
+  }
 }

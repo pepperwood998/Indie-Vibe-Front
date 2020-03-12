@@ -53,8 +53,8 @@ function StreamContextProvider(props) {
       (id, bitrate) => {
         return getStreamInfo(authState.token, id, bitrate);
       },
-      (id, bitrate, start, end) => {
-        return getStream(authState.token, id, bitrate, start, end);
+      (url, start, end) => {
+        return getStream(url, start, end);
       }
     );
   }, [authState]);

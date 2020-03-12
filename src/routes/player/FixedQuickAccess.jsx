@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 
 import { ButtonFrame } from '../../components/buttons';
 import { AuthContext } from '../../contexts';
+import { GroupPlaylistDialog } from '../../components/groups';
 
 import { AddPlaylistIcon } from '../../assets/svgs';
 
@@ -13,6 +14,7 @@ function QuickAccess() {
 
   return (
     <div className='quick-access'>
+      {/* <GroupPlaylistDialog /> */}
       <div className='quick-access__role'>
         <RoleBanner role={role} />
       </div>

@@ -1,5 +1,4 @@
 import fetch from 'cross-fetch';
-import createFileList from 'create-file-list';
 
 import { host } from './constant';
 
@@ -21,11 +20,10 @@ export const getStreamInfo = (token, id, bitrate) => {
   });
 };
 
-export const getStream = (token, id, bitrate, start, end) => {
-  return fetch(`${host}/stream/${bitrate}/${id}`, {
+export const getStream = (url, start, end) => {
+  return fetch(url, {
     headers: {
-      Range: getRangeStr(start, end),
-      Authorization: 'Bearer ' + token
+      Range: getRangeStr(start, end)
     }
   });
 };
