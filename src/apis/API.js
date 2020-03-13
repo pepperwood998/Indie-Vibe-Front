@@ -65,6 +65,39 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
   });
 };
 
+export const createPlaylist = (token, title, description, thumbnail) => {
+  let data = new FormData();
+  data.append('title', title);
+  data.append('description', description);
+  data.append('thumbnail', thumbnail);
+
+  return fetch(`${host}/playlists`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: data
+  });
+};
+
+export const getMePlaylists = token => {
+  return fetch(`${host}/me/playlists`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getMeNewPlaylist = (token, playlistId) => {
+  return fetch(`${host}/me/playlists/${playlistId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
 const getRangeStr = (start, end) => {
   return 'bytes=' + start + '-' + end;
 };

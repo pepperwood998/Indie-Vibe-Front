@@ -1,7 +1,16 @@
 import React from 'react';
 
-function CardError({ message = 'Error' }) {
-  return <div className='card-error font-short-regular font-weight-bold'>{message}</div>;
+function CardError(props) {
+  let classes = [
+    'card-error font-short-regular font-weight-bold',
+    props.className
+  ].join(' ');
+
+  return (
+    <div className={classes}>
+      {props.message}
+    </div>
+  );
 }
 
 export default CardError;

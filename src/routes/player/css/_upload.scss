@@ -6,7 +6,7 @@
     position: absolute;
     height: 100%;
     width: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: $blackHalf;
     box-shadow: 0 0 18px rgb(10, 10, 13);
     z-index: 50;
     display: flex;
@@ -44,50 +44,6 @@
       select.release-type {
         width: 120px;
         margin-left: 10px;
-      }
-    }
-  }
-
-  .genre-list-dialog-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $blackBlur;
-    z-index: 999;
-
-    .genre-list-dialog {
-      background-color: $white;
-      padding: 20px;
-      border-radius: 5px;
-
-      .genre-list {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-column-gap: 10px;
-
-        .genre-item {
-          padding: 15px 10px;
-          border: 1px solid $grayDark;
-          border-radius: 5px;
-          text-align: center;
-          cursor: pointer;
-          width: 120px;
-          word-wrap: break-word;
-
-          &:hover {
-            transform: scale(1.02);
-          }
-
-          &.selected {
-            background-color: $grayDark;
-            color: $white;
-          }
-        }
       }
     }
   }

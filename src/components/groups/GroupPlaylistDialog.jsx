@@ -1,13 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 
+import { AuthContext } from '../../contexts';
+import { createPlaylist } from '../../apis/API';
 import { InputFileLabel, InputText } from '../inputs';
 import { ButtonMain } from '../buttons';
+import { CardError, CardSuccess } from '../cards';
 
 import { CloseIcon } from '../../assets/svgs';
 import PlaylistPlaceholder from '../../assets/imgs/playlist-placeholder.png';
 
 function GroupPlaylistDialog(props) {
-  const { isUpdated, handleCloseDialog } = props;
+  const { state: authState } = useContext(AuthContext);
+  const { isUpdated, handleCloseDialog, handleCreatePlaylistSuccess } = props;
 
   const [info, setInfo] = useState({
     title: props.title,
@@ -15,7 +19,11 @@ function GroupPlaylistDialog(props) {
   });
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailSrc, setThumbnailSrc] = useState(props.thumbnail);
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState({
+    error: '',
+    success: '',
+    submit: 0
+  });
 
   const thumbnailRef = useRef();
 
@@ -39,17 +47,57 @@ function GroupPlaylistDialog(props) {
     });
   };
 
-  const handlePropagateDialog = e => {
-    e.stopPropagation();
+  const handleSubmit = () => {
+    setStatus({ ...status, submit: 1 });
+    if (!info.title) return;
+
+    setStatus({ ...status, submit: 2 });
+    createPlaylist(authState.token, info.title, info.description, thumbnail)
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === 'success') {
+          setStatus({ ...status, success: 'Playlist created' });
+          handleCreatePlaylistSuccess(res.data);
+          setTimeout(() => {
+            handleCloseDialog();
+          }, 500);
+        } else {
+          setStatus({ ...status, error: 'Failed to create playlist' });
+          setTimeout(() => {
+            setStatus({
+              ...status,
+              submit: 0,
+              error: ''
+            });
+          }, 500);
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
-  const handleSubmit = () => {
-    setSubmitted(true);
+  const handlePropagateDialog = e => {
+    e.stopPropagation();
   };
 
   return (
     <div className='playlist-dialog-wrapper' onClick={handleCloseDialog}>
       <div className='playlist-dialog' onClick={handlePropagateDialog}>
+        {status.error ? (
+          <div className='notification'>
+            <CardError message='Failed to create the playlist' />
+          </div>
+        ) : (
+          ''
+        )}
+        {status.success ? (
+          <div className='notification'>
+            <CardSuccess message='Failed to create the playlist' />
+          </div>
+        ) : (
+          ''
+        )}
         <CloseIcon
           className='svg--regular svg--cursor svg--scale'
           onClick={handleCloseDialog}
@@ -66,7 +114,7 @@ function GroupPlaylistDialog(props) {
                 value={info.title}
                 placeholder='Playlist name'
                 onChange={handleChangeInfo}
-                error={submitted && !info.title}
+                error={status.submit && !info.title}
                 errMessage='Must have a title'
               />
             </div>
@@ -101,8 +149,12 @@ function GroupPlaylistDialog(props) {
               </InputFileLabel>
             </div>
             <div className='right__button'>
-              <ButtonMain onClick={handleSubmit}>
+              <ButtonMain
+                onClick={handleSubmit}
+                disabled={status.submit === 2 ? true : false}
+              >
                 {isUpdated ? 'Save' : 'Create'}
+                {status.submit === 2 ? '...' : ''}
               </ButtonMain>
             </div>
           </div>

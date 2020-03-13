@@ -1,15 +1,18 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import { ButtonFrame } from '../../components/buttons';
 import { AuthContext } from '../../contexts';
 import { GroupPlaylistDialog } from '../../components/groups';
 
 import { AddPlaylistIcon } from '../../assets/svgs';
+import { LinkWhiteColor } from '../../components/links';
+import { getMePlaylists, getMeNewPlaylist } from '../../apis/API';
 
 function QuickAccess() {
   const { state: authState } = useContext(AuthContext);
   const { role } = authState;
 
+  const [playlists, setPlaylists] = useState([]);
   const [dialogOpened, setDialogOpened] = useState(false);
 
   const handleOpenDialog = () => {
@@ -20,10 +23,30 @@ function QuickAccess() {
     setDialogOpened(false);
   };
 
+  const handleCreatePlaylistSuccess = playlistId => {
+    getMeNewPlaylist(authState.token, playlistId).then(res => {
+      if (res.status === 'success') {
+        setPlaylists([...playlists, res.data]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    getMePlaylists(authState.token).then(res => {
+      if (res.status === 'success') {
+        console.log(res.data);
+        setPlaylists([...playlists, ...res.data]);
+      }
+    });
+  }, []);
+
   return (
     <div className='quick-access'>
       {dialogOpened ? (
-        <GroupPlaylistDialog handleCloseDialog={handleCloseDialog} />
+        <GroupPlaylistDialog
+          handleCloseDialog={handleCloseDialog}
+          handleCreatePlaylistSuccess={handleCreatePlaylistSuccess}
+        />
       ) : (
         ''
       )}
@@ -37,6 +60,21 @@ function QuickAccess() {
             className='svg--regular svg--cursor svg--scale'
             onClick={handleOpenDialog}
           />
+        </div>
+        <div className='content-wrapper'>
+          <ul className='content'>
+            {playlists.map((item, index) => (
+              <li className='item-wrapper' key={index}>
+                <LinkWhiteColor
+                  href={`/player/playlist/${item.id}`}
+                  className='item font-short-big font-weight-bold'
+                  nav={true}
+                >
+                  {item.title}
+                </LinkWhiteColor>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

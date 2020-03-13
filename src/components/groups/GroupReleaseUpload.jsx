@@ -65,17 +65,24 @@ function GroupReleaseUpload() {
   }, []);
 
   useEffect(() => {
+    let successTimeout;
+    let failTimeout;
     if (publishing === 2) {
       if (success) {
-        setTimeout(() => {
+        successTimeout = setTimeout(() => {
           window.location.href = '/player/workspace';
         }, 1000);
       } else {
-        setTimeout(() => {
+        failTimeout = setTimeout(() => {
           setPublishing(0);
         }, 1000);
       }
     }
+
+    return () => {
+      clearTimeout(successTimeout);
+      clearTimeout(failTimeout);
+    };
   }, [publishing]);
 
   const handleThumbnailChange = () => {

@@ -35,6 +35,7 @@
     grid-area: quick-access;
     width: 200px;
     background-color: $blackLight;
+    overflow: hidden;
   }
 
   &__bottom {
@@ -103,6 +104,10 @@
   }
 
   .quick-access {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
     &__role {
       display: flex;
       justify-content: center;
@@ -128,12 +133,39 @@
     }
 
     &__playlists {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+
       .banner {
         display: flex;
         padding: 10px 20px;
         justify-content: space-between;
         align-items: center;
         background-color: $black;
+      }
+
+      .content-wrapper {
+        flex: 1;
+        overflow-y: auto;
+        height: 100%;
+        padding: 0px 20px;
+
+        .content {
+          padding: 15px 0;
+
+          .item-wrapper {
+            padding: 5px 0;
+
+            .item {
+              display: block;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+        }
       }
     }
   }

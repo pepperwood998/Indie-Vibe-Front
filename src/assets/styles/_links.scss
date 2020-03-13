@@ -12,9 +12,13 @@ a.active .button {
     text-decoration: none;
   }
 
-  &-bright-gray:hover {
-    color: $white;
-    text-decoration: none;
+  &-bright-gray {
+    color: $grayLight;
+
+    &:hover {
+      color: $white;
+      text-decoration: none;
+    }
   }
 
   &-blue-main {
