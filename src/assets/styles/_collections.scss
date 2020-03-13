@@ -23,10 +23,58 @@
   }
 
   &__content {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-gap: 30px;
+    &.grid {
+      display: grid;
+      grid-template-rows: 1fr;
+      grid-gap: 30px;
 
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+  }
+}
+
+.collection-table {
+  &__row {
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    border-bottom: 1px solid $grayDark;
+    box-sizing: content-box;
+
+    &--header {
+      color: $grayLight;
+      border-top: 1px solid $grayDark;
+    }
+  }
+
+  &__cell {
+    display: flex;
+    align-items: center;
+
+    &--action {
+      width: 50px;
+      justify-content: center;
+    }
+    &--favorite {
+      width: 50px;
+      justify-content: center;
+    }
+    &--title {
+      flex: 1;
+    }
+    &--artist {
+      width: 20%;
+    }
+    &--release {
+      width: 20%;
+    }
+    &--duration {
+      width: 100px;
+      justify-content: center;
+    }
+    &--added-date {
+      width: 100px;
+      justify-content: center;
+    }
   }
 }

@@ -5,7 +5,10 @@ import { TemplateNavPage } from '../template';
 import { UserRoute } from '../../../components/custom-routes';
 import { capitalize } from '../../../utils/Common';
 import { NavLinkColor } from '../../../components/links';
-import CollecionMain from '../../../components/collections/CollectionMain';
+import {
+  CollectionMain,
+  CollectionTracks
+} from '../../../components/collections';
 
 import { ArrowRight } from '../../../assets/svgs';
 
@@ -47,16 +50,46 @@ function Search() {
 
   const test = {
     tracks: {
-      items: [],
+      items: [
+        {
+          id: 'vq98jf093f9032fj0',
+          title: 'Vung vong veo',
+          artists: [
+            {
+              id: '093jf930f92j',
+              displayName: 'Hà Hồ'
+            },
+            {
+              id: 'f093j92jf2',
+              displayName: 'Misuka'
+            }
+          ]
+        }
+      ],
       offset: 0,
-      limit: 0,
-      total: 0
+      limit: 2,
+      total: 40
     },
     artists: {
-      items: [],
+      items: [
+        {
+          id: 'j89349823hf982',
+          displayName: 'Vũ.',
+          type: 'artist',
+          relation: ['following'],
+          followersCount: 10
+        },
+        {
+          id: '92f8fh92h39fh2',
+          displayName: 'Vân',
+          type: 'artist',
+          relation: [],
+          followersCount: 1000
+        }
+      ],
       offset: 0,
-      limit: 0,
-      total: 0
+      limit: 2,
+      total: 10
     },
     releases: {
       items: [],
@@ -86,10 +119,23 @@ function Search() {
       total: 20
     },
     profiles: {
-      items: [],
+      items: [
+        {
+          id: '09j0evjqw9vj2',
+          displayName: 'Tuan',
+          type: 'profile',
+          relation: ['following']
+        },
+        {
+          id: '0c129hcj0j3209c',
+          displayName: 'Tuan',
+          type: 'profile',
+          relation: []
+        }
+      ],
       offset: 0,
-      limit: 0,
-      total: 0
+      limit: 2,
+      total: 20
     },
     genres: {
       items: [],
@@ -129,11 +175,30 @@ function General(props) {
         if (!data[key].items.length) return '';
 
         let type = key.substr(0, key.length - 1);
+        if (type === 'track') {
+          return (
+            <CollectionTracks
+              header={
+                <NavLinkColor
+                  href={`/player/search/${key}`}
+                  className='header-title font-white'
+                >
+                  {capitalize(key)}
+                  <ArrowRight />
+                </NavLinkColor>
+              }
+              data={data[key]}
+              short={true}
+              key={index}
+            />
+          );
+        }
+
         return (
-          <CollecionMain
+          <CollectionMain
             header={
               <NavLinkColor
-                href={`/player/search/${type}`}
+                href={`/player/search/${key}`}
                 className='header-title font-white'
               >
                 {capitalize(key)}
@@ -153,25 +218,35 @@ function General(props) {
 }
 
 function Mono(props) {
-  console.log(props.data);
   const { type } = props;
   const [data, setData] = useState({
-    items: props.items,
-    offset: props.offset,
-    limit: props.limit,
-    total: props.total
+    items: props.data.items,
+    offset: props.data.offset,
+    limit: props.data.limit,
+    total: props.data.total
   });
 
-  const temp = props.data;
+  if (type === 'track') {
+    return (
+      <CollectionTracks
+        header={
+          data.total > 0
+            ? data.total + ` ${type}s`
+            : `No results for ${capitalize(type)}`
+        }
+        data={data}
+      />
+    );
+  }
 
   return (
-    <CollecionMain
+    <CollectionMain
       header={
-        temp.total > 0
-          ? temp.total + ` ${type}s`
+        data.total > 0
+          ? data.total + ` ${type}s`
           : `No results for ${capitalize(type)}`
       }
-      data={temp}
+      data={data}
       type={type}
     />
   );

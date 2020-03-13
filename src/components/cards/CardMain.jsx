@@ -26,11 +26,11 @@ function CardMain(props) {
             className='cover'
           />
         </Link>
-        <div className='action'>
+        <div className='action playlist-release'>
           <ButtonIcon>
             <PlayIcon />
           </ButtonIcon>
-          <div className='action__extra'>
+          <div className='action__extra playlist-release'>
             {relation.includes('own') ? (
               ''
             ) : relation.includes('favorite') ? (
@@ -55,7 +55,7 @@ function CardMain(props) {
         >
           {content.title}
         </NavLinkUnderline>
-        <div className='content font-short-s font-gray-light'>
+        <div className='content playlist-release font-short-s font-gray-light'>
           <span>
             {content.type === 'release' ? (
               <React.Fragment>

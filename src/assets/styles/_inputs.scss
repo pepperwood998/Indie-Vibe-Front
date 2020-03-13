@@ -83,7 +83,7 @@ textarea.input-text {
     cursor: pointer;
 
     &--error {
-      color: $red;
+      color: $red!important;
     }
 
     &--img.input-custom__label--error {
