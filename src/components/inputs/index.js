@@ -1,6 +1,7 @@
 export { default as InputForm } from './InputForm';
-export { default as Checkbox } from './Checkbox';
-export { default as RadioBox } from './RadioBox';
-export { default as SearchInput } from './SearchInput';
-export { default as FileLabel } from './FileLabel';
+export { default as InputCheckbox } from './InputCheckbox';
+export { default as InputRadioBox } from './InputRadioBox';
+export { default as InputSearch } from './InputSearch';
+export { default as InputFileLabel } from './InputFileLabel';
 export { default as InputGenre } from './InputGenre';
+export { default as InputText } from './InputText';

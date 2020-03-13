@@ -2,7 +2,7 @@ import React from 'react';
 
 import { SearchIcon } from '../../assets/svgs';
 
-function SearchInput({ placeholder = 'Search', onChange = () => {} }) {
+function InputSearch({ placeholder = 'Search', onChange = () => {} }) {
   return (
     <div className='input-search'>
       <SearchIcon />
@@ -16,4 +16,4 @@ function SearchInput({ placeholder = 'Search', onChange = () => {} }) {
   );
 }
 
-export default SearchInput;
+export default InputSearch;

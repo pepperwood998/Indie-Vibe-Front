@@ -1,12 +1,13 @@
 import React from 'react';
 
-import Top from './Top';
-import NavBar from './NavBar';
-import QuickAccess from './QuickAccess';
-import Bottom from './Bottom';
+import Top from './FixedTop';
+import NavMenu from './FixedNavMenu';
+import QuickAccess from './FixedQuickAccess';
+import Bottom from './FixedBottom';
 import { UserRoute, ArtistRoute } from '../../components/custom-routes';
-import { Browse, Library, Home, Account, Artist, Search } from './monopage';
+import { Browse, Library, Home, Account, Artist } from './monopage';
 import { Workspace } from './workspace';
+import { Search } from './search';
 
 import './css/player.scss';
 
@@ -17,7 +18,7 @@ function Player() {
         <Top />
       </div>
       <div className='player__nav'>
-        <NavBar />
+        <NavMenu />
       </div>
       <div className='player__quick-access'>
         <QuickAccess />

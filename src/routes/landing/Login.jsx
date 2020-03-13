@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 
-import { InputForm, Checkbox } from '../../components/inputs';
+import { InputForm, InputCheckbox } from '../../components/inputs';
 import {
   ButtonMain,
   ButtonFacebook,
@@ -8,7 +8,7 @@ import {
 } from '../../components/buttons';
 import Authentication from './Authentication';
 import { login } from '../../apis';
-import ErrorCard from '../../components/cards/ErrorCard';
+import { CardError } from '../../components/cards';
 import { AuthContext } from '../../contexts';
 
 import { LogoSignIn } from '../../assets/svgs';
@@ -94,7 +94,7 @@ function Login() {
 
   const inputs = () => (
     <React.Fragment>
-      {loginError ? <ErrorCard message={loginError} /> : ''}
+      {loginError ? <CardError message={loginError} /> : ''}
       <InputForm
         type='text'
         placeholder='Your email address'
@@ -114,7 +114,7 @@ function Login() {
       />
 
       <div className='input-addition input-addition-span'>
-        <Checkbox label='Remember me' onChange={handleRememberedChange} />
+        <InputCheckbox label='Remember me' onChange={handleRememberedChange} />
         <a
           href='#'
           className='font-tall-r font-weight-bold font-blue-main link link-bright-blue-main'

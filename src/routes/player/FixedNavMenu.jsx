@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 
 import { NavLinkColor, NavLinkUnderline } from '../../components/links';
-import { AccountContextMenu } from '../../components/context-menu';
+import { ContextMenuAccount } from '../../components/context-menu';
 import { MeContext, AuthContext } from '../../contexts';
 import { getMeSimple } from '../../apis';
 
@@ -15,7 +15,7 @@ import {
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonFrame } from '../../components/buttons';
 
-function NavBar() {
+function NavMenu() {
   const { state: authState } = useContext(AuthContext);
   const {
     state: meState,
@@ -45,7 +45,7 @@ function NavBar() {
           <div className='avatar-box__layer'>
             <SettingIcon data-toggle='dropdown' />
             <div className='dropdown-menu'>
-              <AccountContextMenu fromLanding={false} />
+              <ContextMenuAccount fromLanding={false} />
             </div>
           </div>
         </div>
@@ -61,7 +61,7 @@ function NavBar() {
       <ul className='menu'>
         <li>
           <NavLinkColor
-            href='/player/home'
+            href={['/player', '/player/home']}
             className='font-short-big font-weight-bold font-white'
           >
             <HomeIcon />
@@ -120,4 +120,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default NavMenu;

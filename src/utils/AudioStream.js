@@ -9,10 +9,11 @@ class AudioStream {
     this.isPlaying = false;
     this.wasPlaying = false;
     this.isClearAll = false;
+    this.url = '';
 
     this.trackId = '';
     this.apiInfo = trackId => undefined;
-    this.apiData = (trackId, start, end) => undefined;
+    this.apiData = (url, start, end) => undefined;
 
     this.sizeTotal = 0;
     this.sizeData = 0;
@@ -302,11 +303,11 @@ class AudioStream {
     this.isClearAll = true;
     this.audio.removeEventListener('timeupdate', this.eventTimeUpdate);
     this.media.removeEventListener('sourceopen', this.eventSourceOpen);
-    this.buffer.removeEventListener('updateend', this.eventUpdateEnd);
 
     this.audio.pause();
     this.audio.remove();
     if (this.buffer) {
+      this.buffer.removeEventListener('updateend', this.eventUpdateEnd);
       this.buffer.abort();
       if (this.buffer.length)
         this.buffer.remove(this.buffer.start(0), this.buffer.end(0));
@@ -322,6 +323,8 @@ class AudioStream {
         if (!data) throw 'info not found';
 
         this.onInfo(data.info);
+        console.log(data.url);
+        this.url = data.url;
         this.offset = data.mp3Offset;
         this.sizeTotal = data.fileSize;
         this.sizeData = data.fileSize - data.mp3Offset;
@@ -340,7 +343,7 @@ class AudioStream {
   }
 
   fetchChunk(start, end) {
-    return this.apiData(this.trackId, this.bitrate, start, end)
+    return this.apiData(this.url, start, end)
       .then(response => {
         return response.arrayBuffer();
       })

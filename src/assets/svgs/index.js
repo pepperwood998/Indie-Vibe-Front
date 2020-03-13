@@ -27,4 +27,5 @@ export { ReactComponent as MuteIcon } from './volume-mute.svg';
 export { ReactComponent as UnmuteIcon } from './volume-unmute.svg';
 export { ReactComponent as AddIcon } from './add.svg';
 export { ReactComponent as CloseIcon } from './close.svg';
+export { ReactComponent as MoreIcon } from './more.svg';
 

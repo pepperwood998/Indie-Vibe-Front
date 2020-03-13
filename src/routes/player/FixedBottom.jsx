@@ -114,6 +114,7 @@ function NowPayingMiddle() {
       <div className='player-controls__action'>
         <div className='player-action-wrapper'>
           <SkipPreviousIcon
+            className='svg--cursor svg--bright'
             onClick={() => {
               streamDispatch(streamActions.skipBackward());
             }}
@@ -122,12 +123,14 @@ function NowPayingMiddle() {
         <div className='player-action-wrapper'>
           {streamState.paused ? (
             <PlayIcon
+              className='svg--cursor svg--bright'
               onClick={() => {
                 streamDispatch(streamActions.requestPaused(false));
               }}
             />
           ) : (
             <PauseIcon
+              className='svg--cursor svg--bright'
               onClick={() => {
                 streamDispatch(streamActions.requestPaused(true));
               }}
@@ -136,6 +139,7 @@ function NowPayingMiddle() {
         </div>
         <div className='player-action-wrapper'>
           <SkipNextIcon
+            className='svg--cursor svg--bright'
             onClick={() => {
               streamDispatch(streamActions.skipForward());
             }}
@@ -251,19 +255,25 @@ function NowPayingRight() {
     <div className='extra-controls-wrapper'>
       <div className='extra-controls'>
         <div className='control-wrapper'>
-          <RepeatOffIcon />
+          <RepeatOffIcon className='svg--small svg--cursor svg--bright' />
         </div>
         <div className='control-wrapper'>
-          <ShuffleIcon />
+          <ShuffleIcon className='svg--small svg--cursor svg--bright' />
         </div>
         <div className='control-wrapper'>
-          <MusicQueueIcon />
+          <MusicQueueIcon className='svg--small svg--cursor svg--bright' />
         </div>
         <div className='control-wrapper control-volume'>
           {!streamState.muted && streamState.volume !== 0 ? (
-            <UnmuteIcon onClick={handleMute} />
+            <UnmuteIcon
+              className='svg--small svg--cursor svg--bright'
+              onClick={handleMute}
+            />
           ) : (
-            <MuteIcon onClick={handleUnmute} />
+            <MuteIcon
+              className='svg--small svg--cursor svg--bright'
+              onClick={handleUnmute}
+            />
           )}
           <ProgressBar
             progressPer={streamState.muted ? 0 : streamState.volume}

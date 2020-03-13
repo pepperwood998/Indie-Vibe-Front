@@ -1,0 +1,82 @@
+@import './colors';
+@import './fonts';
+
+@import './inputs';
+@import './cards';
+@import './collections';
+@import './buttons';
+@import './links';
+
+label {
+  margin: 0;
+}
+
+.dropdown-menu {
+  padding: 0px;
+  border: 0px;
+  background: transparent;
+
+  &--fixed {
+    margin-top: 10px;
+  }
+}
+
+.context-menu {
+  background-color: $blackGray;
+  border-radius: 5px;
+
+  a,
+  span {
+    display: block;
+    padding: 15px 30px;
+    cursor: pointer;
+  }
+}
+
+.tab-menu-wrapper {
+  padding: 0px 40px;
+  border-bottom: 1px solid $grayDark;
+
+  .tab-menu {
+    display: flex;
+
+    li a {
+      display: block;
+      padding: 15px 0px 15px;
+      margin: 0px 40px 0px 0px;
+
+      &.active {
+        border-bottom: 2px solid $blueMain;
+        color: $white;
+      }
+    }
+  }
+}
+
+.svg {
+  &--small {
+    width: 22px;
+    height: 22px;
+  }
+  
+  &--regular {
+    width: 24px;
+    height: 24px;
+  }
+
+  &--cursor {
+    cursor: pointer;
+  }
+
+  &--scale {
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &--bright {
+    &:hover path {
+      fill: $white;
+    }
+  }
+}

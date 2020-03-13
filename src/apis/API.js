@@ -1,4 +1,5 @@
 import fetch from 'cross-fetch';
+
 import { host } from './constant';
 
 export const getMeSimple = token => {
@@ -19,11 +20,10 @@ export const getStreamInfo = (token, id, bitrate) => {
   });
 };
 
-export const getStream = (token, id, bitrate, start, end) => {
-  return fetch(`${host}/stream/${bitrate}/${id}`, {
+export const getStream = (url, start, end) => {
+  return fetch(url, {
     headers: {
-      Range: getRangeStr(start, end),
-      Authorization: 'Bearer ' + token
+      Range: getRangeStr(start, end)
     }
   });
 };
@@ -50,17 +50,52 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
   let data = new FormData();
   data.append('info', JSON.stringify(info));
   data.append('thumbnail', thumbnail);
-  data.append('audioFiles', audioFiles);
 
-  console.log(info);
-  // return fetch(`${host}/artist/releases`, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Authorization': 'Bearer ' + token,
-  //     'Content-type': 'application/x-www-form-urlencoded'
-  //   },
-  //   body: data
-  // });
+  audioFiles.forEach(item => {
+    data.append('audioFiles', item.audio128);
+    data.append('audioFiles', item.audio320);
+  });
+
+  return fetch(`${host}/artist/releases`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: data
+  });
+};
+
+export const createPlaylist = (token, title, description, thumbnail) => {
+  let data = new FormData();
+  data.append('title', title);
+  data.append('description', description);
+  data.append('thumbnail', thumbnail);
+
+  return fetch(`${host}/playlists`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: data
+  });
+};
+
+export const getMePlaylists = token => {
+  return fetch(`${host}/me/playlists`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getMeNewPlaylist = (token, playlistId) => {
+  return fetch(`${host}/me/playlists/${playlistId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
 };
 
 const getRangeStr = (start, end) => {

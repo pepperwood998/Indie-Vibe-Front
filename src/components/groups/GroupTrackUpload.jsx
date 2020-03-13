@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-import { InputForm, FileLabel, InputGenre } from '../inputs';
-import GenreDialog from './GenreDialog';
+import { InputForm, InputFileLabel, InputGenre } from '../inputs';
+import { GroupGenreDialog } from '.';
 
-import { AddIcon, CloseIcon } from '../../assets/svgs';
+import { CloseIcon } from '../../assets/svgs';
 
-function TrackUploadItem(props) {
+function GroupTrackUpload(props) {
   const [info, setInfo] = useState({ ...props.info });
   const [audio, setAudio] = useState({ ...props.audio });
   const [audioSrc, setAudioSrc] = useState({ ...props.audioSrc });
@@ -82,7 +82,7 @@ function TrackUploadItem(props) {
           ref={ref.audio128}
           onChange={handleAudioChange}
           data-ref-type='audio128'
-          className='input-file'
+          className='input-custom'
         />
         <input
           id={'audio320' + props.index}
@@ -92,7 +92,7 @@ function TrackUploadItem(props) {
           ref={ref.audio320}
           onChange={handleAudioChange}
           data-ref-type='audio320'
-          className='input-file'
+          className='input-custom'
         />
         <div className='upload-field'>
           <span className='label'>Title:</span>
@@ -121,7 +121,7 @@ function TrackUploadItem(props) {
         </div>
         <div className='upload-field'>
           <span className='label'>MP3 128:</span>
-          <FileLabel
+          <InputFileLabel
             for={'audio128' + props.index}
             error={props.submitted && !props.audio.audio128}
             errMessage='Missing 128kbps mp3 file'
@@ -130,11 +130,11 @@ function TrackUploadItem(props) {
             {props.audioSrc.audio128
               ? props.audioSrc.audio128
               : 'Choose 128kbps file'}
-          </FileLabel>
+          </InputFileLabel>
         </div>
         <div className='upload-field'>
           <span className='label'>MP3 320:</span>
-          <FileLabel
+          <InputFileLabel
             for={'audio320' + props.index}
             error={props.submitted && !props.audio.audio320}
             errMessage='Missing 320kbps mp3 file'
@@ -143,7 +143,7 @@ function TrackUploadItem(props) {
             {props.audioSrc.audio320
               ? props.audioSrc.audio320
               : 'Choose 320kbps file'}
-          </FileLabel>
+          </InputFileLabel>
         </div>
         <div className='upload-field'>
           <span className='label'>Produced by:</span>
@@ -156,7 +156,7 @@ function TrackUploadItem(props) {
         </div>
       </div>
       {genreDialogOpened ? (
-        <GenreDialog
+        <GroupGenreDialog
           items={genreList}
           selected={props.info.genres}
           handleGenreDialogSaved={handleGenreDialogSaved}
@@ -169,4 +169,4 @@ function TrackUploadItem(props) {
   );
 }
 
-export default TrackUploadItem;
+export default GroupTrackUpload;

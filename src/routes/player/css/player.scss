@@ -4,6 +4,8 @@
 @import './upload';
 @import './player-control';
 @import './nav-menu';
+@import './mono-page';
+@import './dialog';
 
 .player {
   display: grid;
@@ -33,6 +35,7 @@
     grid-area: quick-access;
     width: 200px;
     background-color: $blackLight;
+    overflow: hidden;
   }
 
   &__bottom {
@@ -48,21 +51,29 @@
     display: flex;
     overflow: hidden;
 
-    .artist-page {
+    .content-page {
       flex: 1;
+
+      .mono-page {
+        height: 100%;
+        overflow-y: auto;
+      }
+    }
+
+    .compound-page {
       display: flex;
       flex-direction: column;
 
-      .content-wrapper-scroll {
+      .body-scroll {
         flex: 1;
         overflow-y: auto;
 
-        .content-wrapper {
+        .body {
           height: 100%;
           overflow-y: auto;
-          padding: 20px;
+          padding: 30px 40px;
 
-          > div {
+          &__bound {
             background-color: $blackBlueLight;
             padding: 10px;
           }
@@ -93,6 +104,10 @@
   }
 
   .quick-access {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
     &__role {
       display: flex;
       justify-content: center;
@@ -118,18 +133,37 @@
     }
 
     &__playlists {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+
       .banner {
         display: flex;
         padding: 10px 20px;
         justify-content: space-between;
         align-items: center;
         background-color: $black;
+      }
 
-        svg {
-          cursor: pointer;
+      .content-wrapper {
+        flex: 1;
+        overflow-y: auto;
+        height: 100%;
+        padding: 0px 20px;
 
-          &:hover {
-            transform: scale(1.1);
+        .content {
+          padding: 15px 0;
+
+          .item-wrapper {
+            padding: 5px 0;
+
+            .item {
+              display: block;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
           }
         }
       }

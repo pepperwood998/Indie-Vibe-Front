@@ -1,2 +1,3 @@
-export { default as ErrorCard } from './ErrorCard';
-export { default as SuccessCard } from './SuccessCard';
+export { default as CardError } from './CardError';
+export { default as CardSuccess } from './CardSuccess';
+export { default as CardMain } from './CardMain';

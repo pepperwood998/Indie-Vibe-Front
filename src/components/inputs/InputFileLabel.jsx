@@ -1,14 +1,14 @@
 import React from 'react';
 
-function FileLabel(props) {
+function InputFileLabel(props) {
   let label = props.children;
   let classes = [
-    'input-label link-bright-gray font-short-big font-gray-light',
+    'input-custom__label link-bright-gray font-short-big font-gray-light',
     props.className
   ].join(' ');
 
   if (props.error) {
-    classes += ' input-error';
+    classes += ' input-custom__label--error';
     if (!props.keep) label = props.errMessage;
   }
 
@@ -19,4 +19,4 @@ function FileLabel(props) {
   );
 }
 
-export default FileLabel;
+export default InputFileLabel;
