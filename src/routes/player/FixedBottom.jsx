@@ -5,7 +5,7 @@ import { StreamContext } from '../../contexts/StreamContext';
 
 import Placeholder from '../../assets/imgs/placeholder.png';
 import {
-  FavoriteIcon,
+  UnFavoriteIcon,
   SkipPreviousIcon,
   PlayIcon,
   SkipNextIcon,
@@ -74,7 +74,7 @@ function NowPayingLeft() {
           </div>
         </div>
         <div className='now-playing__action'>
-          <FavoriteIcon />
+          <UnFavoriteIcon />
         </div>
       </div>
     );

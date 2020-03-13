@@ -51,7 +51,10 @@
       &__extra {
         display: flex;
         justify-content: space-between;
-        min-width: 70px;
+
+        .button-icon:last-child {
+          margin-left: 5px;
+        }
       }
     }
 

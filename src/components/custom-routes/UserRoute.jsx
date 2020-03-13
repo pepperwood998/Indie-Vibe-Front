@@ -10,7 +10,7 @@ function UserRoute({ component: Component, ...rest }) {
       {...rest}
       render={props => {
         if (state.token) {
-          return <Component {...props} />;
+          return <Component {...props} {...rest} />;
         } else {
           return (
             <Redirect

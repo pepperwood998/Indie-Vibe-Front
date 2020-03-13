@@ -79,4 +79,10 @@ label {
       fill: $white;
     }
   }
+
+  &--blue {
+    path {
+      fill: $blueMain!important;
+    }
+  }
 }

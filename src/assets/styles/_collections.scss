@@ -1,8 +1,25 @@
-.group-main {
+.collection-main {
   padding: 20px 0px;
 
   &__header {
     padding: 0px 0px 20px;
+    font: $shortExtra;
+    color: $white;
+    font-weight: bold;
+
+    .header-title {
+      display: flex;
+      align-items: center;
+
+      svg {
+        transition: ease 0.2s;
+      }
+      &:hover {
+        svg {
+          margin-left: 5px;
+        }
+      }
+    }
   }
 
   &__content {
@@ -10,6 +27,6 @@
     grid-template-rows: 1fr;
     grid-gap: 30px;
 
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
