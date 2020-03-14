@@ -1,4 +1,5 @@
 import MapList from './MapList';
+import { getFormattedTime } from './Common';
 
 class AudioStream {
   constructor(mime = 'audio/mpeg') {
@@ -104,7 +105,7 @@ class AudioStream {
     this.eventTimeUpdate = e => {
       var progressPer = (this.audio.currentTime / this.media.duration) * 100;
       this.onProgress(
-        this.getFormattedTime(
+        getFormattedTime(
           Math.round((progressPer / 100) * this.media.duration)
         ),
         progressPer
@@ -336,7 +337,7 @@ class AudioStream {
         this.data.offset = data.mp3Offset;
 
         this.onTrackFormatted(
-          this.getFormattedTime(Math.round(data.duration / 1000))
+          getFormattedTime(Math.round(data.duration / 1000))
         );
       })
       .catch(error => console.log(error));
@@ -356,23 +357,6 @@ class AudioStream {
       });
   }
 
-  getFormattedTime(second) {
-    // Hours, minutes and seconds
-    var hrs = ~~(second / 3600);
-    var mins = ~~((second % 3600) / 60);
-    var secs = ~~second % 60;
-
-    // Output like "1:01" or "4:03:59" or "123:03:59"
-    var ret = '';
-
-    if (hrs > 0) {
-      ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
-    }
-
-    ret += '' + mins + ':' + (secs < 10 ? '0' : '');
-    ret += '' + secs;
-    return ret;
-  }
 }
 
 export default AudioStream;

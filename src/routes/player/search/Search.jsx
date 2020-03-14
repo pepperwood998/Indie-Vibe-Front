@@ -54,16 +54,42 @@ function Search() {
         {
           id: 'vq98jf093f9032fj0',
           title: 'Vung vong veo',
+          duration: 234000,
           artists: [
             {
               id: '093jf930f92j',
-              displayName: 'Hà Hồ'
+              displayName: 'Hà Hồ Hồ'
             },
             {
               id: 'f093j92jf2',
               displayName: 'Misuka'
             }
-          ]
+          ],
+          release: {
+            id: 'j0238jf23f023',
+            title: 'Sunhi'
+          },
+          relation: ['favorite']
+        },
+        {
+          id: 'vq98jf093f9032fj0',
+          title: 'Vung vong veo',
+          duration: 234000,
+          artists: [
+            {
+              id: '093jf930f92j',
+              displayName: 'Hà Hồ Hồ'
+            },
+            {
+              id: 'f093j92jf2',
+              displayName: 'Misuka'
+            }
+          ],
+          release: {
+            id: 'j0238jf23f023',
+            title: 'Sunhi'
+          },
+          relation: []
         }
       ],
       offset: 0,
@@ -104,14 +130,14 @@ function Search() {
           title: 'Acoustic Chill',
           type: 'playlist',
           relation: ['favorite'],
-          description: 'N/A'
+          description: 'Description'
         },
         {
           id: '2834j9238u489gu3',
           title: 'Acoustic Chill',
           type: 'playlist',
           relation: ['own'],
-          description: 'N/A'
+          description: 'Description'
         }
       ],
       offset: 0,
@@ -188,6 +214,7 @@ function General(props) {
                 </NavLinkColor>
               }
               data={data[key]}
+              type='search'
               short={true}
               key={index}
             />
@@ -235,6 +262,7 @@ function Mono(props) {
             : `No results for ${capitalize(type)}`
         }
         data={data}
+        type='search'
       />
     );
   }

@@ -89,8 +89,8 @@ export const getMePlaylists = token => {
   }).then(response => response.json());
 };
 
-export const getMeNewPlaylist = (token, playlistId) => {
-  return fetch(`${host}/me/playlists/${playlistId}`, {
+export const getPlaylistSimple = (token, playlistId) => {
+  return fetch(`${host}/playlists/${playlistId}`, {
     method: 'GET',
     headers: {
       Authorization: 'Bearer ' + token

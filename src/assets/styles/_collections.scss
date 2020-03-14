@@ -40,6 +40,7 @@
     height: 50px;
     border-bottom: 1px solid $grayDark;
     box-sizing: content-box;
+    font: $shortRegular;
 
     &--header {
       color: $grayLight;
@@ -50,6 +51,14 @@
   &__cell {
     display: flex;
     align-items: center;
+    color: $white;
+
+    > :last-child {
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     &--action {
       width: 50px;
@@ -61,20 +70,23 @@
     }
     &--title {
       flex: 1;
+      padding-left: 10px;
     }
     &--artist {
       width: 20%;
+      padding-left: 10px;
     }
     &--release {
       width: 20%;
+      padding-left: 10px;
     }
     &--duration {
       width: 100px;
-      justify-content: center;
+      padding-left: 10px;
     }
     &--added-date {
       width: 100px;
-      justify-content: center;
+      padding-left: 10px;
     }
   }
 }

@@ -30,4 +30,6 @@ export { ReactComponent as UnmuteIcon } from './volume-unmute.svg';
 export { ReactComponent as AddIcon } from './add.svg';
 export { ReactComponent as CloseIcon } from './close.svg';
 export { ReactComponent as MoreIcon } from './more.svg';
+export { ReactComponent as TimerIcon } from './timer.svg';
+export { ReactComponent as DateIcon } from './date.svg';
 

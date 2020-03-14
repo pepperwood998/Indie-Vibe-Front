@@ -20,12 +20,10 @@ function Content(props) {
   const { type } = props;
   let { items, offset, limit } = props.data;
 
-  useEffect(() => {
-    if (props.short) {
-      offset = 0;
-      limit = 10;
-    }
-  }, []);
+  if (props.short) {
+    offset = 0;
+    limit = 2;
+  }
 
   switch (type) {
     case 'playlist':
