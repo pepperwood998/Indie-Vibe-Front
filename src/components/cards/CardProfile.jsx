@@ -27,9 +27,13 @@ function CardProfile(props) {
           />
         </Link>
         <div className='action profile'>
-          <ButtonIcon>
-            <PlayIcon />
-          </ButtonIcon>
+          {content.type === 'artist' ? (
+            <ButtonIcon>
+              <PlayIcon />
+            </ButtonIcon>
+          ) : (
+            ''
+          )}
           <div className='action__extra profile'>
             {relation.includes('following') ? (
               <ButtonIcon>

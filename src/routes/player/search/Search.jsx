@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { NavigationTab } from '../../../components/navigation';
 import { TemplateNavPage } from '../template';
 import { UserRoute } from '../../../components/custom-routes';
-import { capitalize } from '../../../utils/Common';
-import { NavLinkColor } from '../../../components/links';
-import {
-  CollectionMain,
-  CollectionTracks
-} from '../../../components/collections';
-
-import { ArrowRight } from '../../../assets/svgs';
+import General from './General';
+import Mono from './Mono';
 
 function Search() {
   const nav = (
@@ -191,93 +185,6 @@ function Search() {
   );
 
   return <TemplateNavPage nav={nav} body={body} />;
-}
-
-function General(props) {
-  const { data } = props;
-
-  const render = data
-    ? Object.keys(data).map((key, index) => {
-        if (!data[key].items.length) return '';
-
-        let type = key.substr(0, key.length - 1);
-        if (type === 'track') {
-          return (
-            <CollectionTracks
-              header={
-                <NavLinkColor
-                  href={`/player/search/${key}`}
-                  className='header-title font-white'
-                >
-                  {capitalize(key)}
-                  <ArrowRight />
-                </NavLinkColor>
-              }
-              data={data[key]}
-              type='search'
-              short={true}
-              key={index}
-            />
-          );
-        }
-
-        return (
-          <CollectionMain
-            header={
-              <NavLinkColor
-                href={`/player/search/${key}`}
-                className='header-title font-white'
-              >
-                {capitalize(key)}
-                <ArrowRight />
-              </NavLinkColor>
-            }
-            data={data[key]}
-            type={type}
-            short={true}
-            key={index}
-          />
-        );
-      })
-    : '';
-
-  return render;
-}
-
-function Mono(props) {
-  const { type } = props;
-  const [data, setData] = useState({
-    items: props.data.items,
-    offset: props.data.offset,
-    limit: props.data.limit,
-    total: props.data.total
-  });
-
-  if (type === 'track') {
-    return (
-      <CollectionTracks
-        header={
-          data.total > 0
-            ? data.total + ` ${type}s`
-            : `No results for ${capitalize(type)}`
-        }
-        data={data}
-        type='search'
-      />
-    );
-  }
-
-  return (
-    <CollectionMain
-      header={
-        data.total > 0
-          ? data.total + ` ${type}s`
-          : `No results for ${capitalize(type)}`
-      }
-      data={data}
-      type={type}
-    />
-  );
 }
 
 export default Search;
