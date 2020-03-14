@@ -6,22 +6,21 @@ import { GroupGenreDialog } from '.';
 import { CloseIcon } from '../../assets/svgs';
 
 function GroupTrackUpload(props) {
-  const [info, setInfo] = useState({ ...props.info });
-  const [audio, setAudio] = useState({ ...props.audio });
-  const [audioSrc, setAudioSrc] = useState({ ...props.audioSrc });
-
+  const [info, setInfo] = useState({});
+  const [audio, setAudio] = useState({});
+  const [audioSrc, setAudioSrc] = useState({});
   const [genreDialogOpened, setGenreDialogOpened] = useState(false);
-
-  const { genreList, index: trackInd } = props;
 
   useEffect(() => {
     props.handleItemChange(trackInd, info, audio, audioSrc);
   }, [info, audio, audioSrc]);
-
+  
   const ref = {
     audio128: useRef(),
     audio320: useRef()
   };
+
+  const { genreList, index: trackInd, submitted } = props;
 
   const handleChange = e => {
     setInfo({
@@ -101,7 +100,7 @@ function GroupTrackUpload(props) {
             name='title'
             onChange={handleChange}
             value={props.info.title}
-            error={props.info.title === '' && props.submitted}
+            error={submitted && props.info.title === ''}
             errMessage='Missing song name'
           />
         </div>
@@ -115,7 +114,7 @@ function GroupTrackUpload(props) {
               : ''}
             <InputGenre
               onClick={handleOpenGenreDialog}
-              error={props.submitted && props.info.genres.length <= 0}
+              error={submitted && props.info.genres.length <= 0}
             />
           </div>
         </div>
@@ -123,7 +122,7 @@ function GroupTrackUpload(props) {
           <span className='label'>MP3 128:</span>
           <InputFileLabel
             for={'audio128' + props.index}
-            error={props.submitted && !props.audio.audio128}
+            error={submitted && !props.audio.audio128}
             errMessage='Missing 128kbps mp3 file'
             keep={false}
           >
@@ -136,7 +135,7 @@ function GroupTrackUpload(props) {
           <span className='label'>MP3 320:</span>
           <InputFileLabel
             for={'audio320' + props.index}
-            error={props.submitted && !props.audio.audio320}
+            error={submitted && !props.audio.audio320}
             errMessage='Missing 320kbps mp3 file'
             keep={false}
           >
