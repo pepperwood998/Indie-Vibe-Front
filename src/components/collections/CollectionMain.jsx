@@ -25,17 +25,33 @@ function Content(props) {
     limit = 2;
   }
 
+  const handleToggleFavorite = () => {};
+
   switch (type) {
     case 'playlist':
     case 'release':
       return items
         .slice(offset, limit)
-        .map((item, index) => <CardMain content={item} key={index} />);
+        .map((item, index) => (
+          <CardMain
+            content={item}
+            key={index}
+            index={index}
+            handleToggleFavorite={handleToggleFavorite}
+          />
+        ));
     case 'artist':
     case 'profile':
       return items
         .slice(offset, limit)
-        .map((item, index) => <CardProfile content={item} key={index} />);
+        .map((item, index) => (
+          <CardProfile
+            content={item}
+            key={index}
+            index={index}
+            handleToggleFavorite={handleToggleFavorite}
+          />
+        ));
   }
 
   return '';

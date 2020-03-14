@@ -98,6 +98,16 @@ export const getPlaylistSimple = (token, playlistId) => {
   }).then(response => response.json());
 };
 
+export const performActionObject = (token, type, id, action) => {
+  return fetch(`${host}/${type}s/${id}`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: `action=${action}`
+  }).then(response => response.json());
+};
+
 const getRangeStr = (start, end) => {
   return 'bytes=' + start + '-' + end;
 };
