@@ -11,6 +11,7 @@ function CollectionTracks(props) {
         <CollectionTrackTable
           data={props.data}
           type={props.type}
+          handleToggleFavorite={props.handleToggleFavorite}
         />
       </div>
     </div>

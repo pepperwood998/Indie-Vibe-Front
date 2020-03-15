@@ -10,7 +10,11 @@ function CollectionMain(props) {
     <div className='collection-main collection-main--extended'>
       <div className='collection-main__header'>{header}</div>
       <div className='collection-main__content grid'>
-        <Content data={data} type={type} />
+        <Content
+          data={data}
+          type={type}
+          handleToggleFavorite={props.handleToggleFavorite}
+        />
       </div>
     </div>
   );
@@ -26,14 +30,24 @@ function Content(props) {
       return items
         .slice(offset, limit)
         .map((item, index) => (
-          <CardMain content={item} key={index} index={index} />
+          <CardMain
+            content={item}
+            key={index}
+            index={index}
+            handleToggleFavorite={props.handleToggleFavorite}
+          />
         ));
     case 'artist':
     case 'profile':
       return items
         .slice(offset, limit)
         .map((item, index) => (
-          <CardProfile content={item} key={index} index={index} />
+          <CardProfile
+            content={item}
+            key={index}
+            index={index}
+            handleToggleFavorite={props.handleToggleFavorite}
+          />
         ));
   }
 

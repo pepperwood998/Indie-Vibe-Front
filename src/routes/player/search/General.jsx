@@ -133,16 +133,16 @@ function General() {
     }
   });
 
-  // const handleToggleFavorite = (type, index, relation) => {
-  //   let target = { ...data[`${type}s`] };
-  //   target.items.some((item, i) => {
-  //     if (index === i) {
-  //       item.relation = [...relation];
-  //       return true;
-  //     }
-  //   });
-  //   setData({ ...data, [`${type}s`]: target });
-  // };
+  const handleToggleFavorite = (type, index, relation) => {
+    let target = { ...data[`${type}s`] };
+    target.items.some((item, i) => {
+      if (index === i) {
+        item.relation = [...relation];
+        return true;
+      }
+    });
+    setData({ ...data, [`${type}s`]: target });
+  };
 
   const render = data
     ? Object.keys(data).map((key, index) => {
@@ -163,6 +163,7 @@ function General() {
               }
               data={data[key]}
               type='search'
+              handleToggleFavorite={handleToggleFavorite}
               key={index}
             />
           );
@@ -181,6 +182,7 @@ function General() {
             }
             data={data[key]}
             type={type}
+            handleToggleFavorite={handleToggleFavorite}
             key={index}
           />
         );

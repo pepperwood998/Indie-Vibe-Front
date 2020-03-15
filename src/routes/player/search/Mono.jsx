@@ -132,16 +132,16 @@ function Mono(props) {
   };
   const [data, setData] = useState(test[`${type}s`]);
 
-  // const handleToggleFavorite = (type, index, relation) => {
-  //   let items = [...data.items];
-  //   items.some((item, i) => {
-  //     if (index === i) {
-  //       item.relation = [...relation];
-  //       return true;
-  //     }
-  //   });
-  //   setData({ ...data, items });
-  // };
+  const handleToggleFavorite = (type, index, relation) => {
+    let items = [...data.items];
+    items.some((item, i) => {
+      if (index === i) {
+        item.relation = [...relation];
+        return true;
+      }
+    });
+    setData({ ...data, items });
+  };
 
   if (type === 'track') {
     return (
@@ -153,6 +153,7 @@ function Mono(props) {
         }
         data={data}
         type='search'
+        handleToggleFavorite={handleToggleFavorite}
       />
     );
   }
@@ -166,6 +167,7 @@ function Mono(props) {
       }
       data={data}
       type={type}
+      handleToggleFavorite={handleToggleFavorite}
     />
   );
 }

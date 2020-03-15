@@ -1,7 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import { NavLinkUnderline } from '../links';
 import { getFormattedTime } from '../../utils/Common';
+import { AuthContext } from '../../contexts';
+import { performActionObject } from '../../apis/API';
 
 import {
   UnFavoriteIcon,
@@ -9,8 +11,6 @@ import {
   DateIcon,
   FavoriteIcon
 } from '../../assets/svgs';
-import { AuthContext } from '../../contexts';
-import { performActionObject } from '../../apis/API';
 
 function CollectionTrackTable(props) {
   const { type } = props;
@@ -65,11 +65,32 @@ function CollectionTrackTable(props) {
               ...item.track
             }
           );
-          return <RowPlaylist item={item} key={index} serial={index + 1} />;
+          return (
+            <RowPlaylist
+              item={item}
+              key={index}
+              serial={index + 1}
+              handleToggleFavorite={props.handleToggleFavorite}
+            />
+          );
         } else if (type === 'release') {
-          return <RowRelease item={item} key={index} serial={index + 1} />;
+          return (
+            <RowRelease
+              item={item}
+              key={index}
+              serial={index + 1}
+              handleToggleFavorite={props.handleToggleFavorite}
+            />
+          );
         } else {
-          return <RowSearch item={item} key={index} serial={index + 1} />;
+          return (
+            <RowSearch
+              item={item}
+              key={index}
+              serial={index + 1}
+              handleToggleFavorite={props.handleToggleFavorite}
+            />
+          );
         }
       })}
     </div>
@@ -84,7 +105,11 @@ function RowPlaylist(props) {
       <div className='collection-table__cell collection-table__cell--action'>
         <span>{serial}</span>
       </div>
-      <CellFavorite id={item.id} relation={item.relation} />
+      <CellFavorite
+        id={item.id}
+        relation={item.relation}
+        handleToggleFavorite={props.handleToggleFavorite}
+      />
       <div className='collection-table__cell collection-table__cell--title'>
         <span>{item.title}</span>
       </div>
@@ -133,7 +158,11 @@ function RowRelease(props) {
       <div className='collection-table__cell collection-table__cell--action'>
         <span>{serial}</span>
       </div>
-      <CellFavorite id={item.id} relation={item.relation} />
+      <CellFavorite
+        id={item.id}
+        relation={item.relation}
+        handleToggleFavorite={props.handleToggleFavorite}
+      />
       <div className='collection-table__cell collection-table__cell--title'>
         <span>{item.title}</span>
       </div>
@@ -152,7 +181,11 @@ function RowSearch(props) {
       <div className='collection-table__cell collection-table__cell--action'>
         <span>{serial}</span>
       </div>
-      <CellFavorite id={item.id} relation={item.relation} />
+      <CellFavorite
+        id={item.id}
+        relation={item.relation}
+        handleToggleFavorite={props.handleToggleFavorite}
+      />
       <div className='collection-table__cell collection-table__cell--title'>
         <span>{item.title}</span>
       </div>
@@ -194,6 +227,10 @@ function CellFavorite(props) {
   const { state: authState } = useContext(AuthContext);
 
   const [relation, setRelation] = useState([...props.relation]);
+
+  useEffect(() => {
+    props.handleToggleFavorite('track', props.index, relation);
+  }, [relation]);
 
   const handleToggleFavorite = action => {
     performActionObject(authState.token, 'track', props.id, relation, action)
