@@ -81,7 +81,7 @@ function Register() {
             setRegisteringFb(false);
           })
           .catch(err => {
-            setRegisterError(err);
+            setRegisterError("Server error");
             setRegisteringFb(false);
           });
       });

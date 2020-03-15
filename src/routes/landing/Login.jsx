@@ -56,7 +56,7 @@ function Login() {
       })
       .catch(err => {
         setPwd('');
-        setLoginError(err);
+        setLoginError('Server error');
         setLoggingIn(false);
       });
   };
