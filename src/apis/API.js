@@ -98,14 +98,27 @@ export const getPlaylistSimple = (token, playlistId) => {
   }).then(response => response.json());
 };
 
-export const performActionObject = (token, type, id, action) => {
+export const performActionObject = (token, type, id, relation, action) => {
+  if (type === 'profile' || type === 'artist') {
+    type = 'user';
+  }
+
   return fetch(`${host}/${type}s/${id}`, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
     },
     body: `action=${action}`
-  }).then(response => response.json());
+  })
+    .then(response => response.json())
+    .then(res => {
+      if (res.status === 'success') {
+        if (action === 'favorite') return [...relation, 'favorite'];
+        else return relation.filter(value => value !== 'favorite');
+      } else {
+        throw 'Error';
+      }
+    });
 };
 
 const getRangeStr = (start, end) => {

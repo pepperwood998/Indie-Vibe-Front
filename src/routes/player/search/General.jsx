@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { capitalize } from '../../../utils/Common';
 import { NavLinkColor } from '../../../components/links';
@@ -10,7 +10,7 @@ import {
 import { ArrowRight } from '../../../assets/svgs';
 
 function General() {
-  const data = {
+  const [data, setData] = useState({
     tracks: {
       items: [
         {
@@ -64,7 +64,7 @@ function General() {
           id: 'j89349823hf982',
           displayName: 'Vũ.',
           type: 'artist',
-          relation: ['following'],
+          relation: ['favorite'],
           followersCount: 10
         },
         {
@@ -112,7 +112,7 @@ function General() {
           id: '09j0evjqw9vj2',
           displayName: 'Tuan',
           type: 'profile',
-          relation: ['following']
+          relation: ['favorite']
         },
         {
           id: '0c129hcj0j3209c',
@@ -131,7 +131,18 @@ function General() {
       limit: 0,
       total: 0
     }
-  };
+  });
+
+  // const handleToggleFavorite = (type, index, relation) => {
+  //   let target = { ...data[`${type}s`] };
+  //   target.items.some((item, i) => {
+  //     if (index === i) {
+  //       item.relation = [...relation];
+  //       return true;
+  //     }
+  //   });
+  //   setData({ ...data, [`${type}s`]: target });
+  // };
 
   const render = data
     ? Object.keys(data).map((key, index) => {
@@ -152,7 +163,6 @@ function General() {
               }
               data={data[key]}
               type='search'
-              short={true}
               key={index}
             />
           );
@@ -171,7 +181,6 @@ function General() {
             }
             data={data[key]}
             type={type}
-            short={true}
             key={index}
           />
         );

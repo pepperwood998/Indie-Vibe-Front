@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { ButtonIcon } from '../buttons';
 import { NavLinkUnderline } from '../links';
+import { AuthContext } from '../../contexts';
+import { performActionObject } from '../../apis/API';
 
 import {
   FavoriteIcon,
@@ -13,8 +15,30 @@ import {
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
 function CardProfile(props) {
+  const { state: authState } = useContext(AuthContext);
   const { content } = props;
-  const { relation } = content;
+
+  const [relation, setRelation] = useState([...content.relation]);
+
+  // useEffect(() => {
+  //   props.handleToggleFavorite(content.type, props.index, relation);
+  // }, [relation]);
+
+  const handleToggleFavorite = action => {
+    performActionObject(
+      authState.token,
+      content.type,
+      content.id,
+      relation,
+      action
+    )
+      .then(r => {
+        setRelation(r);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   return (
     <div className='card-main'>
@@ -35,13 +59,22 @@ function CardProfile(props) {
             ''
           )}
           <div className='action__extra profile'>
-            {relation.includes('following') ? (
+            {relation.includes('favorite') ? (
               <ButtonIcon>
-                <FavoriteIcon className='svg--blue' />
+                <FavoriteIcon
+                  className='svg--blue'
+                  onClick={() => {
+                    handleToggleFavorite('unfavorite');
+                  }}
+                />
               </ButtonIcon>
             ) : (
               <ButtonIcon>
-                <UnFavoriteIcon />
+                <UnFavoriteIcon
+                  onClick={() => {
+                    handleToggleFavorite('favorite');
+                  }}
+                />
               </ButtonIcon>
             )}
             <ButtonIcon>

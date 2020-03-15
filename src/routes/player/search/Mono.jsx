@@ -62,7 +62,7 @@ function Mono(props) {
           id: 'j89349823hf982',
           displayName: 'Vũ.',
           type: 'artist',
-          relation: ['following'],
+          relation: ['favorite'],
           followersCount: 10
         },
         {
@@ -110,7 +110,7 @@ function Mono(props) {
           id: '09j0evjqw9vj2',
           displayName: 'Tuan',
           type: 'profile',
-          relation: ['following']
+          relation: ['favorite']
         },
         {
           id: '0c129hcj0j3209c',
@@ -130,7 +130,18 @@ function Mono(props) {
       total: 0
     }
   };
-  const data = test[`${type}s`];
+  const [data, setData] = useState(test[`${type}s`]);
+
+  // const handleToggleFavorite = (type, index, relation) => {
+  //   let items = [...data.items];
+  //   items.some((item, i) => {
+  //     if (index === i) {
+  //       item.relation = [...relation];
+  //       return true;
+  //     }
+  //   });
+  //   setData({ ...data, items });
+  // };
 
   if (type === 'track') {
     return (

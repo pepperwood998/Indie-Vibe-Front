@@ -18,23 +18,26 @@ function CardMain(props) {
   const { state: authState } = useContext(AuthContext);
   const { content } = props;
 
-  const [relation, setRelation] = useState([]);
+  const [relation, setRelation] = useState([...content.relation]);
 
-  useEffect(() => {
-    props.handleToggleFavorite(props.index, relation);
-  }, [relation]);
+  // useEffect(() => {
+  //   props.handleToggleFavorite(content.type, props.index, relation);
+  // }, [relation]);
 
   const handleToggleFavorite = action => {
-    performActionObject(authState.token, content.type, content.id, action).then(
-      res => {
-        if (res.status === 'success') {
-          if (action === 'favorite')
-            setRelation([...content.relation, 'favorite']);
-          else
-            setRelation(content.relation.filter(value => value !== 'favorite'));
-        }
-      }
-    );
+    performActionObject(
+      authState.token,
+      content.type,
+      content.id,
+      relation,
+      action
+    )
+      .then(r => {
+        setRelation(r);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   return (
@@ -52,9 +55,9 @@ function CardMain(props) {
             <PlayIcon />
           </ButtonIcon>
           <div className='action__extra playlist-release'>
-            {content.relation.includes('own') ? (
+            {relation.includes('own') ? (
               ''
-            ) : content.relation.includes('favorite') ? (
+            ) : relation.includes('favorite') ? (
               <ButtonIcon>
                 <FavoriteIcon
                   className='svg--blue'

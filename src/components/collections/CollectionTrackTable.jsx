@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { NavLinkUnderline } from '../links';
 import { getFormattedTime } from '../../utils/Common';
@@ -9,15 +9,12 @@ import {
   DateIcon,
   FavoriteIcon
 } from '../../assets/svgs';
+import { AuthContext } from '../../contexts';
+import { performActionObject } from '../../apis/API';
 
 function CollectionTrackTable(props) {
   const { type } = props;
   let { items, offset, limit, total } = props.data;
-
-  if (props.short) {
-    offset = 0;
-    limit = 5;
-  }
 
   return (
     <div className='collection-table'>
@@ -87,13 +84,7 @@ function RowPlaylist(props) {
       <div className='collection-table__cell collection-table__cell--action'>
         <span>{serial}</span>
       </div>
-      <div className='collection-table__cell collection-table__cell--favorite'>
-        {item.relation.includes('favorite') ? (
-          <FavoriteIcon className='svg--cursor svg--scale svg--blue' />
-        ) : (
-          <UnFavoriteIcon className='svg--cursor svg--scale' />
-        )}
-      </div>
+      <CellFavorite id={item.id} relation={item.relation} />
       <div className='collection-table__cell collection-table__cell--title'>
         <span>{item.title}</span>
       </div>
@@ -142,13 +133,7 @@ function RowRelease(props) {
       <div className='collection-table__cell collection-table__cell--action'>
         <span>{serial}</span>
       </div>
-      <div className='collection-table__cell collection-table__cell--favorite'>
-        {item.relation.includes('favorite') ? (
-          <FavoriteIcon className='svg--cursor svg--scale svg--blue' />
-        ) : (
-          <UnFavoriteIcon className='svg--cursor svg--scale' />
-        )}
-      </div>
+      <CellFavorite id={item.id} relation={item.relation} />
       <div className='collection-table__cell collection-table__cell--title'>
         <span>{item.title}</span>
       </div>
@@ -167,13 +152,7 @@ function RowSearch(props) {
       <div className='collection-table__cell collection-table__cell--action'>
         <span>{serial}</span>
       </div>
-      <div className='collection-table__cell collection-table__cell--favorite'>
-        {item.relation.includes('favorite') ? (
-          <FavoriteIcon className='svg--cursor svg--scale svg--blue' />
-        ) : (
-          <UnFavoriteIcon className='svg--cursor svg--scale' />
-        )}
-      </div>
+      <CellFavorite id={item.id} relation={item.relation} />
       <div className='collection-table__cell collection-table__cell--title'>
         <span>{item.title}</span>
       </div>
@@ -207,6 +186,42 @@ function RowSearch(props) {
       <div className='collection-table__cell collection-table__cell--duration'>
         <span>{getFormattedTime(item.duration / 1000)}</span>
       </div>
+    </div>
+  );
+}
+
+function CellFavorite(props) {
+  const { state: authState } = useContext(AuthContext);
+
+  const [relation, setRelation] = useState([...props.relation]);
+
+  const handleToggleFavorite = action => {
+    performActionObject(authState.token, 'track', props.id, relation, action)
+      .then(r => {
+        setRelation(r);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  return (
+    <div className='collection-table__cell collection-table__cell--favorite'>
+      {relation.includes('favorite') ? (
+        <FavoriteIcon
+          className='svg--cursor svg--scale svg--blue'
+          onClick={() => {
+            handleToggleFavorite('unfavorite');
+          }}
+        />
+      ) : (
+        <UnFavoriteIcon
+          className='svg--cursor svg--scale'
+          onClick={() => {
+            handleToggleFavorite('favorite');
+          }}
+        />
+      )}
     </div>
   );
 }
