@@ -6,7 +6,7 @@ import { GroupPlaylistDialog } from '../../components/groups';
 
 import { AddPlaylistIcon } from '../../assets/svgs';
 import { LinkWhiteColor } from '../../components/links';
-import { getMePlaylists, getMeNewPlaylist } from '../../apis/API';
+import { getMePlaylists, getPlaylistSimple } from '../../apis/API';
 
 function QuickAccess() {
   const { state: authState } = useContext(AuthContext);
@@ -24,7 +24,7 @@ function QuickAccess() {
   };
 
   const handleCreatePlaylistSuccess = playlistId => {
-    getMeNewPlaylist(authState.token, playlistId).then(res => {
+    getPlaylistSimple(authState.token, playlistId).then(res => {
       if (res.status === 'success') {
         setPlaylists([...playlists, res.data]);
       }
@@ -34,7 +34,6 @@ function QuickAccess() {
   useEffect(() => {
     getMePlaylists(authState.token).then(res => {
       if (res.status === 'success') {
-        console.log(res.data);
         setPlaylists([...playlists, ...res.data]);
       }
     });

@@ -11,7 +11,7 @@ function CollectionTracks(props) {
         <CollectionTrackTable
           data={props.data}
           short={props.short}
-          type='release'
+          type={props.type}
         />
       </div>
     </div>

@@ -15,7 +15,7 @@ function GroupPlaylistDialog(props) {
 
   const [info, setInfo] = useState({
     title: props.title,
-    description: props.description
+    description: props.description ? props.description : null
   });
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailSrc, setThumbnailSrc] = useState(props.thumbnail);

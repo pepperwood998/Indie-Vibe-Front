@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { NavLinkUnderline } from '../links';
 import { ButtonIcon } from '../buttons';
+import { performActionObject } from '../../apis/API';
+import { AuthContext } from '../../contexts';
 
 import Placeholder from '../../assets/imgs/placeholder.png';
 import {
@@ -13,8 +15,27 @@ import {
 } from '../../assets/svgs';
 
 function CardMain(props) {
+  const { state: authState } = useContext(AuthContext);
   const { content } = props;
-  const { relation } = content;
+
+  const [relation, setRelation] = useState([]);
+
+  useEffect(() => {
+    props.handleToggleFavorite(props.index, relation);
+  }, [relation]);
+
+  const handleToggleFavorite = action => {
+    performActionObject(authState.token, content.type, content.id, action).then(
+      res => {
+        if (res.status === 'success') {
+          if (action === 'favorite')
+            setRelation([...content.relation, 'favorite']);
+          else
+            setRelation(content.relation.filter(value => value !== 'favorite'));
+        }
+      }
+    );
+  };
 
   return (
     <div className='card-main'>
@@ -31,15 +52,24 @@ function CardMain(props) {
             <PlayIcon />
           </ButtonIcon>
           <div className='action__extra playlist-release'>
-            {relation.includes('own') ? (
+            {content.relation.includes('own') ? (
               ''
-            ) : relation.includes('favorite') ? (
+            ) : content.relation.includes('favorite') ? (
               <ButtonIcon>
-                <FavoriteIcon className='svg--blue' />
+                <FavoriteIcon
+                  className='svg--blue'
+                  onClick={() => {
+                    handleToggleFavorite('unfavorite');
+                  }}
+                />
               </ButtonIcon>
             ) : (
               <ButtonIcon>
-                <UnFavoriteIcon />
+                <UnFavoriteIcon
+                  onClick={() => {
+                    handleToggleFavorite('favorite');
+                  }}
+                />
               </ButtonIcon>
             )}
             <ButtonIcon>

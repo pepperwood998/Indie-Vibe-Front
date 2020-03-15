@@ -4,3 +4,5 @@ export { MeContext } from './MeContext';
 export { default as MeContextProvider } from './MeContext';
 export { StreamContext } from './StreamContext';
 export { default as StreamContextProvider } from './StreamContext';
+export { LibraryContext } from './LibraryContext';
+export { default as LibraryContextProvider } from './LibraryContext';
