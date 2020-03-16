@@ -15,8 +15,8 @@ function Mono(props) {
   const [data, setData] = useState({
     items: [],
     offset: 0,
-    limit: 1,
-    total: 1
+    limit: 0,
+    total: 0
   });
 
   useEffect(() => {
