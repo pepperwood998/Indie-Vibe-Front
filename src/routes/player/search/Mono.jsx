@@ -13,13 +13,7 @@ function Mono(props) {
 
   const { state: authState } = useContext(AuthContext);
   const [data, setData] = useState({
-    items: [{
-      id: '2834j9238u489gu3',
-      title: 'Acoustic Chill',
-      type: 'playlist',
-      relation: ['favorite'],
-      description: 'Description'
-    }],
+    items: [],
     offset: 0,
     limit: 1,
     total: 1
