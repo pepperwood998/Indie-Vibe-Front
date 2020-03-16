@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { NavLinkUnderline } from '../links';
 import { ButtonIcon } from '../buttons';
-import { performActionObject } from '../../apis/API';
+import { performActionFavorite } from '../../apis/API';
 import { AuthContext } from '../../contexts';
 
 import Placeholder from '../../assets/imgs/placeholder.png';
@@ -25,7 +25,7 @@ function CardMain(props) {
   }, [relation]);
 
   const handleToggleFavorite = action => {
-    performActionObject(
+    performActionFavorite(
       authState.token,
       content.type,
       content.id,

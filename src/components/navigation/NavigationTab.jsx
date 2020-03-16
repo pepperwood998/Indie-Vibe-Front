@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 function NavigationTab(props) {
-  const { items } = props;
+  const { type, items } = props;
 
   return (
     <div className='tab-menu-wrapper'>
@@ -23,6 +23,11 @@ function NavigationTab(props) {
               <NavLink
                 to={item.href}
                 className='link-bright-gray font-short-big font-weight-bold font-gray-light'
+                isActive={(match, location) => {
+                  if (type !== 'search') return item.href === location.pathname;
+                  if (match) return location.pathname === match.url;
+                  return false;
+                }}
               >
                 {item.label}
               </NavLink>

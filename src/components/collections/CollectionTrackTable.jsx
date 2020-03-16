@@ -3,7 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { NavLinkUnderline } from '../links';
 import { getFormattedTime } from '../../utils/Common';
 import { AuthContext } from '../../contexts';
-import { performActionObject } from '../../apis/API';
+import { performActionFavorite } from '../../apis/API';
 
 import {
   UnFavoriteIcon,
@@ -14,7 +14,7 @@ import {
 
 function CollectionTrackTable(props) {
   const { type } = props;
-  let { items, offset, limit, total } = props.data;
+  let { items, offset, limit } = props.data;
 
   return (
     <div className='collection-table'>
@@ -233,7 +233,7 @@ function CellFavorite(props) {
   }, [relation]);
 
   const handleToggleFavorite = action => {
-    performActionObject(authState.token, 'track', props.id, relation, action)
+    performActionFavorite(authState.token, 'track', props.id, relation, action)
       .then(r => {
         setRelation(r);
       })

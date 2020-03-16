@@ -11,11 +11,11 @@ import { Search } from './search';
 
 import './css/player.scss';
 
-function Player() {
+function Player(props) {
   return (
     <div className='player'>
       <div className='player__top'>
-        <Top />
+        <Top history={props.history} />
       </div>
       <div className='player__nav'>
         <NavMenu />
@@ -32,7 +32,7 @@ function Player() {
         <UserRoute path='/player/library' component={Library} />
         <UserRoute path='/player/account' component={Account} />
         <UserRoute path='/player/artist' component={Artist} />
-        <UserRoute path='/player/search' component={Search} />
+        <UserRoute path='/player/search/:key' component={Search} />
         <ArtistRoute path='/player/workspace' component={Workspace} />
       </div>
     </div>

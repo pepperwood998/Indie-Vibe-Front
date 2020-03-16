@@ -80,7 +80,7 @@ export const createPlaylist = (token, title, description, thumbnail) => {
   });
 };
 
-export const getMePlaylists = token => {
+export const getPlaylistsMe = token => {
   return fetch(`${host}/me/playlists`, {
     method: 'GET',
     headers: {
@@ -90,7 +90,7 @@ export const getMePlaylists = token => {
 };
 
 export const getPlaylistSimple = (token, playlistId) => {
-  return fetch(`${host}/playlists/${playlistId}`, {
+  return fetch(`${host}/playlists/simple/${playlistId}`, {
     method: 'GET',
     headers: {
       Authorization: 'Bearer ' + token
@@ -98,7 +98,7 @@ export const getPlaylistSimple = (token, playlistId) => {
   }).then(response => response.json());
 };
 
-export const performActionObject = (token, type, id, relation, action) => {
+export const performActionFavorite = (token, type, id, relation, action) => {
   if (type === 'profile' || type === 'artist') {
     type = 'user';
   }
@@ -119,6 +119,18 @@ export const performActionObject = (token, type, id, relation, action) => {
         throw 'Error';
       }
     });
+};
+
+export const search = (token, key, type = '') => {
+  let url = `${host}/search/${key}`;
+  if (type) url += `/${type}s`;
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
 };
 
 const getRangeStr = (start, end) => {

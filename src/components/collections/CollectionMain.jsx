@@ -23,6 +23,7 @@ function CollectionMain(props) {
 function Content(props) {
   const { type } = props;
   let { items, offset, limit } = props.data;
+  console.log(offset);
 
   switch (type) {
     case 'playlist':

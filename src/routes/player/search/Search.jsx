@@ -6,36 +6,39 @@ import { UserRoute } from '../../../components/custom-routes';
 import General from './General';
 import Mono from './Mono';
 
-function Search() {
+function Search(props) {
+  const { key } = props.match.params;
+
   const nav = (
     <NavigationTab
+      type='search'
       items={[
         {
-          href: ['/player/search', '/player/search/general'],
+          href: `/player/search/${key}`,
           label: 'General'
         },
         {
-          href: '/player/search/tracks',
+          href: `/player/search/${key}/tracks`,
           label: 'Tracks'
         },
         {
-          href: '/player/search/artists',
+          href: `/player/search/${key}/artists`,
           label: 'Arists'
         },
         {
-          href: '/player/search/releases',
+          href: `/player/search/${key}/releases`,
           label: 'Releases'
         },
         {
-          href: '/player/search/playlists',
+          href: `/player/search/${key}/playlists`,
           label: 'Playlists'
         },
         {
-          href: '/player/search/profiles',
+          href: `/player/search/${key}/profiles`,
           label: 'Profiles'
         },
         {
-          href: '/player/search/genres',
+          href: `/player/search/${key}/genres`,
           label: 'Genres'
         }
       ]}
@@ -52,14 +55,11 @@ function Search() {
 
   const body = (
     <React.Fragment>
-      <UserRoute
-        exact
-        path={['/player/search', '/player/search/general']}
-        component={General}
-      />
+      <UserRoute exact path='/player/search/:key' component={General} />
       {tabs.map((value, index) => (
         <UserRoute
-          path={`/player/search/${value}`}
+          exact
+          path={`/player/search/:key/${value}`}
           component={Mono}
           type={value.substr(0, value.length - 1)}
           key={index}
