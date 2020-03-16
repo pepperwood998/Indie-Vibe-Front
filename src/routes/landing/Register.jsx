@@ -43,9 +43,18 @@ function Register() {
       .then(response => response.json())
       .then(json => {
         if (json.status === 'failed') {
-          setRegisterError(json.data);
+          throw { type: 'wrong', msg: json.data };
         } else {
           setRegisterSuccess(json.data);
+        }
+
+        setRegistering(false);
+      })
+      .catch(err => {
+        if (err.type && err.type==='wrong') {
+          setRegisterError(err.msg);
+        } else {
+          setRegisterError('Server error');
         }
 
         setRegistering(false);
@@ -73,7 +82,10 @@ function Register() {
           .then(response => response.json())
           .then(json => {
             if (json.status === 'failed') {
-              setRegisterError(json.data);
+              throw {
+                type: 'wrong',
+                msg: json.data
+              };
             } else {
               setRegisterSuccess(json.data);
             }
@@ -81,7 +93,12 @@ function Register() {
             setRegisteringFb(false);
           })
           .catch(err => {
-            setRegisterError("Server error");
+            if (err.type && err.type==='wrong') {
+              setRegisterError(err.msg);
+            } else {
+              setRegisterError('Server error');
+            }
+
             setRegisteringFb(false);
           });
       });

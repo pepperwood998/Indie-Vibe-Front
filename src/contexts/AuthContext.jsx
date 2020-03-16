@@ -63,7 +63,6 @@ function AuthContextProvider(props) {
       let lastTimeSession = localStorage.getItem('lastTimeSession');
       let btw = 0;
       if (lastTimeSession) {
-        console.log('new page');
         btw = Date.now() - parseInt(lastTimeSession);
       } else {
         localStorage.setItem('lastTimeSession', Date.now().toString());

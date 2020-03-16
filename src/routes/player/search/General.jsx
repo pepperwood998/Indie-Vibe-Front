@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { capitalize } from '../../../utils/Common';
 import { NavLinkColor } from '../../../components/links';
@@ -6,153 +6,68 @@ import {
   CollectionTracks,
   CollectionMain
 } from '../../../components/collections';
+import { AuthContext } from '../../../contexts';
+import { search } from '../../../apis/API';
 
 import { ArrowRight } from '../../../assets/svgs';
 
-function General() {
-  const data = {
-    tracks: {
-      items: [
-        {
-          id: 'vq98jf093f9032fj0',
-          title: 'Vung vong veo',
-          duration: 234000,
-          artists: [
-            {
-              id: '093jf930f92j',
-              displayName: 'Hà Hồ Hồ'
-            },
-            {
-              id: 'f093j92jf2',
-              displayName: 'Misuka'
-            }
-          ],
-          release: {
-            id: 'j0238jf23f023',
-            title: 'Sunhi'
-          },
-          relation: ['favorite']
-        },
-        {
-          id: 'vq98jf093f9032fj0',
-          title: 'Vung vong veo',
-          duration: 234000,
-          artists: [
-            {
-              id: '093jf930f92j',
-              displayName: 'Hà Hồ Hồ'
-            },
-            {
-              id: 'f093j92jf2',
-              displayName: 'Misuka'
-            }
-          ],
-          release: {
-            id: 'j0238jf23f023',
-            title: 'Sunhi'
-          },
-          relation: []
+function General(props) {
+  const { key: searchKey } = props.match.params;
+
+  const { state: authState } = useContext(AuthContext);
+  const [data, setData] = useState({
+    tracks: [],
+    artists: [],
+    releases: [],
+    playlists: [],
+    profiles: [],
+    genres: []
+  });
+
+  useEffect(() => {
+    search(authState.token, props.match.params.key)
+      .then(res => {
+        if (res.status === 'success') {
+          setData({ ...data, ...res.data });
         }
-      ],
-      offset: 0,
-      limit: 2,
-      total: 40
-    },
-    artists: {
-      items: [
-        {
-          id: 'j89349823hf982',
-          displayName: 'Vũ.',
-          type: 'artist',
-          relation: ['following'],
-          followersCount: 10
-        },
-        {
-          id: '92f8fh92h39fh2',
-          displayName: 'Vân',
-          type: 'artist',
-          relation: [],
-          followersCount: 1000
-        }
-      ],
-      offset: 0,
-      limit: 2,
-      total: 10
-    },
-    releases: {
-      items: [],
-      offset: 0,
-      limit: 0,
-      total: 0
-    },
-    playlists: {
-      items: [
-        {
-          id: '2834j9238u489gu3',
-          title: 'Acoustic Chill',
-          type: 'playlist',
-          relation: ['favorite'],
-          description: 'Description'
-        },
-        {
-          id: '2834j9238u489gu3',
-          title: 'Acoustic Chill',
-          type: 'playlist',
-          relation: ['own'],
-          description: 'Description'
-        }
-      ],
-      offset: 0,
-      limit: 10,
-      total: 20
-    },
-    profiles: {
-      items: [
-        {
-          id: '09j0evjqw9vj2',
-          displayName: 'Tuan',
-          type: 'profile',
-          relation: ['following']
-        },
-        {
-          id: '0c129hcj0j3209c',
-          displayName: 'Tuan',
-          type: 'profile',
-          relation: []
-        }
-      ],
-      offset: 0,
-      limit: 2,
-      total: 20
-    },
-    genres: {
-      items: [],
-      offset: 0,
-      limit: 0,
-      total: 0
-    }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
+
+  const handleToggleFavorite = (type, index, relation) => {
+    let target = [...data[`${type}s`]];
+    target.some((item, i) => {
+      if (index === i) {
+        item.relation = [...relation];
+        return true;
+      }
+    });
+    setData({ ...data, [`${type}s`]: target });
   };
 
-  const render = data
-    ? Object.keys(data).map((key, index) => {
-        if (!data[key].items.length) return '';
-
+  let exist = Object.keys(data).find(key => data[key].length > 0);
+  let render = '';
+  if (exist) {
+    render = Object.keys(data).map((key, index) => {
+      if (data[key].length > 0) {
         let type = key.substr(0, key.length - 1);
         if (type === 'track') {
           return (
             <CollectionTracks
               header={
                 <NavLinkColor
-                  href={`/player/search/${key}`}
+                  href={`/player/search/${searchKey}/${key}`}
                   className='header-title font-white'
                 >
                   {capitalize(key)}
                   <ArrowRight />
                 </NavLinkColor>
               }
-              data={data[key]}
+              data={{ items: data[key], offset: 0, limit: data[key].length }}
               type='search'
-              short={true}
+              handleToggleFavorite={handleToggleFavorite}
               key={index}
             />
           );
@@ -162,21 +77,28 @@ function General() {
           <CollectionMain
             header={
               <NavLinkColor
-                href={`/player/search/${key}`}
+                href={`/player/search/${searchKey}/${key}`}
                 className='header-title font-white'
               >
                 {capitalize(key)}
                 <ArrowRight />
               </NavLinkColor>
             }
-            data={data[key]}
+            data={{ items: data[key], offset: 0, limit: data[key].length }}
             type={type}
-            short={true}
+            handleToggleFavorite={handleToggleFavorite}
             key={index}
           />
         );
-      })
-    : '';
+      }
+    });
+  } else {
+    render = (
+      <span className='font-short-extra font-white font-weight-bold'>
+        No results found
+      </span>
+    );
+  }
 
   return render;
 }

@@ -47,16 +47,18 @@ function Login() {
     setLoggingIn(true);
     login(email, pwd)
       .then(response => {
-        if (response.status !== 200) throw 'Wrong email or password!';
-        setLoggingIn(false);
+        if (response.status !== 200) throw 'wrong';
+
         return response.json();
       })
       .then(json => {
         dispatch(loginSuccess({ ...json, remembered }));
       })
       .catch(err => {
+        if (err === 'wrong') setLoginError('Wrong email or password');
+        else setLoginError('Server error');
+
         setPwd('');
-        setLoginError('Server error');
         setLoggingIn(false);
       });
   };
@@ -77,7 +79,7 @@ function Login() {
       .then(response => response.json())
       .then(json => {
         if (json.status && json.status === 'failed') {
-          setLoginError(json.data);
+          throw 'wrong';
         } else {
           dispatch(loginSuccess({ ...json, remembered }));
         }
@@ -85,7 +87,9 @@ function Login() {
         setLoggingInFb(false);
       })
       .catch(err => {
-        setLoginError(err);
+        if (err === 'wrong') setLoginError('Facebook account is not connected');
+        else setLoginError('Server error');
+
         setLoggingInFb(false);
       });
   };

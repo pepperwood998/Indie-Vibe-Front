@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { CardMain } from '../cards';
 import CardProfile from '../cards/CardProfile';
 
 function CollectionMain(props) {
-  const { header, data, type, short } = props;
+  const { header, data, type } = props;
 
   return (
     <div className='collection-main collection-main--extended'>
       <div className='collection-main__header'>{header}</div>
       <div className='collection-main__content grid'>
-        <Content data={data} type={type} short={short} />
+        <Content
+          data={data}
+          type={type}
+          handleToggleFavorite={props.handleToggleFavorite}
+        />
       </div>
     </div>
   );
@@ -19,13 +23,6 @@ function CollectionMain(props) {
 function Content(props) {
   const { type } = props;
   let { items, offset, limit } = props.data;
-
-  if (props.short) {
-    offset = 0;
-    limit = 2;
-  }
-
-  const handleToggleFavorite = () => {};
 
   switch (type) {
     case 'playlist':
@@ -37,7 +34,7 @@ function Content(props) {
             content={item}
             key={index}
             index={index}
-            handleToggleFavorite={handleToggleFavorite}
+            handleToggleFavorite={props.handleToggleFavorite}
           />
         ));
     case 'artist':
@@ -49,7 +46,7 @@ function Content(props) {
             content={item}
             key={index}
             index={index}
-            handleToggleFavorite={handleToggleFavorite}
+            handleToggleFavorite={props.handleToggleFavorite}
           />
         ));
   }

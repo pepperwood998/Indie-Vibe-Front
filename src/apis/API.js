@@ -11,23 +11,6 @@ export const getMeSimple = token => {
   });
 };
 
-export const getStreamInfo = (token, id, bitrate) => {
-  return fetch(`${host}/stream/info/${bitrate}/${id}`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + token
-    }
-  });
-};
-
-export const getStream = (url, start, end) => {
-  return fetch(url, {
-    headers: {
-      Range: getRangeStr(start, end)
-    }
-  });
-};
-
 export const getGenresList = token => {
   return fetch(`${host}/genres`, {
     method: 'GET',
@@ -68,8 +51,8 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
 export const createPlaylist = (token, title, description, thumbnail) => {
   let data = new FormData();
   data.append('title', title);
-  data.append('description', description);
-  data.append('thumbnail', thumbnail);
+  if (description) data.append('description', description);
+  if (thumbnail) data.append('thumbnail', thumbnail);
 
   return fetch(`${host}/playlists`, {
     method: 'POST',
@@ -80,7 +63,7 @@ export const createPlaylist = (token, title, description, thumbnail) => {
   });
 };
 
-export const getMePlaylists = token => {
+export const getPlaylistsMe = token => {
   return fetch(`${host}/me/playlists`, {
     method: 'GET',
     headers: {
@@ -90,7 +73,7 @@ export const getMePlaylists = token => {
 };
 
 export const getPlaylistSimple = (token, playlistId) => {
-  return fetch(`${host}/playlists/${playlistId}`, {
+  return fetch(`${host}/playlists/simple/${playlistId}`, {
     method: 'GET',
     headers: {
       Authorization: 'Bearer ' + token
@@ -98,16 +81,37 @@ export const getPlaylistSimple = (token, playlistId) => {
   }).then(response => response.json());
 };
 
-export const performActionObject = (token, type, id, action) => {
+export const performActionFavorite = (token, type, id, relation, action) => {
+  if (type === 'profile' || type === 'artist') {
+    type = 'user';
+  }
+
   return fetch(`${host}/${type}s/${id}`, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
     },
     body: `action=${action}`
-  }).then(response => response.json());
+  })
+    .then(response => response.json())
+    .then(res => {
+      if (res.status === 'success') {
+        if (action === 'favorite') return [...relation, 'favorite'];
+        else return relation.filter(value => value !== 'favorite');
+      } else {
+        throw 'Error';
+      }
+    });
 };
 
-const getRangeStr = (start, end) => {
-  return 'bytes=' + start + '-' + end;
+export const search = (token, key, type = '') => {
+  let url = `${host}/search/${key}`;
+  if (type) url += `/${type}s`;
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
 };
