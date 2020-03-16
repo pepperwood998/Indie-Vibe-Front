@@ -1,29 +1,25 @@
-import React, {
-  createContext,
-  useReducer,
-  useEffect,
-  useContext,
-  useState
-} from 'react';
+import React, { createContext, useReducer, useEffect, useContext } from 'react';
 import AudioStream from '../utils/AudioStream';
-import { getStreamInfo, getStream } from '../apis/API';
+import { getStreamInfo, getStream } from '../apis/StreamAPI';
 import { AuthContext } from './AuthContext';
+import { reorder, shuffle } from '../utils/Common';
 
 const StreamContext = createContext();
 
 const stream = new AudioStream();
 
 const initState = {
-  queue: ['ikK5yIy3mxbUZw1T8hnF'],
-  shuffle: [],
+  queue: [],
+  queueSrc: [],
   currentSong: 0,
   bitrate: 128,
-  playType: 'release', // 'playlist' or 'release'
+  playType: '', // 'playlist' or 'release' or 'favorite'
   collectionId: '',
   volume: 50,
   muted: false,
   autoplay: false,
   paused: true,
+  shuffled: false,
   info: {}
 };
 
@@ -67,6 +63,18 @@ function StreamContextProvider(props) {
 }
 
 const actions = {
+  start: payload => {
+    return {
+      type: 'START',
+      payload
+    };
+  },
+  reorder: trackId => {
+    return {
+      type: 'REORDER',
+      trackId
+    };
+  },
   skipBackward: () => {
     return {
       type: 'SKIP_BACKWARD'
@@ -117,7 +125,25 @@ const actions = {
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'START':
+      stream.start(action.payload.queue[0]);
+      return {
+        ...state,
+        ...action.payload
+      };
+    case 'REORDER':
+      let queue = reorder(state.queue, state.queue.indexOf(action.trackId));
+      if (state.shuffled) {
+        queue = [queue[0], ...shuffle(queue.slice(1))];
+      }
+      return {
+        ...state,
+        queue,
+        currentSong: 0
+      };
     case 'SKIP_BACKWARD':
+      if (!state.queue.length) return state;
+
       let index = Math.max(state.currentSong - 1, 0);
       stream.start(state.queue[index]);
       return {
@@ -125,6 +151,8 @@ const reducer = (state, action) => {
         currentSong: index
       };
     case 'SKIP_FORWARD':
+      if (!state.queue.length) return state;
+
       let ind = Math.min(state.currentSong + 1, state.queue.length - 1);
       stream.start(state.queue[ind]);
       return {

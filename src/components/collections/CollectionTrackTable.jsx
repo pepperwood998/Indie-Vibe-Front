@@ -2,14 +2,18 @@ import React, { useState, useContext, useEffect } from 'react';
 
 import { NavLinkUnderline } from '../links';
 import { getFormattedTime } from '../../utils/Common';
-import { AuthContext } from '../../contexts';
+import { AuthContext, StreamContext } from '../../contexts';
 import { performActionFavorite } from '../../apis/API';
+import { ButtonIcon } from '../buttons';
+import { streamCollection } from '../../apis/StreamAPI';
 
 import {
   UnFavoriteIcon,
   TimerIcon,
   DateIcon,
-  FavoriteIcon
+  FavoriteIcon,
+  PlayIcon,
+  PauseIcon
 } from '../../assets/svgs';
 
 function CollectionTrackTable(props) {
@@ -70,6 +74,7 @@ function CollectionTrackTable(props) {
               item={item}
               key={index}
               serial={index + 1}
+              collectionId={props.collectionId}
               handleToggleFavorite={props.handleToggleFavorite}
             />
           );
@@ -79,6 +84,7 @@ function CollectionTrackTable(props) {
               item={item}
               key={index}
               serial={index + 1}
+              collectionId={props.collectionId}
               handleToggleFavorite={props.handleToggleFavorite}
             />
           );
@@ -88,6 +94,8 @@ function CollectionTrackTable(props) {
               item={item}
               key={index}
               serial={index + 1}
+              collectionId={item.release ? item.release.id : ''}
+              type={props.type}
               handleToggleFavorite={props.handleToggleFavorite}
             />
           );
@@ -101,10 +109,13 @@ function RowPlaylist(props) {
   const { item, serial } = props;
 
   return (
-    <div className='collection-table__row'>
-      <div className='collection-table__cell collection-table__cell--action'>
-        <span>{serial}</span>
-      </div>
+    <div className='collection-table__row collection-table__row--data'>
+      <CellAction
+        serial={serial}
+        id={item.id}
+        collectionId={props.collectionId}
+        type='playlist'
+      />
       <CellFavorite
         id={item.id}
         relation={item.relation}
@@ -133,10 +144,10 @@ function RowPlaylist(props) {
       <div className='collection-table__cell collection-table__cell--release'>
         <span>
           <NavLinkUnderline
-            href={`/player/release/${item.release.id}`}
+            href={`/player/release/${item.release ? item.release.id : ''}`}
             className='font-white'
           >
-            {item.release.title}
+            {item.release ? item.release.title : ''}
           </NavLinkUnderline>
         </span>
       </div>
@@ -154,10 +165,13 @@ function RowRelease(props) {
   const { item, serial } = props;
 
   return (
-    <div className='collection-table__row'>
-      <div className='collection-table__cell collection-table__cell--action'>
-        <span>{serial}</span>
-      </div>
+    <div className='collection-table__row collection-table__row--data'>
+      <CellAction
+        serial={serial}
+        id={item.id}
+        collectionId={props.collectionId}
+        type='release'
+      />
       <CellFavorite
         id={item.id}
         relation={item.relation}
@@ -176,11 +190,16 @@ function RowRelease(props) {
 function RowSearch(props) {
   const { item, serial } = props;
 
+  const type = props.type === 'favorite' ? props.type : 'release';
+
   return (
-    <div className='collection-table__row'>
-      <div className='collection-table__cell collection-table__cell--action'>
-        <span>{serial}</span>
-      </div>
+    <div className='collection-table__row collection-table__row--data'>
+      <CellAction
+        serial={serial}
+        id={item.id}
+        collectionId={props.collectionId}
+        type={type}
+      />
       <CellFavorite
         id={item.id}
         relation={item.relation}
@@ -209,10 +228,10 @@ function RowSearch(props) {
       <div className='collection-table__cell collection-table__cell--release'>
         <span>
           <NavLinkUnderline
-            href={`/player/release/${item.release.id}`}
+            href={`/player/release/${item.release ? item.release.id : ''}`}
             className='font-white'
           >
-            {item.release.title}
+            {item.release ? item.release.title : ''}
           </NavLinkUnderline>
         </span>
       </div>
@@ -259,6 +278,62 @@ function CellFavorite(props) {
           }}
         />
       )}
+    </div>
+  );
+}
+
+function CellAction(props) {
+  const { state: authState } = useContext(AuthContext);
+  const {
+    state: streamState,
+    actions: streamAction,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
+
+  const current = streamState.queue[streamState.currentSong];
+  const { serial, id, collectionId, type } = props;
+
+  const handlePause = () => {
+    streamDispatch(streamAction.requestPaused(true));
+  };
+  const handlePlay = () => {
+    if (id === current && collectionId === streamState.collectionId) {
+      streamDispatch(streamAction.requestPaused(false));
+    } else {
+      if (collectionId === streamState.collectionId) {
+        streamDispatch(streamAction.reorder(id));
+      } else {
+        streamCollection(authState.token, type, collectionId)
+          .then(res => {
+            if (res.status === 'success') {
+              streamDispatch(
+                streamAction.start({
+                  queue: res.data,
+                  playType: type,
+                  collectionId
+                })
+              );
+            }
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      }
+    }
+  };
+
+  return (
+    <div className='collection-table__cell collection-table__cell--action'>
+      <span>{serial}</span>
+      <div className='action'>
+        <ButtonIcon>
+          {id === current && !streamState.paused ? (
+            <PauseIcon onClick={handlePause} />
+          ) : (
+            <PlayIcon onClick={handlePlay} />
+          )}
+        </ButtonIcon>
+      </div>
     </div>
   );
 }

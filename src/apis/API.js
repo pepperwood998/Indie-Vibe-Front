@@ -11,23 +11,6 @@ export const getMeSimple = token => {
   });
 };
 
-export const getStreamInfo = (token, id, bitrate) => {
-  return fetch(`${host}/stream/info/${bitrate}/${id}`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + token
-    }
-  });
-};
-
-export const getStream = (url, start, end) => {
-  return fetch(url, {
-    headers: {
-      Range: getRangeStr(start, end)
-    }
-  });
-};
-
 export const getGenresList = token => {
   return fetch(`${host}/genres`, {
     method: 'GET',
@@ -68,8 +51,8 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
 export const createPlaylist = (token, title, description, thumbnail) => {
   let data = new FormData();
   data.append('title', title);
-  data.append('description', description);
-  data.append('thumbnail', thumbnail);
+  if (description) data.append('description', description);
+  if (thumbnail) data.append('thumbnail', thumbnail);
 
   return fetch(`${host}/playlists`, {
     method: 'POST',
@@ -131,8 +114,4 @@ export const search = (token, key, type = '') => {
       Authorization: 'Bearer ' + token
     }
   }).then(response => response.json());
-};
-
-const getRangeStr = (start, end) => {
-  return 'bytes=' + start + '-' + end;
 };

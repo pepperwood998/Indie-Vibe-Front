@@ -4,25 +4,35 @@ import { Link } from 'react-router-dom';
 import { NavLinkUnderline } from '../links';
 import { ButtonIcon } from '../buttons';
 import { performActionFavorite } from '../../apis/API';
-import { AuthContext } from '../../contexts';
+import { AuthContext, StreamContext } from '../../contexts';
+import { streamCollection } from '../../apis/StreamAPI';
 
 import Placeholder from '../../assets/imgs/placeholder.png';
 import {
   PlayIcon,
   UnFavoriteIcon,
   MoreIcon,
-  FavoriteIcon
+  FavoriteIcon,
+  PauseIcon
 } from '../../assets/svgs';
 
 function CardMain(props) {
-  const { state: authState } = useContext(AuthContext);
   const { content } = props;
+
+  const { state: authState } = useContext(AuthContext);
+  const {
+    state: streamState,
+    actions: streamAction,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
 
   const [relation, setRelation] = useState([...content.relation]);
 
   useEffect(() => {
     props.handleToggleFavorite(content.type, props.index, relation);
   }, [relation]);
+
+  const current = streamState.queue[streamState.currentSong];
 
   const handleToggleFavorite = action => {
     performActionFavorite(
@@ -40,6 +50,28 @@ function CardMain(props) {
       });
   };
 
+  const handlePaused = () => {
+    streamDispatch(streamAction.requestPaused(true));
+  };
+
+  const handlePlay = () => {
+    if (content.id === streamState.collectionId) {
+      streamDispatch(streamAction.requestPaused(false));
+    } else {
+      streamCollection(authState.token, content.type, content.id).then(res => {
+        if (res.status === 'success') {
+          streamDispatch(
+            streamAction.start({
+              queue: res.data,
+              playType: content.type,
+              collectionId: content.id
+            })
+          );
+        }
+      });
+    }
+  };
+
   return (
     <div className='card-main'>
       <div className='card-main__cover-wrapper'>
@@ -52,7 +84,11 @@ function CardMain(props) {
         </Link>
         <div className='action playlist-release'>
           <ButtonIcon>
-            <PlayIcon />
+            {content.id === streamState.collectionId && !streamState.paused ? (
+              <PauseIcon onClick={handlePaused} />
+            ) : (
+              <PlayIcon onClick={handlePlay} />
+            )}
           </ButtonIcon>
           <div className='action__extra playlist-release'>
             {relation.includes('own') ? (

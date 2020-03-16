@@ -190,7 +190,7 @@ class AudioStream {
     // should implement some queueing solution
     // prevent seeking before track info coming in
     //
-    if (!this.trackId) return;
+    if (!this.trackId || !this.url) return;
     if (this.isPlaying) this.wasPlaying = true;
     else this.wasPlaying = false;
     this.pause();
