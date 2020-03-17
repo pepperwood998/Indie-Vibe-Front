@@ -5,7 +5,7 @@ import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
 import Bottom from './FixedBottom';
 import { UserRoute, ArtistRoute } from '../../components/custom-routes';
-import { Browse, Home, Account, Artist } from './monopage';
+import { Browse, Home, Account, Artist, TrackList } from './monopage';
 import { Workspace } from './workspace';
 import { Search } from './search';
 import { Library } from './library';
@@ -34,6 +34,16 @@ function Player(props) {
         <UserRoute path='/player/account' component={Account} />
         <UserRoute path='/player/artist' component={Artist} />
         <UserRoute path='/player/search/:key' component={Search} />
+        <UserRoute
+          path='/player/release/:id'
+          type='release'
+          component={TrackList}
+        />
+        <UserRoute
+          path='/player/playlist/:id'
+          type='playlist'
+          component={TrackList}
+        />
         <ArtistRoute path='/player/workspace' component={Workspace} />
       </div>
     </div>

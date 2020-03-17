@@ -60,47 +60,49 @@ function CollectionTrackTable(props) {
       </div>
 
       {/* Track table content */}
-      {items.slice(offset, limit).map((item, index) => {
-        if (type === 'playlist') {
-          item = Object.assign(
-            {},
-            {
-              addedAt: item.addedAt,
-              ...item.track
+      {items
+        ? items.slice(offset, limit).map((item, index) => {
+            if (type === 'playlist') {
+              item = Object.assign(
+                {},
+                {
+                  addedAt: item.addedAt,
+                  ...item.track
+                }
+              );
+              return (
+                <RowPlaylist
+                  item={item}
+                  key={index}
+                  serial={index + 1}
+                  collectionId={props.collectionId}
+                  handleToggleFavorite={props.handleToggleFavorite}
+                />
+              );
+            } else if (type === 'release') {
+              return (
+                <RowRelease
+                  item={item}
+                  key={index}
+                  serial={index + 1}
+                  collectionId={props.collectionId}
+                  handleToggleFavorite={props.handleToggleFavorite}
+                />
+              );
+            } else {
+              return (
+                <RowSearch
+                  item={item}
+                  key={index}
+                  serial={index + 1}
+                  collectionId={item.release ? item.release.id : ''}
+                  type={props.type}
+                  handleToggleFavorite={props.handleToggleFavorite}
+                />
+              );
             }
-          );
-          return (
-            <RowPlaylist
-              item={item}
-              key={index}
-              serial={index + 1}
-              collectionId={props.collectionId}
-              handleToggleFavorite={props.handleToggleFavorite}
-            />
-          );
-        } else if (type === 'release') {
-          return (
-            <RowRelease
-              item={item}
-              key={index}
-              serial={index + 1}
-              collectionId={props.collectionId}
-              handleToggleFavorite={props.handleToggleFavorite}
-            />
-          );
-        } else {
-          return (
-            <RowSearch
-              item={item}
-              key={index}
-              serial={index + 1}
-              collectionId={item.release ? item.release.id : ''}
-              type={props.type}
-              handleToggleFavorite={props.handleToggleFavorite}
-            />
-          );
-        }
-      })}
+          })
+        : ''}
     </div>
   );
 }
