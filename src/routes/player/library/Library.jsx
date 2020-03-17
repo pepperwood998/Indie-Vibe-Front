@@ -5,43 +5,47 @@ import { UserRoute } from '../../../components/custom-routes';
 import { TemplateNavPage } from '../template';
 import Mono from './Mono';
 import General from './General';
+import { GroupProfileBox } from '../../../components/groups';
 
 function Library(props) {
   const { id } = props.match.params;
 
   const nav = (
-    <NavigationTab
-      items={[
-        {
-          href: `/player/library/${id}`,
-          label: 'General'
-        },
-        {
-          href: `/player/library/${id}/favorites`,
-          label: 'Favorite songs'
-        },
-        {
-          href: `/player/library/${id}/playlists`,
-          label: 'Playlists'
-        },
-        {
-          href: `/player/library/${id}/releases`,
-          label: 'Releases'
-        },
-        {
-          href: `/player/library/${id}/artists`,
-          label: 'Artists'
-        },
-        {
-          href: `/player/library/${id}/followings`,
-          label: 'Followings'
-        },
-        {
-          href: `/player/library/${id}/followers`,
-          label: 'Followers'
-        }
-      ]}
-    />
+    <React.Fragment>
+      <GroupProfileBox id={id} />
+      <NavigationTab
+        items={[
+          {
+            href: `/player/library/${id}`,
+            label: 'General'
+          },
+          {
+            href: `/player/library/${id}/favorites`,
+            label: 'Favorite songs'
+          },
+          {
+            href: `/player/library/${id}/playlists`,
+            label: 'Playlists'
+          },
+          {
+            href: `/player/library/${id}/releases`,
+            label: 'Releases'
+          },
+          {
+            href: `/player/library/${id}/artists`,
+            label: 'Artists'
+          },
+          {
+            href: `/player/library/${id}/followings`,
+            label: 'Followings'
+          },
+          {
+            href: `/player/library/${id}/followers`,
+            label: 'Followers'
+          }
+        ]}
+      />
+    </React.Fragment>
   );
 
   const tabs = [

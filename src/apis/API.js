@@ -67,8 +67,9 @@ export const performActionFavorite = (token, type, id, relation, action) => {
   if (type === 'profile' || type === 'artist') {
     type = 'user';
   }
+  let url = `${host}/${type}s/${id}`;
 
-  return fetch(`${host}/${type}s/${id}`, {
+  return fetch(url, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
@@ -107,6 +108,17 @@ export const library = (token, userId, type = '', offset = 0, limit = 20) => {
 
   url = new URL(url);
   url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const profile = (token, userId) => {
+  let url = `${host}/library/${userId}/profile`;
 
   return fetch(url, {
     method: 'GET',
