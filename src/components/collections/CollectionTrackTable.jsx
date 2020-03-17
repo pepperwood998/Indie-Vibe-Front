@@ -31,7 +31,7 @@ function CollectionTrackTable(props) {
         <div className='collection-table__cell collection-table__cell--title'>
           <span>TITLE</span>
         </div>
-        {type === 'search' || type === 'playlist' ? (
+        {type === 'search' || type === 'favorite' || type === 'playlist' ? (
           <React.Fragment>
             <div className='collection-table__cell collection-table__cell--artist'>
               <span>ARTISTS</span>
@@ -305,7 +305,7 @@ function CellAction(props) {
       } else {
         streamCollection(authState.token, type, collectionId)
           .then(res => {
-            if (res.status === 'success') {
+            if (res.status === 'success' && res.data.length) {
               streamDispatch(
                 streamAction.start({
                   queue: res.data,

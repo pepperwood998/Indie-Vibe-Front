@@ -119,7 +119,7 @@ const reducer = (state, action) => {
       }
       return {
         ...state,
-        id: decodedToken['client_id'],
+        id: decodedToken['user'],
         role: decodedToken['authorities'][0],
         token: payload['access_token'],
         refreshToken: payload['refresh_token'],

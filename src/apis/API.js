@@ -63,24 +63,6 @@ export const createPlaylist = (token, title, description, thumbnail) => {
   });
 };
 
-export const getPlaylistsMe = token => {
-  return fetch(`${host}/me/playlists`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + token
-    }
-  }).then(response => response.json());
-};
-
-export const getPlaylistSimple = (token, playlistId) => {
-  return fetch(`${host}/playlists/simple/${playlistId}`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + token
-    }
-  }).then(response => response.json());
-};
-
 export const performActionFavorite = (token, type, id, relation, action) => {
   if (type === 'profile' || type === 'artist') {
     type = 'user';
@@ -104,11 +86,50 @@ export const performActionFavorite = (token, type, id, relation, action) => {
     });
 };
 
-export const search = (token, key, type = '') => {
+export const search = (token, key, type = '', offset = 0, limit = 20) => {
   let url = `${host}/search/${key}`;
   if (type) url += `/${type}s`;
 
+  url = new URL(url);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
   return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const library = (token, userId, type = '', offset = 0, limit = 20) => {
+  let url = `${host}/library/${userId}`;
+  if (type) url += `/${type}s`;
+
+  url = new URL(url);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getPlaylistsMe = (token, offset = 0, limit = 20) => {
+  let url = new URL(`${host}/me/playlists`);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getPlaylistSimple = (token, playlistId) => {
+  return fetch(`${host}/playlists/simple/${playlistId}`, {
     method: 'GET',
     headers: {
       Authorization: 'Bearer ' + token

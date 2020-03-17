@@ -5,12 +5,13 @@ import {
   CollectionMain
 } from '../../../components/collections';
 import { capitalize } from '../../../utils/Common';
-import { search } from '../../../apis/API';
+import { library, getPlaylistsMe } from '../../../apis/API';
 import { AuthContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
 
 function Mono(props) {
   const { type } = props;
+  const userId = props.match ? props.match.params.id : '';
 
   const { state: authState } = useContext(AuthContext);
   const [data, setData] = useState({
@@ -21,7 +22,7 @@ function Mono(props) {
   });
 
   useEffect(() => {
-    search(authState.token, props.match.params.key, props.type)
+    getLibraryTarget(authState, userId, type)
       .then(res => {
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
@@ -44,12 +45,7 @@ function Mono(props) {
   };
 
   const handleLoadMore = () => {
-    search(
-      authState.token,
-      props.match.params.key,
-      props.type,
-      data.offset + data.limit
-    )
+    getLibraryTarget(authState, userId, type, data.offset + data.limit)
       .then(res => {
         if (res.status === 'success' && res.data.items) {
           setData({
@@ -68,16 +64,14 @@ function Mono(props) {
 
   let collection = '';
 
-  if (type === 'track') {
+  if (type === 'favorite') {
     collection = (
       <CollectionTracks
         header={
-          data.total > 0
-            ? data.total + ` ${type}s`
-            : `No results for ${capitalize(type)}`
+          data.total > 0 ? data.total + ` ${type}s` : `No ${capitalize(type)}`
         }
         data={data}
-        type='search'
+        type='favorite'
         handleToggleFavorite={handleToggleFavorite}
       />
     );
@@ -85,9 +79,7 @@ function Mono(props) {
     collection = (
       <CollectionMain
         header={
-          data.total > 0
-            ? data.total + ` ${type}s`
-            : `No results for ${capitalize(type)}`
+          data.total > 0 ? data.total + ` ${type}s` : `No ${capitalize(type)}`
         }
         data={data}
         type={type}
@@ -107,5 +99,13 @@ function Mono(props) {
     </React.Fragment>
   );
 }
+
+const getLibraryTarget = (authState, userId, type, offset, limit) => {
+  if (type === 'playlist' && userId === authState.id) {
+    return getPlaylistsMe(authState.token, offset, limit);
+  }
+
+  return library(authState.token, userId, type, offset, limit);
+};
 
 export default Mono;

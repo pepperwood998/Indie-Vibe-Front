@@ -79,7 +79,7 @@ function NavMenu() {
         </li>
         <li>
           <NavLinkColor
-            href='/player/library'
+            href={`/player/library/${authState.id}`}
             className='font-short-big font-weight-bold font-white'
           >
             <LibraryIcon />
@@ -89,19 +89,19 @@ function NavMenu() {
       </ul>
       <div className='quick-menu'>
         <Link
-          to='/player/library/artists'
+          to={`/player/library/${authState.id}/artists`}
           className='link-bright-gray font-short-regular font-gray-light'
         >
           Artist
         </Link>
         <Link
-          to='/player/library/albums'
+          to={`/player/library/${authState.id}/albums`}
           className='link-bright-gray font-short-regular font-gray-light'
         >
           Albums
         </Link>
         <Link
-          to='/player/library/favorite'
+          to={`/player/library/${authState.id}/favorites`}
           className='link-bright-gray font-short-regular font-gray-light'
         >
           Favorite songs

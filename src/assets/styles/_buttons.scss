@@ -26,6 +26,11 @@
     background-color: $blueFb;
   }
 
+  &-load-more {
+    display: table;
+    margin: auto;
+  }
+
   &--fit {
     display: inline-block;
   }
