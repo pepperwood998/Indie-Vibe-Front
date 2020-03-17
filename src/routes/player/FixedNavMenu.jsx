@@ -95,10 +95,10 @@ function NavMenu() {
           Artist
         </Link>
         <Link
-          to={`/player/library/${authState.id}/albums`}
+          to={`/player/library/${authState.id}/releases`}
           className='link-bright-gray font-short-regular font-gray-light'
         >
-          Albums
+          Releases
         </Link>
         <Link
           to={`/player/library/${authState.id}/favorites`}
