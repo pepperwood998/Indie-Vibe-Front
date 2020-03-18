@@ -32,7 +32,8 @@ function TrackList(props) {
       limit: 0,
       total: 0
     },
-    relation: []
+    relation: [],
+    followersCount: 0
   });
 
   const [owner, setOwner] = useState({ role: {} });
@@ -41,7 +42,6 @@ function TrackList(props) {
   useEffect(() => {
     getTrackList(authState.token, id, type).then(res => {
       if (res.status === 'success' && res.data) {
-        console.log(res.data.tracks);
         setData({ ...data, ...res.data });
         if (type === 'playlist') {
           setOwner({ ...owner, ...res.data.owner });

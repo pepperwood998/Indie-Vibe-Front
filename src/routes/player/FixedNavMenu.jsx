@@ -4,7 +4,6 @@ import { NavLink, Link } from 'react-router-dom';
 import { NavLinkColor, NavLinkUnderline } from '../../components/links';
 import { ContextMenuAccount } from '../../components/context-menu';
 import { MeContext, AuthContext } from '../../contexts';
-import { getMeSimple } from '../../apis';
 
 import {
   HomeIcon,
@@ -14,6 +13,7 @@ import {
 } from '../../assets/svgs';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonFrame } from '../../components/buttons';
+import { profile } from '../../apis/API';
 
 function NavMenu() {
   const { state: authState } = useContext(AuthContext);
@@ -25,8 +25,7 @@ function NavMenu() {
 
   useEffect(() => {
     if (!meState.id) {
-      getMeSimple(authState.token)
-        .then(response => response.json())
+      profile(authState.token, authState.id)
         .then(json => {
           if (json.status === 'success') {
             meDispatch(meActions.loadMe(json.data));

@@ -2,15 +2,6 @@ import fetch from 'cross-fetch';
 
 import { host } from './constant';
 
-export const getMeSimple = token => {
-  return fetch(`${host}/me/simple`, {
-    method: 'GET',
-    headers: {
-      Authorization: 'Bearer ' + token
-    }
-  });
-};
-
 export const getGenresList = token => {
   return fetch(`${host}/genres`, {
     method: 'GET',
@@ -39,7 +30,7 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
     data.append('audioFiles', item.audio320);
   });
 
-  return fetch(`${host}/artist/releases`, {
+  return fetch(`${host}/releases`, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
