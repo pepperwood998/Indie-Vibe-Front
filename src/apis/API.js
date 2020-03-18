@@ -63,8 +63,76 @@ export const createPlaylist = (token, title, description, thumbnail) => {
   });
 };
 
-export const getPlaylistsMe = token => {
-  return fetch(`${host}/me/playlists`, {
+export const performActionFavorite = (token, type, id, relation, action) => {
+  if (type === 'profile' || type === 'artist') {
+    type = 'user';
+  }
+  let url = new URL(`${host}/${type}s/${id}`);
+  url.search = new URLSearchParams({ action }).toString();
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  })
+    .then(response => response.json())
+    .then(res => {
+      if (res.status === 'success') {
+        if (action === 'favorite') return [...relation, 'favorite'];
+        else return relation.filter(value => value !== 'favorite');
+      } else {
+        throw 'Error';
+      }
+    });
+};
+
+export const search = (token, key, type = '', offset = 0, limit = 20) => {
+  let url = `${host}/search/${key}`;
+  if (type) url += `/${type}s`;
+
+  url = new URL(url);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const library = (token, userId, type = '', offset = 0, limit = 20) => {
+  let url = `${host}/library/${userId}`;
+  if (type) url += `/${type}s`;
+
+  url = new URL(url);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const profile = (token, userId) => {
+  let url = `${host}/library/${userId}/profile`;
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getPlaylistsMe = (token, offset = 0, limit = 20) => {
+  let url = new URL(`${host}/me/playlists`);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
     method: 'GET',
     headers: {
       Authorization: 'Bearer ' + token
@@ -81,32 +149,9 @@ export const getPlaylistSimple = (token, playlistId) => {
   }).then(response => response.json());
 };
 
-export const performActionFavorite = (token, type, id, relation, action) => {
-  if (type === 'profile' || type === 'artist') {
-    type = 'user';
-  }
-
-  return fetch(`${host}/${type}s/${id}`, {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer ' + token
-    },
-    body: `action=${action}`
-  })
-    .then(response => response.json())
-    .then(res => {
-      if (res.status === 'success') {
-        if (action === 'favorite') return [...relation, 'favorite'];
-        else return relation.filter(value => value !== 'favorite');
-      } else {
-        throw 'Error';
-      }
-    });
-};
-
-export const search = (token, key, type = '') => {
-  let url = `${host}/search/${key}`;
-  if (type) url += `/${type}s`;
+export const getTrackList = (token, id, type, offset = 0, limit = 20) => {
+  let url = new URL(`${host}/${type}s/full/${id}`);
+  url.search = new URLSearchParams({ offset, limit }).toString();
 
   return fetch(url, {
     method: 'GET',

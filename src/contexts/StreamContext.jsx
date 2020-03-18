@@ -9,7 +9,7 @@ const StreamContext = createContext();
 const stream = new AudioStream();
 
 const initState = {
-  queue: [],
+  queue: ['3AUo1uunXOxigzt6JIsZ', '5UmNONJQaXmNmbdmr2On'],
   queueSrc: [],
   currentSong: 0,
   bitrate: 128,
@@ -17,7 +17,7 @@ const initState = {
   collectionId: '',
   volume: 50,
   muted: false,
-  autoplay: false,
+  autoplay: true,
   paused: true,
   shuffled: false,
   info: {}
@@ -30,30 +30,19 @@ function StreamContextProvider(props) {
 
   // init stream states
   useEffect(() => {
-    stream.init(
-      paused => {
-        dispatch(actions.setPaused(paused));
-      },
-      state.autoplay,
-      state.bitrate
-    );
-
+    stream.api = (id, bitrate) => {
+      return getStreamInfo(authState.token, id, bitrate);
+    };
     stream.onInfo = info => {
       dispatch(actions.setInfo(info));
     };
+    stream.onTogglePaused = paused => {
+      dispatch(actions.onTogglePaused(paused));
+    };
+    stream.onEnded = () => {
+      console.log('ended');
+    };
   }, []);
-
-  // refresh stream api
-  useEffect(() => {
-    stream.refreshApi(
-      (id, bitrate) => {
-        return getStreamInfo(authState.token, id, bitrate);
-      },
-      (url, start, end) => {
-        return getStream(url, start, end);
-      }
-    );
-  }, [authState]);
 
   return (
     <StreamContext.Provider value={{ state, actions, dispatch, stream }}>
@@ -63,6 +52,12 @@ function StreamContextProvider(props) {
 }
 
 const actions = {
+  init: payload => {
+    return {
+      type: 'INIT',
+      payload
+    };
+  },
   start: payload => {
     return {
       type: 'START',
@@ -85,15 +80,14 @@ const actions = {
       type: 'SKIP_FORWARD'
     };
   },
-  requestPaused: paused => {
+  togglePaused: () => {
     return {
-      type: 'REQUEST_PAUSED',
-      paused
+      type: 'TOGGLE_PAUSED'
     };
   },
-  setPaused: paused => {
+  onTogglePaused: paused => {
     return {
-      type: 'SET_PAUSED',
+      type: 'ON_TOGGLE_PAUSED',
       paused
     };
   },
@@ -120,11 +114,24 @@ const actions = {
       type: 'SET_INFO',
       info
     };
+  },
+  clean: () => {
+    return { type: 'CLEAN' };
   }
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'INIT':
+      const { payload } = action;
+      stream.init(
+        payload.audio,
+        payload.onProgress,
+        payload.onDurationChange,
+        state.autoplay,
+        state.bitrate
+      );
+      return state;
     case 'START':
       stream.start(action.payload.queue[0]);
       return {
@@ -159,11 +166,10 @@ const reducer = (state, action) => {
         ...state,
         currentSong: ind
       };
-    case 'REQUEST_PAUSED':
-      const { paused } = action;
-      stream.togglePaused(paused);
+    case 'TOGGLE_PAUSED':
+      stream.togglePaused();
       return state;
-    case 'SET_PAUSED':
+    case 'ON_TOGGLE_PAUSED':
       return {
         ...state,
         paused: action.paused
@@ -187,6 +193,9 @@ const reducer = (state, action) => {
         ...state,
         info: action.info
       };
+    case 'CLEAN':
+      stream.clean();
+      return state;
     default:
       return state;
   }

@@ -1,19 +1,35 @@
 import React, { useContext, useState, useEffect } from 'react';
 
-import { ButtonFrame } from '../../components/buttons';
+import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
 import { AuthContext } from '../../contexts';
 import { GroupPlaylistDialog } from '../../components/groups';
-
-import { AddPlaylistIcon } from '../../assets/svgs';
 import { LinkWhiteColor } from '../../components/links';
 import { getPlaylistsMe, getPlaylistSimple } from '../../apis/API';
+
+import { AddPlaylistIcon } from '../../assets/svgs';
 
 function QuickAccess() {
   const { state: authState } = useContext(AuthContext);
   const { role } = authState;
 
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState({
+    items: [],
+    offset: 0,
+    limit: 0,
+    total: 0
+  });
   const [dialogOpened, setDialogOpened] = useState(false);
+
+  useEffect(() => {
+    getPlaylistsMe(authState.token).then(res => {
+      if (res.status === 'success' && res.data) {
+        setPlaylists({
+          ...playlists,
+          ...res.data
+        });
+      }
+    });
+  }, []);
 
   const handleOpenDialog = () => {
     setDialogOpened(true);
@@ -26,18 +42,29 @@ function QuickAccess() {
   const handleCreatePlaylistSuccess = playlistId => {
     getPlaylistSimple(authState.token, playlistId).then(res => {
       if (res.status === 'success') {
-        setPlaylists([...playlists, res.data]);
+        setPlaylists({
+          ...playlists,
+          items: [...playlists.items, { ...res.data }]
+        });
       }
     });
   };
 
-  useEffect(() => {
-    getPlaylistsMe(authState.token).then(res => {
-      if (res.status === 'success') {
-        setPlaylists([...playlists, ...res.data]);
+  const handleLoadMore = () => {
+    getPlaylistsMe(authState.token, playlists.offset + playlists.limit).then(
+      res => {
+        if (res.status === 'success' && res.data.items) {
+          setPlaylists({
+            ...playlists,
+            items: [...playlists.items, ...res.data.items],
+            offset: res.data.offset,
+            limit: res.data.limit,
+            total: res.data.total
+          });
+        }
       }
-    });
-  }, []);
+    );
+  };
 
   return (
     <div className='quick-access'>
@@ -62,18 +89,25 @@ function QuickAccess() {
         </div>
         <div className='content-wrapper'>
           <ul className='content'>
-            {playlists.map((item, index) => (
-              <li className='item-wrapper' key={index}>
-                <LinkWhiteColor
-                  href={`/player/playlist/${item.id}`}
-                  className='item font-short-big font-weight-bold'
-                  nav={true}
-                >
-                  {item.title}
-                </LinkWhiteColor>
-              </li>
-            ))}
+            {playlists.items
+              .slice(playlists.offset, playlists.limit)
+              .map((item, index) => (
+                <li className='item-wrapper' key={index}>
+                  <LinkWhiteColor
+                    href={`/player/playlist/${item.id}`}
+                    className='item font-short-big font-weight-bold'
+                    nav={true}
+                  >
+                    {item.title}
+                  </LinkWhiteColor>
+                </li>
+              ))}
           </ul>
+          {playlists.total > playlists.offset + playlists.limit ? (
+            <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </div>

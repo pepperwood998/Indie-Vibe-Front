@@ -21,7 +21,7 @@ function CardProfile(props) {
   const [relation, setRelation] = useState([...content.relation]);
 
   useEffect(() => {
-    props.handleToggleFavorite(content.type, props.index, relation);
+    props.handleToggleFavorite(props.index, relation, content.type);
   }, [relation]);
 
   const handleToggleFavorite = action => {

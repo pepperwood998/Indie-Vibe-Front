@@ -29,7 +29,7 @@ function CardMain(props) {
   const [relation, setRelation] = useState([...content.relation]);
 
   useEffect(() => {
-    props.handleToggleFavorite(content.type, props.index, relation);
+    props.handleToggleFavorite(props.index, relation, content.type);
   }, [relation]);
 
   const current = streamState.queue[streamState.currentSong];
@@ -59,7 +59,7 @@ function CardMain(props) {
       streamDispatch(streamAction.requestPaused(false));
     } else {
       streamCollection(authState.token, content.type, content.id).then(res => {
-        if (res.status === 'success') {
+        if (res.status === 'success' && res.data.length) {
           streamDispatch(
             streamAction.start({
               queue: res.data,

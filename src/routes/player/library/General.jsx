@@ -2,32 +2,25 @@ import React, { useState, useEffect, useContext } from 'react';
 
 import { capitalize } from '../../../utils/Common';
 import { NavLinkColor } from '../../../components/links';
-import {
-  CollectionTracks,
-  CollectionMain
-} from '../../../components/collections';
+import { CollectionMain } from '../../../components/collections';
 import { AuthContext } from '../../../contexts';
-import { search } from '../../../apis/API';
+import { library } from '../../../apis/API';
 
 import { ArrowRight } from '../../../assets/svgs';
 
 function General(props) {
-  const { key: searchKey } = props.match.params;
+  const { id: userId } = props.match.params;
 
   const { state: authState } = useContext(AuthContext);
   const [data, setData] = useState({
-    tracks: [],
-    artists: [],
-    releases: [],
     playlists: [],
-    profiles: [],
-    genres: []
+    artists: []
   });
 
   useEffect(() => {
-    search(authState.token, props.match.params.key)
+    library(authState.token, props.match.params.id)
       .then(res => {
-        if (res.status === 'success') {
+        if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
         }
       })
@@ -53,31 +46,12 @@ function General(props) {
     render = Object.keys(data).map((key, index) => {
       if (data[key].length > 0) {
         let type = key.substr(0, key.length - 1);
-        if (type === 'track') {
-          return (
-            <CollectionTracks
-              header={
-                <NavLinkColor
-                  href={`/player/search/${searchKey}/${key}`}
-                  className='header-title font-white'
-                >
-                  {capitalize(key)}
-                  <ArrowRight />
-                </NavLinkColor>
-              }
-              data={{ items: data[key], offset: 0, limit: data[key].length }}
-              type='search'
-              handleToggleFavorite={handleToggleFavorite}
-              key={index}
-            />
-          );
-        }
 
         return (
           <CollectionMain
             header={
               <NavLinkColor
-                href={`/player/search/${searchKey}/${key}`}
+                href={`/player/library/${userId}/${key}`}
                 className='header-title font-white'
               >
                 {capitalize(key)}
@@ -95,7 +69,7 @@ function General(props) {
   } else {
     render = (
       <span className='font-short-extra font-white font-weight-bold'>
-        No results found
+        Library empty
       </span>
     );
   }

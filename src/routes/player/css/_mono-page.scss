@@ -1,3 +1,74 @@
 .mono-page {
-  padding: 0px 40px;
+  padding: 0px 60px;
+}
+
+.track-list {
+  padding-top: 40px;
+  padding-bottom: 40px;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    height: 200px;
+
+    .avatar {
+      width: 200px;
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        width: inherit;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px 0px 10px 30px;
+
+      &__top {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .description {
+          margin: 10px 0;
+          overflow-y: auto;
+        }
+      }
+
+      &__bottom {
+        .dot {
+          margin: 0 5px;
+        }
+      }
+    }
+  }
+  &__action {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+
+    .action {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      > :not(:last-child) {
+        margin-right: 10px;
+      }
+    }
+  }
+  &__content {
+  }
 }

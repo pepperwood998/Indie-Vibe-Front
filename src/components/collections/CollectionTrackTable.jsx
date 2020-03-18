@@ -31,7 +31,7 @@ function CollectionTrackTable(props) {
         <div className='collection-table__cell collection-table__cell--title'>
           <span>TITLE</span>
         </div>
-        {type === 'search' || type === 'playlist' ? (
+        {type === 'search' || type === 'favorite' || type === 'playlist' ? (
           <React.Fragment>
             <div className='collection-table__cell collection-table__cell--artist'>
               <span>ARTISTS</span>
@@ -60,47 +60,49 @@ function CollectionTrackTable(props) {
       </div>
 
       {/* Track table content */}
-      {items.slice(offset, limit).map((item, index) => {
-        if (type === 'playlist') {
-          item = Object.assign(
-            {},
-            {
-              addedAt: item.addedAt,
-              ...item.track
+      {items
+        ? items.slice(offset, limit).map((item, index) => {
+            if (type === 'playlist') {
+              item = Object.assign(
+                {},
+                {
+                  addedAt: item.addedAt,
+                  ...item.track
+                }
+              );
+              return (
+                <RowPlaylist
+                  item={item}
+                  key={index}
+                  serial={index}
+                  collectionId={props.collectionId}
+                  handleToggleFavorite={props.handleToggleFavorite}
+                />
+              );
+            } else if (type === 'release') {
+              return (
+                <RowRelease
+                  item={item}
+                  key={index}
+                  serial={index}
+                  collectionId={props.collectionId}
+                  handleToggleFavorite={props.handleToggleFavorite}
+                />
+              );
+            } else {
+              return (
+                <RowSearch
+                  item={item}
+                  key={index}
+                  serial={index}
+                  collectionId={item.release ? item.release.id : ''}
+                  type={props.type}
+                  handleToggleFavorite={props.handleToggleFavorite}
+                />
+              );
             }
-          );
-          return (
-            <RowPlaylist
-              item={item}
-              key={index}
-              serial={index + 1}
-              collectionId={props.collectionId}
-              handleToggleFavorite={props.handleToggleFavorite}
-            />
-          );
-        } else if (type === 'release') {
-          return (
-            <RowRelease
-              item={item}
-              key={index}
-              serial={index + 1}
-              collectionId={props.collectionId}
-              handleToggleFavorite={props.handleToggleFavorite}
-            />
-          );
-        } else {
-          return (
-            <RowSearch
-              item={item}
-              key={index}
-              serial={index + 1}
-              collectionId={item.release ? item.release.id : ''}
-              type={props.type}
-              handleToggleFavorite={props.handleToggleFavorite}
-            />
-          );
-        }
-      })}
+          })
+        : 'jkdfjekjw'}
     </div>
   );
 }
@@ -111,13 +113,14 @@ function RowPlaylist(props) {
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
-        serial={serial}
+        serial={serial+1}
         id={item.id}
         collectionId={props.collectionId}
         type='playlist'
       />
       <CellFavorite
         id={item.id}
+        index={serial}
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
@@ -151,11 +154,11 @@ function RowPlaylist(props) {
           </NavLinkUnderline>
         </span>
       </div>
-      <div className='collection-table__cell collection-table__cell--added-date'>
-        <span>{item.addedAt}</span>
-      </div>
       <div className='collection-table__cell collection-table__cell--duration'>
         <span>{getFormattedTime(item.duration / 1000)}</span>
+      </div>
+      <div className='collection-table__cell collection-table__cell--added-date'>
+        <span>{item.addedAt}</span>
       </div>
     </div>
   );
@@ -167,13 +170,14 @@ function RowRelease(props) {
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
-        serial={serial}
+        serial={serial+1}
         id={item.id}
         collectionId={props.collectionId}
         type='release'
       />
       <CellFavorite
         id={item.id}
+        index={serial}
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
@@ -195,13 +199,14 @@ function RowSearch(props) {
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
-        serial={serial}
+        serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
         type={type}
       />
       <CellFavorite
         id={item.id}
+        index={serial}
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
@@ -248,7 +253,7 @@ function CellFavorite(props) {
   const [relation, setRelation] = useState([...props.relation]);
 
   useEffect(() => {
-    props.handleToggleFavorite('track', props.index, relation);
+    props.handleToggleFavorite(props.index, relation, 'track');
   }, [relation]);
 
   const handleToggleFavorite = action => {
@@ -305,7 +310,7 @@ function CellAction(props) {
       } else {
         streamCollection(authState.token, type, collectionId)
           .then(res => {
-            if (res.status === 'success') {
+            if (res.status === 'success' && res.data.length) {
               streamDispatch(
                 streamAction.start({
                   queue: res.data,
