@@ -113,7 +113,7 @@ function RowPlaylist(props) {
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
-        serial={serial+1}
+        serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
         type='playlist'
@@ -170,7 +170,7 @@ function RowRelease(props) {
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
-        serial={serial+1}
+        serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
         type='release'
@@ -250,7 +250,9 @@ function RowSearch(props) {
 function CellFavorite(props) {
   const { state: authState } = useContext(AuthContext);
 
-  const [relation, setRelation] = useState([...props.relation]);
+  const [relation, setRelation] = useState(
+    Array.isArray(props.relation) ? [...props.relation] : []
+  );
 
   useEffect(() => {
     props.handleToggleFavorite(props.index, relation, 'track');

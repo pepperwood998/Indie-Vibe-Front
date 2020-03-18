@@ -119,7 +119,9 @@ function TrackList(props) {
                 </span>
                 <NavLinkUnderline
                   href={`/player/${
-                    owner.role.id === 'r-artist' ? 'artist' : 'library'
+                    type === 'release' || owner.role.id === 'r-artist'
+                      ? 'artist'
+                      : 'library'
                   }/${owner.id}`}
                   className='font-short-regular font-white'
                 >
