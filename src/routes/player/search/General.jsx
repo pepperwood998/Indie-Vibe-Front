@@ -36,7 +36,7 @@ function General(props) {
       });
   }, []);
 
-  const handleToggleFavorite = (type, index, relation) => {
+  const handleToggleFavorite = (index, relation, type) => {
     let target = [...data[`${type}s`]];
     target.some((item, i) => {
       if (index === i) {

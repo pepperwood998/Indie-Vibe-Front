@@ -29,7 +29,7 @@ function CardMain(props) {
   const [relation, setRelation] = useState([...content.relation]);
 
   useEffect(() => {
-    props.handleToggleFavorite(content.type, props.index, relation);
+    props.handleToggleFavorite(props.index, relation, content.type);
   }, [relation]);
 
   const current = streamState.queue[streamState.currentSong];

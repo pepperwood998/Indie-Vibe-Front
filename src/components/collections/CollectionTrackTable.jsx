@@ -74,7 +74,7 @@ function CollectionTrackTable(props) {
                 <RowPlaylist
                   item={item}
                   key={index}
-                  serial={index + 1}
+                  serial={index}
                   collectionId={props.collectionId}
                   handleToggleFavorite={props.handleToggleFavorite}
                 />
@@ -84,7 +84,7 @@ function CollectionTrackTable(props) {
                 <RowRelease
                   item={item}
                   key={index}
-                  serial={index + 1}
+                  serial={index}
                   collectionId={props.collectionId}
                   handleToggleFavorite={props.handleToggleFavorite}
                 />
@@ -94,7 +94,7 @@ function CollectionTrackTable(props) {
                 <RowSearch
                   item={item}
                   key={index}
-                  serial={index + 1}
+                  serial={index}
                   collectionId={item.release ? item.release.id : ''}
                   type={props.type}
                   handleToggleFavorite={props.handleToggleFavorite}
@@ -102,7 +102,7 @@ function CollectionTrackTable(props) {
               );
             }
           })
-        : ''}
+        : 'jkdfjekjw'}
     </div>
   );
 }
@@ -113,13 +113,14 @@ function RowPlaylist(props) {
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
-        serial={serial}
+        serial={serial+1}
         id={item.id}
         collectionId={props.collectionId}
         type='playlist'
       />
       <CellFavorite
         id={item.id}
+        index={serial}
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
@@ -153,11 +154,11 @@ function RowPlaylist(props) {
           </NavLinkUnderline>
         </span>
       </div>
-      <div className='collection-table__cell collection-table__cell--added-date'>
-        <span>{item.addedAt}</span>
-      </div>
       <div className='collection-table__cell collection-table__cell--duration'>
         <span>{getFormattedTime(item.duration / 1000)}</span>
+      </div>
+      <div className='collection-table__cell collection-table__cell--added-date'>
+        <span>{item.addedAt}</span>
       </div>
     </div>
   );
@@ -169,13 +170,14 @@ function RowRelease(props) {
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
-        serial={serial}
+        serial={serial+1}
         id={item.id}
         collectionId={props.collectionId}
         type='release'
       />
       <CellFavorite
         id={item.id}
+        index={serial}
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
@@ -197,13 +199,14 @@ function RowSearch(props) {
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
-        serial={serial}
+        serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
         type={type}
       />
       <CellFavorite
         id={item.id}
+        index={serial}
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
@@ -250,7 +253,7 @@ function CellFavorite(props) {
   const [relation, setRelation] = useState([...props.relation]);
 
   useEffect(() => {
-    props.handleToggleFavorite('track', props.index, relation);
+    props.handleToggleFavorite(props.index, relation, 'track');
   }, [relation]);
 
   const handleToggleFavorite = action => {

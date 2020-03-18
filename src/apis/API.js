@@ -67,14 +67,14 @@ export const performActionFavorite = (token, type, id, relation, action) => {
   if (type === 'profile' || type === 'artist') {
     type = 'user';
   }
-  let url = `${host}/${type}s/${id}`;
+  let url = new URL(`${host}/${type}s/${id}`);
+  url.search = new URLSearchParams({ action }).toString();
 
   return fetch(url, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
-    },
-    body: `action=${action}`
+    }
   })
     .then(response => response.json())
     .then(res => {
@@ -142,6 +142,18 @@ export const getPlaylistsMe = (token, offset = 0, limit = 20) => {
 
 export const getPlaylistSimple = (token, playlistId) => {
   return fetch(`${host}/playlists/simple/${playlistId}`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getTrackList = (token, id, type, offset = 0, limit = 20) => {
+  let url = new URL(`${host}/${type}s/full/${id}`);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
     method: 'GET',
     headers: {
       Authorization: 'Bearer ' + token

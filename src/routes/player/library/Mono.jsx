@@ -33,7 +33,7 @@ function Mono(props) {
       });
   }, []);
 
-  const handleToggleFavorite = (type, index, relation) => {
+  const handleToggleFavorite = (index, relation, type) => {
     let items = [...data.items];
     items.some((item, i) => {
       if (index === i) {
