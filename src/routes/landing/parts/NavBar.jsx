@@ -3,8 +3,8 @@ import React, { useContext, useEffect } from 'react';
 import { LinkWhiteColor } from '../../../components/links';
 import { ButtonFrame } from '../../../components/buttons';
 import { ContextMenuAccount } from '../../../components/context-menu';
-import { getMeSimple } from '../../../apis';
 import { MeContext, AuthContext } from '../../../contexts';
+import { profile } from '../../../apis/API';
 
 import { Logo, ArrowDown } from '../../../assets/svgs';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
@@ -19,8 +19,7 @@ function NavBar(props) {
 
   useEffect(() => {
     if (authState.token && !meState.id) {
-      getMeSimple(authState.token)
-        .then(response => response.json())
+      profile(authState.token, authState.id)
         .then(json => {
           if (json.status === 'success') {
             meDispatch(meActions.loadMe(json.data));
