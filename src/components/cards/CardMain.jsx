@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { NavLinkUnderline } from '../links';
-import { ButtonIcon } from '../buttons';
+import { ButtonIcon, ButtonMore } from '../buttons';
 import { performActionFavorite } from '../../apis/API';
 import { AuthContext, StreamContext } from '../../contexts';
 import { streamCollection } from '../../apis/StreamAPI';
@@ -11,7 +11,6 @@ import Placeholder from '../../assets/imgs/placeholder.png';
 import {
   PlayIcon,
   UnFavoriteIcon,
-  MoreIcon,
   FavoriteIcon,
   PauseIcon
 } from '../../assets/svgs';
@@ -111,9 +110,7 @@ function CardMain(props) {
                 />
               </ButtonIcon>
             )}
-            <ButtonIcon>
-              <MoreIcon />
-            </ButtonIcon>
+            <ButtonMore className='right' />
           </div>
         </div>
       </div>

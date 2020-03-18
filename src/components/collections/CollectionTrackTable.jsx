@@ -13,7 +13,9 @@ import {
   DateIcon,
   FavoriteIcon,
   PlayIcon,
-  PauseIcon
+  PauseIcon,
+  MoreIcon,
+  PlusIcon
 } from '../../assets/svgs';
 
 function CollectionTrackTable(props) {
@@ -124,11 +126,15 @@ function RowPlaylist(props) {
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
-      <div className='collection-table__cell collection-table__cell--title'>
-        <span>{item.title}</span>
-      </div>
+      <CellTitle
+        id={item.id}
+        title={item.title}
+        index={serial}
+        relation={item.relation}
+        handleToggleFavorite={props.handleToggleFavorite}
+      />
       <div className='collection-table__cell collection-table__cell--artist'>
-        <span>
+        <span className='main'>
           {item.artists
             ? item.artists
                 .map(artist => (
@@ -145,7 +151,7 @@ function RowPlaylist(props) {
         </span>
       </div>
       <div className='collection-table__cell collection-table__cell--release'>
-        <span>
+        <span className='main'>
           <NavLinkUnderline
             href={`/player/release/${item.release ? item.release.id : ''}`}
             className='font-white'
@@ -155,10 +161,10 @@ function RowPlaylist(props) {
         </span>
       </div>
       <div className='collection-table__cell collection-table__cell--duration'>
-        <span>{getFormattedTime(item.duration / 1000)}</span>
+        <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
       </div>
       <div className='collection-table__cell collection-table__cell--added-date'>
-        <span>{item.addedAt}</span>
+        <span className='main'>{item.addedAt}</span>
       </div>
     </div>
   );
@@ -181,11 +187,15 @@ function RowRelease(props) {
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
-      <div className='collection-table__cell collection-table__cell--title'>
-        <span>{item.title}</span>
-      </div>
+      <CellTitle
+        id={item.id}
+        title={item.title}
+        index={serial}
+        relation={item.relation}
+        handleToggleFavorite={props.handleToggleFavorite}
+      />
       <div className='collection-table__cell collection-table__cell--duration'>
-        <span>{getFormattedTime(item.duration / 1000)}</span>
+        <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
       </div>
     </div>
   );
@@ -210,11 +220,15 @@ function RowSearch(props) {
         relation={item.relation}
         handleToggleFavorite={props.handleToggleFavorite}
       />
-      <div className='collection-table__cell collection-table__cell--title'>
-        <span>{item.title}</span>
-      </div>
+      <CellTitle
+        id={item.id}
+        title={item.title}
+        index={serial}
+        relation={item.relation}
+        handleToggleFavorite={props.handleToggleFavorite}
+      />
       <div className='collection-table__cell collection-table__cell--artist'>
-        <span>
+        <span className='main'>
           {item.artists
             ? item.artists
                 .map(artist => (
@@ -231,7 +245,7 @@ function RowSearch(props) {
         </span>
       </div>
       <div className='collection-table__cell collection-table__cell--release'>
-        <span>
+        <span className='main'>
           <NavLinkUnderline
             href={`/player/release/${item.release ? item.release.id : ''}`}
             className='font-white'
@@ -241,7 +255,7 @@ function RowSearch(props) {
         </span>
       </div>
       <div className='collection-table__cell collection-table__cell--duration'>
-        <span>{getFormattedTime(item.duration / 1000)}</span>
+        <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
       </div>
     </div>
   );
@@ -341,6 +355,20 @@ function CellAction(props) {
           )}
         </ButtonIcon>
       </div>
+    </div>
+  );
+}
+
+function CellTitle(props) {
+  const { title } = props;
+
+  return (
+    <div className='collection-table__cell collection-table__cell--title'>
+      <span className='main'>{title}</span>
+      <span className='extra'>
+        <PlusIcon className='svg--cursor svg--gray-light svg--bright' />
+        <MoreIcon className='svg--cursor svg--gray-light svg--bright' />
+      </span>
     </div>
   );
 }

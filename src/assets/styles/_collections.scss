@@ -55,6 +55,10 @@
       .collection-table__cell--action .action {
         visibility: visible;
       }
+
+      .collection-table__cell--title .extra {
+        visibility: visible;
+      }
     }
   }
 
@@ -62,8 +66,9 @@
     display: flex;
     align-items: center;
     color: $white;
+    overflow: hidden;
 
-    > :last-child {
+    .main {
       min-width: 0;
       white-space: nowrap;
       overflow: hidden;
@@ -94,7 +99,13 @@
     }
     &--title {
       flex: 1;
+      justify-content: space-between;
       padding-left: 10px;
+
+      .extra {
+        visibility: hidden;
+        display: flex;
+      }
     }
     &--artist {
       width: 20%;

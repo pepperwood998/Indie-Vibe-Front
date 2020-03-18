@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ButtonIcon } from '../buttons';
+import { ButtonIcon, ButtonMore } from '../buttons';
 import { NavLinkUnderline } from '../links';
 import { AuthContext } from '../../contexts';
 import { performActionFavorite } from '../../apis/API';
@@ -10,7 +10,6 @@ import {
   FavoriteIcon,
   PlayIcon,
   UnFavoriteIcon,
-  MoreIcon
 } from '../../assets/svgs';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
@@ -77,9 +76,7 @@ function CardProfile(props) {
                 />
               </ButtonIcon>
             )}
-            <ButtonIcon>
-              <MoreIcon />
-            </ButtonIcon>
+            <ButtonMore className='right' />
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { NavLinkUnderline } from '../../../components/links';
-import { ButtonMain, ButtonIcon } from '../../../components/buttons';
+import { ButtonMain, ButtonIcon, ButtonMore } from '../../../components/buttons';
 import { InputForm } from '../../../components/inputs';
 import { CollectionTrackTable } from '../../../components/collections';
 import { getTrackList, performActionFavorite } from '../../../apis/API';
@@ -168,9 +168,7 @@ function TrackList(props) {
                 />
               </ButtonIcon>
             )}
-            <ButtonIcon>
-              <MoreIcon />
-            </ButtonIcon>
+            <ButtonMore className='right' />
           </div>
           <div className='filter'>
             <InputForm placeholder='Filter' />
