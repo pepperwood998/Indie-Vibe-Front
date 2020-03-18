@@ -89,28 +89,35 @@ function NowPayingMiddle() {
   const [progressPer, setProgressPer] = useState(0);
 
   const {
-    stream,
     state: streamState,
     actions: streamActions,
     dispatch: streamDispatch
   } = useContext(StreamContext);
 
+  const audioRef = useRef();
+
   useEffect(() => {
-    stream.onProgress = (timeProgress, per) => {
-      setProgressTime(timeProgress);
-      setProgressPer(per);
-    };
-    stream.onTrackFormatted = duration => {
-      setDuration(duration);
-    };
+    streamDispatch(
+      streamActions.init({
+        audio: audioRef.current,
+        onProgress: (time, per) => {
+          setProgressTime(time);
+          setProgressPer(per);
+        },
+        onDurationChange: duration => {
+          setDuration(duration);
+        }
+      })
+    );
 
     return () => {
-      stream.clearAll();
+      streamDispatch(streamActions.clean());
     };
   }, []);
 
   return (
     <div className='player-controls'>
+      <audio ref={audioRef}></audio>
       <div className='player-controls__action'>
         <div className='player-action-wrapper'>
           <SkipPreviousIcon
@@ -125,14 +132,14 @@ function NowPayingMiddle() {
             <PlayIcon
               className='svg--cursor svg--bright'
               onClick={() => {
-                streamDispatch(streamActions.requestPaused(false));
+                streamDispatch(streamActions.togglePaused());
               }}
             />
           ) : (
             <PauseIcon
               className='svg--cursor svg--bright'
               onClick={() => {
-                streamDispatch(streamActions.requestPaused(true));
+                streamDispatch(streamActions.togglePaused());
               }}
             />
           )}
@@ -205,11 +212,6 @@ function ProgressBar(props) {
       });
     }
   };
-
-  useEffect(() => {
-    // window.addEventListener('mousemove', handleMouseMove);
-    // window.addEventListener('mouseup', handleMouseUp);
-  });
 
   return (
     <div className='ivb-progress-bar'>
