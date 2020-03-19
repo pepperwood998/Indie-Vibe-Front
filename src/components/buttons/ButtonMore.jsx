@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 
 import { ButtonIcon } from '.';
 import { LibraryContext } from '../../contexts';
@@ -11,7 +11,6 @@ function ButtonMore(props) {
     actions: libActions,
     dispatch: libDispatch
   } = useContext(LibraryContext);
-
 
   const handleToggleCtxMenu = e => {
     if (libState.ctxMenuOpened) return;

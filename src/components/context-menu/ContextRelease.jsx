@@ -1,7 +1,8 @@
 import React from 'react';
+
 import { LinkWhiteColor } from '../links';
 
-function ContextPlaylist(props) {
+function ContextRelease(props) {
   const { content } = props;
 
   if (Array.isArray(content.relation)) {
@@ -25,17 +26,7 @@ function Me(props) {
           <LinkWhiteColor>Add to queue</LinkWhiteColor>
         </li>
         <li>
-          {content.status === 'public' ? (
-            <LinkWhiteColor>Set private</LinkWhiteColor>
-          ) : (
-            <LinkWhiteColor>Set public</LinkWhiteColor>
-          )}
-        </li>
-        <li>
-          <LinkWhiteColor>Edit</LinkWhiteColor>
-        </li>
-        <li>
-          <LinkWhiteColor>Delete</LinkWhiteColor>
+          <LinkWhiteColor>Manage</LinkWhiteColor>
         </li>
       </ul>
     </div>
@@ -63,4 +54,4 @@ function Other(props) {
   );
 }
 
-export default ContextPlaylist;
+export default ContextRelease;

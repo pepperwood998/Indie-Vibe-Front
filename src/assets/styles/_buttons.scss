@@ -50,6 +50,7 @@
   background: $white;
   border-radius: 50%;
   cursor: pointer;
+  transition: 0.05s ease;
 
   svg {
     width: 20px;
@@ -62,6 +63,6 @@
   }
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 }

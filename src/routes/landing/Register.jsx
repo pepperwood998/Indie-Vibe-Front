@@ -42,7 +42,7 @@ function Register() {
     register(email, pwd, cfPwd, displayName, gender)
       .then(response => response.json())
       .then(json => {
-        if (json.status === 'failed') {
+        if (json.status === 'fail') {
           throw { type: 'wrong', msg: json.data };
         } else {
           setRegisterSuccess(json.data);

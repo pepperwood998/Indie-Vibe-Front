@@ -25,6 +25,7 @@ function General(props) {
   });
 
   useEffect(() => {
+    console.log('general');
     search(authState.token, props.match.params.key)
       .then(res => {
         if (res.status === 'success') {
@@ -35,7 +36,7 @@ function General(props) {
       .catch(err => {
         console.error(err);
       });
-  }, []);
+  }, [searchKey]);
 
   const handleToggleFavorite = (index, relation, type) => {
     let target = [...data[`${type}s`]];

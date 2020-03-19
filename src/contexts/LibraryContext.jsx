@@ -36,7 +36,6 @@ const reducer = (state, action) => {
         ctxMenuElem: action.payload
       };
     case 'OPEN_CTX_MENU':
-      console.log(action.payload.pos);
       return {
         ...state,
         ctxMenuOpened: true,

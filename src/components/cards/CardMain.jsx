@@ -130,7 +130,7 @@ function CardMain(props) {
           <span>
             {content.type === 'release' ? (
               <React.Fragment>
-                by&nbsp
+                <span>by&nbsp;</span>
                 <NavLinkUnderline
                   href={`/player/artist/${content.artist.id}`}
                   className='font-gray-light'

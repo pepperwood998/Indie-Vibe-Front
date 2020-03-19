@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { NavLinkUnderline } from '../../../components/links';
-import { ButtonMain, ButtonIcon, ButtonMore } from '../../../components/buttons';
+import {
+  ButtonMain,
+  ButtonIcon,
+  ButtonMore
+} from '../../../components/buttons';
 import { InputForm } from '../../../components/inputs';
 import { CollectionTrackTable } from '../../../components/collections';
 import { getTrackList, performActionFavorite } from '../../../apis/API';
@@ -90,15 +94,13 @@ function TrackList(props) {
   };
 
   const handleListToggleFavorite = action => {
-    performActionFavorite(
-      authState.token,
-      type,
-      id,
-      data.relation,
-      action
-    ).then(r => {
-      setData({ ...data, relation: r });
-    });
+    performActionFavorite(authState.token, type, id, data.relation, action)
+      .then(r => {
+        setData({ ...data, relation: r });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   return (
@@ -168,7 +170,14 @@ function TrackList(props) {
                 />
               </ButtonIcon>
             )}
-            <ButtonMore className='right' />
+            <ButtonMore
+              ctxData={{
+                type: type,
+                id: id,
+                relation: data.relation,
+                status: data.status
+              }}
+            />
           </div>
           <div className='filter'>
             <InputForm placeholder='Filter' />
