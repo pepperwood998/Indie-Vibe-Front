@@ -6,7 +6,10 @@ const initState = {
   ctxMenuElem: null,
   ctxMenuOpened: false,
   ctxMenuContent: {},
-  ctxMenuPos: [0, 0]
+  ctxMenuPos: [0, 0],
+  ctxFav: { id: '', type: '', relation: [] },
+  ctxHandleToggleFavorite: action => undefined,
+  ctxHandleDeletePlaylist: id => undefined
 };
 
 const actions = {
@@ -24,10 +27,13 @@ const actions = {
   },
   closeCtxMenu: () => {
     return { type: 'CLOSE_CTX_MENU' };
+  },
+  toggleFavorite: payload => {
+    return { type: 'TOGGLE_FAV', payload };
   }
 };
 
-let handleClosed = e => {};
+let handleClosed = e => undefined;
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INIT_CTX_ELEM':
@@ -44,7 +50,14 @@ const reducer = (state, action) => {
       };
     case 'CLOSE_CTX_MENU':
       document.removeEventListener('click', handleClosed);
-      return { ...state, ctxMenuOpened: false, ctxMenuContent: {} };
+      return {
+        ...state,
+        ctxMenuOpened: false,
+        ctxMenuContent: {},
+        ctxMenuPos: [0, 0]
+      };
+    case 'TOGGLE_FAV':
+      return { ...state, ctxFav: { ...action.payload } };
     default:
       return state;
   }
@@ -63,6 +76,10 @@ function LibraryContextProvider(props) {
       document.addEventListener('click', handleClosed);
     }
   }, [state]);
+
+  useEffect(() => {
+    dispatch(actions.closeCtxMenu());
+  }, [state.ctxFav]);
 
   return (
     <LibraryContext.Provider value={{ state, actions, dispatch }}>

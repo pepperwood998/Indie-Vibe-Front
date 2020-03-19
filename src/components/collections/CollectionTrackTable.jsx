@@ -63,7 +63,7 @@ function CollectionTrackTable(props) {
 
       {/* Track table content */}
       {items
-        ? items.slice(offset, limit).map((item, index) => {
+        ? items.map((item, index) => {
             if (type === 'playlist') {
               item = Object.assign(
                 {},
@@ -78,7 +78,6 @@ function CollectionTrackTable(props) {
                   key={index}
                   serial={index}
                   collectionId={props.collectionId}
-                  handleToggleFavorite={props.handleToggleFavorite}
                 />
               );
             } else if (type === 'release') {
@@ -88,7 +87,6 @@ function CollectionTrackTable(props) {
                   key={index}
                   serial={index}
                   collectionId={props.collectionId}
-                  handleToggleFavorite={props.handleToggleFavorite}
                 />
               );
             } else {
@@ -98,8 +96,6 @@ function CollectionTrackTable(props) {
                   key={index}
                   serial={index}
                   collectionId={item.release ? item.release.id : ''}
-                  type={props.type}
-                  handleToggleFavorite={props.handleToggleFavorite}
                 />
               );
             }
@@ -118,20 +114,20 @@ function RowPlaylist(props) {
         serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
-        type='playlist'
+        streamType='playlist'
       />
       <CellFavorite
         id={item.id}
         index={serial}
         relation={item.relation}
-        handleToggleFavorite={props.handleToggleFavorite}
+        collectionKey='playlist'
       />
       <CellTitle
         id={item.id}
         title={item.title}
         index={serial}
         relation={item.relation}
-        handleToggleFavorite={props.handleToggleFavorite}
+        collectionKey='playlist'
       />
       <div className='collection-table__cell collection-table__cell--artist'>
         <span className='main'>
@@ -179,20 +175,20 @@ function RowRelease(props) {
         serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
-        type='release'
+        streamType='release'
       />
       <CellFavorite
         id={item.id}
         index={serial}
         relation={item.relation}
-        handleToggleFavorite={props.handleToggleFavorite}
+        collectionKey='release'
       />
       <CellTitle
         id={item.id}
         title={item.title}
         index={serial}
         relation={item.relation}
-        handleToggleFavorite={props.handleToggleFavorite}
+        collectionKey='release'
       />
       <div className='collection-table__cell collection-table__cell--duration'>
         <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
@@ -204,7 +200,7 @@ function RowRelease(props) {
 function RowSearch(props) {
   const { item, serial } = props;
 
-  const type = props.type === 'favorite' ? props.type : 'release';
+  const streamType = props.type === 'favorite' ? props.type : 'release';
 
   return (
     <div className='collection-table__row collection-table__row--data'>
@@ -212,20 +208,20 @@ function RowSearch(props) {
         serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
-        type={type}
+        streamType={streamType}
       />
       <CellFavorite
         id={item.id}
         index={serial}
         relation={item.relation}
-        handleToggleFavorite={props.handleToggleFavorite}
+        collectionKey='track'
       />
       <CellTitle
         id={item.id}
         title={item.title}
         index={serial}
         relation={item.relation}
-        handleToggleFavorite={props.handleToggleFavorite}
+        collectionKey='track'
       />
       <div className='collection-table__cell collection-table__cell--artist'>
         <span className='main'>
@@ -261,48 +257,6 @@ function RowSearch(props) {
   );
 }
 
-function CellFavorite(props) {
-  const { state: authState } = useContext(AuthContext);
-
-  const [relation, setRelation] = useState(
-    Array.isArray(props.relation) ? [...props.relation] : []
-  );
-
-  useEffect(() => {
-    props.handleToggleFavorite(props.index, relation, 'track');
-  }, [relation]);
-
-  const handleToggleFavorite = action => {
-    performActionFavorite(authState.token, 'track', props.id, relation, action)
-      .then(r => {
-        setRelation(r);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  return (
-    <div className='collection-table__cell collection-table__cell--favorite'>
-      {relation.includes('favorite') ? (
-        <FavoriteIcon
-          className='svg--cursor svg--scale svg--blue'
-          onClick={() => {
-            handleToggleFavorite('unfavorite');
-          }}
-        />
-      ) : (
-        <UnFavoriteIcon
-          className='svg--cursor svg--scale'
-          onClick={() => {
-            handleToggleFavorite('favorite');
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
 function CellAction(props) {
   const { state: authState } = useContext(AuthContext);
   const {
@@ -312,7 +266,7 @@ function CellAction(props) {
   } = useContext(StreamContext);
 
   const current = streamState.queue[streamState.currentSong];
-  const { serial, id, collectionId, type } = props;
+  const { serial, id, collectionId, streamType } = props;
 
   const handlePause = () => {
     streamDispatch(streamAction.requestPaused(true));
@@ -324,13 +278,13 @@ function CellAction(props) {
       if (collectionId === streamState.collectionId) {
         streamDispatch(streamAction.reorder(id));
       } else {
-        streamCollection(authState.token, type, collectionId)
+        streamCollection(authState.token, streamType, collectionId)
           .then(res => {
             if (res.status === 'success' && res.data.length) {
               streamDispatch(
                 streamAction.start({
                   queue: res.data,
-                  playType: type,
+                  playType: streamType,
                   collectionId
                 })
               );
@@ -355,6 +309,55 @@ function CellAction(props) {
           )}
         </ButtonIcon>
       </div>
+    </div>
+  );
+}
+
+function CellFavorite(props) {
+  const { state: authState } = useContext(AuthContext);
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
+  const handleToggleFavorite = action => {
+    performActionFavorite(
+      authState.token,
+      'track',
+      props.id,
+      props.relation,
+      action
+    )
+      .then(r => {
+        libDispatch(
+          libActions.toggleFavorite({
+            id: props.id,
+            type: 'track',
+            relation: r
+          })
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  return (
+    <div className='collection-table__cell collection-table__cell--favorite'>
+      {props.relation.includes('favorite') ? (
+        <FavoriteIcon
+          className='svg--cursor svg--scale svg--blue'
+          onClick={() => {
+            handleToggleFavorite('unfavorite');
+          }}
+        />
+      ) : (
+        <UnFavoriteIcon
+          className='svg--cursor svg--scale'
+          onClick={() => {
+            handleToggleFavorite('favorite');
+          }}
+        />
+      )}
     </div>
   );
 }

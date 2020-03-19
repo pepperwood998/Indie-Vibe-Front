@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
+
 import { LinkWhiteColor } from '../links';
+import { LibraryContext } from '../../contexts';
 
 function ContextPlaylist(props) {
   const { content } = props;
 
   if (Array.isArray(content.relation)) {
     if (content.relation.includes('own')) {
-      return <Me content={content} />;
+      return <Me {...props} />;
     }
 
-    return <Other content={content} />;
+    return <Other {...props} />;
   } else {
     return '';
   }
@@ -17,6 +19,10 @@ function ContextPlaylist(props) {
 
 function Me(props) {
   const { content } = props;
+
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
 
   return (
     <div className='context-menu'>
@@ -35,7 +41,15 @@ function Me(props) {
           <LinkWhiteColor>Edit</LinkWhiteColor>
         </li>
         <li>
-          <LinkWhiteColor>Delete</LinkWhiteColor>
+          <LinkWhiteColor
+            onClick={() => {
+              {
+                libDispatch(libActions.deletePlaylist(content.id));
+              }
+            }}
+          >
+            Delete
+          </LinkWhiteColor>
         </li>
       </ul>
     </div>
@@ -43,7 +57,7 @@ function Me(props) {
 }
 
 function Other(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   return (
     <div className='context-menu'>
@@ -53,9 +67,21 @@ function Other(props) {
         </li>
         <li>
           {content.relation.includes('favorite') ? (
-            <LinkWhiteColor>Remove from library</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                handlers.handleToggleFavorite('unfavorite');
+              }}
+            >
+              Remove from library
+            </LinkWhiteColor>
           ) : (
-            <LinkWhiteColor>Add to library</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                handlers.handleToggleFavorite('favorite');
+              }}
+            >
+              Add to library
+            </LinkWhiteColor>
           )}
         </li>
       </ul>

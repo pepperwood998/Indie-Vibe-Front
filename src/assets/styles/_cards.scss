@@ -88,6 +88,10 @@
           transform: translateX(-50%);
         }
       }
+
+      &.ctx-menu {
+        opacity: 1;
+      }
     }
 
     &:hover {

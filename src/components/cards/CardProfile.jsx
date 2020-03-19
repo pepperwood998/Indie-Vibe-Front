@@ -3,38 +3,47 @@ import { Link } from 'react-router-dom';
 
 import { ButtonIcon, ButtonMore } from '../buttons';
 import { NavLinkUnderline } from '../links';
-import { AuthContext } from '../../contexts';
+import { AuthContext, LibraryContext } from '../../contexts';
 import { performActionFavorite } from '../../apis/API';
 
 import { FavoriteIcon, PlayIcon, UnFavoriteIcon } from '../../assets/svgs';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
 function CardProfile(props) {
-  const { state: authState } = useContext(AuthContext);
   const { content } = props;
 
-  const [relation, setRelation] = useState([...content.relation]);
-
-  useEffect(() => {
-    props.handleToggleFavorite(props.index, relation, content.type);
-  }, [relation]);
+  const { state: authState } = useContext(AuthContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   const handleToggleFavorite = action => {
     performActionFavorite(
       authState.token,
       content.type,
       content.id,
-      relation,
+      content.relation,
       action
     )
       .then(r => {
-        setRelation(r);
+        libDispatch(
+          libActions.toggleFavorite({
+            id: content.id,
+            type: content.type,
+            relation: r
+          })
+        );
       })
       .catch(error => {
         console.error(error);
       });
   };
 
+  let ctxClasses = 'action profile';
+  if (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
+    ctxClasses += ' ctx-menu';
   return (
     <div className='card-main'>
       <div className='card-main__cover-wrapper profile'>
@@ -45,7 +54,7 @@ function CardProfile(props) {
             className='cover'
           />
         </Link>
-        <div className='action profile'>
+        <div className={ctxClasses}>
           {content.type === 'artist' ? (
             <ButtonIcon>
               <PlayIcon />
@@ -54,7 +63,7 @@ function CardProfile(props) {
             ''
           )}
           <div className='action__extra profile'>
-            {relation.includes('favorite') ? (
+            {content.relation.includes('favorite') ? (
               <ButtonIcon>
                 <FavoriteIcon
                   className='svg--blue'

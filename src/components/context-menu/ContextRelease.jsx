@@ -7,10 +7,10 @@ function ContextRelease(props) {
 
   if (Array.isArray(content.relation)) {
     if (content.relation.includes('own')) {
-      return <Me content={content} />;
+      return <Me {...props} />;
     }
 
-    return <Other content={content} />;
+    return <Other {...props} />;
   } else {
     return '';
   }
@@ -34,7 +34,7 @@ function Me(props) {
 }
 
 function Other(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   return (
     <div className='context-menu'>
@@ -44,9 +44,21 @@ function Other(props) {
         </li>
         <li>
           {content.relation.includes('favorite') ? (
-            <LinkWhiteColor>Remove from library</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                handlers.handleToggleFavorite('unfavorite');
+              }}
+            >
+              Remove from library
+            </LinkWhiteColor>
           ) : (
-            <LinkWhiteColor>Add to library</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                handlers.handleToggleFavorite('favorite');
+              }}
+            >
+              Add to library
+            </LinkWhiteColor>
           )}
         </li>
       </ul>

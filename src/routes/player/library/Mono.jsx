@@ -4,9 +4,9 @@ import {
   CollectionTracks,
   CollectionMain
 } from '../../../components/collections';
-import { capitalize } from '../../../utils/Common';
+import { capitalize, useEffectSkip } from '../../../utils/Common';
 import { library, getPlaylistsMe } from '../../../apis/API';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
 
 function Mono(props) {
@@ -14,6 +14,8 @@ function Mono(props) {
   const userId = props.match ? props.match.params.id : '';
 
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
+
   const [data, setData] = useState({
     items: [],
     offset: 0,
@@ -33,16 +35,17 @@ function Mono(props) {
       });
   }, []);
 
-  const handleToggleFavorite = (index, relation, type) => {
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
     let items = [...data.items];
-    items.some((item, i) => {
-      if (index === i) {
-        item.relation = [...relation];
+    items.some(item => {
+      if (ctxFav.id === item.id) {
+        item.relation = [...ctxFav.relation];
         return true;
       }
     });
     setData({ ...data, items });
-  };
+  }, [libState.ctxFav]);
 
   const handleLoadMore = () => {
     getLibraryTarget(authState, userId, type, data.offset + data.limit)
@@ -72,7 +75,6 @@ function Mono(props) {
         }
         data={data}
         type='favorite'
-        handleToggleFavorite={handleToggleFavorite}
       />
     );
   } else {
@@ -83,7 +85,6 @@ function Mono(props) {
         }
         data={data}
         type={type}
-        handleToggleFavorite={handleToggleFavorite}
       />
     );
   }

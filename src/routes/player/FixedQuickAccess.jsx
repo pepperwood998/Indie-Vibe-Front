@@ -89,19 +89,17 @@ function QuickAccess() {
         </div>
         <div className='content-wrapper'>
           <ul className='content'>
-            {playlists.items
-              .slice(playlists.offset, playlists.limit)
-              .map((item, index) => (
-                <li className='item-wrapper' key={index}>
-                  <LinkWhiteColor
-                    href={`/player/playlist/${item.id}`}
-                    className='item font-short-big font-weight-bold'
-                    nav={true}
-                  >
-                    {item.title}
-                  </LinkWhiteColor>
-                </li>
-              ))}
+            {playlists.items.map((item, index) => (
+              <li className='item-wrapper' key={index}>
+                <LinkWhiteColor
+                  href={`/player/playlist/${item.id}`}
+                  className='item font-short-big font-weight-bold'
+                  nav={true}
+                >
+                  {item.title}
+                </LinkWhiteColor>
+              </li>
+            ))}
           </ul>
           {playlists.total > playlists.offset + playlists.limit ? (
             <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>

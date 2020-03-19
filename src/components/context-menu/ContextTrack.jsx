@@ -3,7 +3,7 @@ import React from 'react';
 import { LinkWhiteColor } from '../links';
 
 function ContextTrack(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   return (
     <div className='context-menu'>
@@ -26,9 +26,21 @@ function ContextTrack(props) {
         <li>
           {Array.isArray(content.relation) &&
           content.relation.includes('favorite') ? (
-            <LinkWhiteColor>Remove from Favorite</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                handlers.handleToggleFavorite('unfavorite');
+              }}
+            >
+              Remove from Favorite
+            </LinkWhiteColor>
           ) : (
-            <LinkWhiteColor>Add to Favorite</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                handlers.handleToggleFavorite('favorite');
+              }}
+            >
+              Add to Favorite
+            </LinkWhiteColor>
           )}
         </li>
       </ul>

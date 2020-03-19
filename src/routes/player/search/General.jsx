@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 
-import { capitalize } from '../../../utils/Common';
+import { capitalize, useEffectSkip } from '../../../utils/Common';
 import { NavLinkColor } from '../../../components/links';
 import {
   CollectionTracks,
   CollectionMain
 } from '../../../components/collections';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, LibraryContext } from '../../../contexts';
 import { search } from '../../../apis/API';
 
 import { ArrowRight } from '../../../assets/svgs';
@@ -15,6 +15,8 @@ function General(props) {
   const { key: searchKey } = props.match.params;
 
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
+
   const [data, setData] = useState({
     tracks: [],
     artists: [],
@@ -25,11 +27,9 @@ function General(props) {
   });
 
   useEffect(() => {
-    console.log('general');
     search(authState.token, props.match.params.key)
       .then(res => {
         if (res.status === 'success') {
-          console.log(res.data);
           setData({ ...data, ...res.data });
         }
       })
@@ -38,16 +38,17 @@ function General(props) {
       });
   }, [searchKey]);
 
-  const handleToggleFavorite = (index, relation, type) => {
-    let target = [...data[`${type}s`]];
-    target.some((item, i) => {
-      if (index === i) {
-        item.relation = [...relation];
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
+    let target = [...data[`${ctxFav.type}s`]];
+    target.some(item => {
+      if (ctxFav.id === item.id) {
+        item.relation = [...ctxFav.relation];
         return true;
       }
     });
-    setData({ ...data, [`${type}s`]: target });
-  };
+    setData({ ...data, [`${ctxFav.type}s`]: target });
+  }, [libState.ctxFav]);
 
   let exist = Object.keys(data).find(key => data[key].length > 0);
   let render = '';
@@ -68,8 +69,9 @@ function General(props) {
                 </NavLinkColor>
               }
               data={{ items: data[key], offset: 0, limit: data[key].length }}
-              type='search'
-              handleToggleFavorite={handleToggleFavorite}
+              extra={{
+                type: 'search'
+              }}
               key={index}
             />
           );
@@ -88,7 +90,6 @@ function General(props) {
             }
             data={{ items: data[key], offset: 0, limit: data[key].length }}
             type={type}
-            handleToggleFavorite={handleToggleFavorite}
             key={index}
           />
         );

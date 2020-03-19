@@ -12,7 +12,6 @@ function CollectionTracks(props) {
           data={props.data}
           type={props.type}
           collectionId={props.collectionId}
-          handleToggleFavorite={props.handleToggleFavorite}
         />
       </div>
     </div>

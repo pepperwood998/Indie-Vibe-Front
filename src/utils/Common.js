@@ -1,3 +1,5 @@
+import { useRef, useEffect } from "react";
+
 export const capitalize = str => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
@@ -50,4 +52,13 @@ export const shuffle = array => {
 export const formatNumber = num => {
   if (!num) return 0;
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+};
+
+export const useEffectSkip = (fn, inputs) => {
+  const didMountRef = useRef(false);
+
+  useEffect(() => {
+    if (didMountRef.current) fn();
+    else didMountRef.current = true;
+  }, inputs);
 };

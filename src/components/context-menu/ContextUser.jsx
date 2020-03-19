@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-
-import { LinkWhiteColor } from '../links';
 import { AuthContext } from '../../contexts';
+import { LinkWhiteColor } from '../links';
+
 
 function ContextUser(props) {
   const { content } = props;
@@ -9,9 +9,9 @@ function ContextUser(props) {
   const { state: authState } = useContext(AuthContext);
 
   if (content.id === authState.id) {
-    return <Me content={content} />;
+    return <Me {...props} />;
   } else {
-    return <Other content={content} />;
+    return <Other {...props} />;
   }
 }
 
@@ -30,16 +30,28 @@ function Me(props) {
 }
 
 function Other(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   return (
     <div className='context-menu'>
       <ul>
         <li>
           {content.relation.includes('favorite') ? (
-            <LinkWhiteColor>Unfollow</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                handlers.handleToggleFavorite('unfavorite');
+              }}
+            >
+              Unfollow
+            </LinkWhiteColor>
           ) : (
-            <LinkWhiteColor>Follow</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                handlers.handleToggleFavorite('favorite');
+              }}
+            >
+              Follow
+            </LinkWhiteColor>
           )}
         </li>
         {content.type === 'artist' ? (

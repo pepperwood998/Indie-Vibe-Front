@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { NavLinkUnderline } from '../links';
 import { ButtonIcon, ButtonMore } from '../buttons';
-import { performActionFavorite } from '../../apis/API';
-import { AuthContext, StreamContext } from '../../contexts';
+import { performActionFavorite, deleteTrackList } from '../../apis/API';
+import { AuthContext, StreamContext, LibraryContext } from '../../contexts';
 import { streamCollection } from '../../apis/StreamAPI';
 
 import Placeholder from '../../assets/imgs/placeholder.png';
@@ -24,23 +24,42 @@ function CardMain(props) {
     actions: streamAction,
     dispatch: streamDispatch
   } = useContext(StreamContext);
-
-  const [relation, setRelation] = useState([...content.relation]);
-
-  useEffect(() => {
-    props.handleToggleFavorite(props.index, relation, content.type);
-  }, [relation]);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   const handleToggleFavorite = action => {
     performActionFavorite(
       authState.token,
       content.type,
       content.id,
-      relation,
+      content.relation,
       action
     )
       .then(r => {
-        setRelation(r);
+        libDispatch(
+          libActions.toggleFavorite({
+            id: content.id,
+            type: content.type,
+            relation: r
+          })
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const handleDeletePlaylist = id => {
+    deleteTrackList(authState.token, content.type, id)
+      .then(res => {
+        if (res.status === 'success') {
+          // ...
+        } else {
+          throw 'Failed to delete';
+        }
       })
       .catch(error => {
         console.error(error);
@@ -69,6 +88,9 @@ function CardMain(props) {
     }
   };
 
+  let ctxClasses = 'action playlist-release';
+  if (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
+    ctxClasses += ' ctx-menu';
   return (
     <div className='card-main'>
       <div className='card-main__cover-wrapper'>
@@ -79,7 +101,7 @@ function CardMain(props) {
             className='cover'
           />
         </Link>
-        <div className='action playlist-release'>
+        <div className={ctxClasses}>
           <ButtonIcon>
             {content.id === streamState.collectionId && !streamState.paused ? (
               <PauseIcon onClick={handlePaused} />
@@ -88,9 +110,9 @@ function CardMain(props) {
             )}
           </ButtonIcon>
           <div className='action__extra playlist-release'>
-            {relation.includes('own') ? (
+            {content.relation.includes('own') ? (
               ''
-            ) : relation.includes('favorite') ? (
+            ) : content.relation.includes('favorite') ? (
               <ButtonIcon>
                 <FavoriteIcon
                   className='svg--blue'
@@ -115,6 +137,8 @@ function CardMain(props) {
                 relation: content.relation,
                 status: content.status
               }}
+              handleToggleFavorite={handleToggleFavorite}
+              handleDeletePlaylist={handleDeletePlaylist}
             />
           </div>
         </div>
