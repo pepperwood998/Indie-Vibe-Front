@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 
 import Top from './FixedTop';
 import NavMenu from './FixedNavMenu';
@@ -9,10 +9,24 @@ import { Browse, Home, Account, Artist, TrackList } from './monopage';
 import { Workspace } from './workspace';
 import { Search } from './search';
 import { Library } from './library';
+import { LibraryContext } from '../../contexts';
+import { ContextSwitch } from '../../components/context-menu';
 
 import './css/player.scss';
 
 function Player(props) {
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
+
+  const menuRef = useRef();
+
+  useEffect(() => {
+    libDispatch(libActions.initCtxElem(menuRef.current));
+  }, []);
+
   return (
     <div className='player'>
       <div className='player__top'>
@@ -45,6 +59,20 @@ function Player(props) {
           component={TrackList}
         />
         <ArtistRoute path='/player/workspace' component={Workspace} />
+      </div>
+      <div
+        ref={menuRef}
+        className='context-wrapper'
+        style={{
+          top: libState.ctxMenuPos[1] + 'px',
+          left: libState.ctxMenuPos[0] + 'px'
+        }}
+      >
+        {libState.ctxMenuOpened ? (
+          <ContextSwitch content={libState.ctxMenuContent} />
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );

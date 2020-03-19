@@ -31,8 +31,6 @@ function CardMain(props) {
     props.handleToggleFavorite(props.index, relation, content.type);
   }, [relation]);
 
-  const current = streamState.queue[streamState.currentSong];
-
   const handleToggleFavorite = action => {
     performActionFavorite(
       authState.token,
@@ -110,7 +108,14 @@ function CardMain(props) {
                 />
               </ButtonIcon>
             )}
-            <ButtonMore className='right' />
+            <ButtonMore
+              ctxData={{
+                type: content.type,
+                id: content.id,
+                relation: content.relation,
+                status: content.status
+              }}
+            />
           </div>
         </div>
       </div>
