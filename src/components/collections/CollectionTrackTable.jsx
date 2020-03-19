@@ -19,7 +19,7 @@ import {
 } from '../../assets/svgs';
 
 function CollectionTrackTable(props) {
-  const { type } = props;
+  const { type } = props.extra;
   let { items, offset, limit } = props.data;
 
   return (
@@ -63,7 +63,7 @@ function CollectionTrackTable(props) {
 
       {/* Track table content */}
       {items
-        ? items.slice(offset, limit).map((item, index) => {
+        ? items.map((item, index) => {
             if (type === 'playlist') {
               item = Object.assign(
                 {},
@@ -77,8 +77,8 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
+                  extra={props.extra}
                   collectionId={props.collectionId}
-                  handleToggleFavorite={props.handleToggleFavorite}
                 />
               );
             } else if (type === 'release') {
@@ -87,8 +87,8 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
+                  extra={props.extra}
                   collectionId={props.collectionId}
-                  handleToggleFavorite={props.handleToggleFavorite}
                 />
               );
             } else {
@@ -97,9 +97,8 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
+                  extra={props.extra}
                   collectionId={item.release ? item.release.id : ''}
-                  type={props.type}
-                  handleToggleFavorite={props.handleToggleFavorite}
                 />
               );
             }
@@ -118,22 +117,22 @@ function RowPlaylist(props) {
         serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
-        type='playlist'
+        streamType='playlist'
       />
       <CellFavorite
         id={item.id}
         index={serial}
         relation={item.relation}
+        extra={props.extra}
         collectionKey='playlist'
-        handleToggleFavorite={props.handleToggleFavorite}
       />
       <CellTitle
         id={item.id}
         title={item.title}
         index={serial}
         relation={item.relation}
+        extra={props.extra}
         collectionKey='playlist'
-        handleToggleFavorite={props.handleToggleFavorite}
       />
       <div className='collection-table__cell collection-table__cell--artist'>
         <span className='main'>
@@ -181,22 +180,22 @@ function RowRelease(props) {
         serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
-        type='release'
+        streamType='release'
       />
       <CellFavorite
         id={item.id}
         index={serial}
         relation={item.relation}
+        extra={props.extra}
         collectionKey='release'
-        handleToggleFavorite={props.handleToggleFavorite}
       />
       <CellTitle
         id={item.id}
         title={item.title}
         index={serial}
         relation={item.relation}
+        extra={props.extra}
         collectionKey='release'
-        handleToggleFavorite={props.handleToggleFavorite}
       />
       <div className='collection-table__cell collection-table__cell--duration'>
         <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
@@ -208,7 +207,7 @@ function RowRelease(props) {
 function RowSearch(props) {
   const { item, serial } = props;
 
-  const type = props.type === 'favorite' ? props.type : 'release';
+  const streamType = props.type === 'favorite' ? props.type : 'release';
 
   return (
     <div className='collection-table__row collection-table__row--data'>
@@ -216,22 +215,22 @@ function RowSearch(props) {
         serial={serial + 1}
         id={item.id}
         collectionId={props.collectionId}
-        type={type}
+        streamType={streamType}
       />
       <CellFavorite
         id={item.id}
         index={serial}
         relation={item.relation}
+        extra={props.extra}
         collectionKey='track'
-        handleToggleFavorite={props.handleToggleFavorite}
       />
       <CellTitle
         id={item.id}
         title={item.title}
         index={serial}
         relation={item.relation}
+        extra={props.extra}
         collectionKey='track'
-        handleToggleFavorite={props.handleToggleFavorite}
       />
       <div className='collection-table__cell collection-table__cell--artist'>
         <span className='main'>
@@ -276,7 +275,7 @@ function CellAction(props) {
   } = useContext(StreamContext);
 
   const current = streamState.queue[streamState.currentSong];
-  const { serial, id, collectionId, type } = props;
+  const { serial, id, collectionId, streamType } = props;
 
   const handlePause = () => {
     streamDispatch(streamAction.requestPaused(true));
@@ -288,13 +287,13 @@ function CellAction(props) {
       if (collectionId === streamState.collectionId) {
         streamDispatch(streamAction.reorder(id));
       } else {
-        streamCollection(authState.token, type, collectionId)
+        streamCollection(authState.token, streamType, collectionId)
           .then(res => {
             if (res.status === 'success' && res.data.length) {
               streamDispatch(
                 streamAction.start({
                   queue: res.data,
-                  playType: type,
+                  playType: streamType,
                   collectionId
                 })
               );
@@ -331,7 +330,7 @@ function CellFavorite(props) {
   );
 
   useEffect(() => {
-    props.handleToggleFavorite(props.index, relation, props.collectionKey);
+    props.extra.handleToggleFavorite(props.index, relation, props.collectionKey);
   }, [relation]);
 
   const handleToggleFavorite = action => {
@@ -380,7 +379,7 @@ function CellTitle(props) {
   );
 
   useEffect(() => {
-    props.handleToggleFavorite(props.index, relation, props.collectionKey);
+    props.extra.handleToggleFavorite(props.index, relation, props.collectionKey);
   }, [relation]);
 
   const handleToggleFavorite = action => {

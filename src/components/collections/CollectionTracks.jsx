@@ -10,9 +10,8 @@ function CollectionTracks(props) {
         {/* {items.slice(offset, limit).map((item, index) => '')} */}
         <CollectionTrackTable
           data={props.data}
-          type={props.type}
+          extra={props.extra}
           collectionId={props.collectionId}
-          handleToggleFavorite={props.handleToggleFavorite}
         />
       </div>
     </div>

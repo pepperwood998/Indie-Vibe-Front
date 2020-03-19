@@ -44,6 +44,10 @@ function Mono(props) {
     setData({ ...data, items });
   };
 
+  const handleDeleteItem = index => {
+    setData(data.items.filter((value, i) => index === i));
+  };
+
   const handleLoadMore = () => {
     getLibraryTarget(authState, userId, type, data.offset + data.limit)
       .then(res => {
@@ -82,8 +86,10 @@ function Mono(props) {
           data.total > 0 ? data.total + ` ${type}s` : `No ${capitalize(type)}`
         }
         data={data}
-        type={type}
-        handleToggleFavorite={handleToggleFavorite}
+        extra={{
+          type: type,
+          handleToggleFavorite: handleToggleFavorite
+        }}
       />
     );
   }

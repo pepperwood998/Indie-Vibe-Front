@@ -12,7 +12,7 @@ import { getTrackList, performActionFavorite } from '../../../apis/API';
 import { AuthContext, StreamContext } from '../../../contexts';
 import { streamCollection } from '../../../apis/StreamAPI';
 
-import { UnFavoriteIcon, MoreIcon, FavoriteIcon } from '../../../assets/svgs';
+import { UnFavoriteIcon, FavoriteIcon } from '../../../assets/svgs';
 import Placeholder from '../../../assets/imgs/placeholder.png';
 
 function TrackList(props) {
@@ -187,9 +187,11 @@ function TrackList(props) {
         <div className='track-list__content'>
           <CollectionTrackTable
             data={data.tracks}
-            type={type}
             collectionId={data.id}
-            handleToggleFavorite={handleToggleFavorite}
+            extra={{
+              type: type,
+              handleToggleFavorite: handleToggleFavorite
+            }}
           />
         </div>
       </div>

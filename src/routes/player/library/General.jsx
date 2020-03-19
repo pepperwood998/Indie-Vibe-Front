@@ -59,8 +59,10 @@ function General(props) {
               </NavLinkColor>
             }
             data={{ items: data[key], offset: 0, limit: data[key].length }}
-            type={type}
-            handleToggleFavorite={handleToggleFavorite}
+            extra={{
+              type: type,
+              handleToggleFavorite: handleToggleFavorite
+            }}
             key={index}
           />
         );

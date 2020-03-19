@@ -29,7 +29,7 @@ function CardMain(props) {
   const [relation, setRelation] = useState([...content.relation]);
 
   useEffect(() => {
-    props.handleToggleFavorite(props.index, relation, content.type);
+    props.extra.handleToggleFavorite(props.index, relation, content.type);
   }, [relation]);
 
   const handleToggleFavorite = action => {

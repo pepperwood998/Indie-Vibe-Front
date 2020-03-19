@@ -77,8 +77,10 @@ function Mono(props) {
             : `No results for ${capitalize(type)}`
         }
         data={data}
-        type='search'
-        handleToggleFavorite={handleToggleFavorite}
+        extra={{
+          type: 'search',
+          handleToggleFavorite: handleToggleFavorite
+        }}
       />
     );
   } else {
@@ -90,8 +92,10 @@ function Mono(props) {
             : `No results for ${capitalize(type)}`
         }
         data={data}
-        type={type}
-        handleToggleFavorite={handleToggleFavorite}
+        extra={{
+          type: type,
+          handleToggleFavorite: handleToggleFavorite
+        }}
       />
     );
   }
