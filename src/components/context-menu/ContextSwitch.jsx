@@ -10,14 +10,14 @@ function ContextSwitch(props) {
 
   switch (content.type) {
     case 'track':
-      return <ContextTrack content={content} />;
+      return <ContextTrack {...props} />;
     case 'playlist':
-      return <ContextPlaylist content={content} />;
+      return <ContextPlaylist {...props} />;
     case 'release':
-      return <ContextRelease content={content} />;
+      return <ContextRelease {...props} />;
     case 'profile':
     case 'artist':
-      return <ContextUser content={content} />;
+      return <ContextUser {...props} />;
     default:
       return '';
   }

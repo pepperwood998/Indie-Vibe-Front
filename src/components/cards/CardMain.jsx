@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { NavLinkUnderline } from '../links';
 import { ButtonIcon, ButtonMore } from '../buttons';
 import { performActionFavorite } from '../../apis/API';
-import { AuthContext, StreamContext } from '../../contexts';
+import { AuthContext, StreamContext, LibraryContext } from '../../contexts';
 import { streamCollection } from '../../apis/StreamAPI';
 
 import Placeholder from '../../assets/imgs/placeholder.png';
@@ -24,6 +24,7 @@ function CardMain(props) {
     actions: streamAction,
     dispatch: streamDispatch
   } = useContext(StreamContext);
+  const { state: libState } = useContext(LibraryContext);
 
   const [relation, setRelation] = useState([...content.relation]);
 
@@ -69,6 +70,9 @@ function CardMain(props) {
     }
   };
 
+  let ctxClasses = 'action playlist-release';
+  if (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
+    ctxClasses += ' ctx-menu';
   return (
     <div className='card-main'>
       <div className='card-main__cover-wrapper'>
@@ -79,7 +83,7 @@ function CardMain(props) {
             className='cover'
           />
         </Link>
-        <div className='action playlist-release'>
+        <div className={ctxClasses}>
           <ButtonIcon>
             {content.id === streamState.collectionId && !streamState.paused ? (
               <PauseIcon onClick={handlePaused} />
@@ -115,6 +119,7 @@ function CardMain(props) {
                 relation: content.relation,
                 status: content.status
               }}
+              handleToggleFavorite={handleToggleFavorite}
             />
           </div>
         </div>

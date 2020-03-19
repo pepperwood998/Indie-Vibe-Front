@@ -177,6 +177,7 @@ function TrackList(props) {
                 relation: data.relation,
                 status: data.status
               }}
+              handleToggleFavorite={handleListToggleFavorite}
             />
           </div>
           <div className='filter'>

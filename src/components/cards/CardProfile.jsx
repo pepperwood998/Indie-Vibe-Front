@@ -3,15 +3,17 @@ import { Link } from 'react-router-dom';
 
 import { ButtonIcon, ButtonMore } from '../buttons';
 import { NavLinkUnderline } from '../links';
-import { AuthContext } from '../../contexts';
+import { AuthContext, LibraryContext } from '../../contexts';
 import { performActionFavorite } from '../../apis/API';
 
 import { FavoriteIcon, PlayIcon, UnFavoriteIcon } from '../../assets/svgs';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
 function CardProfile(props) {
-  const { state: authState } = useContext(AuthContext);
   const { content } = props;
+
+  const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
 
   const [relation, setRelation] = useState([...content.relation]);
 
@@ -35,6 +37,9 @@ function CardProfile(props) {
       });
   };
 
+  let ctxClasses = 'action profile';
+  if (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
+    ctxClasses += ' ctx-menu';
   return (
     <div className='card-main'>
       <div className='card-main__cover-wrapper profile'>
@@ -45,7 +50,7 @@ function CardProfile(props) {
             className='cover'
           />
         </Link>
-        <div className='action profile'>
+        <div className={ctxClasses}>
           {content.type === 'artist' ? (
             <ButtonIcon>
               <PlayIcon />
@@ -79,6 +84,7 @@ function CardProfile(props) {
                 relation: content.relation,
                 status: content.status
               }}
+              handleToggleFavorite={handleToggleFavorite}
             />
           </div>
         </div>

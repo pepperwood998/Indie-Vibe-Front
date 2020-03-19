@@ -6,7 +6,8 @@ const initState = {
   ctxMenuElem: null,
   ctxMenuOpened: false,
   ctxMenuContent: {},
-  ctxMenuPos: [0, 0]
+  ctxMenuPos: [0, 0],
+  ctxHandleToggleFavorite: action => undefined
 };
 
 const actions = {
@@ -24,10 +25,14 @@ const actions = {
   },
   closeCtxMenu: () => {
     return { type: 'CLOSE_CTX_MENU' };
+  },
+  toggleCtxFavorite: payload => {
+    return { type: 'TOGGLE_CTX_FAV', payload };
   }
 };
 
-let handleClosed = e => {};
+let handleClosed = e => undefined;
+let toggleFavorite = action => undefined;
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INIT_CTX_ELEM':
@@ -40,11 +45,21 @@ const reducer = (state, action) => {
         ...state,
         ctxMenuOpened: true,
         ctxMenuContent: { ...action.payload.content },
-        ctxMenuPos: [...action.payload.pos]
+        ctxMenuPos: [...action.payload.pos],
+        ctxHandleToggleFavorite: action.payload.handleToggleFavorite
       };
     case 'CLOSE_CTX_MENU':
       document.removeEventListener('click', handleClosed);
-      return { ...state, ctxMenuOpened: false, ctxMenuContent: {} };
+      return {
+        ...state,
+        ctxMenuOpened: false,
+        ctxMenuContent: {},
+        ctxMenuPos: [0, 0],
+        ctxHandleToggleFavorite: action => undefined
+      };
+    case 'TOGGLE_CTX_FAV':
+      toggleFavorite(action.payload);
+      return state;
     default:
       return state;
   }
@@ -59,6 +74,10 @@ function LibraryContextProvider(props) {
         if (state.ctxMenuElem && !state.ctxMenuElem.contains(e.target)) {
           dispatch(actions.closeCtxMenu());
         }
+      };
+      toggleFavorite = action => {
+        state.ctxHandleToggleFavorite(action);
+        dispatch(actions.closeCtxMenu());
       };
       document.addEventListener('click', handleClosed);
     }

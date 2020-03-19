@@ -19,7 +19,8 @@ function ButtonMore(props) {
     libDispatch(
       libActions.openCtxMenu({
         content: props.ctxData,
-        pos: [x, y + height + 10]
+        pos: [x, y + height + 10],
+        handleToggleFavorite: props.handleToggleFavorite
       })
     );
   };

@@ -124,6 +124,7 @@ function RowPlaylist(props) {
         id={item.id}
         index={serial}
         relation={item.relation}
+        collectionKey='playlist'
         handleToggleFavorite={props.handleToggleFavorite}
       />
       <CellTitle
@@ -131,6 +132,7 @@ function RowPlaylist(props) {
         title={item.title}
         index={serial}
         relation={item.relation}
+        collectionKey='playlist'
         handleToggleFavorite={props.handleToggleFavorite}
       />
       <div className='collection-table__cell collection-table__cell--artist'>
@@ -185,6 +187,7 @@ function RowRelease(props) {
         id={item.id}
         index={serial}
         relation={item.relation}
+        collectionKey='release'
         handleToggleFavorite={props.handleToggleFavorite}
       />
       <CellTitle
@@ -192,6 +195,7 @@ function RowRelease(props) {
         title={item.title}
         index={serial}
         relation={item.relation}
+        collectionKey='release'
         handleToggleFavorite={props.handleToggleFavorite}
       />
       <div className='collection-table__cell collection-table__cell--duration'>
@@ -218,6 +222,7 @@ function RowSearch(props) {
         id={item.id}
         index={serial}
         relation={item.relation}
+        collectionKey='track'
         handleToggleFavorite={props.handleToggleFavorite}
       />
       <CellTitle
@@ -225,6 +230,7 @@ function RowSearch(props) {
         title={item.title}
         index={serial}
         relation={item.relation}
+        collectionKey='track'
         handleToggleFavorite={props.handleToggleFavorite}
       />
       <div className='collection-table__cell collection-table__cell--artist'>
@@ -257,48 +263,6 @@ function RowSearch(props) {
       <div className='collection-table__cell collection-table__cell--duration'>
         <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
       </div>
-    </div>
-  );
-}
-
-function CellFavorite(props) {
-  const { state: authState } = useContext(AuthContext);
-
-  const [relation, setRelation] = useState(
-    Array.isArray(props.relation) ? [...props.relation] : []
-  );
-
-  useEffect(() => {
-    props.handleToggleFavorite(props.index, relation, 'track');
-  }, [relation]);
-
-  const handleToggleFavorite = action => {
-    performActionFavorite(authState.token, 'track', props.id, relation, action)
-      .then(r => {
-        setRelation(r);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  return (
-    <div className='collection-table__cell collection-table__cell--favorite'>
-      {relation.includes('favorite') ? (
-        <FavoriteIcon
-          className='svg--cursor svg--scale svg--blue'
-          onClick={() => {
-            handleToggleFavorite('unfavorite');
-          }}
-        />
-      ) : (
-        <UnFavoriteIcon
-          className='svg--cursor svg--scale'
-          onClick={() => {
-            handleToggleFavorite('favorite');
-          }}
-        />
-      )}
     </div>
   );
 }
@@ -359,14 +323,75 @@ function CellAction(props) {
   );
 }
 
+function CellFavorite(props) {
+  const { state: authState } = useContext(AuthContext);
+
+  const [relation, setRelation] = useState(
+    Array.isArray(props.relation) ? [...props.relation] : []
+  );
+
+  useEffect(() => {
+    props.handleToggleFavorite(props.index, relation, props.collectionKey);
+  }, [relation]);
+
+  const handleToggleFavorite = action => {
+    performActionFavorite(authState.token, 'track', props.id, relation, action)
+      .then(r => {
+        setRelation(r);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  return (
+    <div className='collection-table__cell collection-table__cell--favorite'>
+      {props.relation.includes('favorite') ? (
+        <FavoriteIcon
+          className='svg--cursor svg--scale svg--blue'
+          onClick={() => {
+            handleToggleFavorite('unfavorite');
+          }}
+        />
+      ) : (
+        <UnFavoriteIcon
+          className='svg--cursor svg--scale'
+          onClick={() => {
+            handleToggleFavorite('favorite');
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
 function CellTitle(props) {
   const { title } = props;
 
+  const { state: authState } = useContext(AuthContext);
   const {
     state: libState,
     actions: libActions,
     dispatch: libDispatch
   } = useContext(LibraryContext);
+
+  const [relation, setRelation] = useState(
+    Array.isArray(props.relation) ? [...props.relation] : []
+  );
+
+  useEffect(() => {
+    props.handleToggleFavorite(props.index, relation, props.collectionKey);
+  }, [relation]);
+
+  const handleToggleFavorite = action => {
+    performActionFavorite(authState.token, 'track', props.id, relation, action)
+      .then(r => {
+        setRelation(r);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   const handleToggleCtxMenu = e => {
     if (libState.ctxMenuOpened) return;
@@ -379,7 +404,8 @@ function CellTitle(props) {
           id: props.id,
           relation: props.relation
         },
-        pos: [x, y + height + 10]
+        pos: [x, y + height + 10],
+        handleToggleFavorite: handleToggleFavorite
       })
     );
   };

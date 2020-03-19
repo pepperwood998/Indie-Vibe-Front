@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { LinkWhiteColor } from '../links';
-import { AuthContext } from '../../contexts';
+import { AuthContext, LibraryContext } from '../../contexts';
 
 function ContextUser(props) {
   const { content } = props;
@@ -32,14 +32,34 @@ function Me(props) {
 function Other(props) {
   const { content } = props;
 
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
   return (
     <div className='context-menu'>
       <ul>
         <li>
           {content.relation.includes('favorite') ? (
-            <LinkWhiteColor>Unfollow</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                {
+                  libDispatch(libActions.toggleCtxFavorite('unfavorite'));
+                }
+              }}
+            >
+              Unfollow
+            </LinkWhiteColor>
           ) : (
-            <LinkWhiteColor>Follow</LinkWhiteColor>
+            <LinkWhiteColor
+              onClick={() => {
+                {
+                  libDispatch(libActions.toggleCtxFavorite('favorite'));
+                }
+              }}
+            >
+              Follow
+            </LinkWhiteColor>
           )}
         </li>
         {content.type === 'artist' ? (
