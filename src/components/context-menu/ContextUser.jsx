@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-
+import { AuthContext } from '../../contexts';
 import { LinkWhiteColor } from '../links';
-import { AuthContext, LibraryContext } from '../../contexts';
+
 
 function ContextUser(props) {
   const { content } = props;
@@ -9,9 +9,9 @@ function ContextUser(props) {
   const { state: authState } = useContext(AuthContext);
 
   if (content.id === authState.id) {
-    return <Me content={content} />;
+    return <Me {...props} />;
   } else {
-    return <Other content={content} />;
+    return <Other {...props} />;
   }
 }
 
@@ -30,11 +30,7 @@ function Me(props) {
 }
 
 function Other(props) {
-  const { content } = props;
-
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
+  const { content, handlers } = props;
 
   return (
     <div className='context-menu'>
@@ -43,9 +39,7 @@ function Other(props) {
           {content.relation.includes('favorite') ? (
             <LinkWhiteColor
               onClick={() => {
-                {
-                  libDispatch(libActions.toggleCtxFavorite('unfavorite'));
-                }
+                handlers.handleToggleFavorite('unfavorite');
               }}
             >
               Unfollow
@@ -53,9 +47,7 @@ function Other(props) {
           ) : (
             <LinkWhiteColor
               onClick={() => {
-                {
-                  libDispatch(libActions.toggleCtxFavorite('favorite'));
-                }
+                handlers.handleToggleFavorite('favorite');
               }}
             >
               Follow

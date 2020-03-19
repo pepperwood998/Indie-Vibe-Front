@@ -19,7 +19,7 @@ import {
 } from '../../assets/svgs';
 
 function CollectionTrackTable(props) {
-  const { type } = props.extra;
+  const { type } = props;
   let { items, offset, limit } = props.data;
 
   return (
@@ -77,7 +77,6 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
-                  extra={props.extra}
                   collectionId={props.collectionId}
                 />
               );
@@ -87,7 +86,6 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
-                  extra={props.extra}
                   collectionId={props.collectionId}
                 />
               );
@@ -97,7 +95,6 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
-                  extra={props.extra}
                   collectionId={item.release ? item.release.id : ''}
                 />
               );
@@ -123,7 +120,6 @@ function RowPlaylist(props) {
         id={item.id}
         index={serial}
         relation={item.relation}
-        extra={props.extra}
         collectionKey='playlist'
       />
       <CellTitle
@@ -131,7 +127,6 @@ function RowPlaylist(props) {
         title={item.title}
         index={serial}
         relation={item.relation}
-        extra={props.extra}
         collectionKey='playlist'
       />
       <div className='collection-table__cell collection-table__cell--artist'>
@@ -186,7 +181,6 @@ function RowRelease(props) {
         id={item.id}
         index={serial}
         relation={item.relation}
-        extra={props.extra}
         collectionKey='release'
       />
       <CellTitle
@@ -194,7 +188,6 @@ function RowRelease(props) {
         title={item.title}
         index={serial}
         relation={item.relation}
-        extra={props.extra}
         collectionKey='release'
       />
       <div className='collection-table__cell collection-table__cell--duration'>
@@ -221,7 +214,6 @@ function RowSearch(props) {
         id={item.id}
         index={serial}
         relation={item.relation}
-        extra={props.extra}
         collectionKey='track'
       />
       <CellTitle
@@ -229,7 +221,6 @@ function RowSearch(props) {
         title={item.title}
         index={serial}
         relation={item.relation}
-        extra={props.extra}
         collectionKey='track'
       />
       <div className='collection-table__cell collection-table__cell--artist'>
@@ -324,19 +315,26 @@ function CellAction(props) {
 
 function CellFavorite(props) {
   const { state: authState } = useContext(AuthContext);
-
-  const [relation, setRelation] = useState(
-    Array.isArray(props.relation) ? [...props.relation] : []
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
   );
 
-  useEffect(() => {
-    props.extra.handleToggleFavorite(props.index, relation, props.collectionKey);
-  }, [relation]);
-
   const handleToggleFavorite = action => {
-    performActionFavorite(authState.token, 'track', props.id, relation, action)
+    performActionFavorite(
+      authState.token,
+      'track',
+      props.id,
+      props.relation,
+      action
+    )
       .then(r => {
-        setRelation(r);
+        libDispatch(
+          libActions.toggleFavorite({
+            id: props.id,
+            type: 'track',
+            relation: r
+          })
+        );
       })
       .catch(error => {
         console.error(error);
@@ -367,30 +365,11 @@ function CellFavorite(props) {
 function CellTitle(props) {
   const { title } = props;
 
-  const { state: authState } = useContext(AuthContext);
   const {
     state: libState,
     actions: libActions,
     dispatch: libDispatch
   } = useContext(LibraryContext);
-
-  const [relation, setRelation] = useState(
-    Array.isArray(props.relation) ? [...props.relation] : []
-  );
-
-  useEffect(() => {
-    props.extra.handleToggleFavorite(props.index, relation, props.collectionKey);
-  }, [relation]);
-
-  const handleToggleFavorite = action => {
-    performActionFavorite(authState.token, 'track', props.id, relation, action)
-      .then(r => {
-        setRelation(r);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
 
   const handleToggleCtxMenu = e => {
     if (libState.ctxMenuOpened) return;
@@ -403,8 +382,7 @@ function CellTitle(props) {
           id: props.id,
           relation: props.relation
         },
-        pos: [x, y + height + 10],
-        handleToggleFavorite: handleToggleFavorite
+        pos: [x, y + height + 10]
       })
     );
   };

@@ -54,6 +54,17 @@ export const createPlaylist = (token, title, description, thumbnail) => {
   });
 };
 
+export const deleteTrackList = (token, type, id) => {
+  let url = `${host}/${type}s/${id}`;
+
+  return fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
 export const performActionFavorite = (token, type, id, relation, action) => {
   if (type === 'profile' || type === 'artist') {
     type = 'user';
@@ -120,7 +131,7 @@ export const profile = (token, userId) => {
 };
 
 export const getPlaylistsMe = (token, offset = 0, limit = 20) => {
-  let url = new URL(`${host}/me/playlists`);
+  let url = new URL(`${host}/library/playlists`);
   url.search = new URLSearchParams({ offset, limit }).toString();
 
   return fetch(url, {

@@ -1,14 +1,9 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { LinkWhiteColor } from '../links';
-import { LibraryContext } from '../../contexts';
 
 function ContextTrack(props) {
-  const { content } = props;
-
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
+  const { content, handlers } = props;
 
   return (
     <div className='context-menu'>
@@ -33,9 +28,7 @@ function ContextTrack(props) {
           content.relation.includes('favorite') ? (
             <LinkWhiteColor
               onClick={() => {
-                {
-                  libDispatch(libActions.toggleCtxFavorite('unfavorite'));
-                }
+                handlers.handleToggleFavorite('unfavorite');
               }}
             >
               Remove from Favorite
@@ -43,9 +36,7 @@ function ContextTrack(props) {
           ) : (
             <LinkWhiteColor
               onClick={() => {
-                {
-                  libDispatch(libActions.toggleCtxFavorite('favorite'));
-                }
+                handlers.handleToggleFavorite('favorite');
               }}
             >
               Add to Favorite

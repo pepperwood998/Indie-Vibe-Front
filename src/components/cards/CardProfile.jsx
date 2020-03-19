@@ -13,24 +13,28 @@ function CardProfile(props) {
   const { content } = props;
 
   const { state: authState } = useContext(AuthContext);
-  const { state: libState } = useContext(LibraryContext);
-
-  const [relation, setRelation] = useState([...content.relation]);
-
-  useEffect(() => {
-    props.extra.handleToggleFavorite(props.index, relation, content.type);
-  }, [relation]);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   const handleToggleFavorite = action => {
     performActionFavorite(
       authState.token,
       content.type,
       content.id,
-      relation,
+      content.relation,
       action
     )
       .then(r => {
-        setRelation(r);
+        libDispatch(
+          libActions.toggleFavorite({
+            id: content.id,
+            type: content.type,
+            relation: r
+          })
+        );
       })
       .catch(error => {
         console.error(error);
@@ -59,7 +63,7 @@ function CardProfile(props) {
             ''
           )}
           <div className='action__extra profile'>
-            {relation.includes('favorite') ? (
+            {content.relation.includes('favorite') ? (
               <ButtonIcon>
                 <FavoriteIcon
                   className='svg--blue'
@@ -84,7 +88,6 @@ function CardProfile(props) {
                 relation: content.relation,
                 status: content.status
               }}
-              handleToggleFavorite={handleToggleFavorite}
             />
           </div>
         </div>

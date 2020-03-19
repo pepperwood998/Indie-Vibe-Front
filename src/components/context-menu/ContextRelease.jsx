@@ -1,17 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { LinkWhiteColor } from '../links';
-import { LibraryContext } from '../../contexts';
 
 function ContextRelease(props) {
   const { content } = props;
 
   if (Array.isArray(content.relation)) {
     if (content.relation.includes('own')) {
-      return <Me content={content} />;
+      return <Me {...props} />;
     }
 
-    return <Other content={content} />;
+    return <Other {...props} />;
   } else {
     return '';
   }
@@ -35,11 +34,7 @@ function Me(props) {
 }
 
 function Other(props) {
-  const { content } = props;
-
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
+  const { content, handlers } = props;
 
   return (
     <div className='context-menu'>
@@ -51,9 +46,7 @@ function Other(props) {
           {content.relation.includes('favorite') ? (
             <LinkWhiteColor
               onClick={() => {
-                {
-                  libDispatch(libActions.toggleCtxFavorite('unfavorite'));
-                }
+                handlers.handleToggleFavorite('unfavorite');
               }}
             >
               Remove from library
@@ -61,9 +54,7 @@ function Other(props) {
           ) : (
             <LinkWhiteColor
               onClick={() => {
-                {
-                  libDispatch(libActions.toggleCtxFavorite('favorite'));
-                }
+                handlers.handleToggleFavorite('favorite');
               }}
             >
               Add to library

@@ -20,6 +20,10 @@ function ContextPlaylist(props) {
 function Me(props) {
   const { content } = props;
 
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
   return (
     <div className='context-menu'>
       <ul>
@@ -37,7 +41,15 @@ function Me(props) {
           <LinkWhiteColor>Edit</LinkWhiteColor>
         </li>
         <li>
-          <LinkWhiteColor>Delete</LinkWhiteColor>
+          <LinkWhiteColor
+            onClick={() => {
+              {
+                libDispatch(libActions.deletePlaylist(content.id));
+              }
+            }}
+          >
+            Delete
+          </LinkWhiteColor>
         </li>
       </ul>
     </div>
@@ -45,11 +57,7 @@ function Me(props) {
 }
 
 function Other(props) {
-  const { content } = props;
-
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
+  const { content, handlers } = props;
 
   return (
     <div className='context-menu'>
@@ -61,9 +69,7 @@ function Other(props) {
           {content.relation.includes('favorite') ? (
             <LinkWhiteColor
               onClick={() => {
-                {
-                  libDispatch(libActions.toggleCtxFavorite('unfavorite'));
-                }
+                handlers.handleToggleFavorite('unfavorite');
               }}
             >
               Remove from library
@@ -71,9 +77,7 @@ function Other(props) {
           ) : (
             <LinkWhiteColor
               onClick={() => {
-                {
-                  libDispatch(libActions.toggleCtxFavorite('favorite'));
-                }
+                handlers.handleToggleFavorite('favorite');
               }}
             >
               Add to library

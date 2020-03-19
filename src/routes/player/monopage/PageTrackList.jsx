@@ -8,12 +8,17 @@ import {
 } from '../../../components/buttons';
 import { InputForm } from '../../../components/inputs';
 import { CollectionTrackTable } from '../../../components/collections';
-import { getTrackList, performActionFavorite } from '../../../apis/API';
-import { AuthContext, StreamContext } from '../../../contexts';
+import {
+  getTrackList,
+  performActionFavorite,
+  deleteTrackList
+} from '../../../apis/API';
+import { AuthContext, StreamContext, LibraryContext } from '../../../contexts';
 import { streamCollection } from '../../../apis/StreamAPI';
 
 import { UnFavoriteIcon, FavoriteIcon } from '../../../assets/svgs';
 import Placeholder from '../../../assets/imgs/placeholder.png';
+import { useEffectSkip } from '../../../utils/Common';
 
 function TrackList(props) {
   // props
@@ -27,6 +32,7 @@ function TrackList(props) {
     actions: streamAction,
     dispatch: streamDispatch
   } = useContext(StreamContext);
+  const { state: libState } = useContext(LibraryContext);
 
   // states
   const [data, setData] = useState({
@@ -54,23 +60,30 @@ function TrackList(props) {
         }
       }
     });
-  }, []);
+  }, [id]);
 
-  // handling
-  const handleToggleFavorite = (index, relation, type) => {
-    let tracks = { ...data.tracks };
-    tracks.items.some((item, i) => {
-      if (index === i) {
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
+    if (ctxFav.type === 'playlist' || ctxFav.type === 'release') {
+      setData({ ...data, relation: ctxFav.relation });
+    } else {
+      let tracks = { ...data.tracks };
+      tracks.items.some(item => {
         if (type === 'playlist') {
-          item.track.relation = [...relation];
+          if (ctxFav.id === item.track.id) {
+            item.track.relation = [...ctxFav.relation];
+            return true;
+          }
         } else {
-          item.relation = [...relation];
+          if (ctxFav.id === item.id) {
+            item.relation = [...ctxFav.relation];
+            return true;
+          }
         }
-        return true;
-      }
-    });
-    setData({ ...data, tracks });
-  };
+      });
+      setData({ ...data, tracks });
+    }
+  }, [libState.ctxFav]);
 
   const handlePaused = () => {
     streamDispatch(streamAction.requestPaused(true));
@@ -177,7 +190,6 @@ function TrackList(props) {
                 relation: data.relation,
                 status: data.status
               }}
-              handleToggleFavorite={handleListToggleFavorite}
             />
           </div>
           <div className='filter'>
@@ -188,10 +200,7 @@ function TrackList(props) {
           <CollectionTrackTable
             data={data.tracks}
             collectionId={data.id}
-            extra={{
-              type: type,
-              handleToggleFavorite: handleToggleFavorite
-            }}
+            type={type}
           />
         </div>
       </div>

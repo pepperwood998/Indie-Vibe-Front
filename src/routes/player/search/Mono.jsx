@@ -4,15 +4,17 @@ import {
   CollectionTracks,
   CollectionMain
 } from '../../../components/collections';
-import { capitalize } from '../../../utils/Common';
+import { capitalize, useEffectSkip } from '../../../utils/Common';
 import { search } from '../../../apis/API';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
 
 function Mono(props) {
   const { type } = props;
 
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
+
   const [data, setData] = useState({
     items: [],
     offset: 0,
@@ -32,16 +34,17 @@ function Mono(props) {
       });
   }, []);
 
-  const handleToggleFavorite = (index, relation, type) => {
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
     let items = [...data.items];
-    items.some((item, i) => {
-      if (index === i) {
-        item.relation = [...relation];
+    items.some(item => {
+      if (ctxFav.id === item.id) {
+        item.relation = [...ctxFav.relation];
         return true;
       }
     });
     setData({ ...data, items });
-  };
+  }, [libState.ctxFav]);
 
   const handleLoadMore = () => {
     search(
@@ -77,10 +80,7 @@ function Mono(props) {
             : `No results for ${capitalize(type)}`
         }
         data={data}
-        extra={{
-          type: 'search',
-          handleToggleFavorite: handleToggleFavorite
-        }}
+        type='search'
       />
     );
   } else {
@@ -92,10 +92,7 @@ function Mono(props) {
             : `No results for ${capitalize(type)}`
         }
         data={data}
-        extra={{
-          type: type,
-          handleToggleFavorite: handleToggleFavorite
-        }}
+        type={type}
       />
     );
   }

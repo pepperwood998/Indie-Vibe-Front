@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { NavLinkUnderline } from '../links';
 import { ButtonIcon, ButtonMore } from '../buttons';
-import { performActionFavorite } from '../../apis/API';
+import { performActionFavorite, deleteTrackList } from '../../apis/API';
 import { AuthContext, StreamContext, LibraryContext } from '../../contexts';
 import { streamCollection } from '../../apis/StreamAPI';
 
@@ -24,24 +24,42 @@ function CardMain(props) {
     actions: streamAction,
     dispatch: streamDispatch
   } = useContext(StreamContext);
-  const { state: libState } = useContext(LibraryContext);
-
-  const [relation, setRelation] = useState([...content.relation]);
-
-  useEffect(() => {
-    props.extra.handleToggleFavorite(props.index, relation, content.type);
-  }, [relation]);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   const handleToggleFavorite = action => {
     performActionFavorite(
       authState.token,
       content.type,
       content.id,
-      relation,
+      content.relation,
       action
     )
       .then(r => {
-        setRelation(r);
+        libDispatch(
+          libActions.toggleFavorite({
+            id: content.id,
+            type: content.type,
+            relation: r
+          })
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const handleDeletePlaylist = id => {
+    deleteTrackList(authState.token, content.type, id)
+      .then(res => {
+        if (res.status === 'success') {
+          // ...
+        } else {
+          throw 'Failed to delete';
+        }
       })
       .catch(error => {
         console.error(error);
@@ -92,9 +110,9 @@ function CardMain(props) {
             )}
           </ButtonIcon>
           <div className='action__extra playlist-release'>
-            {relation.includes('own') ? (
+            {content.relation.includes('own') ? (
               ''
-            ) : relation.includes('favorite') ? (
+            ) : content.relation.includes('favorite') ? (
               <ButtonIcon>
                 <FavoriteIcon
                   className='svg--blue'
@@ -120,6 +138,7 @@ function CardMain(props) {
                 status: content.status
               }}
               handleToggleFavorite={handleToggleFavorite}
+              handleDeletePlaylist={handleDeletePlaylist}
             />
           </div>
         </div>

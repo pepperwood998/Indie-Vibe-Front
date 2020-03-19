@@ -7,7 +7,9 @@ const initState = {
   ctxMenuOpened: false,
   ctxMenuContent: {},
   ctxMenuPos: [0, 0],
-  ctxHandleToggleFavorite: action => undefined
+  ctxFav: { id: '', type: '', relation: [] },
+  ctxHandleToggleFavorite: action => undefined,
+  ctxHandleDeletePlaylist: id => undefined
 };
 
 const actions = {
@@ -26,13 +28,12 @@ const actions = {
   closeCtxMenu: () => {
     return { type: 'CLOSE_CTX_MENU' };
   },
-  toggleCtxFavorite: payload => {
-    return { type: 'TOGGLE_CTX_FAV', payload };
+  toggleFavorite: payload => {
+    return { type: 'TOGGLE_FAV', payload };
   }
 };
 
 let handleClosed = e => undefined;
-let toggleFavorite = action => undefined;
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INIT_CTX_ELEM':
@@ -45,8 +46,7 @@ const reducer = (state, action) => {
         ...state,
         ctxMenuOpened: true,
         ctxMenuContent: { ...action.payload.content },
-        ctxMenuPos: [...action.payload.pos],
-        ctxHandleToggleFavorite: action.payload.handleToggleFavorite
+        ctxMenuPos: [...action.payload.pos]
       };
     case 'CLOSE_CTX_MENU':
       document.removeEventListener('click', handleClosed);
@@ -54,12 +54,10 @@ const reducer = (state, action) => {
         ...state,
         ctxMenuOpened: false,
         ctxMenuContent: {},
-        ctxMenuPos: [0, 0],
-        ctxHandleToggleFavorite: action => undefined
+        ctxMenuPos: [0, 0]
       };
-    case 'TOGGLE_CTX_FAV':
-      toggleFavorite(action.payload);
-      return state;
+    case 'TOGGLE_FAV':
+      return { ...state, ctxFav: { ...action.payload } };
     default:
       return state;
   }
@@ -75,13 +73,13 @@ function LibraryContextProvider(props) {
           dispatch(actions.closeCtxMenu());
         }
       };
-      toggleFavorite = action => {
-        state.ctxHandleToggleFavorite(action);
-        dispatch(actions.closeCtxMenu());
-      };
       document.addEventListener('click', handleClosed);
     }
   }, [state]);
+
+  useEffect(() => {
+    dispatch(actions.closeCtxMenu());
+  }, [state.ctxFav]);
 
   return (
     <LibraryContext.Provider value={{ state, actions, dispatch }}>
