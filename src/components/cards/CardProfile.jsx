@@ -6,11 +6,7 @@ import { NavLinkUnderline } from '../links';
 import { AuthContext } from '../../contexts';
 import { performActionFavorite } from '../../apis/API';
 
-import {
-  FavoriteIcon,
-  PlayIcon,
-  UnFavoriteIcon,
-} from '../../assets/svgs';
+import { FavoriteIcon, PlayIcon, UnFavoriteIcon } from '../../assets/svgs';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
 function CardProfile(props) {
@@ -76,7 +72,14 @@ function CardProfile(props) {
                 />
               </ButtonIcon>
             )}
-            <ButtonMore className='right' />
+            <ButtonMore
+              ctxData={{
+                type: content.type,
+                id: content.id,
+                relation: content.relation,
+                status: content.status
+              }}
+            />
           </div>
         </div>
       </div>

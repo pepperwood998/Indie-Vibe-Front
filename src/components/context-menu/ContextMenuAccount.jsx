@@ -13,33 +13,35 @@ function ContextMenuAccount(props) {
   };
 
   return (
-    <ul className='context-menu d-flex flex-column'>
-      <li>
-        {props.fromLanding ? (
+    <div className='context-wrapper'>
+      <ul className='context-menu d-flex flex-column'>
+        <li>
+          {props.fromLanding ? (
+            <LinkWhiteColor
+              href='/player/account'
+              className='font-short-regular font-weight-bold font-white'
+            >
+              Account
+            </LinkWhiteColor>
+          ) : (
+            <NavLinkColor
+              href='/player/account'
+              className='font-short-regular font-weight-bold font-white'
+            >
+              Account
+            </NavLinkColor>
+          )}
+        </li>
+        <li>
           <LinkWhiteColor
-            href='/player/account'
+            onClick={handleLogout}
             className='font-short-regular font-weight-bold font-white'
           >
-            Account
+            Logout
           </LinkWhiteColor>
-        ) : (
-          <NavLinkColor
-            href='/player/account'
-            className='font-short-regular font-weight-bold font-white'
-          >
-            Account
-          </NavLinkColor>
-        )}
-      </li>
-      <li>
-        <LinkWhiteColor
-          onClick={handleLogout}
-          className='font-short-regular font-weight-bold font-white'
-        >
-          Logout
-        </LinkWhiteColor>
-      </li>
-    </ul>
+        </li>
+      </ul>
+    </div>
   );
 }
 

@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 
 import { NavLinkUnderline } from '../links';
 import { getFormattedTime } from '../../utils/Common';
-import { AuthContext, StreamContext } from '../../contexts';
+import { AuthContext, StreamContext, LibraryContext } from '../../contexts';
 import { performActionFavorite } from '../../apis/API';
 import { ButtonIcon } from '../buttons';
 import { streamCollection } from '../../apis/StreamAPI';
@@ -362,12 +362,37 @@ function CellAction(props) {
 function CellTitle(props) {
   const { title } = props;
 
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
+
+  const handleToggleCtxMenu = e => {
+    if (libState.ctxMenuOpened) return;
+
+    const { x, y, width, height } = e.target.getBoundingClientRect();
+    libDispatch(
+      libActions.openCtxMenu({
+        content: {
+          type: 'track',
+          id: props.id,
+          relation: props.relation
+        },
+        pos: [x, y + height + 10]
+      })
+    );
+  };
+
   return (
     <div className='collection-table__cell collection-table__cell--title'>
       <span className='main'>{title}</span>
       <span className='extra'>
         <PlusIcon className='svg--cursor svg--gray-light svg--bright' />
-        <MoreIcon className='svg--cursor svg--gray-light svg--bright' />
+        <MoreIcon
+          className='svg--cursor svg--gray-light svg--bright'
+          onClick={handleToggleCtxMenu}
+        />
       </span>
     </div>
   );
