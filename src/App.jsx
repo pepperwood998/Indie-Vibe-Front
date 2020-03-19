@@ -7,7 +7,8 @@ import { UserRoute, GuestRoute } from './components/custom-routes';
 import {
   MeContextProvider,
   AuthContextProvider,
-  StreamContextProvider
+  StreamContextProvider,
+  LibraryContextProvider
 } from './contexts';
 
 class App extends Component {
@@ -21,7 +22,9 @@ class App extends Component {
               <GuestRoute path='/login' component={Login} />
               <GuestRoute path='/register' component={Register} />
               <StreamContextProvider>
-                <UserRoute path='/player' component={Player} />
+                <LibraryContextProvider>
+                  <UserRoute path='/player' component={Player} />
+                </LibraryContextProvider>
               </StreamContextProvider>
             </MeContextProvider>
           </AuthContextProvider>

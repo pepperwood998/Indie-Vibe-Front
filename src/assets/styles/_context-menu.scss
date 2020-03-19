@@ -1,0 +1,19 @@
+.context-wrapper {
+  position: absolute;
+  min-width: 170px;
+  white-space: nowrap;
+  box-shadow: 0 0 10px $blackBlurHalf;
+  z-index: 100;
+
+  .context-menu {
+    background-color: $blackGray;
+    border-radius: 5px;
+
+    a,
+    span {
+      display: block;
+      padding: 15px 30px;
+      cursor: pointer;
+    }
+  }
+}

@@ -28,6 +28,7 @@ function General(props) {
     search(authState.token, props.match.params.key)
       .then(res => {
         if (res.status === 'success') {
+          console.log(res.data);
           setData({ ...data, ...res.data });
         }
       })

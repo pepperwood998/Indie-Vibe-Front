@@ -23,8 +23,9 @@
     cursor: pointer;
 
     &.profile {
-      border-radius: 50%;
-      overflow: hidden;
+      .cover {
+        border-radius: 50%;
+      }
     }
 
     .dummy {
@@ -66,14 +67,15 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        border-radius: 50%;
       }
 
       &__extra {
         display: flex;
         justify-content: space-between;
 
-        .button-icon:last-child {
-          margin-left: 5px;
+        .button-icon:first-child {
+          margin-right: 5px;
         }
 
         &.playlist-release {

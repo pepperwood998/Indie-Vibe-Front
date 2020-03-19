@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { NavLinkUnderline } from '../../../components/links';
-import { ButtonMain, ButtonIcon } from '../../../components/buttons';
+import { ButtonMain, ButtonIcon, ButtonMore } from '../../../components/buttons';
 import { InputForm } from '../../../components/inputs';
 import { CollectionTrackTable } from '../../../components/collections';
 import { getTrackList, performActionFavorite } from '../../../apis/API';
@@ -119,7 +119,9 @@ function TrackList(props) {
                 </span>
                 <NavLinkUnderline
                   href={`/player/${
-                    owner.role.id === 'r-artist' ? 'artist' : 'library'
+                    type === 'release' || owner.role.id === 'r-artist'
+                      ? 'artist'
+                      : 'library'
                   }/${owner.id}`}
                   className='font-short-regular font-white'
                 >
@@ -166,9 +168,7 @@ function TrackList(props) {
                 />
               </ButtonIcon>
             )}
-            <ButtonIcon>
-              <MoreIcon />
-            </ButtonIcon>
+            <ButtonMore className='right' />
           </div>
           <div className='filter'>
             <InputForm placeholder='Filter' />
