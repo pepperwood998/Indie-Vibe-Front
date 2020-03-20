@@ -10,8 +10,6 @@ const initState = {
   ctxFav: { id: '', type: '', relation: [] },
   ctxDelPlaylistId: '',
   ctxPlaylistPrivate: { id: '', status: '' },
-  ctxHandleToggleFavorite: action => undefined,
-  ctxHandleDeletePlaylist: id => undefined
 };
 
 const actions = {
