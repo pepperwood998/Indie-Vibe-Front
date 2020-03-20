@@ -85,6 +85,14 @@ function TrackList(props) {
     }
   }, [libState.ctxFav]);
 
+  useEffectSkip(() => {
+    if (type === 'playlist') {
+      if (id === libState.ctxDelPlaylistId) {
+        props.history.push(`/player/library/${authState.id}`);
+      }
+    }
+  }, [libState.ctxDelPlaylistId]);
+
   const handlePaused = () => {
     streamDispatch(streamAction.requestPaused(true));
   };

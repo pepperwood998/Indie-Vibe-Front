@@ -22,11 +22,7 @@ function ContextPlaylist(props) {
 }
 
 function Me(props) {
-  const { content } = props;
-
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
+  const { content, handlers } = props;
 
   return (
     <ul>
@@ -46,9 +42,7 @@ function Me(props) {
       <li>
         <LinkWhiteColor
           onClick={() => {
-            {
-              libDispatch(libActions.deletePlaylist(content.id));
-            }
+            handlers.handleDeletePlaylist(content.id);
           }}
         >
           Delete

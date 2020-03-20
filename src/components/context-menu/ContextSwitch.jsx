@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useEffect } from 'react';
-import { performActionFavorite } from '../../apis/API';
+import { performActionFavorite, deleteTrackList } from '../../apis/API';
 import { AuthContext, LibraryContext } from '../../contexts';
 import ContextPlaylist from './ContextPlaylist';
 import ContextRelease from './ContextRelease';
@@ -54,7 +54,20 @@ function ContextSwitch(props) {
       });
   };
 
-  const superprops = {
+  const handleDeletePlaylist = id => {
+    libDispatch(libActions.closeCtxMenu());
+    deleteTrackList(authState.token, 'playlist', id)
+      .then(res => {
+        if (res.status === 'success') {
+          libDispatch(libActions.deletePlaylist(id));
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  let superprops = {
     elemRef: ref,
     content,
     handlers: {
@@ -66,6 +79,10 @@ function ContextSwitch(props) {
     case 'track':
       return <ContextTrack {...superprops} />;
     case 'playlist':
+      superprops = {
+        ...superprops,
+        handlers: { ...superprops.handlers, handleDeletePlaylist }
+      };
       return <ContextPlaylist {...superprops} />;
     case 'release':
       return <ContextRelease {...superprops} />;

@@ -50,6 +50,14 @@ function General(props) {
     setData({ ...data, [`${ctxFav.type}s`]: target });
   }, [libState.ctxFav]);
 
+  useEffectSkip(() => {
+    let target = [...data.playlists];
+    setData({
+      ...data,
+      playlists: target.filter(item => item.id !== libState.ctxDelPlaylistId)
+    });
+  }, [libState.ctxDelPlaylistId]);
+
   let exist = Object.keys(data).find(key => data[key].length > 0);
   let render = '';
   if (exist) {

@@ -8,6 +8,7 @@ const initState = {
   ctxMenuContent: {},
   ctxMenuPos: [0, 0],
   ctxFav: { id: '', type: '', relation: [] },
+  ctxDelPlaylistId: '',
   ctxHandleToggleFavorite: action => undefined,
   ctxHandleDeletePlaylist: id => undefined
 };
@@ -36,6 +37,9 @@ const actions = {
   },
   toggleFavorite: payload => {
     return { type: 'TOGGLE_FAV', payload };
+  },
+  deletePlaylist: payload => {
+    return { type: 'DELETE_PLAYLIST', payload };
   }
 };
 
@@ -66,6 +70,8 @@ const reducer = (state, action) => {
       };
     case 'TOGGLE_FAV':
       return { ...state, ctxFav: { ...action.payload } };
+    case 'DELETE_PLAYLIST':
+      return { ...state, ctxDelPlaylistId: action.payload };
     default:
       return state;
   }
