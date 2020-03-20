@@ -103,18 +103,12 @@ function TrackList(props) {
     streamDispatch(streamAction.requestPaused(true));
   };
   const handlePlay = () => {
-    if (id === streamState.collectionId) {
+    if (id === streamState.playFromId) {
       streamDispatch(streamAction.requestPaused(false));
     } else {
       streamCollection(authState.token, type, id).then(res => {
         if (res.status === 'success' && res.data.length) {
-          streamDispatch(
-            streamAction.start({
-              queue: res.data,
-              playType: type,
-              collectionId: id
-            })
-          );
+          streamDispatch(streamAction.start(res.data, type, id));
         }
       });
     }
@@ -176,7 +170,7 @@ function TrackList(props) {
         </div>
         <div className='track-list__action'>
           <div className='action'>
-            {id === streamState.collectionId && !streamState.paused ? (
+            {id === streamState.playFromId && !streamState.paused ? (
               <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
             ) : (
               <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
@@ -213,7 +207,7 @@ function TrackList(props) {
         <div className='track-list__content'>
           <CollectionTrackTable
             data={data.tracks}
-            collectionId={data.id}
+            playFromId={data.id}
             type={type}
           />
         </div>

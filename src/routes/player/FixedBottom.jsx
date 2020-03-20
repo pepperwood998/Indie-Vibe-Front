@@ -36,7 +36,7 @@ function Bottom() {
 function NowPayingLeft() {
   const { state: streamState } = useContext(StreamContext);
   const { id, title, artists, release } = streamState.info;
-  const { playType, collectionId } = streamState;
+  const { playFromType, playFromId } = streamState;
 
   const artistSeparator = (
     <span className='font-short-s font-gray-light'>, </span>
@@ -52,7 +52,7 @@ function NowPayingLeft() {
         </div>
         <div className='now-playing__info'>
           <NavLinkUnderline
-            href={`/player/${playType}/${collectionId}`}
+            href={`/player/${playFromType}/${playFromId}`}
             className='font-short-regular font-weight-bold font-white'
           >
             {title}

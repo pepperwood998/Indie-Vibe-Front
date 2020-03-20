@@ -71,17 +71,13 @@ function CardMain(props) {
   };
 
   const handlePlay = () => {
-    if (content.id === streamState.collectionId) {
+    if (content.id === streamState.playFromId) {
       streamDispatch(streamAction.requestPaused(false));
     } else {
       streamCollection(authState.token, content.type, content.id).then(res => {
         if (res.status === 'success' && res.data.length) {
           streamDispatch(
-            streamAction.start({
-              queue: res.data,
-              playType: content.type,
-              collectionId: content.id
-            })
+            streamAction.start(res.data, content.type, content.id)
           );
         }
       });
@@ -103,7 +99,7 @@ function CardMain(props) {
         </Link>
         <div className={ctxClasses}>
           <ButtonIcon>
-            {content.id === streamState.collectionId && !streamState.paused ? (
+            {content.id === streamState.playFromId && !streamState.paused ? (
               <PauseIcon onClick={handlePaused} />
             ) : (
               <PlayIcon onClick={handlePlay} />

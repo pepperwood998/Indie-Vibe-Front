@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useEffect, useContext } from 'react';
 import AudioStream from '../utils/AudioStream';
-import { getStreamInfo, getStream } from '../apis/StreamAPI';
+import { getStreamInfo } from '../apis/StreamAPI';
 import { AuthContext } from './AuthContext';
 import { reorder, shuffle } from '../utils/Common';
 
@@ -11,13 +11,13 @@ const stream = new AudioStream();
 const initState = {
   queue: ['3AUo1uunXOxigzt6JIsZ', '5UmNONJQaXmNmbdmr2On'],
   queueSrc: [],
-  currentSong: 0,
+  currentSongIndex: 0,
   bitrate: 128,
-  playType: '', // 'playlist' or 'release' or 'favorite'
-  collectionId: '',
+  playFromId: '',
+  playFromType: '', // 'playlist' or 'release' or 'favorite'
   volume: 50,
   muted: false,
-  autoplay: true,
+  autoplay: false,
   paused: true,
   shuffled: false,
   info: {}
@@ -60,10 +60,14 @@ const actions = {
       payload
     };
   },
-  start: payload => {
+  start: (queue, playFromType, playFromId) => {
     return {
       type: 'START',
-      payload
+      payload: {
+        queue,
+        playFromType,
+        playFromId
+      }
     };
   },
   repeatTrack: () => {
@@ -141,10 +145,11 @@ const reducer = (state, action) => {
       stream.start(action.payload.queue[0]);
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
+        queueSrc: action.payload.queue
       };
     case 'REPEAT_TRACK':
-      stream.start(state.queue[state.currentSong]);
+      stream.start(state.queue[state.currentSongIndex]);
       return state;
     case 'REORDER':
       let queue = reorder(state.queue, state.queue.indexOf(action.trackId));
@@ -154,25 +159,25 @@ const reducer = (state, action) => {
       return {
         ...state,
         queue,
-        currentSong: 0
+        currentSongIndex: 0
       };
     case 'SKIP_BACKWARD':
       if (!state.queue.length) return state;
 
-      let index = Math.max(state.currentSong - 1, 0);
+      let index = Math.max(state.currentSongIndex - 1, 0);
       stream.start(state.queue[index]);
       return {
         ...state,
-        currentSong: index
+        currentSongIndex: index
       };
     case 'SKIP_FORWARD':
       if (!state.queue.length) return state;
 
-      let ind = Math.min(state.currentSong + 1, state.queue.length - 1);
+      let ind = Math.min(state.currentSongIndex + 1, state.queue.length - 1);
       stream.start(state.queue[ind]);
       return {
         ...state,
-        currentSong: ind
+        currentSongIndex: ind
       };
     case 'TOGGLE_PAUSED':
       stream.togglePaused();

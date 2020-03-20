@@ -11,7 +11,7 @@ function CollectionTracks(props) {
         <CollectionTrackTable
           data={props.data}
           type={props.type}
-          collectionId={props.collectionId}
+          playFromId={props.playFromId}
         />
       </div>
     </div>
