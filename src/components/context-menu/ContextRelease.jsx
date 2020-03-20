@@ -21,15 +21,24 @@ function ContextRelease(props) {
 }
 
 function Me(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   return (
     <ul>
       <li>
         <LinkWhiteColor>Add to queue</LinkWhiteColor>
       </li>
-      <li>
-        <LinkWhiteColor>Manage</LinkWhiteColor>
+      <li
+        onClick={() => {
+          handlers.handleClose();
+        }}
+      >
+        <LinkWhiteColor
+          nav={true}
+          href={`/player/workspace/release/${content.id}`}
+        >
+          Manage
+        </LinkWhiteColor>
       </li>
     </ul>
   );

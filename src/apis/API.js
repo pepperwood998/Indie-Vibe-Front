@@ -66,27 +66,29 @@ export const deleteTrackList = (token, type, id) => {
 };
 
 export const performActionFavorite = (token, type, id, relation, action) => {
+  return performAction(token, id, action, type).then(res => {
+    if (res.status === 'success') {
+      if (action === 'favorite') return [...relation, 'favorite'];
+      else return relation.filter(value => value !== 'favorite');
+    } else {
+      throw 'Error';
+    }
+  });
+};
+
+export const performAction = (token, id, action, type) => {
   if (type === 'profile' || type === 'artist') {
     type = 'user';
   }
   let url = new URL(`${host}/${type}s/${id}`);
   url.search = new URLSearchParams({ action }).toString();
 
-  return fetch(url, {
+  return fetch('http://www.mocky.io/v2/5e743e473000007c282e69a1', {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
     }
-  })
-    .then(response => response.json())
-    .then(res => {
-      if (res.status === 'success') {
-        if (action === 'favorite') return [...relation, 'favorite'];
-        else return relation.filter(value => value !== 'favorite');
-      } else {
-        throw 'Error';
-      }
-    });
+  }).then(response => response.json());
 };
 
 export const search = (token, key, type = '', offset = 0, limit = 20) => {

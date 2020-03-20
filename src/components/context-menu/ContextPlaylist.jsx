@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 
 import { LinkWhiteColor } from '../links';
-import { LibraryContext } from '../../contexts';
+import { LibraryContext, AuthContext } from '../../contexts';
+import { deleteTrackList, performAction } from '../../apis/API';
 
 function ContextPlaylist(props) {
   const { content } = props;
@@ -22,7 +23,39 @@ function ContextPlaylist(props) {
 }
 
 function Me(props) {
-  const { content, handlers } = props;
+  const { content } = props;
+
+  const { state: authState } = useContext(AuthContext);
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
+  const handleDeletePlaylist = id => {
+    libDispatch(libActions.closeCtxMenu());
+    deleteTrackList(authState.token, 'playlist', id)
+      .then(res => {
+        if (res.status === 'success') {
+          libDispatch(libActions.deletePlaylist(id));
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
+  const handleTogglePlaylistPrivate = action => {
+    libDispatch(libActions.closeCtxMenu());
+    performAction(authState.token, content.id, action, 'playlist').then(res => {
+      if (res.status === 'success') {
+        libDispatch(
+          libActions.togglePlaylistPrivate({
+            id: content.id,
+            status: action === 'make-public' ? 'public' : 'private'
+          })
+        );
+      }
+    });
+  };
 
   return (
     <ul>
@@ -31,9 +64,21 @@ function Me(props) {
       </li>
       <li>
         {content.status === 'public' ? (
-          <LinkWhiteColor>Set private</LinkWhiteColor>
+          <LinkWhiteColor
+            onClick={() => {
+              handleTogglePlaylistPrivate('make-private');
+            }}
+          >
+            Set private
+          </LinkWhiteColor>
         ) : (
-          <LinkWhiteColor>Set public</LinkWhiteColor>
+          <LinkWhiteColor
+            onClick={() => {
+              handleTogglePlaylistPrivate('make-public');
+            }}
+          >
+            Set public
+          </LinkWhiteColor>
         )}
       </li>
       <li>
@@ -42,7 +87,7 @@ function Me(props) {
       <li>
         <LinkWhiteColor
           onClick={() => {
-            handlers.handleDeletePlaylist(content.id);
+            handleDeletePlaylist(content.id);
           }}
         >
           Delete

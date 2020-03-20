@@ -93,6 +93,12 @@ function TrackList(props) {
     }
   }, [libState.ctxDelPlaylistId]);
 
+  // playlist privacy
+  useEffectSkip(() => {
+    const { ctxPlaylistPrivate } = libState;
+    setData({ ...data, status: ctxPlaylistPrivate.status });
+  }, [libState.ctxPlaylistPrivate]);
+
   const handlePaused = () => {
     streamDispatch(streamAction.requestPaused(true));
   };

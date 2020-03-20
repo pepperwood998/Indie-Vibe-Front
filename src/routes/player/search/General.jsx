@@ -58,6 +58,19 @@ function General(props) {
     });
   }, [libState.ctxDelPlaylistId]);
 
+  // playlist privacy
+  useEffectSkip(() => {
+    const { ctxPlaylistPrivate } = libState;
+    let playlists = [...data.playlists];
+    playlists.some(playlist => {
+      if (ctxPlaylistPrivate.id === playlist.id) {
+        playlist.status = ctxPlaylistPrivate.status;
+        return true;
+      }
+    });
+    setData({ ...data, playlists });
+  }, [libState.ctxPlaylistPrivate]);
+
   let exist = Object.keys(data).find(key => data[key].length > 0);
   let render = '';
   if (exist) {
