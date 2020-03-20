@@ -131,7 +131,8 @@ function CardMain(props) {
                 type: content.type,
                 id: content.id,
                 relation: content.relation,
-                status: content.status
+                status: content.status,
+                artistId: content.artist ? content.artist.id : ''
               }}
               handleToggleFavorite={handleToggleFavorite}
               handleDeletePlaylist={handleDeletePlaylist}

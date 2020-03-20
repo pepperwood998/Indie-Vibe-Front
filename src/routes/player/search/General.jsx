@@ -90,9 +90,7 @@ function General(props) {
                 </NavLinkColor>
               }
               data={{ items: data[key], offset: 0, limit: data[key].length }}
-              extra={{
-                type: 'search'
-              }}
+              type='search'
               key={index}
             />
           );

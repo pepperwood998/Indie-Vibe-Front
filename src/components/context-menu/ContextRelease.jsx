@@ -52,6 +52,18 @@ function Other(props) {
       <li>
         <LinkWhiteColor>Add to queue</LinkWhiteColor>
       </li>
+      <li
+        onClick={() => {
+          handlers.handleClose();
+        }}
+      >
+        <LinkWhiteColor
+          nav={true}
+          href={`/player/artist/${content.id}`}
+        >
+          Discover Artist
+        </LinkWhiteColor>
+      </li>
       <li>
         {content.relation.includes('favorite') ? (
           <LinkWhiteColor

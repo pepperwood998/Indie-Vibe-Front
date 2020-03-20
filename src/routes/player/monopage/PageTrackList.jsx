@@ -52,6 +52,11 @@ function TrackList(props) {
   useEffect(() => {
     getTrackList(authState.token, id, type).then(res => {
       if (res.status === 'success' && res.data) {
+        if (type !== res.data.type) {
+          window.location.href = '/player/home';
+          return;
+        }
+
         setData({ ...data, ...res.data });
         if (type === 'playlist') {
           setOwner({ ...owner, ...res.data.owner });
@@ -196,7 +201,8 @@ function TrackList(props) {
                 type: type,
                 id: id,
                 relation: data.relation,
-                status: data.status
+                status: data.status,
+                artistId: data.artist ? data.artist.id : ''
               }}
             />
           </div>
@@ -205,11 +211,20 @@ function TrackList(props) {
           </div>
         </div>
         <div className='track-list__content'>
-          <CollectionTrackTable
-            data={data.tracks}
-            playFromId={data.id}
-            type={type}
-          />
+          {type === 'playlist' ? (
+            <CollectionTrackTable
+              data={data.tracks}
+              playFromId={data.id}
+              type={type}
+            />
+          ) : (
+            <CollectionTrackTable
+              data={data.tracks}
+              releaseArtistId={data.artist ? data.artist.id : ''}
+              playFromId={data.id}
+              type={type}
+            />
+          )}
         </div>
       </div>
     </div>

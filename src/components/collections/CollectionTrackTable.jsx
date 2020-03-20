@@ -86,6 +86,7 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
+                  artistId={props.releaseArtistId}
                   playFromId={props.playFromId}
                 />
               );
@@ -125,6 +126,9 @@ function RowPlaylist(props) {
       <CellTitle
         id={item.id}
         title={item.title}
+        fromType='playlist'
+        releaseId={item.release.id}
+        artistId={item.release.artist.id}
         index={serial}
         relation={item.relation}
         collectionKey='playlist'
@@ -186,6 +190,8 @@ function RowRelease(props) {
       <CellTitle
         id={item.id}
         title={item.title}
+        fromType='release'
+        artistId={props.artistId}
         index={serial}
         relation={item.relation}
         collectionKey='release'
@@ -219,6 +225,9 @@ function RowSearch(props) {
       <CellTitle
         id={item.id}
         title={item.title}
+        fromType='release'
+        releaseId={item.release.id}
+        artistId={item.release.artist.id}
         index={serial}
         relation={item.relation}
         collectionKey='track'
@@ -376,7 +385,10 @@ function CellTitle(props) {
         content: {
           type: 'track',
           id: props.id,
-          relation: props.relation
+          fromType: props.fromType,
+          relation: props.relation,
+          releaseId: props.releaseId,
+          artistId: props.artistId
         },
         pos: [x, y + height + 10]
       })
