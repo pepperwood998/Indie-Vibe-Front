@@ -83,7 +83,7 @@ export const performAction = (token, id, action, type) => {
   let url = new URL(`${host}/${type}s/${id}`);
   url.search = new URLSearchParams({ action }).toString();
 
-  return fetch('http://www.mocky.io/v2/5e743e473000007c282e69a1', {
+  return fetch(url, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
