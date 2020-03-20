@@ -68,8 +68,10 @@ label {
   }
 
   &--bright {
-    &:hover path {
-      fill: $white;
+    opacity: 0.8;
+
+    &:hover {
+      opacity: 1;
     }
   }
 

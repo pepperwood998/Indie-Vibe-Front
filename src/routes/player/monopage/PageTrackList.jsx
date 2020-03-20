@@ -100,11 +100,11 @@ function TrackList(props) {
   }, [libState.ctxPlaylistPrivate]);
 
   const handlePaused = () => {
-    streamDispatch(streamAction.requestPaused(true));
+    streamDispatch(streamAction.togglePaused(true));
   };
   const handlePlay = () => {
     if (id === streamState.playFromId) {
-      streamDispatch(streamAction.requestPaused(false));
+      streamDispatch(streamAction.togglePaused(false));
     } else {
       streamCollection(authState.token, type, id).then(res => {
         if (res.status === 'success' && res.data.length) {

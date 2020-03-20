@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect } from 'react';
 
 export const capitalize = str => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -52,6 +52,24 @@ export const shuffle = array => {
 export const formatNumber = num => {
   if (!num) return 0;
   return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+};
+
+export const swap = (array, a, b) => {
+  const res = [...array];
+
+  let temp = res[a];
+  res[a] = res[b];
+  res[b] = temp;
+
+  return res;
+};
+
+export const getCircularIndex = (index, length) => {
+  let diff = length - 1 - index;
+  if (diff < 0) return 0;
+  if (diff >= length) return length - 1;
+
+  return index;
 };
 
 export const useEffectSkip = (fn, inputs) => {

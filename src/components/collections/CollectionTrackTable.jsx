@@ -269,11 +269,11 @@ function CellAction(props) {
   const { serial, id, playFromId, playFromType } = props;
 
   const handlePause = () => {
-    streamDispatch(streamAction.requestPaused(true));
+    streamDispatch(streamAction.togglePaused(true));
   };
   const handlePlay = () => {
     if (id === current && playFromId === streamState.playFromId) {
-      streamDispatch(streamAction.requestPaused(false));
+      streamDispatch(streamAction.togglePaused(false));
     } else {
       if (playFromId === streamState.playFromId) {
         streamDispatch(streamAction.reorder(id));
@@ -282,7 +282,7 @@ function CellAction(props) {
           .then(res => {
             if (res.status === 'success' && res.data.length) {
               streamDispatch(
-                streamAction.start(res.data, playFromType, playFromId)
+                streamAction.start(res.data, playFromType, playFromId, id)
               );
             }
           })

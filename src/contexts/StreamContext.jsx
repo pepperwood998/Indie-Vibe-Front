@@ -2,25 +2,34 @@ import React, { createContext, useReducer, useEffect, useContext } from 'react';
 import AudioStream from '../utils/AudioStream';
 import { getStreamInfo } from '../apis/StreamAPI';
 import { AuthContext } from './AuthContext';
-import { reorder, shuffle } from '../utils/Common';
+import { reorder, shuffle, swap, getCircularIndex } from '../utils/Common';
 
 const StreamContext = createContext();
 
 const stream = new AudioStream();
 
 const initState = {
-  queue: ['3AUo1uunXOxigzt6JIsZ', '5UmNONJQaXmNmbdmr2On'],
-  queueSrc: [],
+  queue: [
+    // '3AUo1uunXOxigzt6JIsZ',
+    // '5UmNONJQaXmNmbdmr2On',
+    // 'gKen4p6Y37lf2OkVuMNg'
+  ],
+  queueSrc: [
+    // '3AUo1uunXOxigzt6JIsZ',
+    // '5UmNONJQaXmNmbdmr2On',
+    // 'gKen4p6Y37lf2OkVuMNg'
+  ],
   currentSongIndex: 0,
   bitrate: 128,
   playFromId: '',
   playFromType: '', // 'playlist' or 'release' or 'favorite'
+  info: {},
   volume: 50,
   muted: false,
   autoplay: false,
   paused: true,
-  shuffled: false,
-  info: {}
+  repeat: 'none',
+  shuffled: false
 };
 
 function StreamContextProvider(props) {
@@ -39,12 +48,27 @@ function StreamContextProvider(props) {
     stream.onTogglePaused = paused => {
       dispatch(actions.onTogglePaused(paused));
     };
-    stream.onEnded = () => {
-      // testing
-      // repeat current song
-      dispatch(actions.repeatTrack());
-    };
   }, []);
+
+  //
+  useEffect(() => {
+    stream.onEnded = () => {
+      switch (state.repeat) {
+        case 'none':
+          if (state.currentSongIndex < state.queue.length - 1) {
+            dispatch(actions.skipForward(true));
+          }
+          break;
+        case 'one':
+          dispatch(actions.repeatTrack());
+          break;
+        case 'all':
+          dispatch(actions.skipForward(true));
+          break;
+        default:
+      }
+    };
+  }, [state.currentSongIndex, state.repeat, state.queue]);
 
   return (
     <StreamContext.Provider value={{ state, actions, dispatch, stream }}>
@@ -60,13 +84,14 @@ const actions = {
       payload
     };
   },
-  start: (queue, playFromType, playFromId) => {
+  start: (queue, playFromType, playFromId, targetTrackId) => {
     return {
       type: 'START',
       payload: {
         queue,
         playFromType,
-        playFromId
+        playFromId,
+        targetTrackId
       }
     };
   },
@@ -79,14 +104,16 @@ const actions = {
       trackId
     };
   },
-  skipBackward: () => {
+  skipBackward: payload => {
     return {
-      type: 'SKIP_BACKWARD'
+      type: 'SKIP_BACKWARD',
+      payload
     };
   },
-  skipForward: () => {
+  skipForward: payload => {
     return {
-      type: 'SKIP_FORWARD'
+      type: 'SKIP_FORWARD',
+      payload
     };
   },
   togglePaused: () => {
@@ -118,6 +145,18 @@ const actions = {
       muted
     };
   },
+  setRepeat: repeat => {
+    return {
+      type: 'SET_REPEAT',
+      repeat
+    };
+  },
+  setShuffle: shuffled => {
+    return {
+      type: 'SET_SHUFFLE',
+      shuffled
+    };
+  },
   setInfo: info => {
     return {
       type: 'SET_INFO',
@@ -131,8 +170,8 @@ const actions = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'INIT':
-      const { payload } = action;
+    case 'INIT': {
+      let { payload } = action;
       stream.init(
         payload.audio,
         payload.onProgress,
@@ -141,44 +180,68 @@ const reducer = (state, action) => {
         state.bitrate
       );
       return state;
-    case 'START':
-      stream.start(action.payload.queue[0]);
-      return {
-        ...state,
-        ...action.payload,
-        queueSrc: action.payload.queue
-      };
-    case 'REPEAT_TRACK':
-      stream.start(state.queue[state.currentSongIndex]);
-      return state;
-    case 'REORDER':
-      let queue = reorder(state.queue, state.queue.indexOf(action.trackId));
-      if (state.shuffled) {
-        queue = [queue[0], ...shuffle(queue.slice(1))];
+    }
+    case 'START': {
+      let { payload } = action;
+      let { queue } = payload;
+      if (payload.targetTrackId) {
+        queue = reorder(queue, queue.indexOf(payload.targetTrackId));
       }
+      stream.continue(queue[0]);
       return {
         ...state,
-        queue,
+        queue: [...queue],
+        queueSrc: [...queue],
+        playFromType: payload.playFromType,
+        playFromId: payload.playFromId,
         currentSongIndex: 0
       };
-    case 'SKIP_BACKWARD':
-      if (!state.queue.length) return state;
-
-      let index = Math.max(state.currentSongIndex - 1, 0);
-      stream.start(state.queue[index]);
+    }
+    case 'REPEAT_TRACK': {
+      stream.continue(state.queue[state.currentSongIndex]);
+      return state;
+    }
+    case 'REORDER': {
+      let targetIndex = state.queue.indexOf(action.trackId);
+      let queue = swap(state.queue, state.currentSongIndex, targetIndex);
+      stream.continue(queue[state.currentSongIndex]);
       return {
         ...state,
-        currentSongIndex: index
+        queue
       };
-    case 'SKIP_FORWARD':
+    }
+    case 'SKIP_BACKWARD': {
       if (!state.queue.length) return state;
 
-      let ind = Math.min(state.currentSongIndex + 1, state.queue.length - 1);
-      stream.start(state.queue[ind]);
+      let backwardId = getCircularIndex(
+        state.currentSongIndex - 1,
+        state.queue.length
+      );
+      stream.start(
+        state.queue[backwardId],
+        action.payload ? action.payload : state.autoplay
+      );
       return {
         ...state,
-        currentSongIndex: ind
+        currentSongIndex: backwardId
       };
+    }
+    case 'SKIP_FORWARD': {
+      if (!state.queue.length) return state;
+
+      let forwardId = getCircularIndex(
+        state.currentSongIndex + 1,
+        state.queue.length
+      );
+      stream.start(
+        state.queue[forwardId],
+        action.payload ? action.payload : state.autoplay
+      );
+      return {
+        ...state,
+        currentSongIndex: forwardId
+      };
+    }
     case 'TOGGLE_PAUSED':
       stream.togglePaused();
       return state;
@@ -201,6 +264,28 @@ const reducer = (state, action) => {
       if (!muted) stream.volume(state.volume);
       stream.toggleMute(muted);
       return { ...state, muted };
+    case 'SET_REPEAT':
+      return { ...state, repeat: action.repeat };
+    case 'SET_SHUFFLE':
+      if (state.queue.length) {
+        let { shuffled } = action;
+
+        if (shuffled) {
+          let queue = reorder(state.queue, state.currentSongIndex);
+          queue = [queue[0], ...shuffle(queue.slice(1))];
+          return { ...state, queue, currentSongIndex: 0, shuffled };
+        } else {
+          let currentSong = state.queue[state.currentSongIndex];
+          let currentSongIndex = state.queueSrc.indexOf(currentSong);
+          return {
+            ...state,
+            queue: [...state.queueSrc],
+            currentSongIndex,
+            shuffled
+          };
+        }
+      }
+      return state;
     case 'SET_INFO':
       return {
         ...state,

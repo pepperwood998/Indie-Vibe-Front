@@ -79,12 +79,17 @@ class AudioStream {
     this.api = api;
   }
 
-  start(id) {
+  start(id, autoplay) {
     this.trackId = id;
+    this.audio.autoplay = autoplay;
     this.fetchInfo().then(() => {
       this.seek(0);
     });
   }
+
+  continue(id) {
+    this.start(id, true);
+  } 
 
   volume(per) {
     this.audio.volume = per / 100;
@@ -130,7 +135,7 @@ class AudioStream {
 
         this.audio.src = data.url;
         this.audio.load();
-        if (this.isPlaying) this.audio.play();
+        if (this.audio.autoplay) this.audio.play();
         this.onInfo(data.info);
       })
       .catch(error => console.log(error));
