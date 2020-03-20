@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 import { performActionFavorite } from '../../apis/API';
 import { AuthContext, LibraryContext } from '../../contexts';
 import ContextPlaylist from './ContextPlaylist';
@@ -13,6 +13,23 @@ function ContextSwitch(props) {
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
   );
+
+  const ref = useRef();
+
+  useEffect(() => {
+    let ctxMenuBoudingRect = ref.current.getBoundingClientRect();
+    if (
+      ctxMenuBoudingRect.y + ctxMenuBoudingRect.height >=
+      window.innerHeight
+    ) {
+      libDispatch(
+        libActions.updateCtxPos([
+          ctxMenuBoudingRect.x + 30,
+          window.innerHeight - ctxMenuBoudingRect.height - 10
+        ])
+      );
+    }
+  }, []);
 
   const handleToggleFavorite = action => {
     libDispatch(libActions.closeCtxMenu());
@@ -38,6 +55,7 @@ function ContextSwitch(props) {
   };
 
   const superprops = {
+    elemRef: ref,
     content,
     handlers: {
       handleToggleFavorite

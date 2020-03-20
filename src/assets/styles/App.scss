@@ -8,6 +8,10 @@
 @import './links';
 @import './context-menu';
 
+body {
+  overflow: hidden;
+}
+
 label {
   margin: 0;
 }

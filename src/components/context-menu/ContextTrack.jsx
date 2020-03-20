@@ -6,7 +6,7 @@ function ContextTrack(props) {
   const { content, handlers } = props;
 
   return (
-    <div className='context-menu'>
+    <div className='context-menu' ref={props.elemRef}>
       <ul>
         <li>
           <LinkWhiteColor>Add to queue</LinkWhiteColor>

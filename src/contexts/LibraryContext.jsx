@@ -25,6 +25,12 @@ const actions = {
       payload
     };
   },
+  updateCtxPos: payload => {
+    return {
+      type: 'UPDATE_CTX_POS',
+      payload
+    };
+  },
   closeCtxMenu: () => {
     return { type: 'CLOSE_CTX_MENU' };
   },
@@ -48,6 +54,8 @@ const reducer = (state, action) => {
         ctxMenuContent: { ...action.payload.content },
         ctxMenuPos: [...action.payload.pos]
       };
+    case 'UPDATE_CTX_POS':
+      return { ...state, ctxMenuPos: [...action.payload] };
     case 'CLOSE_CTX_MENU':
       document.removeEventListener('click', handleClosed);
       return {
@@ -75,7 +83,7 @@ function LibraryContextProvider(props) {
       };
       document.addEventListener('click', handleClosed);
     }
-  }, [state]);
+  }, [state.ctxMenuOpened]);
 
   useEffect(() => {
     dispatch(actions.closeCtxMenu());
