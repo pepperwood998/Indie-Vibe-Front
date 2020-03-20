@@ -40,7 +40,9 @@ function StreamContextProvider(props) {
       dispatch(actions.onTogglePaused(paused));
     };
     stream.onEnded = () => {
-      console.log('ended');
+      // testing
+      // repeat current song
+      dispatch(actions.repeatTrack());
     };
   }, []);
 
@@ -63,6 +65,9 @@ const actions = {
       type: 'START',
       payload
     };
+  },
+  repeatTrack: () => {
+    return { type: 'REPEAT_TRACK' };
   },
   reorder: trackId => {
     return {
@@ -138,6 +143,9 @@ const reducer = (state, action) => {
         ...state,
         ...action.payload
       };
+    case 'REPEAT_TRACK':
+      stream.start(state.queue[state.currentSong]);
+      return state;
     case 'REORDER':
       let queue = reorder(state.queue, state.queue.indexOf(action.trackId));
       if (state.shuffled) {
