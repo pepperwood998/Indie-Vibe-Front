@@ -93,7 +93,7 @@ function GroupPlaylistDialog(props) {
         )}
         {status.success ? (
           <div className='notification'>
-            <CardSuccess message='Failed to create the playlist' />
+            <CardSuccess message='Playlist created' />
           </div>
         ) : (
           ''
