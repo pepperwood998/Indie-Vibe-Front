@@ -24,6 +24,7 @@ export { ReactComponent as RepeatOffIcon } from './repeat-off.svg';
 export { ReactComponent as RepeatListIcon } from './repeat-list.svg';
 export { ReactComponent as RepeatTrackIcon } from './repeat-track.svg';
 export { ReactComponent as ShuffleIcon } from './shuffle.svg';
+export { ReactComponent as UnShuffleIcon } from './un-shuffle.svg';
 export { ReactComponent as MusicQueueIcon } from './music-queue.svg';
 export { ReactComponent as MuteIcon } from './volume-mute.svg';
 export { ReactComponent as UnmuteIcon } from './volume-unmute.svg';

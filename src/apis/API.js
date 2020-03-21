@@ -66,6 +66,17 @@ export const deleteTrackList = (token, type, id) => {
 };
 
 export const performActionFavorite = (token, type, id, relation, action) => {
+  return performAction(token, id, action, type).then(res => {
+    if (res.status === 'success') {
+      if (action === 'favorite') return [...relation, 'favorite'];
+      else return relation.filter(value => value !== 'favorite');
+    } else {
+      throw 'Error';
+    }
+  });
+};
+
+export const performAction = (token, id, action, type) => {
   if (type === 'profile' || type === 'artist') {
     type = 'user';
   }
@@ -77,16 +88,7 @@ export const performActionFavorite = (token, type, id, relation, action) => {
     headers: {
       Authorization: 'Bearer ' + token
     }
-  })
-    .then(response => response.json())
-    .then(res => {
-      if (res.status === 'success') {
-        if (action === 'favorite') return [...relation, 'favorite'];
-        else return relation.filter(value => value !== 'favorite');
-      } else {
-        throw 'Error';
-      }
-    });
+  }).then(response => response.json());
 };
 
 export const search = (token, key, type = '', offset = 0, limit = 20) => {

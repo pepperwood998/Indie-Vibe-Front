@@ -6,17 +6,39 @@ function ContextTrack(props) {
   const { content, handlers } = props;
 
   return (
-    <div className='context-menu'>
+    <div className='context-menu' ref={props.elemRef}>
       <ul>
         <li>
           <LinkWhiteColor>Add to queue</LinkWhiteColor>
         </li>
-        <li>
-          <LinkWhiteColor>Discover Artist</LinkWhiteColor>
+        <li
+          onClick={() => {
+            handlers.handleClose();
+          }}
+        >
+          <LinkWhiteColor
+            nav={true}
+            href={`/player/artist/${content.artistId}`}
+          >
+            Discover Artist
+          </LinkWhiteColor>
         </li>
-        <li>
-          <LinkWhiteColor>View Release</LinkWhiteColor>
-        </li>
+        {content.fromType !== 'release' ? (
+          <li
+            onClick={() => {
+              handlers.handleClose();
+            }}
+          >
+            <LinkWhiteColor
+              nav={true}
+              href={`/player/release/${content.releaseId}`}
+            >
+              View Release
+            </LinkWhiteColor>
+          </li>
+        ) : (
+          ''
+        )}
         <li>
           <LinkWhiteColor>Show credits</LinkWhiteColor>
         </li>

@@ -52,6 +52,11 @@ function TrackList(props) {
   useEffect(() => {
     getTrackList(authState.token, id, type).then(res => {
       if (res.status === 'success' && res.data) {
+        if (type !== res.data.type) {
+          window.location.href = '/player/home';
+          return;
+        }
+
         setData({ ...data, ...res.data });
         if (type === 'playlist') {
           setOwner({ ...owner, ...res.data.owner });
@@ -85,22 +90,30 @@ function TrackList(props) {
     }
   }, [libState.ctxFav]);
 
+  useEffectSkip(() => {
+    if (type === 'playlist') {
+      if (id === libState.ctxDelPlaylistId) {
+        props.history.push(`/player/library/${authState.id}`);
+      }
+    }
+  }, [libState.ctxDelPlaylistId]);
+
+  // playlist privacy
+  useEffectSkip(() => {
+    const { ctxPlaylistPrivate } = libState;
+    setData({ ...data, status: ctxPlaylistPrivate.status });
+  }, [libState.ctxPlaylistPrivate]);
+
   const handlePaused = () => {
-    streamDispatch(streamAction.requestPaused(true));
+    streamDispatch(streamAction.togglePaused(true));
   };
   const handlePlay = () => {
-    if (id === streamState.collectionId) {
-      streamDispatch(streamAction.requestPaused(false));
+    if (id === streamState.playFromId) {
+      streamDispatch(streamAction.togglePaused(false));
     } else {
       streamCollection(authState.token, type, id).then(res => {
         if (res.status === 'success' && res.data.length) {
-          streamDispatch(
-            streamAction.start({
-              queue: res.data,
-              playType: type,
-              collectionId: id
-            })
-          );
+          streamDispatch(streamAction.start(res.data, type, id));
         }
       });
     }
@@ -162,7 +175,7 @@ function TrackList(props) {
         </div>
         <div className='track-list__action'>
           <div className='action'>
-            {id === streamState.collectionId && !streamState.paused ? (
+            {id === streamState.playFromId && !streamState.paused ? (
               <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
             ) : (
               <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
@@ -188,7 +201,8 @@ function TrackList(props) {
                 type: type,
                 id: id,
                 relation: data.relation,
-                status: data.status
+                status: data.status,
+                artistId: data.artist ? data.artist.id : ''
               }}
             />
           </div>
@@ -197,11 +211,20 @@ function TrackList(props) {
           </div>
         </div>
         <div className='track-list__content'>
-          <CollectionTrackTable
-            data={data.tracks}
-            collectionId={data.id}
-            type={type}
-          />
+          {type === 'playlist' ? (
+            <CollectionTrackTable
+              data={data.tracks}
+              playFromId={data.id}
+              type={type}
+            />
+          ) : (
+            <CollectionTrackTable
+              data={data.tracks}
+              releaseArtistId={data.artist ? data.artist.id : ''}
+              playFromId={data.id}
+              type={type}
+            />
+          )}
         </div>
       </div>
     </div>

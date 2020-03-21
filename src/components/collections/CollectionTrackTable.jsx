@@ -77,7 +77,7 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
-                  collectionId={props.collectionId}
+                  playFromId={props.playFromId}
                 />
               );
             } else if (type === 'release') {
@@ -86,7 +86,8 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
-                  collectionId={props.collectionId}
+                  artistId={props.releaseArtistId}
+                  playFromId={props.playFromId}
                 />
               );
             } else {
@@ -95,7 +96,7 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
-                  collectionId={item.release ? item.release.id : ''}
+                  playFromId={item.release ? item.release.id : ''}
                 />
               );
             }
@@ -113,8 +114,8 @@ function RowPlaylist(props) {
       <CellAction
         serial={serial + 1}
         id={item.id}
-        collectionId={props.collectionId}
-        streamType='playlist'
+        playFromId={props.playFromId}
+        playFromType='playlist'
       />
       <CellFavorite
         id={item.id}
@@ -125,6 +126,9 @@ function RowPlaylist(props) {
       <CellTitle
         id={item.id}
         title={item.title}
+        fromType='playlist'
+        releaseId={item.release.id}
+        artistId={item.release.artist.id}
         index={serial}
         relation={item.relation}
         collectionKey='playlist'
@@ -174,8 +178,8 @@ function RowRelease(props) {
       <CellAction
         serial={serial + 1}
         id={item.id}
-        collectionId={props.collectionId}
-        streamType='release'
+        playFromId={props.playFromId}
+        playFromType='release'
       />
       <CellFavorite
         id={item.id}
@@ -186,6 +190,8 @@ function RowRelease(props) {
       <CellTitle
         id={item.id}
         title={item.title}
+        fromType='release'
+        artistId={props.artistId}
         index={serial}
         relation={item.relation}
         collectionKey='release'
@@ -200,15 +206,15 @@ function RowRelease(props) {
 function RowSearch(props) {
   const { item, serial } = props;
 
-  const streamType = props.type === 'favorite' ? props.type : 'release';
+  const playFromType = props.type === 'favorite' ? props.type : 'release';
 
   return (
     <div className='collection-table__row collection-table__row--data'>
       <CellAction
         serial={serial + 1}
         id={item.id}
-        collectionId={props.collectionId}
-        streamType={streamType}
+        playFromId={props.playFromId}
+        playFromType={playFromType}
       />
       <CellFavorite
         id={item.id}
@@ -219,6 +225,9 @@ function RowSearch(props) {
       <CellTitle
         id={item.id}
         title={item.title}
+        fromType='release'
+        releaseId={item.release.id}
+        artistId={item.release.artist.id}
         index={serial}
         relation={item.relation}
         collectionKey='track'
@@ -265,28 +274,24 @@ function CellAction(props) {
     dispatch: streamDispatch
   } = useContext(StreamContext);
 
-  const current = streamState.queue[streamState.currentSong];
-  const { serial, id, collectionId, streamType } = props;
+  const current = streamState.queue[streamState.currentSongIndex];
+  const { serial, id, playFromId, playFromType } = props;
 
   const handlePause = () => {
-    streamDispatch(streamAction.requestPaused(true));
+    streamDispatch(streamAction.togglePaused(true));
   };
   const handlePlay = () => {
-    if (id === current && collectionId === streamState.collectionId) {
-      streamDispatch(streamAction.requestPaused(false));
+    if (id === current && playFromId === streamState.playFromId) {
+      streamDispatch(streamAction.togglePaused(false));
     } else {
-      if (collectionId === streamState.collectionId) {
+      if (playFromId === streamState.playFromId) {
         streamDispatch(streamAction.reorder(id));
       } else {
-        streamCollection(authState.token, streamType, collectionId)
+        streamCollection(authState.token, playFromType, playFromId)
           .then(res => {
             if (res.status === 'success' && res.data.length) {
               streamDispatch(
-                streamAction.start({
-                  queue: res.data,
-                  playType: streamType,
-                  collectionId
-                })
+                streamAction.start(res.data, playFromType, playFromId, id)
               );
             }
           })
@@ -380,7 +385,10 @@ function CellTitle(props) {
         content: {
           type: 'track',
           id: props.id,
-          relation: props.relation
+          fromType: props.fromType,
+          relation: props.relation,
+          releaseId: props.releaseId,
+          artistId: props.artistId
         },
         pos: [x, y + height + 10]
       })

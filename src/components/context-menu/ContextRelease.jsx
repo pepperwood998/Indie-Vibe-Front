@@ -5,31 +5,42 @@ import { LinkWhiteColor } from '../links';
 function ContextRelease(props) {
   const { content } = props;
 
-  if (Array.isArray(content.relation)) {
-    if (content.relation.includes('own')) {
-      return <Me {...props} />;
-    }
-
-    return <Other {...props} />;
-  } else {
-    return '';
-  }
+  return (
+    <div className='context-menu' ref={props.elemRef}>
+      {Array.isArray(content.relation) ? (
+        content.relation.includes('own') ? (
+          <Me {...props} />
+        ) : (
+          <Other {...props} />
+        )
+      ) : (
+        ''
+      )}
+    </div>
+  );
 }
 
 function Me(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   return (
-    <div className='context-menu'>
-      <ul>
-        <li>
-          <LinkWhiteColor>Add to queue</LinkWhiteColor>
-        </li>
-        <li>
-          <LinkWhiteColor>Manage</LinkWhiteColor>
-        </li>
-      </ul>
-    </div>
+    <ul>
+      <li>
+        <LinkWhiteColor>Add to queue</LinkWhiteColor>
+      </li>
+      <li
+        onClick={() => {
+          handlers.handleClose();
+        }}
+      >
+        <LinkWhiteColor
+          nav={true}
+          href={`/player/workspace/release/${content.id}`}
+        >
+          Manage
+        </LinkWhiteColor>
+      </li>
+    </ul>
   );
 }
 
@@ -37,32 +48,42 @@ function Other(props) {
   const { content, handlers } = props;
 
   return (
-    <div className='context-menu'>
-      <ul>
-        <li>
-          <LinkWhiteColor>Add to queue</LinkWhiteColor>
-        </li>
-        <li>
-          {content.relation.includes('favorite') ? (
-            <LinkWhiteColor
-              onClick={() => {
-                handlers.handleToggleFavorite('unfavorite');
-              }}
-            >
-              Remove from library
-            </LinkWhiteColor>
-          ) : (
-            <LinkWhiteColor
-              onClick={() => {
-                handlers.handleToggleFavorite('favorite');
-              }}
-            >
-              Add to library
-            </LinkWhiteColor>
-          )}
-        </li>
-      </ul>
-    </div>
+    <ul>
+      <li>
+        <LinkWhiteColor>Add to queue</LinkWhiteColor>
+      </li>
+      <li
+        onClick={() => {
+          handlers.handleClose();
+        }}
+      >
+        <LinkWhiteColor
+          nav={true}
+          href={`/player/artist/${content.id}`}
+        >
+          Discover Artist
+        </LinkWhiteColor>
+      </li>
+      <li>
+        {content.relation.includes('favorite') ? (
+          <LinkWhiteColor
+            onClick={() => {
+              handlers.handleToggleFavorite('unfavorite');
+            }}
+          >
+            Remove from library
+          </LinkWhiteColor>
+        ) : (
+          <LinkWhiteColor
+            onClick={() => {
+              handlers.handleToggleFavorite('favorite');
+            }}
+          >
+            Add to library
+          </LinkWhiteColor>
+        )}
+      </li>
+    </ul>
   );
 }
 

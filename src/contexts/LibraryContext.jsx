@@ -8,8 +8,8 @@ const initState = {
   ctxMenuContent: {},
   ctxMenuPos: [0, 0],
   ctxFav: { id: '', type: '', relation: [] },
-  ctxHandleToggleFavorite: action => undefined,
-  ctxHandleDeletePlaylist: id => undefined
+  ctxDelPlaylistId: '',
+  ctxPlaylistPrivate: { id: '', status: '' },
 };
 
 const actions = {
@@ -25,11 +25,23 @@ const actions = {
       payload
     };
   },
+  updateCtxPos: payload => {
+    return {
+      type: 'UPDATE_CTX_POS',
+      payload
+    };
+  },
   closeCtxMenu: () => {
     return { type: 'CLOSE_CTX_MENU' };
   },
   toggleFavorite: payload => {
     return { type: 'TOGGLE_FAV', payload };
+  },
+  deletePlaylist: payload => {
+    return { type: 'DELETE_PLAYLIST', payload };
+  },
+  togglePlaylistPrivate: payload => {
+    return { type: 'TOGGLE_PLAYLIST_PRIVATE', payload };
   }
 };
 
@@ -48,6 +60,8 @@ const reducer = (state, action) => {
         ctxMenuContent: { ...action.payload.content },
         ctxMenuPos: [...action.payload.pos]
       };
+    case 'UPDATE_CTX_POS':
+      return { ...state, ctxMenuPos: [...action.payload] };
     case 'CLOSE_CTX_MENU':
       document.removeEventListener('click', handleClosed);
       return {
@@ -58,6 +72,10 @@ const reducer = (state, action) => {
       };
     case 'TOGGLE_FAV':
       return { ...state, ctxFav: { ...action.payload } };
+    case 'DELETE_PLAYLIST':
+      return { ...state, ctxDelPlaylistId: action.payload };
+    case 'TOGGLE_PLAYLIST_PRIVATE':
+      return { ...state, ctxPlaylistPrivate: { ...action.payload } };
     default:
       return state;
   }
@@ -75,7 +93,7 @@ function LibraryContextProvider(props) {
       };
       document.addEventListener('click', handleClosed);
     }
-  }, [state]);
+  }, [state.ctxMenuOpened]);
 
   useEffect(() => {
     dispatch(actions.closeCtxMenu());

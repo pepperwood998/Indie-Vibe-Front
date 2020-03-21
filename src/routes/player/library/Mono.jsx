@@ -47,6 +47,26 @@ function Mono(props) {
     setData({ ...data, items });
   }, [libState.ctxFav]);
 
+  useEffectSkip(() => {
+    setData({
+      ...data,
+      items: data.items.filter(item => item.id !== libState.ctxDelPlaylistId),
+      total: data.total - 1
+    });
+  }, [libState.ctxDelPlaylistId]);
+
+  useEffectSkip(() => {
+    const { ctxPlaylistPrivate } = libState;
+    let items = [...data.items];
+    items.some(playlist => {
+      if (ctxPlaylistPrivate.id === playlist.id) {
+        playlist.status = ctxPlaylistPrivate.status;
+        return true;
+      }
+    });
+    setData({ ...data, items });
+  }, [libState.ctxPlaylistPrivate]);
+
   const handleLoadMore = () => {
     getLibraryTarget(authState, userId, type, data.offset + data.limit)
       .then(res => {

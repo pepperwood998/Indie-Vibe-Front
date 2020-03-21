@@ -14,7 +14,10 @@ import {
   MusicQueueIcon,
   UnmuteIcon,
   MuteIcon,
-  PauseIcon
+  PauseIcon,
+  RepeatListIcon,
+  RepeatTrackIcon,
+  UnShuffleIcon
 } from '../../assets/svgs';
 
 function Bottom() {
@@ -36,7 +39,7 @@ function Bottom() {
 function NowPayingLeft() {
   const { state: streamState } = useContext(StreamContext);
   const { id, title, artists, release } = streamState.info;
-  const { playType, collectionId } = streamState;
+  const { playFromType, playFromId } = streamState;
 
   const artistSeparator = (
     <span className='font-short-s font-gray-light'>, </span>
@@ -52,7 +55,7 @@ function NowPayingLeft() {
         </div>
         <div className='now-playing__info'>
           <NavLinkUnderline
-            href={`/player/${playType}/${collectionId}`}
+            href={`/player/${playFromType}/${playFromId}`}
             className='font-short-regular font-weight-bold font-white'
           >
             {title}
@@ -257,10 +260,10 @@ function NowPayingRight() {
     <div className='extra-controls-wrapper'>
       <div className='extra-controls'>
         <div className='control-wrapper'>
-          <RepeatOffIcon className='svg--small svg--cursor svg--bright' />
+          <RepeatControl />
         </div>
         <div className='control-wrapper'>
-          <ShuffleIcon className='svg--small svg--cursor svg--bright' />
+          <ShuffleControl />
         </div>
         <div className='control-wrapper'>
           <MusicQueueIcon className='svg--small svg--cursor svg--bright' />
@@ -287,6 +290,74 @@ function NowPayingRight() {
       </div>
     </div>
   );
+}
+
+function RepeatControl() {
+  const {
+    state: streamState,
+    actions: streamActions,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
+
+  switch (streamState.repeat) {
+    case 'none':
+      return (
+        <RepeatOffIcon
+          className='svg--small svg--cursor svg--bright'
+          onClick={() => {
+            streamDispatch(streamActions.setRepeat('one'));
+          }}
+        />
+      );
+    case 'one':
+      return (
+        <RepeatTrackIcon
+          className='svg--small svg--cursor svg--bright'
+          onClick={() => {
+            streamDispatch(streamActions.setRepeat('all'));
+          }}
+        />
+      );
+    case 'all':
+      return (
+        <RepeatListIcon
+          className='svg--small svg--cursor svg--bright'
+          onClick={() => {
+            streamDispatch(streamActions.setRepeat('none'));
+          }}
+        />
+      );
+    default:
+      return '';
+  }
+}
+
+function ShuffleControl() {
+  const {
+    state: streamState,
+    actions: streamActions,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
+
+  if (streamState.shuffled) {
+    return (
+      <UnShuffleIcon
+        className='svg--small svg--cursor svg--bright'
+        onClick={() => {
+          streamDispatch(streamActions.setShuffle(false));
+        }}
+      />
+    );
+  } else {
+    return (
+      <ShuffleIcon
+        className='svg--small svg--cursor svg--bright'
+        onClick={() => {
+          streamDispatch(streamActions.setShuffle(true));
+        }}
+      />
+    );
+  }
 }
 
 export default Bottom;

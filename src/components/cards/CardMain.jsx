@@ -67,21 +67,17 @@ function CardMain(props) {
   };
 
   const handlePaused = () => {
-    streamDispatch(streamAction.requestPaused(true));
+    streamDispatch(streamAction.togglePaused(true));
   };
 
   const handlePlay = () => {
-    if (content.id === streamState.collectionId) {
-      streamDispatch(streamAction.requestPaused(false));
+    if (content.id === streamState.playFromId) {
+      streamDispatch(streamAction.togglePaused(false));
     } else {
       streamCollection(authState.token, content.type, content.id).then(res => {
         if (res.status === 'success' && res.data.length) {
           streamDispatch(
-            streamAction.start({
-              queue: res.data,
-              playType: content.type,
-              collectionId: content.id
-            })
+            streamAction.start(res.data, content.type, content.id)
           );
         }
       });
@@ -103,7 +99,7 @@ function CardMain(props) {
         </Link>
         <div className={ctxClasses}>
           <ButtonIcon>
-            {content.id === streamState.collectionId && !streamState.paused ? (
+            {content.id === streamState.playFromId && !streamState.paused ? (
               <PauseIcon onClick={handlePaused} />
             ) : (
               <PlayIcon onClick={handlePlay} />
@@ -135,7 +131,8 @@ function CardMain(props) {
                 type: content.type,
                 id: content.id,
                 relation: content.relation,
-                status: content.status
+                status: content.status,
+                artistId: content.artist ? content.artist.id : ''
               }}
               handleToggleFavorite={handleToggleFavorite}
               handleDeletePlaylist={handleDeletePlaylist}

@@ -25,14 +25,14 @@ export const getStreamInfo = (token, id, bitrate) => {
   });
 };
 
-export const getStream = (url, start, end) => {
-  return fetch(url, {
-    headers: {
-      Range: getRangeStr(start, end)
-    }
-  });
-};
+// export const getStream = (url, start, end) => {
+//   return fetch(url, {
+//     headers: {
+//       Range: getRangeStr(start, end)
+//     }
+//   });
+// };
 
-const getRangeStr = (start, end) => {
-  return 'bytes=' + start + '-' + end;
-};
+// const getRangeStr = (start, end) => {
+//   return 'bytes=' + start + '-' + end;
+// };
