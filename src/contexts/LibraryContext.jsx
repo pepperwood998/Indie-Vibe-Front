@@ -10,6 +10,12 @@ const initState = {
   ctxFav: { id: '', type: '', relation: [] },
   ctxDelPlaylistId: '',
   ctxPlaylistPrivate: { id: '', status: '' },
+  myPlaylists: {
+    items: [],
+    offset: 0,
+    limit: 0,
+    total: 0
+  }
 };
 
 const actions = {
@@ -42,6 +48,15 @@ const actions = {
   },
   togglePlaylistPrivate: payload => {
     return { type: 'TOGGLE_PLAYLIST_PRIVATE', payload };
+  },
+  setMyPlaylists: payload => {
+    return { type: 'SET_MY_PLAYLISTS', payload };
+  },
+  createPlaylist: payload => {
+    return { type: 'CREATE_PLAYLIST', payload };
+  },
+  loadMorePlaylists: payload => {
+    return { type: 'LOAD_MORE_PLAYLISTS', payload };
   }
 };
 
@@ -72,10 +87,46 @@ const reducer = (state, action) => {
       };
     case 'TOGGLE_FAV':
       return { ...state, ctxFav: { ...action.payload } };
-    case 'DELETE_PLAYLIST':
-      return { ...state, ctxDelPlaylistId: action.payload };
+    case 'DELETE_PLAYLIST': {
+      const { myPlaylists } = state;
+      return {
+        ...state,
+        ctxDelPlaylistId: action.payload,
+        myPlaylists: {
+          ...myPlaylists,
+          items: myPlaylists.items.filter(item => item.id !== action.payload),
+          total: myPlaylists.total - 1
+        }
+      };
+    }
     case 'TOGGLE_PLAYLIST_PRIVATE':
       return { ...state, ctxPlaylistPrivate: { ...action.payload } };
+    case 'SET_MY_PLAYLISTS':
+      return { ...state, myPlaylists: { ...action.payload } };
+    case 'CREATE_PLAYLIST': {
+      const { myPlaylists } = state;
+      return {
+        ...state,
+        myPlaylists: {
+          ...myPlaylists,
+          items: [...myPlaylists.items, action.payload],
+          total: myPlaylists.total + 1
+        }
+      };
+    }
+    case 'LOAD_MORE_PLAYLISTS': {
+      const { myPlaylists } = state;
+      return {
+        ...state,
+        myPlaylists: {
+          ...myPlaylists,
+          items: [...myPlaylists.items, ...action.payload.items],
+          offset: action.payload.offset,
+          limit: action.payload.limit,
+          total: action.payload.total
+        }
+      };
+    }
     default:
       return state;
   }
