@@ -1,15 +1,17 @@
 import React, { useContext, useState, useEffect } from 'react';
 
 import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
-import { AuthContext } from '../../contexts';
+import { AuthContext, LibraryContext } from '../../contexts';
 import { GroupPlaylistDialog } from '../../components/groups';
 import { LinkWhiteColor } from '../../components/links';
 import { getPlaylistsMe, getPlaylistSimple } from '../../apis/API';
 
 import { AddPlaylistIcon } from '../../assets/svgs';
+import { useEffectSkip } from '../../utils/Common';
 
 function QuickAccess() {
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
   const { role } = authState;
 
   const [playlists, setPlaylists] = useState({
@@ -30,6 +32,16 @@ function QuickAccess() {
       }
     });
   }, []);
+
+  useEffectSkip(() => {
+    setPlaylists({
+      ...playlists,
+      items: playlists.items.filter(
+        item => item.id !== libState.ctxDelPlaylistId
+      ),
+      total: playlists.total - 1
+    });
+  }, [libState.ctxDelPlaylistId]);
 
   const handleOpenDialog = () => {
     setDialogOpened(true);
