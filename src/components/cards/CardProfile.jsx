@@ -48,17 +48,21 @@ function CardProfile(props) {
     <div className='card-main'>
       <div className='card-main__cover-wrapper profile'>
         <div className='dummy'></div>
-        <Link to={`/player/${content.type}/${content.id}`}>
-          <img
-            src={content.thumbnail ? content.thumbnail : AvatarPlaceholder}
-            className='cover'
-          />
-        </Link>
+        <img
+          src={content.thumbnail ? content.thumbnail : AvatarPlaceholder}
+          className='cover'
+        />
         <div className={ctxClasses}>
+          <Link
+            className='action__link'
+            to={`/player/${content.type}/${content.id}`}
+          ></Link>
           {content.type === 'artist' ? (
-            <ButtonIcon>
-              <PlayIcon />
-            </ButtonIcon>
+            <div className='action__play'>
+              <ButtonIcon>
+                <PlayIcon />
+              </ButtonIcon>
+            </div>
           ) : (
             ''
           )}

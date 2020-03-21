@@ -9,6 +9,7 @@ function ContextMenuAccount(props) {
   );
 
   const handleLogout = () => {
+    window.location.href = '/login';
     authDispatch(authAction.logout());
   };
 

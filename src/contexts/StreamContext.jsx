@@ -165,6 +165,15 @@ const actions = {
   },
   clean: () => {
     return { type: 'CLEAN' };
+  },
+  setTrackFavorite: (id, relation) => {
+    return {
+      type: 'SET_TRACK_FAVORITE',
+      payload: {
+        id,
+        relation
+      }
+    };
   }
 };
 
@@ -187,7 +196,7 @@ const reducer = (state, action) => {
       if (payload.targetTrackId) {
         queue = reorder(queue, queue.indexOf(payload.targetTrackId));
       }
-      stream.continue(queue[0]);
+      stream.continue(queue[0], true);
       return {
         ...state,
         queue: [...queue],
@@ -217,10 +226,17 @@ const reducer = (state, action) => {
         state.currentSongIndex - 1,
         state.queue.length
       );
-      stream.start(
-        state.queue[backwardId],
-        action.payload ? action.payload : state.autoplay
-      );
+
+      let autoplay = !state.paused;
+      // when reachs the end of the song
+      if (!autoplay) {
+        if (action.payload) {
+          autoplay = action.payload;
+        } else {
+          autoplay = state.autoplay;
+        }
+      }
+      stream.start(state.queue[backwardId], autoplay);
       return {
         ...state,
         currentSongIndex: backwardId
@@ -233,10 +249,17 @@ const reducer = (state, action) => {
         state.currentSongIndex + 1,
         state.queue.length
       );
-      stream.start(
-        state.queue[forwardId],
-        action.payload ? action.payload : state.autoplay
-      );
+
+      let autoplay = !state.paused;
+      // when reachs the end of the song
+      if (!autoplay) {
+        if (action.payload) {
+          autoplay = action.payload;
+        } else {
+          autoplay = state.autoplay;
+        }
+      }
+      stream.start(state.queue[forwardId], autoplay);
       return {
         ...state,
         currentSongIndex: forwardId
@@ -294,6 +317,20 @@ const reducer = (state, action) => {
     case 'CLEAN':
       stream.clean();
       return state;
+    case 'SET_TRACK_FAVORITE': {
+      const { payload } = action;
+      if (state.info.id === payload.id) {
+        return {
+          ...state,
+          info: {
+            ...state.info,
+            relation: payload.relation
+          }
+        };
+      }
+
+      return state;
+    }
     default:
       return state;
   }

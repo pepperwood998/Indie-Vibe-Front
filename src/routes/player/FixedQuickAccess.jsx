@@ -11,37 +11,24 @@ import { useEffectSkip } from '../../utils/Common';
 
 function QuickAccess() {
   const { state: authState } = useContext(AuthContext);
-  const { state: libState } = useContext(LibraryContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
   const { role } = authState;
 
-  const [playlists, setPlaylists] = useState({
-    items: [],
-    offset: 0,
-    limit: 0,
-    total: 0
-  });
   const [dialogOpened, setDialogOpened] = useState(false);
 
   useEffect(() => {
     getPlaylistsMe(authState.token).then(res => {
       if (res.status === 'success' && res.data) {
-        setPlaylists({
-          ...playlists,
-          ...res.data
-        });
+        libDispatch(libActions.setMyPlaylists(res.data));
       }
     });
   }, []);
 
-  useEffectSkip(() => {
-    setPlaylists({
-      ...playlists,
-      items: playlists.items.filter(
-        item => item.id !== libState.ctxDelPlaylistId
-      ),
-      total: playlists.total - 1
-    });
-  }, [libState.ctxDelPlaylistId]);
+  let playlists = libState.myPlaylists;
 
   const handleOpenDialog = () => {
     setDialogOpened(true);
@@ -54,10 +41,7 @@ function QuickAccess() {
   const handleCreatePlaylistSuccess = playlistId => {
     getPlaylistSimple(authState.token, playlistId).then(res => {
       if (res.status === 'success') {
-        setPlaylists({
-          ...playlists,
-          items: [...playlists.items, { ...res.data }]
-        });
+        libDispatch(libActions.createPlaylist(res.data));
       }
     });
   };
@@ -66,13 +50,7 @@ function QuickAccess() {
     getPlaylistsMe(authState.token, playlists.offset + playlists.limit).then(
       res => {
         if (res.status === 'success' && res.data.items) {
-          setPlaylists({
-            ...playlists,
-            items: [...playlists.items, ...res.data.items],
-            offset: res.data.offset,
-            limit: res.data.limit,
-            total: res.data.total
-          });
+          libDispatch(libActions.loadMorePlaylists(res.data));
         }
       }
     );

@@ -107,7 +107,7 @@ function General(props) {
                 <ArrowRight />
               </NavLinkColor>
             }
-            data={{ items: data[key], offset: 0, limit: data[key].length }}
+            items={data[key]}
             type={type}
             key={index}
           />

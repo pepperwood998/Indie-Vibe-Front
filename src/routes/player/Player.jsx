@@ -13,6 +13,8 @@ import { LibraryContext } from '../../contexts';
 import { ContextSwitch } from '../../components/context-menu';
 
 import './css/player.scss';
+import { CollectionMain } from '../../components/collections';
+import { CloseIcon } from '../../assets/svgs';
 
 function Player(props) {
   const {
@@ -73,6 +75,39 @@ function Player(props) {
         ) : (
           ''
         )}
+      </div>
+      {libState.browsePlaylists.opened ? (
+        <BrowsePlaylist src={libState.myPlaylists} />
+      ) : (
+        ''
+      )}
+    </div>
+  );
+}
+
+function BrowsePlaylist(props) {
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
+  const myOwnPlaylists = props.src.items.filter(item =>
+    item.relation.includes('own')
+  );
+
+  return (
+    <div className='screen-overlay'>
+      <CloseIcon
+        className='close svg--cursor svg--scale'
+        onClick={() => {
+          libDispatch(libActions.setBrowsePlaylists(false, ''));
+        }}
+      />
+      <div className='browse-playlists'>
+        <CollectionMain
+          header={<span>Choose playlist</span>}
+          items={myOwnPlaylists}
+          type='browse-playlist'
+        />
       </div>
     </div>
   );

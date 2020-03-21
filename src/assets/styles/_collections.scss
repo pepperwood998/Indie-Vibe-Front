@@ -93,6 +93,10 @@
         justify-content: center;
         align-items: center;
       }
+
+      .action.active {
+        visibility: visible;
+      }
     }
     &--favorite {
       width: 50px;

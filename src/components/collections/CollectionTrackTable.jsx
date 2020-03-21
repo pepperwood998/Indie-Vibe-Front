@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 
 import { NavLinkUnderline } from '../links';
-import { getFormattedTime } from '../../utils/Common';
+import { getFormattedTime, getDatePart } from '../../utils/Common';
 import { AuthContext, StreamContext, LibraryContext } from '../../contexts';
 import { performActionFavorite } from '../../apis/API';
 import { ButtonIcon } from '../buttons';
@@ -20,7 +20,7 @@ import {
 
 function CollectionTrackTable(props) {
   const { type } = props;
-  let { items, offset, limit } = props.data;
+  let { items } = props.data;
 
   return (
     <div className='collection-table'>
@@ -78,6 +78,7 @@ function CollectionTrackTable(props) {
                   key={index}
                   serial={index}
                   playFromId={props.playFromId}
+                  playlistRelation={props.playlistRelation}
                 />
               );
             } else if (type === 'release') {
@@ -131,6 +132,7 @@ function RowPlaylist(props) {
         artistId={item.release.artist.id}
         index={serial}
         relation={item.relation}
+        playlistRelation={props.playlistRelation}
         collectionKey='playlist'
       />
       <div className='collection-table__cell collection-table__cell--artist'>
@@ -164,7 +166,7 @@ function RowPlaylist(props) {
         <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
       </div>
       <div className='collection-table__cell collection-table__cell--added-date'>
-        <span className='main'>{item.addedAt}</span>
+        <span className='main'>{getDatePart(item.addedAt)}</span>
       </div>
     </div>
   );
@@ -302,10 +304,14 @@ function CellAction(props) {
     }
   };
 
+  let classesAction = 'action';
+  if (id === current) {
+    classesAction += ' active';
+  }
   return (
     <div className='collection-table__cell collection-table__cell--action'>
       <span>{serial}</span>
-      <div className='action'>
+      <div className={classesAction}>
         <ButtonIcon>
           {id === current && !streamState.paused ? (
             <PauseIcon onClick={handlePause} />
@@ -320,6 +326,11 @@ function CellAction(props) {
 
 function CellFavorite(props) {
   const { state: authState } = useContext(AuthContext);
+  const {
+    state: streamState,
+    actions: streamActions,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
   );
@@ -333,6 +344,7 @@ function CellFavorite(props) {
       action
     )
       .then(r => {
+        streamDispatch(streamActions.setTrackFavorite(props.id, r));
         libDispatch(
           libActions.toggleFavorite({
             id: props.id,
@@ -388,7 +400,8 @@ function CellTitle(props) {
           fromType: props.fromType,
           relation: props.relation,
           releaseId: props.releaseId,
-          artistId: props.artistId
+          artistId: props.artistId,
+          playlistRelation: props.playlistRelation
         },
         pos: [x, y + height + 10]
       })
