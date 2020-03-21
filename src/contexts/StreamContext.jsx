@@ -226,10 +226,17 @@ const reducer = (state, action) => {
         state.currentSongIndex - 1,
         state.queue.length
       );
-      stream.start(
-        state.queue[backwardId],
-        action.payload ? action.payload : state.autoplay
-      );
+
+      let autoplay = !state.paused;
+      // when reachs the end of the song
+      if (!autoplay) {
+        if (action.payload) {
+          autoplay = action.payload;
+        } else {
+          autoplay = state.autoplay;
+        }
+      }
+      stream.start(state.queue[backwardId], autoplay);
       return {
         ...state,
         currentSongIndex: backwardId
@@ -242,10 +249,17 @@ const reducer = (state, action) => {
         state.currentSongIndex + 1,
         state.queue.length
       );
-      stream.start(
-        state.queue[forwardId],
-        action.payload ? action.payload : state.autoplay
-      );
+
+      let autoplay = !state.paused;
+      // when reachs the end of the song
+      if (!autoplay) {
+        if (action.payload) {
+          autoplay = action.payload;
+        } else {
+          autoplay = state.autoplay;
+        }
+      }
+      stream.start(state.queue[forwardId], autoplay);
       return {
         ...state,
         currentSongIndex: forwardId

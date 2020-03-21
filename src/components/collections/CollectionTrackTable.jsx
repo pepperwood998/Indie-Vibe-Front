@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 
 import { NavLinkUnderline } from '../links';
-import { getFormattedTime } from '../../utils/Common';
+import { getFormattedTime, getDatePart } from '../../utils/Common';
 import { AuthContext, StreamContext, LibraryContext } from '../../contexts';
 import { performActionFavorite } from '../../apis/API';
 import { ButtonIcon } from '../buttons';
@@ -164,7 +164,7 @@ function RowPlaylist(props) {
         <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
       </div>
       <div className='collection-table__cell collection-table__cell--added-date'>
-        <span className='main'>{item.addedAt}</span>
+        <span className='main'>{getDatePart(item.addedAt)}</span>
       </div>
     </div>
   );

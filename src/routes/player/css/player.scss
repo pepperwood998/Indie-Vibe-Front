@@ -17,6 +17,7 @@
     'nav-bar body quick-access'
     'play-bar play-bar play-bar';
   overflow: hidden;
+  position: relative;
 
   &__top {
     grid-area: body;

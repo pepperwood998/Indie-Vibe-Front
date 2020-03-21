@@ -22,6 +22,12 @@ export const getFormattedTime = second => {
   return ret;
 };
 
+export const getDatePart = datetime => {
+  if (datetime) return /\d{4}-\d{2}-\d{2}/.exec(datetime)[0];
+
+  return '';
+};
+
 export const reorder = (array, index) => {
   let head = array.slice(0, index);
   let tail = array.slice(index);

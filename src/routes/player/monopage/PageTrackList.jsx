@@ -18,7 +18,7 @@ import { streamCollection } from '../../../apis/StreamAPI';
 
 import { UnFavoriteIcon, FavoriteIcon } from '../../../assets/svgs';
 import Placeholder from '../../../assets/imgs/placeholder.png';
-import { useEffectSkip } from '../../../utils/Common';
+import { useEffectSkip, getDatePart } from '../../../utils/Common';
 
 function TrackList(props) {
   // props
@@ -50,21 +50,27 @@ function TrackList(props) {
 
   // effects
   useEffect(() => {
-    getTrackList(authState.token, id, type).then(res => {
-      if (res.status === 'success' && res.data) {
-        if (type !== res.data.type) {
-          window.location.href = '/player/home';
-          return;
-        }
+    getTrackList(authState.token, id, type)
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          if (type !== res.data.type) {
+            window.location.href = '/player/home';
+            return;
+          }
 
-        setData({ ...data, ...res.data });
-        if (type === 'playlist') {
-          setOwner({ ...owner, ...res.data.owner });
+          setData({ ...data, ...res.data });
+          if (type === 'playlist') {
+            setOwner({ ...owner, ...res.data.owner });
+          } else {
+            setOwner({ ...owner, ...res.data.artist });
+          }
         } else {
-          setOwner({ ...owner, ...res.data.artist });
+          throw `Error viewing ${type}`;
         }
-      }
-    });
+      })
+      .catch(error => {
+        window.location.href = '/player/home';
+      });
   }, [id]);
 
   useEffectSkip(() => {
@@ -168,7 +174,7 @@ function TrackList(props) {
               <span>
                 {type === 'playlist'
                   ? `${data.followersCount} followers`
-                  : data.date}
+                  : getDatePart(data.date)}
               </span>
             </div>
           </div>
