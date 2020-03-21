@@ -196,7 +196,7 @@ const reducer = (state, action) => {
       if (payload.targetTrackId) {
         queue = reorder(queue, queue.indexOf(payload.targetTrackId));
       }
-      stream.continue(queue[0]);
+      stream.continue(queue[0], true);
       return {
         ...state,
         queue: [...queue],

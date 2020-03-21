@@ -302,10 +302,14 @@ function CellAction(props) {
     }
   };
 
+  let classesAction = 'action';
+  if (id === current) {
+    classesAction += ' active';
+  }
   return (
     <div className='collection-table__cell collection-table__cell--action'>
       <span>{serial}</span>
-      <div className='action'>
+      <div className={classesAction}>
         <ButtonIcon>
           {id === current && !streamState.paused ? (
             <PauseIcon onClick={handlePause} />
