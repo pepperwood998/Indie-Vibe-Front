@@ -128,3 +128,25 @@
     }
   }
 }
+
+.screen-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $blackBlurDark;
+  z-index: 999;
+  padding: 50px;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .close {
+    position: absolute;
+    right: 50px;
+  }
+
+  .browse-playlists {
+    width: 100%;
+  }
+}

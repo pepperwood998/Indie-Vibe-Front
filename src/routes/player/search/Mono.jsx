@@ -116,7 +116,7 @@ function Mono(props) {
             ? data.total + ` ${type}s`
             : `No results for ${capitalize(type)}`
         }
-        data={data}
+        items={data.items}
         type={type}
       />
     );

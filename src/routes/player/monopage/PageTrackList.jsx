@@ -222,6 +222,7 @@ function TrackList(props) {
               data={data.tracks}
               playFromId={data.id}
               type={type}
+              playlistRelation={data.relation}
             />
           ) : (
             <CollectionTrackTable

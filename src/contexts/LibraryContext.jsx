@@ -15,6 +15,10 @@ const initState = {
     offset: 0,
     limit: 0,
     total: 0
+  },
+  browsePlaylists: {
+    opened: false,
+    trackId: ''
   }
 };
 
@@ -57,6 +61,12 @@ const actions = {
   },
   loadMorePlaylists: payload => {
     return { type: 'LOAD_MORE_PLAYLISTS', payload };
+  },
+  setBrowsePlaylists: (opened, trackId) => {
+    return {
+      type: 'SET_BROWSE_PLAYLSITS',
+      payload: { opened, trackId }
+    };
   }
 };
 
@@ -125,6 +135,12 @@ const reducer = (state, action) => {
           limit: action.payload.limit,
           total: action.payload.total
         }
+      };
+    }
+    case 'SET_BROWSE_PLAYLSITS': {
+      return {
+        ...state,
+        browsePlaylists: action.payload
       };
     }
     default:

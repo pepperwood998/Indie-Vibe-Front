@@ -1,21 +1,20 @@
 import React from 'react';
 
-import { CardMain } from '../cards';
-import CardProfile from '../cards/CardProfile';
+import { CardMain, CardMainMin, CardProfile } from '../cards';
 
 function CollectionMain(props) {
   return (
     <div className='collection-main collection-main--extended'>
       <div className='collection-main__header'>{props.header}</div>
       <div className='collection-main__content grid'>
-        <Content data={props.data} type={props.type} />
+        <Content items={props.items} type={props.type} />
       </div>
     </div>
   );
 }
 
 function Content(props) {
-  let { items, offset, limit } = props.data;
+  let { items } = props;
 
   switch (props.type) {
     case 'playlist':
@@ -25,11 +24,13 @@ function Content(props) {
       ));
     case 'artist':
     case 'profile':
-      return items
-        .slice(offset, limit)
-        .map((item, index) => (
-          <CardProfile content={item} key={index} index={index} />
-        ));
+      return items.map((item, index) => (
+        <CardProfile content={item} key={index} index={index} />
+      ));
+    case 'browse-playlist':
+      return items.map((item, index) => (
+        <CardMainMin content={item} key={index} index={index} />
+      ));
   }
 
   return '';

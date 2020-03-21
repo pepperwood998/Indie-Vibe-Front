@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { LinkWhiteColor } from '../links';
+import { LibraryContext } from '../../contexts';
 
 function ContextTrack(props) {
   const { content, handlers } = props;
+
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
+  const playlistRelation = Array.isArray(content.playlistRelation)
+    ? content.playlistRelation
+    : [];
 
   return (
     <div className='context-menu' ref={props.elemRef}>
@@ -42,8 +51,24 @@ function ContextTrack(props) {
         <li>
           <LinkWhiteColor>Show credits</LinkWhiteColor>
         </li>
+        {playlistRelation.includes('own') && content.fromType === 'playlist' ? (
+          <li>
+            <LinkWhiteColor onClick={() => {}}>
+              Remove from playlist
+            </LinkWhiteColor>
+          </li>
+        ) : (
+          ''
+        )}
         <li>
-          <LinkWhiteColor>Add to Playlist</LinkWhiteColor>
+          <LinkWhiteColor
+            onClick={() => {
+              handlers.handleClose();
+              libDispatch(libActions.setBrowsePlaylists(true, content.id));
+            }}
+          >
+            Add to Playlist
+          </LinkWhiteColor>
         </li>
         <li>
           {Array.isArray(content.relation) &&
