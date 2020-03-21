@@ -320,6 +320,11 @@ function CellAction(props) {
 
 function CellFavorite(props) {
   const { state: authState } = useContext(AuthContext);
+  const {
+    state: streamState,
+    actions: streamActions,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
   );
@@ -333,6 +338,7 @@ function CellFavorite(props) {
       action
     )
       .then(r => {
+        streamDispatch(streamActions.setTrackFavorite(props.id, r));
         libDispatch(
           libActions.toggleFavorite({
             id: props.id,

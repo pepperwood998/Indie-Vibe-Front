@@ -17,8 +17,11 @@ import {
   PauseIcon,
   RepeatListIcon,
   RepeatTrackIcon,
-  UnShuffleIcon
+  UnShuffleIcon,
+  FavoriteIcon
 } from '../../assets/svgs';
+import { performActionFavorite } from '../../apis/API';
+import { AuthContext, LibraryContext } from '../../contexts';
 
 function Bottom() {
   return (
@@ -37,13 +40,39 @@ function Bottom() {
 }
 
 function NowPayingLeft() {
-  const { state: streamState } = useContext(StreamContext);
-  const { id, title, artists, release } = streamState.info;
+  const { state: authState } = useContext(AuthContext);
+  const {
+    state: streamState,
+    actions: streamActions,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
+  const { id, title, artists, release, relation } = streamState.info;
   const { playFromType, playFromId } = streamState;
 
   const artistSeparator = (
     <span className='font-short-s font-gray-light'>, </span>
   );
+
+  const handleToggleFavorite = action => {
+    performActionFavorite(authState.token, 'track', id, relation, action)
+      .then(r => {
+        streamDispatch(streamActions.setTrackFavorite(id, r));
+        libDispatch(
+          libActions.toggleFavorite({
+            id,
+            type: 'track',
+            relation: r
+          })
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   if (id) {
     return (
@@ -77,7 +106,21 @@ function NowPayingLeft() {
           </div>
         </div>
         <div className='now-playing__action'>
-          <UnFavoriteIcon />
+          {relation.includes('favorite') ? (
+            <FavoriteIcon
+              className='svg--cursor svg--scale svg--blue'
+              onClick={() => {
+                handleToggleFavorite('unfavorite');
+              }}
+            />
+          ) : (
+            <UnFavoriteIcon
+              className='svg--cursor svg--scale'
+              onClick={() => {
+                handleToggleFavorite('favorite');
+              }}
+            />
+          )}
         </div>
       </div>
     );

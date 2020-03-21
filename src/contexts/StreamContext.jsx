@@ -165,6 +165,15 @@ const actions = {
   },
   clean: () => {
     return { type: 'CLEAN' };
+  },
+  setTrackFavorite: (id, relation) => {
+    return {
+      type: 'SET_TRACK_FAVORITE',
+      payload: {
+        id,
+        relation
+      }
+    };
   }
 };
 
@@ -294,6 +303,20 @@ const reducer = (state, action) => {
     case 'CLEAN':
       stream.clean();
       return state;
+    case 'SET_TRACK_FAVORITE': {
+      const { payload } = action;
+      if (state.info.id === payload.id) {
+        return {
+          ...state,
+          info: {
+            ...state.info,
+            relation: payload.relation
+          }
+        };
+      }
+
+      return state;
+    }
     default:
       return state;
   }

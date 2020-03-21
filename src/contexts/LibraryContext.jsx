@@ -100,7 +100,7 @@ const reducer = (state, action) => {
       };
     }
     case 'TOGGLE_PLAYLIST_PRIVATE':
-      return { ...state, ctxPlaylistPrivate: { ...action.payload } };
+      return { ...state, ctxPlaylistPrivate: action.payload };
     case 'SET_MY_PLAYLISTS':
       return { ...state, myPlaylists: { ...action.payload } };
     case 'CREATE_PLAYLIST': {
