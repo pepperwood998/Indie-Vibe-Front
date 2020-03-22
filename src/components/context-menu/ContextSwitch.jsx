@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useEffect } from 'react';
 import { performActionFavorite, deleteTrackList } from '../../apis/API';
-import { AuthContext, LibraryContext } from '../../contexts';
+import { AuthContext, LibraryContext, StreamContext } from '../../contexts';
 import ContextPlaylist from './ContextPlaylist';
 import ContextRelease from './ContextRelease';
 import ContextTrack from './ContextTrack';
@@ -10,6 +10,9 @@ function ContextSwitch(props) {
   const { content } = props;
 
   const { state: authState } = useContext(AuthContext);
+  const { actions: streamActions, dispatch: streamDispatch } = useContext(
+    StreamContext
+  );
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
   );
@@ -45,6 +48,7 @@ function ContextSwitch(props) {
       action
     )
       .then(r => {
+        streamDispatch(streamActions.setTrackFavorite(content.id, r));
         libDispatch(
           libActions.toggleFavorite({
             id: content.id,

@@ -9,12 +9,15 @@ import { Browse, Home, Account, Artist, TrackList } from './monopage';
 import { Workspace } from './workspace';
 import { Search } from './search';
 import { Library } from './library';
-import { LibraryContext } from '../../contexts';
+import { LibraryContext, AuthContext } from '../../contexts';
 import { ContextSwitch } from '../../components/context-menu';
-
-import './css/player.scss';
 import { CollectionMain } from '../../components/collections';
 import { CloseIcon } from '../../assets/svgs';
+import { CardSuccess, CardError } from '../../components/cards';
+import { getPlaylistsMe } from '../../apis/API';
+import { ButtonLoadMore } from '../../components/buttons';
+
+import './css/player.scss';
 
 function Player(props) {
   const {
@@ -38,7 +41,7 @@ function Player(props) {
         <NavMenu />
       </div>
       <div className='player__quick-access'>
-        <QuickAccess />
+        <QuickAccess history={props.history} />
       </div>
       <div className='player__bottom'>
         <Bottom />
@@ -76,23 +79,35 @@ function Player(props) {
           ''
         )}
       </div>
-      {libState.browsePlaylists.opened ? (
-        <BrowsePlaylist src={libState.myPlaylists} />
-      ) : (
-        ''
-      )}
+      {libState.browsePlaylists.opened ? <BrowsePlaylist /> : ''}
+      {libState.notification.opened ? <Notification /> : ''}
     </div>
   );
 }
 
-function BrowsePlaylist(props) {
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
+function BrowsePlaylist() {
+  const { state: authState } = useContext(AuthContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
-  const myOwnPlaylists = props.src.items.filter(item =>
+  const { myPlaylists } = libState;
+  const myOwnPlaylists = myPlaylists.items.filter(item =>
     item.relation.includes('own')
   );
+
+  const handleLoadMore = () => {
+    getPlaylistsMe(
+      authState.token,
+      myPlaylists.offset + myPlaylists.limit
+    ).then(res => {
+      if (res.status === 'success' && res.data.items) {
+        libDispatch(libActions.loadMorePlaylists(res.data));
+      }
+    });
+  };
 
   return (
     <div className='screen-overlay'>
@@ -109,6 +124,40 @@ function BrowsePlaylist(props) {
           type='browse-playlist'
         />
       </div>
+      {myPlaylists.total > myPlaylists.offset + myPlaylists.limit ? (
+        <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
+      ) : (
+        ''
+      )}
+    </div>
+  );
+}
+
+function Notification() {
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
+
+  const { notification } = libState;
+  let timeout;
+
+  useEffect(() => {
+    clearTimeout(timeout);
+    if (notification.opened)
+      timeout = setTimeout(() => {
+        libDispatch(libActions.setNotification(false));
+      }, 2000);
+  });
+
+  return (
+    <div className='action-notification'>
+      {notification.success ? (
+        <CardSuccess message={notification.message} />
+      ) : (
+        <CardError message={notification.message} />
+      )}
     </div>
   );
 }

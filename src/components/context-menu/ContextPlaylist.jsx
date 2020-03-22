@@ -35,6 +35,9 @@ function Me(props) {
     deleteTrackList(authState.token, 'playlist', id)
       .then(res => {
         if (res.status === 'success') {
+          libDispatch(
+            libActions.setNotification(true, true, 'Playlist deleted')
+          );
           libDispatch(libActions.deletePlaylist(id));
         }
       })

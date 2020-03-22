@@ -1,16 +1,21 @@
 import React, { useState, useRef, useContext } from 'react';
 
-import { AuthContext } from '../../contexts';
+import { AuthContext, LibraryContext } from '../../contexts';
 import { createPlaylist } from '../../apis/API';
 import { InputFileLabel, InputText } from '../inputs';
 import { ButtonMain } from '../buttons';
-import { CardError, CardSuccess } from '../cards';
 
 import { CloseIcon } from '../../assets/svgs';
 import PlaylistPlaceholder from '../../assets/imgs/playlist-placeholder.png';
 
 function GroupPlaylistDialog(props) {
   const { state: authState } = useContext(AuthContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
+
   const { isUpdated, handleCloseDialog, handleCreatePlaylistSuccess } = props;
 
   const [info, setInfo] = useState({
@@ -19,11 +24,7 @@ function GroupPlaylistDialog(props) {
   });
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailSrc, setThumbnailSrc] = useState(props.thumbnail);
-  const [status, setStatus] = useState({
-    error: '',
-    success: '',
-    submit: 0
-  });
+  const [submitted, setSubmitted] = useState(0);
 
   const thumbnailRef = useRef();
 
@@ -48,28 +49,24 @@ function GroupPlaylistDialog(props) {
   };
 
   const handleSubmit = () => {
-    setStatus({ ...status, submit: 1 });
+    setSubmitted(1);
     if (!info.title) return;
 
-    setStatus({ ...status, submit: 2 });
+    setSubmitted(2);
     createPlaylist(authState.token, info.title, info.description, thumbnail)
       .then(response => response.json())
       .then(res => {
         if (res.status === 'success') {
-          setStatus({ ...status, success: 'Playlist created' });
           handleCreatePlaylistSuccess(res.data);
-          setTimeout(() => {
-            handleCloseDialog();
-          }, 500);
+          handleCloseDialog();
+          libDispatch(
+            libActions.setNotification(true, true, 'Playlist created')
+          );
         } else {
-          setStatus({ ...status, error: 'Failed to create playlist' });
-          setTimeout(() => {
-            setStatus({
-              ...status,
-              submit: 0,
-              error: ''
-            });
-          }, 500);
+          libDispatch(
+            libActions.setNotification(true, false, 'Failed to create playlist')
+          );
+          setSubmitted(0);
         }
       })
       .catch(error => {
@@ -84,22 +81,8 @@ function GroupPlaylistDialog(props) {
   return (
     <div className='playlist-dialog-wrapper' onClick={handleCloseDialog}>
       <div className='playlist-dialog' onClick={handlePropagateDialog}>
-        {status.error ? (
-          <div className='notification'>
-            <CardError message='Failed to create the playlist' />
-          </div>
-        ) : (
-          ''
-        )}
-        {status.success ? (
-          <div className='notification'>
-            <CardSuccess message='Playlist created' />
-          </div>
-        ) : (
-          ''
-        )}
         <CloseIcon
-          className='svg--regular svg--cursor svg--scale'
+          className='close svg--regular svg--cursor svg--scale'
           onClick={handleCloseDialog}
         />
         <div className='playlist-dialog__header font-short-big font-weight-bold font-white'>
@@ -114,7 +97,7 @@ function GroupPlaylistDialog(props) {
                 value={info.title}
                 placeholder='Playlist name'
                 onChange={handleChangeInfo}
-                error={status.submit && !info.title}
+                error={submitted && !info.title}
                 errMessage='Must have a title'
               />
             </div>
@@ -151,10 +134,10 @@ function GroupPlaylistDialog(props) {
             <div className='right__button'>
               <ButtonMain
                 onClick={handleSubmit}
-                disabled={status.submit === 2 ? true : false}
+                disabled={submitted === 2 ? true : false}
               >
                 {isUpdated ? 'Save' : 'Create'}
-                {status.submit === 2 ? '...' : ''}
+                {submitted === 2 ? '...' : ''}
               </ButtonMain>
             </div>
           </div>

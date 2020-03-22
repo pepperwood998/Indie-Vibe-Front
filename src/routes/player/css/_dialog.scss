@@ -19,21 +19,7 @@
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.74);
     position: relative;
 
-    .notification {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 60;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: $blackBlur;
-      width: 100%;
-      height: 100%;
-    }
-
-    svg {
+    .close {
       position: absolute;
       top: 10px;
       right: 10px;
@@ -148,5 +134,29 @@
 
   .browse-playlists {
     width: 100%;
+  }
+}
+
+.action-notification {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+  opacity: 0;
+  animation-name: fader;
+  animation-duration: 2s;
+  z-index: 1000;
+
+  @keyframes fader {
+    0% {
+      opacity: 0;
+    }
+    25% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
   }
 }

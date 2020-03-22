@@ -132,6 +132,7 @@ function RowPlaylist(props) {
         artistId={item.release.artist.id}
         index={serial}
         relation={item.relation}
+        playlistId={props.playFromId}
         playlistRelation={props.playlistRelation}
         collectionKey='playlist'
       />
@@ -401,6 +402,7 @@ function CellTitle(props) {
           relation: props.relation,
           releaseId: props.releaseId,
           artistId: props.artistId,
+          playlistId: props.playlistId,
           playlistRelation: props.playlistRelation
         },
         pos: [x, y + height + 10]
@@ -408,11 +410,19 @@ function CellTitle(props) {
     );
   };
 
+  const handleBrowsePlaylists = () => {
+    libDispatch(libActions.closeCtxMenu());
+    libDispatch(libActions.setBrowsePlaylists(true, props.id));
+  };
+
   return (
     <div className='collection-table__cell collection-table__cell--title'>
       <span className='main'>{title}</span>
       <span className='extra'>
-        <PlusIcon className='svg--cursor svg--gray-light svg--bright' />
+        <PlusIcon
+          className='svg--cursor svg--gray-light svg--bright'
+          onClick={handleBrowsePlaylists}
+        />
         <MoreIcon
           className='svg--cursor svg--gray-light svg--bright'
           onClick={handleToggleCtxMenu}

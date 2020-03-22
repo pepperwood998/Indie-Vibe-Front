@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 
 import { LinkWhiteColor } from '../links';
-import { LibraryContext } from '../../contexts';
+import { LibraryContext, AuthContext } from '../../contexts';
+import { removeTrackFromPlaylist } from '../../apis/API';
 
 function ContextTrack(props) {
   const { content, handlers } = props;
 
+  const { state: authState } = useContext(AuthContext);
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
   );
@@ -13,6 +15,34 @@ function ContextTrack(props) {
   const playlistRelation = Array.isArray(content.playlistRelation)
     ? content.playlistRelation
     : [];
+
+  const handleRemoveTrackFromPlaylist = () => {
+    handlers.handleClose();
+    removeTrackFromPlaylist(authState.token, content.playlistId, content.id)
+      .then(res => {
+        if (res.status === 'success') {
+          libDispatch(
+            libActions.setNotification(
+              true,
+              true,
+              'Track removed from playlist'
+            )
+          );
+          libDispatch(libActions.removeTrackFromPlaylist(content.id));
+        } else {
+          throw 'Error';
+        }
+      })
+      .catch(error => {
+        libDispatch(
+          libActions.setNotification(
+            true,
+            false,
+            'Failed to remove track from playlist'
+          )
+        );
+      });
+  };
 
   return (
     <div className='context-menu' ref={props.elemRef}>
@@ -53,7 +83,7 @@ function ContextTrack(props) {
         </li>
         {playlistRelation.includes('own') && content.fromType === 'playlist' ? (
           <li>
-            <LinkWhiteColor onClick={() => {}}>
+            <LinkWhiteColor onClick={handleRemoveTrackFromPlaylist}>
               Remove from playlist
             </LinkWhiteColor>
           </li>

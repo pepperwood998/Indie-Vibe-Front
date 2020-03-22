@@ -7,9 +7,8 @@ import { LinkWhiteColor } from '../../components/links';
 import { getPlaylistsMe, getPlaylistSimple } from '../../apis/API';
 
 import { AddPlaylistIcon } from '../../assets/svgs';
-import { useEffectSkip } from '../../utils/Common';
 
-function QuickAccess() {
+function QuickAccess(props) {
   const { state: authState } = useContext(AuthContext);
   const {
     state: libState,
@@ -41,6 +40,7 @@ function QuickAccess() {
   const handleCreatePlaylistSuccess = playlistId => {
     getPlaylistSimple(authState.token, playlistId).then(res => {
       if (res.status === 'success') {
+        props.history.push(`/player/playlist/${res.data.id}`);
         libDispatch(libActions.createPlaylist(res.data));
       }
     });

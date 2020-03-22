@@ -10,6 +10,7 @@ const initState = {
   ctxFav: { id: '', type: '', relation: [] },
   ctxDelPlaylistId: '',
   ctxPlaylistPrivate: { id: '', status: '' },
+  ctxDelPlaylistTrackId: '',
   myPlaylists: {
     items: [],
     offset: 0,
@@ -19,6 +20,11 @@ const initState = {
   browsePlaylists: {
     opened: false,
     trackId: ''
+  },
+  notification: {
+    opened: false,
+    success: false,
+    message: ''
   }
 };
 
@@ -64,8 +70,21 @@ const actions = {
   },
   setBrowsePlaylists: (opened, trackId) => {
     return {
-      type: 'SET_BROWSE_PLAYLSITS',
+      type: 'SET_BROWSE_PLAYLISTS',
       payload: { opened, trackId }
+    };
+  },
+  removeTrackFromPlaylist: trackId => {
+    return { type: 'RM_TRACK_PLAYLIST', trackId };
+  },
+  setNotification: (opened, success = false, message = '') => {
+    return {
+      type: 'SET_NOTIFICATION',
+      payload: {
+        opened,
+        success,
+        message
+      }
     };
   }
 };
@@ -137,10 +156,22 @@ const reducer = (state, action) => {
         }
       };
     }
-    case 'SET_BROWSE_PLAYLSITS': {
+    case 'SET_BROWSE_PLAYLISTS': {
       return {
         ...state,
         browsePlaylists: action.payload
+      };
+    }
+    case 'RM_TRACK_PLAYLIST': {
+      return {
+        ...state,
+        ctxDelPlaylistTrackId: action.trackId
+      };
+    }
+    case 'SET_NOTIFICATION': {
+      return {
+        ...state,
+        notification: action.payload
       };
     }
     default:

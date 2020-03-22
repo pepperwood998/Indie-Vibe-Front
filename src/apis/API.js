@@ -103,6 +103,18 @@ export const addTrackToPlaylist = (token, playlistId, trackId) => {
   }).then(response => response.json());
 };
 
+export const removeTrackFromPlaylist = (token, playlistId, trackId) => {
+  let url = new URL(`${host}/playlists/${playlistId}/track`);
+  url.search = new URLSearchParams({ trackId });
+
+  return fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
 export const search = (token, key, type = '', offset = 0, limit = 20) => {
   let url = `${host}/search/${key}`;
   if (type) url += `/${type}s`;

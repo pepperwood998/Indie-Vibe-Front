@@ -32,7 +32,11 @@ function TrackList(props) {
     actions: streamAction,
     dispatch: streamDispatch
   } = useContext(StreamContext);
-  const { state: libState } = useContext(LibraryContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   // states
   const [data, setData] = useState({
@@ -48,7 +52,7 @@ function TrackList(props) {
 
   const [owner, setOwner] = useState({ role: {} });
 
-  // effects
+  // initial
   useEffect(() => {
     getTrackList(authState.token, id, type)
       .then(res => {
@@ -73,6 +77,7 @@ function TrackList(props) {
       });
   }, [id]);
 
+  // favorite (playlist and tracks)
   useEffectSkip(() => {
     const { ctxFav } = libState;
     if (ctxFav.type === 'playlist' || ctxFav.type === 'release') {
@@ -96,6 +101,7 @@ function TrackList(props) {
     }
   }, [libState.ctxFav]);
 
+  // delete playlist
   useEffectSkip(() => {
     if (type === 'playlist') {
       if (id === libState.ctxDelPlaylistId) {
@@ -109,6 +115,27 @@ function TrackList(props) {
     const { ctxPlaylistPrivate } = libState;
     setData({ ...data, status: ctxPlaylistPrivate.status });
   }, [libState.ctxPlaylistPrivate]);
+
+  // remove track from playlist
+  useEffectSkip(() => {
+    if (type === 'playlist') {
+      const { ctxDelPlaylistTrackId } = libState;
+      if (ctxDelPlaylistTrackId) {
+        const { tracks } = data;
+        setData({
+          ...data,
+          tracks: {
+            ...tracks,
+            items: tracks.items.filter(
+              item => item.track.id !== ctxDelPlaylistTrackId
+            ),
+            total: tracks.total - 1
+          }
+        });
+        libDispatch(libActions.removeTrackFromPlaylist(''));
+      }
+    }
+  }, [libState.ctxDelPlaylistTrackId]);
 
   const handlePaused = () => {
     streamDispatch(streamAction.togglePaused(true));
