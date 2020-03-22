@@ -17,6 +17,7 @@ function General(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
+  const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     tracks: [],
     artists: [],
@@ -27,8 +28,10 @@ function General(props) {
   });
 
   useEffect(() => {
+    setFirstRender(true);
     search(authState.token, props.match.params.key)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success') {
           setData({ ...data, ...res.data });
         }
@@ -122,7 +125,7 @@ function General(props) {
     );
   }
 
-  return render;
+  return firstRender ? '' : <div className='fadein'>{render}</div>;
 }
 
 export default General;

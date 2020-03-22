@@ -14,6 +14,7 @@ function General(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
+  const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     playlists: [],
     artists: []
@@ -22,6 +23,7 @@ function General(props) {
   useEffect(() => {
     library(authState.token, props.match.params.id)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
         }
@@ -90,14 +92,16 @@ function General(props) {
       }
     });
   } else {
-    render = (
+    render = firstRender ? (
+      ''
+    ) : (
       <span className='font-short-extra font-white font-weight-bold'>
         Library empty
       </span>
     );
   }
 
-  return render;
+  return <div className='fadein'>{render}</div>;
 }
 
 export default General;

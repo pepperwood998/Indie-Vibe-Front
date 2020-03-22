@@ -39,6 +39,7 @@ function TrackList(props) {
   } = useContext(LibraryContext);
 
   // states
+  const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     tracks: {
       items: [],
@@ -54,8 +55,10 @@ function TrackList(props) {
 
   // initial
   useEffect(() => {
+    setFirstRender(true);
     getTrackList(authState.token, id, type)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           if (type !== res.data.type) {
             window.location.href = '/player/home';
@@ -73,7 +76,7 @@ function TrackList(props) {
         }
       })
       .catch(error => {
-        // window.location.href = '/player/home';
+        window.location.href = '/player/home';
       });
   }, [id]);
 
@@ -165,8 +168,10 @@ function TrackList(props) {
       });
   };
 
-  return (
-    <div className='content-page'>
+  return firstRender ? (
+    ''
+  ) : (
+    <div className='content-page fadein'>
       <div className='mono-page track-list'>
         <div className='track-list__header'>
           <div className='avatar'>

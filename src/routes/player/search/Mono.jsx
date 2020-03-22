@@ -15,6 +15,7 @@ function Mono(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
+  const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     items: [],
     offset: 0,
@@ -25,6 +26,7 @@ function Mono(props) {
   useEffect(() => {
     search(authState.token, props.match.params.key, props.type)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
         }
@@ -123,14 +125,20 @@ function Mono(props) {
   }
 
   return (
-    <React.Fragment>
-      {collection}
-      {data.total > data.offset + data.limit ? (
-        <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
-      ) : (
+    <div className='fadein'>
+      {firstRender ? (
         ''
+      ) : (
+        <React.Fragment>
+          {collection}
+          {data.total > data.offset + data.limit ? (
+            <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
+          ) : (
+            ''
+          )}
+        </React.Fragment>
       )}
-    </React.Fragment>
+    </div>
   );
 }
 
