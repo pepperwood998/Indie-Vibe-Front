@@ -307,16 +307,18 @@ function CellAction(props) {
     }
   };
 
+  let isCurrent =
+    id === current &&
+    playFromType === streamState.playFromType &&
+    playFromId === streamState.playFromId;
   let classesAction = 'action';
-  if (id === current && playFromId === streamState.playFromId) {
-    classesAction += ' active';
-  }
+  classesAction += isCurrent ? ' active' : '';
   return (
     <div className='collection-table__cell collection-table__cell--action'>
       <span>{serial}</span>
       <div className={classesAction}>
         <ButtonIcon>
-          {id === current && !streamState.paused ? (
+          {isCurrent && !streamState.paused ? (
             <PauseIcon onClick={handlePause} />
           ) : (
             <PlayIcon onClick={handlePlay} />

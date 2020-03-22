@@ -43,7 +43,7 @@ function CardProfile(props) {
 
   let ctxClasses = 'action profile';
   if (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
-    ctxClasses += ' ctx-menu';
+    ctxClasses += ' active';
   return (
     <div className='card-main'>
       <div className='card-main__cover-wrapper profile'>

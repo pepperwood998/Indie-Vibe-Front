@@ -137,11 +137,14 @@ function TrackList(props) {
     }
   }, [libState.ctxDelPlaylistTrackId]);
 
+  let isCurrentList =
+    type === streamState.playFromType && id === streamState.playFromId;
+
   const handlePaused = () => {
     streamDispatch(streamAction.togglePaused(true));
   };
   const handlePlay = () => {
-    if (id === streamState.playFromId) {
+    if (isCurrentList) {
       streamDispatch(streamAction.togglePaused(false));
     } else {
       streamCollection(authState.token, type, id).then(res => {
@@ -208,7 +211,7 @@ function TrackList(props) {
         </div>
         <div className='track-list__action'>
           <div className='action'>
-            {id === streamState.playFromId && !streamState.paused ? (
+            {isCurrentList && !streamState.paused ? (
               <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
             ) : (
               <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>

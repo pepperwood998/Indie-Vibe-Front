@@ -39,9 +39,6 @@ function StreamContextProvider(props) {
 
   // init stream states
   useEffect(() => {
-    stream.api = (id, bitrate) => {
-      return getStreamInfo(authState.token, id, bitrate);
-    };
     stream.onInfo = info => {
       dispatch(actions.setInfo(info));
     };
@@ -49,6 +46,12 @@ function StreamContextProvider(props) {
       dispatch(actions.onTogglePaused(paused));
     };
   }, []);
+
+  useEffect(() => {
+    stream.api = (id, bitrate) => {
+      return getStreamInfo(authState.token, id, bitrate);
+    };
+  }, [authState.token]);
 
   //
   useEffect(() => {

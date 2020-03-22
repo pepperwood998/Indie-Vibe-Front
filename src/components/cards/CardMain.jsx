@@ -30,6 +30,10 @@ function CardMain(props) {
     dispatch: libDispatch
   } = useContext(LibraryContext);
 
+  let isCurrentList =
+    content.type === streamState.playFromType &&
+    content.id === streamState.playFromId;
+
   const handleToggleFavorite = action => {
     performActionFavorite(
       authState.token,
@@ -71,7 +75,7 @@ function CardMain(props) {
   };
 
   const handlePlay = () => {
-    if (content.id === streamState.playFromId) {
+    if (isCurrentList) {
       streamDispatch(streamAction.togglePaused(false));
     } else {
       streamCollection(authState.token, content.type, content.id).then(res => {
@@ -85,8 +89,11 @@ function CardMain(props) {
   };
 
   let ctxClasses = 'action playlist-release';
-  if (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
-    ctxClasses += ' ctx-menu';
+  if (
+    isCurrentList ||
+    (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
+  )
+    ctxClasses += ' active';
   return (
     <div className='card-main'>
       <div className='card-main__cover-wrapper'>
@@ -99,7 +106,7 @@ function CardMain(props) {
         </Link>
         <div className={ctxClasses}>
           <ButtonIcon>
-            {content.id === streamState.playFromId && !streamState.paused ? (
+            {isCurrentList && !streamState.paused ? (
               <PauseIcon onClick={handlePaused} />
             ) : (
               <PlayIcon onClick={handlePlay} />
