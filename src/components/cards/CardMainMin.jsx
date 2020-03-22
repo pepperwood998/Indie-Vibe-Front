@@ -27,6 +27,7 @@ function CardMainMin(props) {
             libActions.setNotification(true, true, 'Track added to playlist')
           );
           libDispatch(libActions.setBrowsePlaylists(false, ''));
+          libDispatch(libActions.addTrackToPlaylist(content.id));
         } else {
           throw 'Error';
         }

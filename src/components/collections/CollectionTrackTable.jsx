@@ -308,7 +308,7 @@ function CellAction(props) {
   };
 
   let classesAction = 'action';
-  if (id === current) {
+  if (id === current && playFromId === streamState.playFromId) {
     classesAction += ' active';
   }
   return (

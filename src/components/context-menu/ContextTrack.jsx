@@ -22,13 +22,15 @@ function ContextTrack(props) {
       .then(res => {
         if (res.status === 'success') {
           libDispatch(
+            libActions.removeTrackFromPlaylist(content.playlistId, content.id)
+          );
+          libDispatch(
             libActions.setNotification(
               true,
               true,
               'Track removed from playlist'
             )
           );
-          libDispatch(libActions.removeTrackFromPlaylist(content.id));
         } else {
           throw 'Error';
         }

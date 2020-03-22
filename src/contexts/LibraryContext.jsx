@@ -74,8 +74,11 @@ const actions = {
       payload: { opened, trackId }
     };
   },
-  removeTrackFromPlaylist: trackId => {
-    return { type: 'RM_TRACK_PLAYLIST', trackId };
+  addTrackToPlaylist: playlistId => {
+    return { type: 'ADD_TRACK_PLAYLIST', playlistId };
+  },
+  removeTrackFromPlaylist: (playlistId, trackId) => {
+    return { type: 'RM_TRACK_PLAYLIST', payload: { playlistId, trackId } };
   },
   setNotification: (opened, success = false, message = '') => {
     return {
@@ -162,10 +165,38 @@ const reducer = (state, action) => {
         browsePlaylists: action.payload
       };
     }
-    case 'RM_TRACK_PLAYLIST': {
+    case 'ADD_TRACK_PLAYLIST': {
+      const playlists = [...state.myPlaylists.items];
+      playlists.some(item => {
+        if (action.playlistId === item.id) {
+          item.tracksCount += 1;
+          return true;
+        }
+      });
       return {
         ...state,
-        ctxDelPlaylistTrackId: action.trackId
+        myPlaylists: {
+          ...state.myPlaylists,
+          items: playlists
+        }
+      };
+    }
+    case 'RM_TRACK_PLAYLIST': {
+      const { payload } = action;
+      const playlists = [...state.myPlaylists.items];
+      playlists.some(item => {
+        if (payload.playlistId === item.id) {
+          item.tracksCount -= 1;
+          return true;
+        }
+      });
+      return {
+        ...state,
+        ctxDelPlaylistTrackId: action.payload.trackId,
+        myPlaylists: {
+          ...state.myPlaylists,
+          items: playlists
+        }
       };
     }
     case 'SET_NOTIFICATION': {
