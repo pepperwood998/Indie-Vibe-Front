@@ -97,6 +97,7 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
+                  playFromType={type}
                   playFromId={item.release ? item.release.id : ''}
                 />
               );
@@ -209,7 +210,8 @@ function RowRelease(props) {
 function RowSearch(props) {
   const { item, serial } = props;
 
-  const playFromType = props.type === 'favorite' ? props.type : 'release';
+  const playFromType =
+    props.playFromType === 'favorite' ? 'favorite' : 'release';
 
   return (
     <div className='collection-table__row collection-table__row--data'>

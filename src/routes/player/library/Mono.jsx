@@ -91,7 +91,7 @@ function Mono(props) {
 
   let collection = '';
 
-  if (type === 'favorite') {
+  if (type === 'track') {
     collection = (
       <CollectionTracks
         header={

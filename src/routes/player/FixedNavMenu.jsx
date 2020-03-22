@@ -100,7 +100,7 @@ function NavMenu() {
           Releases
         </Link>
         <Link
-          to={`/player/library/${authState.id}/favorites`}
+          to={`/player/library/${authState.id}/tracks`}
           className='link-bright-gray font-short-regular font-gray-light'
         >
           Favorite songs

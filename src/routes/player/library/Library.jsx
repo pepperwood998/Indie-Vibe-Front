@@ -20,7 +20,7 @@ function Library(props) {
             label: 'General'
           },
           {
-            href: `/player/library/${id}/favorites`,
+            href: `/player/library/${id}/tracks`,
             label: 'Favorite songs'
           },
           {
@@ -49,7 +49,7 @@ function Library(props) {
   );
 
   const tabs = [
-    'favorites',
+    'tracks',
     'playlists',
     'releases',
     'artists',

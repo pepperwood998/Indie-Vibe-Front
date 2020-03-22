@@ -132,7 +132,7 @@ export const search = (token, key, type = '', offset = 0, limit = 20) => {
 
 export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   let url = `${host}/library/${userId}`;
-  if (type) url += `/${type}s`;
+  if (type) url += `/${type}s/favorite`;
 
   url = new URL(url);
   url.search = new URLSearchParams({ offset, limit }).toString();
@@ -157,7 +157,7 @@ export const profile = (token, userId) => {
 };
 
 export const getPlaylistsMe = (token, offset = 0, limit = 20) => {
-  let url = new URL(`${host}/library/playlists`);
+  let url = new URL(`${host}/library/playlists/own`);
   url.search = new URLSearchParams({ offset, limit }).toString();
 
   return fetch(url, {

@@ -73,7 +73,7 @@ function TrackList(props) {
         }
       })
       .catch(error => {
-        window.location.href = '/player/home';
+        // window.location.href = '/player/home';
       });
   }, [id]);
 
