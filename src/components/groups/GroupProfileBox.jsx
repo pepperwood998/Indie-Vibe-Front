@@ -14,13 +14,14 @@ function GroupProfileBox(props) {
   const [data, setData] = useState({});
 
   useEffect(() => {
+    setFirstRender(true);
     profile(authState.token, props.id).then(res => {
       setFirstRender(false);
       if (res.status === 'success' && res.data) {
         setData({ ...data, ...res.data });
       }
     });
-  }, []);
+  }, [props.id]);
 
   const handleToggleFavorite = action => {
     performActionFavorite(
@@ -39,11 +40,11 @@ function GroupProfileBox(props) {
   };
 
   return (
-    <div className='profile-header fadein'>
+    <div className='profile-header-wrapper'>
       {firstRender ? (
         ''
       ) : (
-        <React.Fragment>
+        <div className='profile-header fadein'>
           <div className='profile-header__avatar'>
             <img src={data.thumbnail ? data.thumbnail : AvatarPlaceholder} />
           </div>
@@ -90,7 +91,7 @@ function GroupProfileBox(props) {
               )}
             </div>
           </div>
-        </React.Fragment>
+        </div>
       )}
     </div>
   );

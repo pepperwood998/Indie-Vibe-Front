@@ -1,25 +1,29 @@
-import React, { useState, useEffect, useContext } from 'react';
-
-import { capitalize, useEffectSkip } from '../../../utils/Common';
-import { NavLinkColor } from '../../../components/links';
-import { CollectionMain } from '../../../components/collections';
-import { AuthContext, LibraryContext } from '../../../contexts';
+import React, { useContext, useEffect, useState } from 'react';
 import { library } from '../../../apis/API';
-
 import { ArrowRight } from '../../../assets/svgs';
+import { CollectionMain } from '../../../components/collections';
+import { NavLinkColor } from '../../../components/links';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { capitalize, useEffectSkip } from '../../../utils/Common';
 
 function General(props) {
-  const { id: userId } = props.match.params;
-
+  // contexts
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
+  // states
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     playlists: [],
     artists: []
   });
 
+  // props
+  const { id: userId } = props.match.params;
+  let exist = Object.keys(data).find(key => data[key].length > 0);
+  let render = '';
+
+  // effect: init
   useEffect(() => {
     library(authState.token, props.match.params.id)
       .then(res => {
@@ -33,6 +37,7 @@ function General(props) {
       });
   }, []);
 
+  // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
     let target = [...data[`${ctxFav.type}s`]];
@@ -45,6 +50,7 @@ function General(props) {
     setData({ ...data, [`${ctxFav.type}s`]: target });
   }, [libState.ctxFav]);
 
+  // effect-skip: delete playlist
   useEffectSkip(() => {
     let target = [...data.playlists];
     setData({
@@ -53,7 +59,7 @@ function General(props) {
     });
   }, [libState.ctxDelPlaylistId]);
 
-  // playlist privacy
+  // effect-skip: playlist privacy
   useEffectSkip(() => {
     const { ctxPlaylistPrivate } = libState;
     let playlists = [...data.playlists];
@@ -66,8 +72,6 @@ function General(props) {
     setData({ ...data, playlists });
   }, [libState.ctxPlaylistPrivate]);
 
-  let exist = Object.keys(data).find(key => data[key].length > 0);
-  let render = '';
   if (exist) {
     render = Object.keys(data).map((key, index) => {
       if (data[key].length > 0) {
@@ -92,16 +96,14 @@ function General(props) {
       }
     });
   } else {
-    render = firstRender ? (
-      ''
-    ) : (
+    render = (
       <span className='font-short-extra font-white font-weight-bold'>
         Library empty
       </span>
     );
   }
 
-  return <div className='fadein'>{render}</div>;
+  return firstRender ? '' : <div className='fadein'>{render}</div>;
 }
 
 export default General;

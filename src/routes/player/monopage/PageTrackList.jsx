@@ -21,10 +21,6 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { useEffectSkip, getDatePart } from '../../../utils/Common';
 
 function TrackList(props) {
-  // props
-  const { type } = props;
-  const id = props.match.params.id;
-
   // contexts
   const { state: authState } = useContext(AuthContext);
   const {
@@ -50,10 +46,15 @@ function TrackList(props) {
     relation: [],
     followersCount: 0
   });
-
   const [owner, setOwner] = useState({ role: {} });
 
-  // initial
+  // props
+  const { type } = props;
+  const id = props.match.params.id;
+  let isCurrentList =
+    type === streamState.playFromType && id === streamState.playFromId;
+
+  // effect: init
   useEffect(() => {
     setFirstRender(true);
     getTrackList(authState.token, id, type)
@@ -80,7 +81,7 @@ function TrackList(props) {
       });
   }, [id]);
 
-  // favorite (playlist and tracks)
+  // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
     if (ctxFav.type === 'playlist' || ctxFav.type === 'release') {
@@ -104,7 +105,7 @@ function TrackList(props) {
     }
   }, [libState.ctxFav]);
 
-  // delete playlist
+  // effect-skip: delete playlist
   useEffectSkip(() => {
     if (type === 'playlist') {
       if (id === libState.ctxDelPlaylistId) {
@@ -113,13 +114,13 @@ function TrackList(props) {
     }
   }, [libState.ctxDelPlaylistId]);
 
-  // playlist privacy
+  // effect-skip: playlist privacy
   useEffectSkip(() => {
     const { ctxPlaylistPrivate } = libState;
     setData({ ...data, status: ctxPlaylistPrivate.status });
   }, [libState.ctxPlaylistPrivate]);
 
-  // remove track from playlist
+  // effect-skip: remove track playlist
   useEffectSkip(() => {
     if (type === 'playlist') {
       const { ctxDelPlaylistTrackId } = libState;
@@ -139,9 +140,6 @@ function TrackList(props) {
       }
     }
   }, [libState.ctxDelPlaylistTrackId]);
-
-  let isCurrentList =
-    type === streamState.playFromType && id === streamState.playFromId;
 
   const handlePaused = () => {
     streamDispatch(streamAction.togglePaused(true));

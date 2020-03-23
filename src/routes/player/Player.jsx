@@ -1,23 +1,21 @@
-import React, { useContext, useRef, useEffect } from 'react';
-
-import Top from './FixedTop';
+import React, { useContext, useEffect, useRef } from 'react';
+import { getPlaylistsMeOwn } from '../../apis/API';
+import { CloseIcon } from '../../assets/svgs';
+import { ButtonLoadMore } from '../../components/buttons';
+import { CardError, CardSuccess } from '../../components/cards';
+import { CollectionMain } from '../../components/collections';
+import { ContextSwitch } from '../../components/context-menu';
+import { ArtistRoute, UserRoute } from '../../components/custom-routes';
+import { AuthContext, LibraryContext } from '../../contexts';
+import './css/player.scss';
+import Bottom from './FixedBottom';
 import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
-import Bottom from './FixedBottom';
-import { UserRoute, ArtistRoute } from '../../components/custom-routes';
-import { Browse, Home, Account, Artist, TrackList } from './monopage';
-import { Workspace } from './workspace';
-import { Search } from './search';
+import Top from './FixedTop';
 import { Library } from './library';
-import { LibraryContext, AuthContext } from '../../contexts';
-import { ContextSwitch } from '../../components/context-menu';
-import { CollectionMain } from '../../components/collections';
-import { CloseIcon } from '../../assets/svgs';
-import { CardSuccess, CardError } from '../../components/cards';
-import { getPlaylistsMe } from '../../apis/API';
-import { ButtonLoadMore } from '../../components/buttons';
-
-import './css/player.scss';
+import { Account, Artist, Browse, Home, TrackList } from './monopage';
+import { Search } from './search';
+import { Workspace } from './workspace';
 
 function Player(props) {
   const {
@@ -99,7 +97,7 @@ function BrowsePlaylist() {
   );
 
   const handleLoadMore = () => {
-    getPlaylistsMe(
+    getPlaylistsMeOwn(
       authState.token,
       myPlaylists.offset + myPlaylists.limit
     ).then(res => {

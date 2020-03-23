@@ -1,12 +1,10 @@
-import React, { useContext, useState, useEffect } from 'react';
-
+import React, { useContext, useEffect, useState } from 'react';
+import { getPlaylistSimple, getPlaylistsMeOwn } from '../../apis/API';
+import { AddPlaylistIcon } from '../../assets/svgs';
 import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
-import { AuthContext, LibraryContext } from '../../contexts';
 import { GroupPlaylistDialog } from '../../components/groups';
 import { LinkWhiteColor } from '../../components/links';
-import { getPlaylistsMe, getPlaylistSimple } from '../../apis/API';
-
-import { AddPlaylistIcon } from '../../assets/svgs';
+import { AuthContext, LibraryContext } from '../../contexts';
 
 function QuickAccess(props) {
   const { state: authState } = useContext(AuthContext);
@@ -20,7 +18,7 @@ function QuickAccess(props) {
   const [dialogOpened, setDialogOpened] = useState(false);
 
   useEffect(() => {
-    getPlaylistsMe(authState.token).then(res => {
+    getPlaylistsMeOwn(authState.token).then(res => {
       if (res.status === 'success' && res.data) {
         libDispatch(libActions.setMyPlaylists(res.data));
       }
@@ -47,7 +45,7 @@ function QuickAccess(props) {
   };
 
   const handleLoadMore = () => {
-    getPlaylistsMe(authState.token, playlists.offset + playlists.limit).then(
+    getPlaylistsMeOwn(authState.token, playlists.offset + playlists.limit).then(
       res => {
         if (res.status === 'success' && res.data.items) {
           libDispatch(libActions.loadMorePlaylists(res.data));

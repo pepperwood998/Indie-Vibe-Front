@@ -6,6 +6,7 @@ import { TemplateNavPage } from '../template';
 import Mono from './Mono';
 import General from './General';
 import { GroupProfileBox } from '../../../components/groups';
+import LibraryPlaylists from './LibraryPlaylists';
 
 function Library(props) {
   const { id } = props.match.params;
@@ -48,18 +49,16 @@ function Library(props) {
     </React.Fragment>
   );
 
-  const tabs = [
-    'tracks',
-    'playlists',
-    'releases',
-    'artists',
-    'followings',
-    'followers'
-  ];
+  const tabs = ['tracks', 'releases', 'artists', 'followings', 'followers'];
 
   const body = (
     <React.Fragment>
       <UserRoute exact path='/player/library/:id' component={General} />
+      <UserRoute
+        exact
+        path='/player/library/:id/playlists'
+        component={LibraryPlaylists}
+      />
       {tabs.map((value, index) => (
         <UserRoute
           exact

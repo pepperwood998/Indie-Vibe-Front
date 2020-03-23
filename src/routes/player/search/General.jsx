@@ -12,11 +12,11 @@ import { search } from '../../../apis/API';
 import { ArrowRight } from '../../../assets/svgs';
 
 function General(props) {
-  const { key: searchKey } = props.match.params;
-
+  // contexts
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
+  // states
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     tracks: [],
@@ -27,6 +27,12 @@ function General(props) {
     genres: []
   });
 
+  // props
+  const { key: searchKey } = props.match.params;
+  let exist = Object.keys(data).find(key => data[key].length > 0);
+  let render = '';
+
+  // effect: init
   useEffect(() => {
     setFirstRender(true);
     search(authState.token, props.match.params.key)
@@ -41,6 +47,7 @@ function General(props) {
       });
   }, [searchKey]);
 
+  // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
     let target = [...data[`${ctxFav.type}s`]];
@@ -53,6 +60,7 @@ function General(props) {
     setData({ ...data, [`${ctxFav.type}s`]: target });
   }, [libState.ctxFav]);
 
+  // effect-skip: delete playlist
   useEffectSkip(() => {
     let target = [...data.playlists];
     setData({
@@ -61,7 +69,7 @@ function General(props) {
     });
   }, [libState.ctxDelPlaylistId]);
 
-  // playlist privacy
+  // effect-skip: playlist privacy
   useEffectSkip(() => {
     const { ctxPlaylistPrivate } = libState;
     let playlists = [...data.playlists];
@@ -74,8 +82,6 @@ function General(props) {
     setData({ ...data, playlists });
   }, [libState.ctxPlaylistPrivate]);
 
-  let exist = Object.keys(data).find(key => data[key].length > 0);
-  let render = '';
   if (exist) {
     render = Object.keys(data).map((key, index) => {
       if (data[key].length > 0) {

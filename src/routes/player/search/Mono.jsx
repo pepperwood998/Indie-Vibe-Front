@@ -10,11 +10,11 @@ import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
 
 function Mono(props) {
-  const { type } = props;
-
+  // contexts
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
+  // states
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     items: [],
@@ -23,6 +23,11 @@ function Mono(props) {
     total: 0
   });
 
+  // props
+  const { type } = props;
+  let collection = '';
+
+  // effect: init
   useEffect(() => {
     search(authState.token, props.match.params.key, props.type)
       .then(res => {
@@ -36,6 +41,7 @@ function Mono(props) {
       });
   }, []);
 
+  // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
     let items = [...data.items];
@@ -48,7 +54,7 @@ function Mono(props) {
     setData({ ...data, items });
   }, [libState.ctxFav]);
 
-  // playlists
+  // effect-skip: delete playlist
   useEffectSkip(() => {
     if (type === 'playlist') {
       setData({
@@ -59,6 +65,7 @@ function Mono(props) {
     }
   }, [libState.ctxDelPlaylistId]);
 
+  // effect-skip: playlist privacy
   useEffectSkip(() => {
     if (type === 'playlist') {
       const { ctxPlaylistPrivate } = libState;
@@ -95,8 +102,6 @@ function Mono(props) {
         console.error(err);
       });
   };
-
-  let collection = '';
 
   if (type === 'track') {
     collection = (
