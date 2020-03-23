@@ -15,12 +15,18 @@ function GroupProfileBox(props) {
 
   useEffect(() => {
     setFirstRender(true);
-    profile(authState.token, props.id).then(res => {
-      setFirstRender(false);
-      if (res.status === 'success' && res.data) {
-        setData({ ...data, ...res.data });
-      }
-    });
+    profile(authState.token, props.id)
+      .then(res => {
+        setFirstRender(false);
+        if (res.status === 'success' && res.data) {
+          setData({ ...data, ...res.data });
+        } else {
+          throw 'Error';
+        }
+      })
+      .catch(err => {
+        window.location.href = `/player/library/${authState.id}`;
+      });
   }, [props.id]);
 
   const handleToggleFavorite = action => {

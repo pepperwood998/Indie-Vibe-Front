@@ -131,34 +131,42 @@ function LibraryPlaylists(props) {
         </span>
       ) : (
         <React.Fragment>
-          <div className='fadein'>
-            <CollectionMain
-              header='Created playlists'
-              items={own.items}
-              type='playlist'
-            />
-            {own.total > own.offset + own.limit ? (
-              <ButtonLoadMore onClick={handleLoadMoreOwn}>
-                Load more
-              </ButtonLoadMore>
-            ) : (
-              ''
-            )}
-          </div>
-          <div className='fadein'>
-            <CollectionMain
-              header='Favorite playlists'
-              items={fav.items}
-              type='playlist'
-            />
-            {own.total > own.offset + own.limit ? (
-              <ButtonLoadMore onClick={handleLoadMoreFav}>
-                Load more
-              </ButtonLoadMore>
-            ) : (
-              ''
-            )}
-          </div>
+          {own.items.length <= 0 ? (
+            ''
+          ) : (
+            <div className='fadein'>
+              <CollectionMain
+                header='Created playlists'
+                items={own.items}
+                type='playlist'
+              />
+              {own.total > own.offset + own.limit ? (
+                <ButtonLoadMore onClick={handleLoadMoreOwn}>
+                  Load more
+                </ButtonLoadMore>
+              ) : (
+                ''
+              )}
+            </div>
+          )}
+          {fav.items.length <= 0 ? (
+            ''
+          ) : (
+            <div className='fadein'>
+              <CollectionMain
+                header='Favorite playlists'
+                items={fav.items}
+                type='playlist'
+              />
+              {fav.total > fav.offset + fav.limit ? (
+                <ButtonLoadMore onClick={handleLoadMoreFav}>
+                  Load more
+                </ButtonLoadMore>
+              ) : (
+                ''
+              )}
+            </div>
+          )}
         </React.Fragment>
       )}
     </div>

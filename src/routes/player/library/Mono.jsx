@@ -5,7 +5,7 @@ import {
   CollectionMain
 } from '../../../components/collections';
 import { capitalize, useEffectSkip } from '../../../utils/Common';
-import { library, getPlaylists } from '../../../apis/API';
+import { library } from '../../../apis/API';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
 
@@ -29,7 +29,7 @@ function Mono(props) {
 
   // effect: init
   useEffect(() => {
-    getLibraryTarget(authState, userId, type)
+    library(authState.token, userId, type)
       .then(res => {
         setFirstRender(false);
         if (res.status === 'success' && res.data) {
@@ -55,7 +55,7 @@ function Mono(props) {
   }, [libState.ctxFav]);
 
   const handleLoadMore = () => {
-    getLibraryTarget(authState, userId, type, data.offset + data.limit)
+    library(authState.token, userId, type, data.offset + data.limit)
       .then(res => {
         if (res.status === 'success' && res.data.items) {
           setData({
@@ -108,13 +108,5 @@ function Mono(props) {
     </div>
   );
 }
-
-const getLibraryTarget = (authState, userId, type, offset, limit) => {
-  if (type === 'playlist' && userId === authState.id) {
-    return getPlaylists(authState.token, offset, limit);
-  }
-
-  return library(authState.token, userId, type, offset, limit);
-};
 
 export default Mono;

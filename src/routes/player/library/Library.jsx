@@ -1,12 +1,11 @@
 import React from 'react';
-
-import { NavigationTab } from '../../../components/navigation';
 import { UserRoute } from '../../../components/custom-routes';
-import { TemplateNavPage } from '../template';
-import Mono from './Mono';
-import General from './General';
 import { GroupProfileBox } from '../../../components/groups';
+import { NavigationTab } from '../../../components/navigation';
+import { TemplateNavPage } from '../template';
+import General from './General';
 import LibraryPlaylists from './LibraryPlaylists';
+import Mono from './Mono';
 
 function Library(props) {
   const { id } = props.match.params;
