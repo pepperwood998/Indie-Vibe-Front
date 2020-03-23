@@ -145,8 +145,13 @@ export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   }).then(response => response.json());
 };
 
-export const profile = (token, userId) => {
-  let url = `${host}/library/${userId}/profile`;
+export const profile = (token, userId, type='user') => {
+  let url = '';
+  if (type === 'artist') {
+    url = `${host}/artists/${userId}`;
+  } else {
+    url = `${host}/library/${userId}/profile`;
+  }
 
   return fetch(url, {
     method: 'GET',
@@ -156,8 +161,29 @@ export const profile = (token, userId) => {
   }).then(response => response.json());
 };
 
-export const getPlaylistsMe = (token, offset = 0, limit = 20) => {
-  let url = new URL(`${host}/library/playlists/own`);
+export const getPlaylistsMeOwn = (token, offset = 0, limit = 20) => {
+  return getPlaylists(token, '', '', 'own', offset, limit);
+};
+
+export const getPlaylistsMeFav = (token, offset = 0, limit = 20) => {
+  return getPlaylists(token, '', '', 'favorite', offset, limit);
+};
+
+export const getPlaylists = (
+  token,
+  fromId,
+  targetId,
+  relation = 'own',
+  offset = 0,
+  limit = 20
+) => {
+  let urlStr = '';
+  if (fromId === targetId) {
+    urlStr = `${host}/library/playlists/${relation}`;
+  } else {
+    urlStr = `${host}/library/${targetId}/playlists/${relation}`;
+  }
+  let url = new URL(urlStr);
   url.search = new URLSearchParams({ offset, limit }).toString();
 
   return fetch(url, {
@@ -179,6 +205,24 @@ export const getPlaylistSimple = (token, playlistId) => {
 
 export const getTrackList = (token, id, type, offset = 0, limit = 20) => {
   let url = new URL(`${host}/${type}s/full/${id}`);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getReleasesByType = (
+  token,
+  artistId,
+  type = 're-album',
+  offset = 0,
+  limit = 20
+) => {
+  let url = new URL(`${host}/artists/${artistId}/releases/${type}`);
   url.search = new URLSearchParams({ offset, limit }).toString();
 
   return fetch(url, {
