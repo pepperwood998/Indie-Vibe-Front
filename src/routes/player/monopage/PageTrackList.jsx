@@ -59,14 +59,13 @@ function TrackList(props) {
     setFirstRender(true);
     getTrackList(authState.token, id, type)
       .then(res => {
-        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           if (type !== res.data.type) {
-            window.location.href = '/player/home';
-            return;
+            throw 'Error';
           }
 
           setData({ ...data, ...res.data });
+          setFirstRender(false);
           if (type === 'playlist') {
             setOwner({ ...owner, ...res.data.owner });
           } else {

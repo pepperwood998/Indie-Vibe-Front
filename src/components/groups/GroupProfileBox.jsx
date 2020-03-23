@@ -1,14 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react';
 
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
-import { ButtonMain, ButtonIcon } from '../buttons';
+import { ButtonMain, ButtonIcon, ButtonMore } from '../buttons';
 import { FavoriteIcon, UnFavoriteIcon, MoreIcon } from '../../assets/svgs';
-import { AuthContext } from '../../contexts';
+import { AuthContext, LibraryContext } from '../../contexts';
 import { profile, performActionFavorite } from '../../apis/API';
-import { formatNumber } from '../../utils/Common';
+import { formatNumber, useEffectSkip } from '../../utils/Common';
 
 function GroupProfileBox(props) {
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
 
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({});
@@ -25,7 +26,7 @@ function GroupProfileBox(props) {
         }
       })
       .catch(err => {
-        window.location.href = `/player/library/${authState.id}`;
+        window.location.href = '/player/home';
       });
   }, [props.id]);
 
@@ -44,6 +45,12 @@ function GroupProfileBox(props) {
         console.error(error);
       });
   };
+
+  // effect-skip: favorite
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
+    setData({ ...data, relation: [...ctxFav.relation] });
+  }, [libState.ctxFav]);
 
   return (
     <div className='profile-header-wrapper'>
@@ -88,9 +95,13 @@ function GroupProfileBox(props) {
                       />
                     </ButtonIcon>
                   )}
-                  <ButtonIcon>
-                    <MoreIcon />
-                  </ButtonIcon>
+                  <ButtonMore
+                    ctxData={{
+                      type: data.role.id === 'r-artist' ? 'artist' : 'profile',
+                      id: data.id,
+                      relation: data.relation
+                    }}
+                  />
                 </React.Fragment>
               ) : (
                 ''

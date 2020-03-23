@@ -27,27 +27,30 @@ function General(props) {
   useEffect(() => {
     library(authState.token, props.match.params.id)
       .then(res => {
-        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
+          setFirstRender(false);
         }
       })
       .catch(err => {
         console.error(err);
       });
-  }, []);
+  }, [userId]);
 
   // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
-    let target = [...data[`${ctxFav.type}s`]];
-    target.some(item => {
-      if (ctxFav.id === item.id) {
-        item.relation = [...ctxFav.relation];
-        return true;
-      }
-    });
-    setData({ ...data, [`${ctxFav.type}s`]: target });
+    const items = data[`${ctxFav.type}s`];
+    if (items) {
+      let target = [...items];
+      target.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
+      setData({ ...data, [`${ctxFav.type}s`]: target });
+    }
   }, [libState.ctxFav]);
 
   // effect-skip: delete playlist

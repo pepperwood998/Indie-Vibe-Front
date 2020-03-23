@@ -24,22 +24,23 @@ function Mono(props) {
   });
 
   // props
+  const { key: searchKey } = props.match.params;
   const { type } = props;
   let collection = '';
 
   // effect: init
   useEffect(() => {
-    search(authState.token, props.match.params.key, props.type)
+    search(authState.token, searchKey, props.type)
       .then(res => {
-        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
+          setFirstRender(false);
         }
       })
       .catch(err => {
         console.error(err);
       });
-  }, []);
+  }, [searchKey]);
 
   // effect-skip: favorite
   useEffectSkip(() => {
@@ -129,19 +130,15 @@ function Mono(props) {
     );
   }
 
-  return (
+  return firstRender ? (
+    ''
+  ) : (
     <div className='fadein'>
-      {firstRender ? (
-        ''
+      {collection}
+      {data.total > data.offset + data.limit ? (
+        <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
       ) : (
-        <React.Fragment>
-          {collection}
-          {data.total > data.offset + data.limit ? (
-            <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
-          ) : (
-            ''
-          )}
-        </React.Fragment>
+        ''
       )}
     </div>
   );

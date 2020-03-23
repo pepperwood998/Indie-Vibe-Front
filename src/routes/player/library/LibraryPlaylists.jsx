@@ -19,16 +19,16 @@ function LibraryPlaylists(props) {
   const [own, setOwn] = useState({ ...model });
   const [fav, setFav] = useState({ ...model });
 
-  const { match } = props;
+  const { id: targetId } = props.match.params;
 
   // effect: init
   useEffect(() => {
     // owned playlists
-    getPlaylists(authState.token, authState.id, match.params.id)
+    getPlaylists(authState.token, authState.id, targetId)
       .then(res => {
-        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setOwn({ ...own, ...res.data });
+          setFirstRender(false);
         }
       })
       .catch(err => {
@@ -36,17 +36,17 @@ function LibraryPlaylists(props) {
       });
 
     // favorite playlists
-    getPlaylists(authState.token, authState.id, match.params.id, 'favorite')
+    getPlaylists(authState.token, authState.id, targetId, 'favorite')
       .then(res => {
-        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setFav({ ...fav, ...res.data });
+          setFirstRender(false);
         }
       })
       .catch(err => {
         console.error(err);
       });
-  }, []);
+  }, [targetId]);
 
   // effect-skip: favorite
   useEffectSkip(() => {
@@ -86,7 +86,7 @@ function LibraryPlaylists(props) {
 
   // handlers
   const handleLoadMoreOwn = () => {
-    getPlaylists(authState.token, authState.id, match.params.id)
+    getPlaylists(authState.token, authState.id, targetId)
       .then(res => {
         if (res.status === 'success' && res.data) {
           setOwn({
@@ -104,7 +104,7 @@ function LibraryPlaylists(props) {
   };
 
   const handleLoadMoreFav = () => {
-    getPlaylists(authState.token, authState.id, match.params.id, 'favorite')
+    getPlaylists(authState.token, authState.id, targetId, 'favorite')
       .then(res => {
         if (res.status === 'success' && res.data) {
           setFav({
