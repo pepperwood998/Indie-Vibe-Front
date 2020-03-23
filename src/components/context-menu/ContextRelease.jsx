@@ -59,7 +59,7 @@ function Other(props) {
       >
         <LinkWhiteColor
           nav={true}
-          href={`/player/artist/${content.id}`}
+          href={`/player/artist/${content.artistId}`}
         >
           Discover Artist
         </LinkWhiteColor>

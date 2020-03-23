@@ -130,7 +130,7 @@ function RowPlaylist(props) {
         title={item.title}
         fromType='playlist'
         releaseId={item.release.id}
-        artistId={item.release.artist.id}
+        artistId={item.release.artist ? item.release.artist.id : ''}
         index={serial}
         relation={item.relation}
         playlistId={props.playFromId}
@@ -232,7 +232,7 @@ function RowSearch(props) {
         title={item.title}
         fromType='release'
         releaseId={item.release.id}
-        artistId={item.release.artist.id}
+        artistId={item.release.artist ? item.release.artist.id : ''}
         index={serial}
         relation={item.relation}
         collectionKey='track'
