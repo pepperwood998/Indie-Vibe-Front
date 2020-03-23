@@ -16,14 +16,18 @@ function GroupProfileBox(props) {
 
   let wrapperClasses =
     'profile-header-wrapper' + (props.collapsed ? ' collapsed' : '');
+  let handleProfile = props.handleProfile
+    ? props.handleProfile
+    : () => undefined;
 
   useEffect(() => {
     setFirstRender(true);
-    profile(authState.token, props.id)
+    profile(authState.token, props.id, props.type)
       .then(res => {
         setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
+          handleProfile(res.data);
         } else {
           throw 'Error';
         }

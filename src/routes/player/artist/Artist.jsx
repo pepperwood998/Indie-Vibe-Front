@@ -10,12 +10,24 @@ function Artist(props) {
   const { id } = props.match.params;
 
   const [collapsed, setCollapsed] = useState(false);
+  const [artist, setArtist] = useState({});
 
-  const handleScrollOver = (over) => {
+  const handleScrollOver = over => {
     setCollapsed(over);
   };
 
-  const header = <GroupProfileBox id={id} collapsed={collapsed} />;
+  const handleProfile = artist => {
+    setArtist(artist);
+  };
+
+  const header = (
+    <GroupProfileBox
+      id={id}
+      collapsed={collapsed}
+      type='artist'
+      handleProfile={handleProfile}
+    />
+  );
   const nav = (
     <NavigationTab
       items={[
@@ -37,6 +49,7 @@ function Artist(props) {
         exact
         path='/player/artist/:id/about'
         component={ArtistAbout}
+        artist={artist}
       />
     </React.Fragment>
   );

@@ -25,7 +25,7 @@ function General(props) {
 
   // effect: init
   useEffect(() => {
-    library(authState.token, props.match.params.id)
+    library(authState.token, userId)
       .then(res => {
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
