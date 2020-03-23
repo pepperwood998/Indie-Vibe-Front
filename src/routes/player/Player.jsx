@@ -7,13 +7,14 @@ import { CollectionMain } from '../../components/collections';
 import { ContextSwitch } from '../../components/context-menu';
 import { ArtistRoute, UserRoute } from '../../components/custom-routes';
 import { AuthContext, LibraryContext } from '../../contexts';
+import { Artist } from './artist';
 import './css/player.scss';
 import Bottom from './FixedBottom';
 import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
 import Top from './FixedTop';
 import { Library } from './library';
-import { Account, Artist, Browse, Home, TrackList } from './monopage';
+import { Account, Browse, Home, TrackList } from './monopage';
 import { Search } from './search';
 import { Workspace } from './workspace';
 
@@ -49,7 +50,7 @@ function Player(props) {
         <UserRoute path='/player/browse' component={Browse} />
         <UserRoute path='/player/library/:id' component={Library} />
         <UserRoute path='/player/account' component={Account} />
-        <UserRoute path='/player/artist' component={Artist} />
+        <UserRoute path='/player/artist/:id' component={Artist} />
         <UserRoute path='/player/search/:key' component={Search} />
         <UserRoute
           path='/player/release/:id'

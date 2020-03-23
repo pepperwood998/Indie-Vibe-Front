@@ -65,7 +65,7 @@
     .compound-page {
       display: flex;
       flex-direction: column;
-      padding-top: 40px;
+      padding-top: 10px;
 
       .body-scroll {
         flex: 1;
@@ -73,7 +73,6 @@
 
         .body {
           height: 100%;
-          overflow-y: auto;
           padding: 30px 40px;
 
           &__bound {
@@ -179,7 +178,7 @@
     .profile-header {
       display: flex;
       flex-direction: row;
-      padding: 0 40px 20px;
+      padding: 0 40px 10px;
 
       &__avatar {
         width: 100px;
@@ -187,6 +186,7 @@
         overflow: hidden;
         position: relative;
         border-radius: 50%;
+        transition: 0.1s ease;
 
         img {
           width: inherit;
@@ -214,6 +214,32 @@
 
           > :not(:last-child) {
             margin-right: 10px;
+          }
+        }
+      }
+    }
+
+    &.collapsed {
+      min-height: 40px;
+
+      .profile-header {
+        padding-bottom: 0px;
+
+        &__avatar {
+          width: 40px;
+          height: 40px;
+        }
+
+        &__info {
+          flex-direction: row;
+          align-items: center;
+
+          > * {
+            padding-bottom: 0px;
+            padding-right: 20px;
+          }
+          .followers {
+            display: none;
           }
         }
       }

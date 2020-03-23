@@ -16,8 +16,6 @@ import {
 } from '../../assets/svgs';
 
 function CardMain(props) {
-  const { content } = props;
-
   const { state: authState } = useContext(AuthContext);
   const {
     state: streamState,
@@ -30,6 +28,8 @@ function CardMain(props) {
     dispatch: libDispatch
   } = useContext(LibraryContext);
 
+  const { content } = props;
+  const { artist } = content;
   let isCurrentList =
     content.type === streamState.playFromType &&
     content.id === streamState.playFromId;
@@ -160,10 +160,10 @@ function CardMain(props) {
               <React.Fragment>
                 <span>by&nbsp;</span>
                 <NavLinkUnderline
-                  href={`/player/artist/${content.artist.id}`}
+                  href={`/player/artist/${artist ? artist.id : ''}`}
                   className='font-gray-light'
                 >
-                  {content.artist.displayName}
+                  {artist ? artist.displayName : ''}
                 </NavLinkUnderline>
               </React.Fragment>
             ) : (

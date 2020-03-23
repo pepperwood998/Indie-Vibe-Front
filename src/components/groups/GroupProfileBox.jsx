@@ -14,6 +14,9 @@ function GroupProfileBox(props) {
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({});
 
+  let wrapperClasses =
+    'profile-header-wrapper' + (props.collapsed ? ' collapsed' : '');
+
   useEffect(() => {
     setFirstRender(true);
     profile(authState.token, props.id)
@@ -29,6 +32,12 @@ function GroupProfileBox(props) {
         window.location.href = '/player/home';
       });
   }, [props.id]);
+
+  // effect-skip: favorite
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
+    setData({ ...data, relation: [...ctxFav.relation] });
+  }, [libState.ctxFav]);
 
   const handleToggleFavorite = action => {
     performActionFavorite(
@@ -46,14 +55,8 @@ function GroupProfileBox(props) {
       });
   };
 
-  // effect-skip: favorite
-  useEffectSkip(() => {
-    const { ctxFav } = libState;
-    setData({ ...data, relation: [...ctxFav.relation] });
-  }, [libState.ctxFav]);
-
   return (
-    <div className='profile-header-wrapper'>
+    <div className={wrapperClasses}>
       {firstRender ? (
         ''
       ) : (
@@ -65,7 +68,7 @@ function GroupProfileBox(props) {
             <span className='font-short-extra font-weight-bold font-white'>
               {data.displayName}
             </span>
-            <span className='font-short-regular font-gray-light'>
+            <span className='followers font-short-regular font-gray-light'>
               {formatNumber(data.followersCount)} followers
             </span>
 

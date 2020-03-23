@@ -1,15 +1,17 @@
 import React, { useContext } from 'react';
 
 import { LinkWhiteColor, NavLinkColor } from '../links';
-import { AuthContext } from '../../contexts';
+import { AuthContext, MeContext } from '../../contexts';
 
 function ContextMenuAccount(props) {
   const { actions: authAction, dispatch: authDispatch } = useContext(
     AuthContext
   );
+  const { actions: meActions, dispatch: meDispatch } = useContext(MeContext);
 
   const handleLogout = () => {
     authDispatch(authAction.logout());
+    meDispatch(meActions.unloadMe());
   };
 
   return (

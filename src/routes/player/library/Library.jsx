@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UserRoute } from '../../../components/custom-routes';
 import { GroupProfileBox } from '../../../components/groups';
 import { NavigationTab } from '../../../components/navigation';
@@ -10,9 +10,15 @@ import Mono from './Mono';
 function Library(props) {
   const { id } = props.match.params;
 
+  const [collapsed, setCollapsed] = useState(false);
+
+  const handleScrollOver = over => {
+    setCollapsed(over);
+  };
+
   const nav = (
     <React.Fragment>
-      <GroupProfileBox id={id} />
+      <GroupProfileBox id={id} collapsed={collapsed} />
       <NavigationTab
         items={[
           {
@@ -70,7 +76,13 @@ function Library(props) {
     </React.Fragment>
   );
 
-  return <TemplateNavPage nav={nav} body={body} />;
+  return (
+    <TemplateNavPage
+      nav={nav}
+      body={body}
+      handleScrollOver={handleScrollOver}
+    />
+  );
 }
 
 export default Library;
