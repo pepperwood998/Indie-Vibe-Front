@@ -1,0 +1,112 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { getReleasesByType } from '../../../apis/API';
+import { ButtonLoadMore } from '../../../components/buttons';
+import { CollectionMain } from '../../../components/collections';
+import { AuthContext } from '../../../contexts';
+
+const model = {
+  items: [],
+  offset: 0,
+  limit: 0,
+  total: 0
+};
+function Releases(props) {
+  const { state: authState } = useContext(AuthContext);
+
+  const [firstRender, setFirstRender] = useState(0);
+  const [albums, setAlbums] = useState({ ...model });
+  const [singles, setSingles] = useState({ ...model });
+  const [eps, setEps] = useState({ ...model });
+
+  const { id } = authState;
+  const struct = {
+    're-album': ['Albums', albums, setAlbums],
+    're-single': ['Singles', singles, setSingles],
+    're-eps': ['EPs', eps, setEps]
+  };
+
+  useEffect(() => {
+    for (let type in struct) {
+      getReleasesByType(authState.token, id, type)
+        .then(res => {
+          if (res.status === 'success' && res.data) {
+            const value = struct[type];
+            value[2]({ ...value[1], ...res.data });
+            setFirstRender(firstRender => firstRender + 1);
+          } else {
+            throw 'Error';
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  }, [id]);
+
+  const handleLoadMore = type => {
+    const value = struct[type];
+
+    getReleasesByType(
+      authState.token,
+      id,
+      type,
+      value[1].offset + value[1].limit
+    )
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          value[2]({
+            ...value[1],
+            items: [...value[1].items, ...res.data.items],
+            offset: res.data.offset,
+            limit: res.data.limit,
+            total: res.data.total
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
+  return firstRender < 3 ? (
+    ''
+  ) : (
+    <div className='workspace-releases fadein'>
+      {albums.total <= 0 && singles.total <= 0 && eps.total <= 0 ? (
+        <span className='font-short-extra font-weight-bold font-white'>
+          No public releases.
+        </span>
+      ) : (
+        <React.Fragment>
+          {Object.keys(struct).map((key, index) => {
+            const value = struct[key];
+            if (value[1].items.length <= 0) return '';
+
+            return (
+              <section key={index}>
+                <CollectionMain
+                  header={value[0]}
+                  items={value[1].items}
+                  type='release'
+                />
+                {value[1].total > value[1].offset + value[1].limit ? (
+                  <ButtonLoadMore
+                    onClick={() => {
+                      handleLoadMore(key);
+                    }}
+                  >
+                    Load more
+                  </ButtonLoadMore>
+                ) : (
+                  ''
+                )}
+              </section>
+            );
+          })}
+        </React.Fragment>
+      )}
+    </div>
+  );
+}
+
+export default Releases;

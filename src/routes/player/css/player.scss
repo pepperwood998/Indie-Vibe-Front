@@ -75,6 +75,10 @@
           height: 100%;
           padding: 30px 40px;
 
+          > * {
+            padding-bottom: 100px;
+          }
+
           &__bound {
             background-color: $blackBlueLight;
             padding: 10px;
