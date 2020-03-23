@@ -86,7 +86,13 @@ function LibraryPlaylists(props) {
 
   // handlers
   const handleLoadMoreOwn = () => {
-    getPlaylists(authState.token, authState.id, targetId)
+    getPlaylists(
+      authState.token,
+      authState.id,
+      targetId,
+      'own',
+      own.offset + own.limit
+    )
       .then(res => {
         if (res.status === 'success' && res.data) {
           setOwn({
@@ -104,7 +110,13 @@ function LibraryPlaylists(props) {
   };
 
   const handleLoadMoreFav = () => {
-    getPlaylists(authState.token, authState.id, targetId, 'favorite')
+    getPlaylists(
+      authState.token,
+      authState.id,
+      targetId,
+      'favorite',
+      fav.offset + fav.limit
+    )
       .then(res => {
         if (res.status === 'success' && res.data) {
           setFav({
