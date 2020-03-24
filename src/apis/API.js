@@ -41,16 +41,16 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
 
 export const createOrEditPlaylist = (
   token,
-  title,
-  description,
-  thumbnail,
+  data = { title: [], description: [], thumbnail: [] },
   type = 'create',
   playlistId = ''
 ) => {
-  let data = new FormData();
-  if (title) data.append('title', title);
-  if (description) data.append('description', description);
-  if (thumbnail) data.append('thumbnail', thumbnail);
+  let formData = new FormData();
+  for (let key in data) {
+    if (data[key][0]) {
+      formData.append(key, data[key][1]);
+    }
+  }
 
   let url = `${host}/playlists`;
   if (type === 'edit') url += `/${playlistId}`;
@@ -61,7 +61,7 @@ export const createOrEditPlaylist = (
     headers: {
       Authorization: 'Bearer ' + token
     },
-    body: data
+    body: formData
   }).then(response => response.json());
 };
 

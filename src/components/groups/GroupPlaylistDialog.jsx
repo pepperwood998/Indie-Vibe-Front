@@ -23,14 +23,14 @@ function GroupPlaylistDialog(props) {
   const thumbnailRef = useRef();
 
   const { editPlaylist } = libState;
-  const isEdit = editPlaylist.type === 'edit';
   const { playlist } = editPlaylist;
+  const isEdit = editPlaylist.type === 'edit';
 
-  const [info, setInfo] = useState({
-    title: playlist.title,
-    description: playlist.description
+  const [data, setData] = useState({
+    title: [false, playlist.title],
+    description: [false, playlist.description],
+    thumbnail: [false, null]
   });
-  const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailSrc, setThumbnailSrc] = useState(playlist.thumbnail);
   const [submitted, setSubmitted] = useState(0);
 
@@ -51,6 +51,13 @@ function GroupPlaylistDialog(props) {
     });
   };
 
+  const handleChangeInfo = e => {
+    setData({
+      ...data,
+      [e.target.getAttribute('name')]: [true, e.target.value]
+    });
+  };
+
   const handleChangeThumbnail = () => {
     let file = thumbnailRef.current.files[0];
     if (file) {
@@ -58,32 +65,18 @@ function GroupPlaylistDialog(props) {
       reader.readAsDataURL(file);
 
       reader.onloadend = e => {
-        setThumbnail(file);
+        setData({ ...data, thumbnail: [true, file] });
         setThumbnailSrc(reader.result);
       };
     }
   };
 
-  const handleChangeInfo = e => {
-    setInfo({
-      ...info,
-      [e.target.getAttribute('name')]: e.target.value
-    });
-  };
-
   const handleSubmit = () => {
     setSubmitted(1);
-    if (!info.title) return;
+    if (!data.title[1]) return;
 
     setSubmitted(2);
-    createOrEditPlaylist(
-      authState.token,
-      info.title,
-      info.description,
-      thumbnail,
-      editPlaylist.type,
-      playlist.id
-    )
+    createOrEditPlaylist(authState.token, data, editPlaylist.type, playlist.id)
       .then(res => {
         if (res.status === 'success') {
           handleCreatePlaylistSuccess(res.data);
@@ -112,7 +105,10 @@ function GroupPlaylistDialog(props) {
   };
 
   return (
-    <div className='screen-overlay playlist-dialog fadein' onClick={handleCloseDialog}>
+    <div
+      className='screen-overlay playlist-dialog fadein'
+      onClick={handleCloseDialog}
+    >
       <div className='playlist-dialog' onClick={handlePropagateDialog}>
         <CloseIcon
           className='close svg--regular svg--cursor svg--scale'
@@ -127,10 +123,10 @@ function GroupPlaylistDialog(props) {
               <InputText
                 type='text'
                 name='title'
-                value={info.title}
+                value={data.title[1]}
                 placeholder='Playlist name'
                 onChange={handleChangeInfo}
-                error={submitted && !info.title}
+                error={submitted && !data.title[1]}
                 errMessage='Must have a title'
               />
             </div>
@@ -141,7 +137,7 @@ function GroupPlaylistDialog(props) {
                 placeholder='Description for this playlist (optional)'
                 onChange={handleChangeInfo}
               >
-                {info.description}
+                {data.description[1]}
               </textarea>
             </div>
           </div>
