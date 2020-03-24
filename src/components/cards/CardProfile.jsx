@@ -99,11 +99,11 @@ function CardProfile(props) {
       <div className='card-main__info profile'>
         <NavLinkUnderline
           href={`/player/${content.type}/${content.id}`}
-          className='font-short-big font-weight-bold font-white'
+          className='content one-line font-short-big font-weight-bold font-white'
         >
           {content.displayName}
         </NavLinkUnderline>
-        <div className='content profile font-short-s font-gray-light'>
+        <div className='content bottom one-line font-short-s font-gray-light'>
           {content.type === 'artist'
             ? content.followersCount + ' followers'
             : ''}

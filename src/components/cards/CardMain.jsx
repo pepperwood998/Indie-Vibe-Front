@@ -150,26 +150,24 @@ function CardMain(props) {
       <div className='card-main__info'>
         <NavLinkUnderline
           href={`/player/${content.type}/${content.id}`}
-          className='font-short-big font-weight-bold font-white'
+          className='content one-line font-short-big font-weight-bold font-white'
         >
           {content.title}
         </NavLinkUnderline>
-        <div className='content playlist-release font-short-s font-gray-light'>
-          <span>
-            {content.type === 'release' ? (
-              <React.Fragment>
-                <span>by&nbsp;</span>
-                <NavLinkUnderline
-                  href={`/player/artist/${artist ? artist.id : ''}`}
-                  className='font-gray-light'
-                >
-                  {artist ? artist.displayName : ''}
-                </NavLinkUnderline>
-              </React.Fragment>
-            ) : (
-              content.description
-            )}
-          </span>
+        <div className='content bottom two-line playlist-release font-short-s font-gray-light'>
+          {content.type === 'release' ? (
+            <React.Fragment>
+              <span>by&nbsp;</span>
+              <NavLinkUnderline
+                href={`/player/artist/${artist ? artist.id : ''}`}
+                className='font-gray-light'
+              >
+                {artist ? artist.displayName : ''}
+              </NavLinkUnderline>
+            </React.Fragment>
+          ) : (
+            content.description
+          )}
         </div>
       </div>
     </div>
