@@ -25,9 +25,7 @@ function Me(props) {
 
   return (
     <ul>
-      <li>
-        <LinkWhiteColor>Add to queue</LinkWhiteColor>
-      </li>
+      <li>{props.AddToQueue}</li>
       <li
         onClick={() => {
           handlers.handleClose();
@@ -49,18 +47,13 @@ function Other(props) {
 
   return (
     <ul>
-      <li>
-        <LinkWhiteColor>Add to queue</LinkWhiteColor>
-      </li>
+      <li>{props.AddToQueue}</li>
       <li
         onClick={() => {
           handlers.handleClose();
         }}
       >
-        <LinkWhiteColor
-          nav={true}
-          href={`/player/artist/${content.artistId}`}
-        >
+        <LinkWhiteColor nav={true} href={`/player/artist/${content.artistId}`}>
           Discover Artist
         </LinkWhiteColor>
       </li>

@@ -49,9 +49,7 @@ function ContextTrack(props) {
   return (
     <div className='context-menu' ref={props.elemRef}>
       <ul>
-        <li>
-          <LinkWhiteColor>Add to queue</LinkWhiteColor>
-        </li>
+        <li>{props.AddToQueue}</li>
         <li
           onClick={() => {
             handlers.handleClose();

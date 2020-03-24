@@ -23,7 +23,7 @@ function ContextPlaylist(props) {
 }
 
 function Me(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   const { state: authState } = useContext(AuthContext);
   const { actions: libActions, dispatch: libDispatch } = useContext(
@@ -62,9 +62,7 @@ function Me(props) {
 
   return (
     <ul>
-      <li>
-        <LinkWhiteColor>Add to queue</LinkWhiteColor>
-      </li>
+      <li>{props.AddToQueue}</li>
       <li>
         {content.status === 'public' ? (
           <LinkWhiteColor
@@ -105,9 +103,7 @@ function Other(props) {
 
   return (
     <ul>
-      <li>
-        <LinkWhiteColor>Add to queue</LinkWhiteColor>
-      </li>
+      <li>{props.AddToQueue}</li>
       <li>
         {content.relation.includes('favorite') ? (
           <LinkWhiteColor

@@ -19,7 +19,9 @@ const initState = {
     // '5UmNONJQaXmNmbdmr2On',
     // 'gKen4p6Y37lf2OkVuMNg'
   ],
+  queueExtra: [],
   currentSongIndex: 0,
+  mainQueueMarkIndex: 0,
   bitrate: 128,
   playFromId: '',
   playFromType: '', // 'playlist' or 'release' or 'favorite'
@@ -96,6 +98,12 @@ const actions = {
         playFromId,
         targetTrackId
       }
+    };
+  },
+  addToQueue: extra => {
+    return {
+      type: 'ADD_TO_QUEUE',
+      extra
     };
   },
   repeatTrack: () => {
@@ -209,6 +217,14 @@ const reducer = (state, action) => {
         currentSongIndex: 0
       };
     }
+    case 'ADD_TO_QUEUE': {
+      if (!state.queue.length && !state.queueExtra.length)
+        stream.continue(action.extra[0], true);
+      return {
+        ...state,
+        queueExtra: [...state.queueExtra, ...action.extra]
+      };
+    }
     case 'REPEAT_TRACK': {
       stream.continue(state.queue[state.currentSongIndex]);
       return state;
@@ -223,35 +239,44 @@ const reducer = (state, action) => {
       };
     }
     case 'SKIP_BACKWARD': {
-      if (!state.queue.length) return state;
+      if (!state.queue.length && !state.queueExtra.length) return state;
+
+      let autoplay = !state.paused;
+      // when reachs the end of the song
+      if (!autoplay) {
+        if (action.payload) {
+          autoplay = action.payload;
+        } else {
+          autoplay = state.autoplay;
+        }
+      }
 
       let backwardId = getCircularIndex(
         state.currentSongIndex - 1,
         state.queue.length
       );
 
-      let autoplay = !state.paused;
-      // when reachs the end of the song
-      if (!autoplay) {
-        if (action.payload) {
-          autoplay = action.payload;
-        } else {
-          autoplay = state.autoplay;
-        }
+      const { queue, queueExtra } = state;
+      if (queueExtra.length && backwardId === state.mainQueueMarkIndex) {
+        let queueTemp = [...queueExtra];
+        let nextTrack = queueTemp.pop();
+        stream.start(nextTrack, autoplay);
+
+        return {
+          ...state,
+          queueExtra: queueTemp
+        };
+      } else {
+        stream.start(queue[backwardId], autoplay);
+
+        return {
+          ...state,
+          currentSongIndex: backwardId
+        };
       }
-      stream.start(state.queue[backwardId], autoplay);
-      return {
-        ...state,
-        currentSongIndex: backwardId
-      };
     }
     case 'SKIP_FORWARD': {
-      if (!state.queue.length) return state;
-
-      let forwardId = getCircularIndex(
-        state.currentSongIndex + 1,
-        state.queue.length
-      );
+      if (!state.queue.length && !state.queueExtra.length) return state;
 
       let autoplay = !state.paused;
       // when reachs the end of the song
@@ -262,11 +287,30 @@ const reducer = (state, action) => {
           autoplay = state.autoplay;
         }
       }
-      stream.start(state.queue[forwardId], autoplay);
-      return {
-        ...state,
-        currentSongIndex: forwardId
-      };
+
+      const { queue, queueExtra } = state;
+      if (queueExtra.length) {
+        let queueTemp = [...queueExtra];
+        let nextTrack = queueTemp.shift();
+        stream.start(nextTrack, autoplay);
+
+        return {
+          ...state,
+          queueExtra: queueTemp,
+          mainQueueMarkIndex: state.currentSongIndex
+        };
+      } else {
+        let forwardId = getCircularIndex(
+          state.currentSongIndex + 1,
+          state.queue.length
+        );
+        stream.start(queue[forwardId], autoplay);
+
+        return {
+          ...state,
+          currentSongIndex: forwardId
+        };
+      }
     }
     case 'TOGGLE_PAUSED':
       stream.togglePaused();
