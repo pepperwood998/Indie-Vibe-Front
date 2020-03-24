@@ -39,19 +39,30 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
   });
 };
 
-export const createPlaylist = (token, title, description, thumbnail) => {
+export const createOrEditPlaylist = (
+  token,
+  title,
+  description,
+  thumbnail,
+  type = 'create',
+  playlistId = ''
+) => {
   let data = new FormData();
-  data.append('title', title);
+  if (title) data.append('title', title);
   if (description) data.append('description', description);
   if (thumbnail) data.append('thumbnail', thumbnail);
 
-  return fetch(`${host}/playlists`, {
-    method: 'POST',
+  let url = `${host}/playlists`;
+  if (type === 'edit') url += `/${playlistId}`;
+  url = new URL(url);
+
+  return fetch(url, {
+    method: type === 'edit' ? 'UPDATE' : 'POST',
     headers: {
       Authorization: 'Bearer ' + token
     },
     body: data
-  });
+  }).then(response => response.json());
 };
 
 export const deleteTrackList = (token, type, id) => {
@@ -145,7 +156,7 @@ export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   }).then(response => response.json());
 };
 
-export const profile = (token, userId, type='user') => {
+export const profile = (token, userId, type = 'user') => {
   let url = '';
   if (type === 'artist') {
     url = `${host}/artists/${userId}`;

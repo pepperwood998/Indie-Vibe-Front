@@ -6,6 +6,7 @@ import { CardError, CardSuccess } from '../../components/cards';
 import { CollectionMain } from '../../components/collections';
 import { ContextSwitch } from '../../components/context-menu';
 import { ArtistRoute, UserRoute } from '../../components/custom-routes';
+import { GroupPlaylistDialog } from '../../components/groups';
 import { AuthContext, LibraryContext } from '../../contexts';
 import { Artist } from './artist';
 import './css/player.scss';
@@ -79,6 +80,11 @@ function Player(props) {
         )}
       </div>
       {libState.browsePlaylists.opened ? <BrowsePlaylist /> : ''}
+      {libState.editPlaylist.opened ? (
+        <GroupPlaylistDialog history={props.history} />
+      ) : (
+        ''
+      )}
       {libState.notification.opened ? <Notification /> : ''}
     </div>
   );
@@ -147,7 +153,7 @@ function Notification() {
     if (notification.opened)
       timeout = setTimeout(() => {
         libDispatch(libActions.setNotification(false));
-      }, 2000);
+      }, 1500);
   });
 
   return (

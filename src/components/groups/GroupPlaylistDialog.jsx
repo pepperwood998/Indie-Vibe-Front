@@ -1,7 +1,11 @@
 import React, { useState, useRef, useContext } from 'react';
 
 import { AuthContext, LibraryContext } from '../../contexts';
-import { createPlaylist } from '../../apis/API';
+import {
+  createPlaylist,
+  getPlaylistSimple,
+  createOrEditPlaylist
+} from '../../apis/API';
 import { InputFileLabel, InputText } from '../inputs';
 import { ButtonMain } from '../buttons';
 
@@ -16,17 +20,36 @@ function GroupPlaylistDialog(props) {
     dispatch: libDispatch
   } = useContext(LibraryContext);
 
-  const { isUpdated, handleCloseDialog, handleCreatePlaylistSuccess } = props;
+  const thumbnailRef = useRef();
+
+  const { editPlaylist } = libState;
+  const isEdit = editPlaylist.type === 'edit';
+  const { playlist } = editPlaylist;
 
   const [info, setInfo] = useState({
-    title: props.title,
-    description: props.description ? props.description : null
+    title: playlist.title,
+    description: playlist.description
   });
   const [thumbnail, setThumbnail] = useState(null);
-  const [thumbnailSrc, setThumbnailSrc] = useState(props.thumbnail);
+  const [thumbnailSrc, setThumbnailSrc] = useState(playlist.thumbnail);
   const [submitted, setSubmitted] = useState(0);
 
-  const thumbnailRef = useRef();
+  const handlePropagateDialog = e => {
+    e.stopPropagation();
+  };
+
+  const handleCloseDialog = () => {
+    libDispatch(libActions.setEditPlaylist(false));
+  };
+
+  const handleCreatePlaylistSuccess = playlistId => {
+    getPlaylistSimple(authState.token, playlistId).then(res => {
+      if (res.status === 'success') {
+        props.history.push(`/player/playlist/${res.data.id}`);
+        libDispatch(libActions.createPlaylist(res.data));
+      }
+    });
+  };
 
   const handleChangeThumbnail = () => {
     let file = thumbnailRef.current.files[0];
@@ -53,40 +76,50 @@ function GroupPlaylistDialog(props) {
     if (!info.title) return;
 
     setSubmitted(2);
-    createPlaylist(authState.token, info.title, info.description, thumbnail)
-      .then(response => response.json())
+    createOrEditPlaylist(
+      authState.token,
+      info.title,
+      info.description,
+      thumbnail,
+      editPlaylist.type,
+      playlist.id
+    )
       .then(res => {
         if (res.status === 'success') {
           handleCreatePlaylistSuccess(res.data);
           handleCloseDialog();
           libDispatch(
-            libActions.setNotification(true, true, 'Playlist created')
+            libActions.setNotification(
+              true,
+              true,
+              isEdit ? 'Playlist edited' : 'Playlist created'
+            )
           );
         } else {
-          libDispatch(
-            libActions.setNotification(true, false, 'Failed to create playlist')
-          );
-          setSubmitted(0);
+          throw 'Error';
         }
       })
       .catch(error => {
-        console.log(error);
+        libDispatch(
+          libActions.setNotification(
+            true,
+            false,
+            `Failed to ${editPlaylist.type} playlist`
+          )
+        );
+        setSubmitted(0);
       });
   };
 
-  const handlePropagateDialog = e => {
-    e.stopPropagation();
-  };
-
   return (
-    <div className='playlist-dialog-wrapper' onClick={handleCloseDialog}>
+    <div className='screen-overlay playlist-dialog' onClick={handleCloseDialog}>
       <div className='playlist-dialog' onClick={handlePropagateDialog}>
         <CloseIcon
           className='close svg--regular svg--cursor svg--scale'
           onClick={handleCloseDialog}
         />
         <div className='playlist-dialog__header font-short-big font-weight-bold font-white'>
-          Create Playlist
+          {isEdit ? 'Edit Playlist' : 'Create playlist'}
         </div>
         <div className='playlist-dialog__body'>
           <div className='left'>
@@ -136,7 +169,7 @@ function GroupPlaylistDialog(props) {
                 onClick={handleSubmit}
                 disabled={submitted === 2 ? true : false}
               >
-                {isUpdated ? 'Save' : 'Create'}
+                {isEdit ? 'Save' : 'Create'}
                 {submitted === 2 ? '...' : ''}
               </ButtonMain>
             </div>

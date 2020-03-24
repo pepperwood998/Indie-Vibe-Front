@@ -2,7 +2,11 @@ import React, { useContext } from 'react';
 
 import { LinkWhiteColor } from '../links';
 import { LibraryContext, AuthContext } from '../../contexts';
-import { deleteTrackList, performAction } from '../../apis/API';
+import {
+  deleteTrackList,
+  performAction,
+  getPlaylistSimple
+} from '../../apis/API';
 
 function ContextPlaylist(props) {
   const { content } = props;
@@ -31,7 +35,7 @@ function Me(props) {
   );
 
   const handleDeletePlaylist = id => {
-    libDispatch(libActions.closeCtxMenu());
+    handlers.handleClose();
     deleteTrackList(authState.token, 'playlist', id)
       .then(res => {
         if (res.status === 'success') {
@@ -47,7 +51,7 @@ function Me(props) {
   };
 
   const handleTogglePlaylistPrivate = action => {
-    libDispatch(libActions.closeCtxMenu());
+    handlers.handleClose();
     performAction(authState.token, content.id, action, 'playlist').then(res => {
       if (res.status === 'success') {
         libDispatch(
@@ -56,6 +60,15 @@ function Me(props) {
             status: action === 'make-public' ? 'public' : 'private'
           })
         );
+      }
+    });
+  };
+
+  const handleEditPlaylist = () => {
+    handlers.handleClose();
+    getPlaylistSimple(authState.token, content.id).then(res => {
+      if (res.status === 'success') {
+        libDispatch(libActions.setEditPlaylist(true, 'edit', res.data));
       }
     });
   };
@@ -83,7 +96,7 @@ function Me(props) {
         )}
       </li>
       <li>
-        <LinkWhiteColor>Edit</LinkWhiteColor>
+        <LinkWhiteColor onClick={handleEditPlaylist}>Edit</LinkWhiteColor>
       </li>
       <li>
         <LinkWhiteColor

@@ -21,6 +21,11 @@ const initState = {
     opened: false,
     trackId: ''
   },
+  editPlaylist: {
+    opened: false,
+    type: 'create',
+    playlist: {}
+  },
   notification: {
     opened: false,
     success: false,
@@ -72,6 +77,12 @@ const actions = {
     return {
       type: 'SET_BROWSE_PLAYLISTS',
       payload: { opened, trackId }
+    };
+  },
+  setEditPlaylist: (opened, type = 'create', playlist = {}) => {
+    return {
+      type: 'SET_EDIT_PLAYLIST',
+      payload: { opened, type, playlist }
     };
   },
   addTrackToPlaylist: playlistId => {
@@ -163,6 +174,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         browsePlaylists: action.payload
+      };
+    }
+    case 'SET_EDIT_PLAYLIST': {
+      return {
+        ...state,
+        editPlaylist: action.payload
       };
     }
     case 'ADD_TRACK_PLAYLIST': {
