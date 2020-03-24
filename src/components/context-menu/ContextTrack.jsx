@@ -46,6 +46,11 @@ function ContextTrack(props) {
       });
   };
 
+  const handleOpenTrackCredits = () => {
+    handlers.handleClose();
+    libDispatch(libActions.setTrackCredits(true, content.id));
+  };
+
   return (
     <div className='context-menu' ref={props.elemRef}>
       <ul>
@@ -79,7 +84,9 @@ function ContextTrack(props) {
           ''
         )}
         <li>
-          <LinkWhiteColor>Show credits</LinkWhiteColor>
+          <LinkWhiteColor onClick={handleOpenTrackCredits}>
+            Show credits
+          </LinkWhiteColor>
         </li>
         {playlistRelation.includes('own') && content.fromType === 'playlist' ? (
           <li>

@@ -26,6 +26,10 @@ const initState = {
     type: 'create',
     playlist: {}
   },
+  trackCredits: {
+    opened: false,
+    trackId: ''
+  },
   notification: {
     opened: false,
     success: false,
@@ -83,6 +87,12 @@ const actions = {
     return {
       type: 'SET_EDIT_PLAYLIST',
       payload: { opened, type, playlist }
+    };
+  },
+  setTrackCredits: (opened, trackId = '') => {
+    return {
+      type: 'SET_TRACK_CREDITS',
+      payload: { opened, trackId }
     };
   },
   addTrackToPlaylist: playlistId => {
@@ -180,6 +190,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         editPlaylist: action.payload
+      };
+    }
+    case 'SET_TRACK_CREDITS': {
+      return {
+        ...state,
+        trackCredits: action.payload
       };
     }
     case 'ADD_TRACK_PLAYLIST': {

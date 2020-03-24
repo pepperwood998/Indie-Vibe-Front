@@ -214,6 +214,17 @@ export const getPlaylistSimple = (token, playlistId) => {
   }).then(response => response.json());
 };
 
+export const getTrackFull = (token, id) => {
+  let url = new URL(`${host}/tracks/${id}`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
 export const getTrackList = (token, id, type, offset = 0, limit = 20) => {
   let url = new URL(`${host}/${type}s/full/${id}`);
   url.search = new URLSearchParams({ offset, limit }).toString();

@@ -112,7 +112,7 @@ function GroupPlaylistDialog(props) {
   };
 
   return (
-    <div className='screen-overlay playlist-dialog' onClick={handleCloseDialog}>
+    <div className='screen-overlay playlist-dialog fadein' onClick={handleCloseDialog}>
       <div className='playlist-dialog' onClick={handlePropagateDialog}>
         <CloseIcon
           className='close svg--regular svg--cursor svg--scale'

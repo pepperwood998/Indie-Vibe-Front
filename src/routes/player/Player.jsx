@@ -6,7 +6,10 @@ import { CardError, CardSuccess } from '../../components/cards';
 import { CollectionMain } from '../../components/collections';
 import { ContextSwitch } from '../../components/context-menu';
 import { ArtistRoute, UserRoute } from '../../components/custom-routes';
-import { GroupPlaylistDialog } from '../../components/groups';
+import {
+  GroupPlaylistDialog,
+  GroupTrackCredits
+} from '../../components/groups';
 import { AuthContext, LibraryContext } from '../../contexts';
 import { Artist } from './artist';
 import './css/player.scss';
@@ -85,6 +88,7 @@ function Player(props) {
       ) : (
         ''
       )}
+      {libState.trackCredits.opened ? <GroupTrackCredits /> : ''}
       {libState.notification.opened ? <Notification /> : ''}
     </div>
   );
@@ -115,7 +119,7 @@ function BrowsePlaylist() {
   };
 
   return (
-    <div className='screen-overlay'>
+    <div className='screen-overlay browse-playlists fadein'>
       <CloseIcon
         className='close svg--cursor svg--scale'
         onClick={() => {
