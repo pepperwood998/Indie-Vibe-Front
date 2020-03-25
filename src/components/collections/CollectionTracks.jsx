@@ -9,7 +9,7 @@ function CollectionTracks(props) {
       <div className='collection-main__content'>
         {/* {items.slice(offset, limit).map((item, index) => '')} */}
         <CollectionTrackTable
-          data={props.data}
+          items={props.items}
           type={props.type}
           playFromId={props.playFromId}
         />

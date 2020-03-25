@@ -251,14 +251,14 @@ function TrackList(props) {
         <div className='track-list__content'>
           {type === 'playlist' ? (
             <CollectionTrackTable
-              data={data.tracks}
+              items={data.tracks.items}
               playFromId={data.id}
               type={type}
               playlistRelation={data.relation}
             />
           ) : (
             <CollectionTrackTable
-              data={data.tracks}
+              items={data.tracks.items}
               releaseArtistId={data.artist ? data.artist.id : ''}
               playFromId={data.id}
               type={type}

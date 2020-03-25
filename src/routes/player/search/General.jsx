@@ -11,6 +11,12 @@ import { search } from '../../../apis/API';
 
 import { ArrowRight } from '../../../assets/svgs';
 
+const model = {
+  items: [],
+  offset: 0,
+  limit: 0,
+  total: 0
+};
 function General(props) {
   // contexts
   const { state: authState } = useContext(AuthContext);
@@ -19,23 +25,23 @@ function General(props) {
   // states
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
-    tracks: [],
-    artists: [],
-    releases: [],
-    playlists: [],
-    profiles: [],
-    genres: []
+    tracks: { ...model },
+    artists: { ...model },
+    releases: { ...model },
+    playlists: { ...model },
+    profiles: { ...model },
+    genres: { ...model }
   });
 
   // props
   const { key: searchKey } = props.match.params;
-  let exist = Object.keys(data).find(key => data[key].length > 0);
+  let exist = Object.keys(data).some(key => data[key].total > 0);
   let render = '';
 
   // effect: init
   useEffect(() => {
     setFirstRender(true);
-    search(authState.token, props.match.params.key)
+    search(authState.token, searchKey)
       .then(res => {
         if (res.status === 'success') {
           setData({ ...data, ...res.data });
@@ -50,41 +56,49 @@ function General(props) {
   // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
-    let target = [...data[`${ctxFav.type}s`]];
-    target.some(item => {
+    const key = `${ctxFav.type}s`;
+    const items = [...data[key].items];
+    items.some(item => {
       if (ctxFav.id === item.id) {
         item.relation = [...ctxFav.relation];
         return true;
       }
     });
-    setData({ ...data, [`${ctxFav.type}s`]: target });
+    setData({
+      ...data,
+      [key]: { ...data[key], items }
+    });
   }, [libState.ctxFav]);
 
   // effect-skip: delete playlist
   useEffectSkip(() => {
-    let target = [...data.playlists];
+    const playlists = [...data.playlists.items];
     setData({
       ...data,
-      playlists: target.filter(item => item.id !== libState.ctxDelPlaylistId)
+      playlists: {
+        ...data.playlists,
+        items: playlists.filter(item => item.id !== libState.ctxDelPlaylistId),
+        total: data.playlists.total - 1
+      }
     });
   }, [libState.ctxDelPlaylistId]);
 
   // effect-skip: playlist privacy
   useEffectSkip(() => {
     const { ctxPlaylistPrivate } = libState;
-    let playlists = [...data.playlists];
+    const playlists = [...data.playlists.items];
     playlists.some(playlist => {
       if (ctxPlaylistPrivate.id === playlist.id) {
         playlist.status = ctxPlaylistPrivate.status;
         return true;
       }
     });
-    setData({ ...data, playlists });
+    setData({ ...data, playlists: { ...data.playlists, items: playlists } });
   }, [libState.ctxPlaylistPrivate]);
 
   if (exist) {
     render = Object.keys(data).map((key, index) => {
-      if (data[key].length > 0) {
+      if (data[key].total > 0) {
         let type = key.substr(0, key.length - 1);
         if (type === 'track') {
           return (
@@ -98,7 +112,7 @@ function General(props) {
                   <ArrowRight />
                 </NavLinkColor>
               }
-              data={{ items: data[key], offset: 0, limit: data[key].length }}
+              items={data[key].items}
               type='search'
               key={index}
             />
@@ -116,7 +130,7 @@ function General(props) {
                 <ArrowRight />
               </NavLinkColor>
             }
-            items={data[key]}
+            items={data[key].items}
             type={type}
             key={index}
           />

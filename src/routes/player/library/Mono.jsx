@@ -79,7 +79,7 @@ function Mono(props) {
         header={
           data.total > 0 ? data.total + ` ${type}s` : `No ${capitalize(type)}`
         }
-        data={data}
+        items={data.items}
         type='favorite'
       />
     );
