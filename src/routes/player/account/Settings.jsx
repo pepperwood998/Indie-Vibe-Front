@@ -9,7 +9,7 @@ function Settings(props) {
     dispatch: streamDispatch
   } = useContext(StreamContext);
 
-  const { bitrate } = streamState;
+  const { settings } = streamState;
   let isFree = authState.role === 'r-free';
 
   const handleChangeSettings = e => {
@@ -36,6 +36,7 @@ function Settings(props) {
                 name='bitrate'
                 className='custom-select release-type'
                 onChange={handleChangeSettings}
+                value={settings.bitrate}
               >
                 <option value='128'>Normal</option>
                 <option value='320' disabled={isFree}>

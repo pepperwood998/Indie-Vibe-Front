@@ -37,7 +37,15 @@ const initState = {
 };
 
 function StreamContextProvider(props) {
-  const [state, dispatch] = useReducer(reducer, initState);
+  const [state, dispatch] = useReducer(reducer, initState, () => {
+    let settings = localStorage.getItem('settings');
+    if (settings) {
+      return {
+        ...initState,
+        settings: JSON.parse(settings)
+      };
+    }
+  });
 
   const { state: authState } = useContext(AuthContext);
 
@@ -49,6 +57,8 @@ function StreamContextProvider(props) {
     stream.onTogglePaused = paused => {
       dispatch(actions.onTogglePaused(paused));
     };
+    if (state.settings)
+      localStorage.setItem('settings', JSON.stringify(state.settings));
   }, []);
 
   useEffect(() => {
@@ -380,7 +390,9 @@ const reducer = (state, action) => {
     }
     case 'SET_SETTINGS': {
       stream.setSettings(action.settings);
-      return { ...state, settings: { ...state.settings, ...action.settings } };
+      let newSettings = { ...state.settings, ...action.settings };
+      localStorage.setItem('settings', JSON.stringify(newSettings));
+      return { ...state, settings: newSettings };
     }
     default:
       return state;
