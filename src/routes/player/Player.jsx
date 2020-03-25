@@ -11,17 +11,18 @@ import {
   GroupTrackCredits
 } from '../../components/groups';
 import { AuthContext, LibraryContext } from '../../contexts';
+import { Account } from './account';
 import { Artist } from './artist';
+import { Browse } from './browse';
 import './css/player.scss';
 import Bottom from './FixedBottom';
 import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
 import Top from './FixedTop';
 import { Library } from './library';
-import { Browse, Home, TrackList } from './monopage';
+import { Home, TrackList } from './monopage';
 import { Search } from './search';
 import { Workspace } from './workspace';
-import { Account } from './account';
 
 function Player(props) {
   const {

@@ -3,18 +3,23 @@ import React from 'react';
 import { SearchIcon } from '../../assets/svgs';
 
 function InputSearch({ placeholder = 'Search', onChange = () => {} }) {
+  const handleSearch = e => {
+    if (e.key === 'Enter') {
+      onChange(e);
+    }
+  };
+
   return (
     <div className='input-search'>
       <SearchIcon />
-      <form>
-        <input
-          type='search'
-          className='font-white font-short-s'
-          placeholder={placeholder}
-          onChange={onChange}
-          autoComplete='new-password'
-        />
-      </form>
+      <input
+        type='search'
+        className='font-white font-short-s'
+        placeholder={placeholder}
+        onChange={onChange}
+        onKeyDown={handleSearch}
+        autoComplete='new-password'
+      />
     </div>
   );
 }

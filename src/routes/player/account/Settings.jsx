@@ -29,7 +29,7 @@ function Settings(props) {
           </span>
         </div>
         <div className='catalog__body'>
-          <form className='form-settings table-layout'>
+          <div className='form-settings table-layout'>
             <div className='table-row'>
               <span className='label'>Audio quality</span>
               <select
@@ -44,7 +44,7 @@ function Settings(props) {
                 </option>
               </select>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>

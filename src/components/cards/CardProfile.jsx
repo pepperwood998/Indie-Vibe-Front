@@ -55,7 +55,11 @@ function CardProfile(props) {
         <div className={ctxClasses}>
           <Link
             className='action__link'
-            to={`/player/${content.type}/${content.id}`}
+            to={
+              content.type === 'artist'
+                ? `/player/${content.type}/${content.id}`
+                : `/player/library/${content.id}`
+            }
           ></Link>
           {content.type === 'artist' ? (
             <div className='action__play'>
@@ -67,23 +71,27 @@ function CardProfile(props) {
             ''
           )}
           <div className='action__extra profile'>
-            {content.relation.includes('favorite') ? (
-              <ButtonIcon>
-                <FavoriteIcon
-                  className='svg--blue'
-                  onClick={() => {
-                    handleToggleFavorite('unfavorite');
-                  }}
-                />
-              </ButtonIcon>
+            {content.id !== authState.id ? (
+              content.relation.includes('favorite') ? (
+                <ButtonIcon>
+                  <FavoriteIcon
+                    className='svg--blue'
+                    onClick={() => {
+                      handleToggleFavorite('unfavorite');
+                    }}
+                  />
+                </ButtonIcon>
+              ) : (
+                <ButtonIcon>
+                  <UnFavoriteIcon
+                    onClick={() => {
+                      handleToggleFavorite('favorite');
+                    }}
+                  />
+                </ButtonIcon>
+              )
             ) : (
-              <ButtonIcon>
-                <UnFavoriteIcon
-                  onClick={() => {
-                    handleToggleFavorite('favorite');
-                  }}
-                />
-              </ButtonIcon>
+              ''
             )}
             <ButtonMore
               ctxData={{

@@ -15,12 +15,18 @@ function ContextUser(props) {
 }
 
 function Me(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   return (
     <ul>
-      <li>
-        <LinkWhiteColor>Library</LinkWhiteColor>
+      <li
+        onClick={() => {
+          handlers.handleClose();
+        }}
+      >
+        <LinkWhiteColor nav={true} href={`/player/library/${content.id}`}>
+          Library
+        </LinkWhiteColor>
       </li>
     </ul>
   );

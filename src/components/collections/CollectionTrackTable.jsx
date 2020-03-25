@@ -20,7 +20,7 @@ import {
 
 function CollectionTrackTable(props) {
   const { type } = props;
-  let { items } = props.data;
+  const { items } = props;
 
   return (
     <div className='collection-table'>
@@ -103,7 +103,7 @@ function CollectionTrackTable(props) {
               );
             }
           })
-        : 'jkdfjekjw'}
+        : ''}
     </div>
   );
 }

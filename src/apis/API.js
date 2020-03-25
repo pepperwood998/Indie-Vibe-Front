@@ -288,7 +288,7 @@ export const updatePassword = (token, data) => {
   }
 
   let url = new URL(`${host}/account/password`);
-  return fetch('http://www.mocky.io/v2/5e7ac9b5300000e5c9930f06', {
+  return fetch(url, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
