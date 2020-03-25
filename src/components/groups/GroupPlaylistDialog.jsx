@@ -1,31 +1,62 @@
 import React, { useState, useRef, useContext } from 'react';
 
-import { AuthContext } from '../../contexts';
-import { createPlaylist } from '../../apis/API';
+import { AuthContext, LibraryContext } from '../../contexts';
+import {
+  createPlaylist,
+  getPlaylistSimple,
+  createOrEditPlaylist
+} from '../../apis/API';
 import { InputFileLabel, InputText } from '../inputs';
 import { ButtonMain } from '../buttons';
-import { CardError, CardSuccess } from '../cards';
 
 import { CloseIcon } from '../../assets/svgs';
 import PlaylistPlaceholder from '../../assets/imgs/playlist-placeholder.png';
 
 function GroupPlaylistDialog(props) {
   const { state: authState } = useContext(AuthContext);
-  const { isUpdated, handleCloseDialog, handleCreatePlaylistSuccess } = props;
-
-  const [info, setInfo] = useState({
-    title: props.title,
-    description: props.description ? props.description : null
-  });
-  const [thumbnail, setThumbnail] = useState(null);
-  const [thumbnailSrc, setThumbnailSrc] = useState(props.thumbnail);
-  const [status, setStatus] = useState({
-    error: '',
-    success: '',
-    submit: 0
-  });
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   const thumbnailRef = useRef();
+
+  const { editPlaylist } = libState;
+  const { playlist } = editPlaylist;
+  const isEdit = editPlaylist.type === 'edit';
+
+  const [data, setData] = useState({
+    title: [false, playlist.title],
+    description: [false, playlist.description],
+    thumbnail: [false, null]
+  });
+  const [thumbnailSrc, setThumbnailSrc] = useState(playlist.thumbnail);
+  const [submitted, setSubmitted] = useState(0);
+
+  const handlePropagateDialog = e => {
+    e.stopPropagation();
+  };
+
+  const handleCloseDialog = () => {
+    libDispatch(libActions.setEditPlaylist(false));
+  };
+
+  const handleCreatePlaylistSuccess = playlistId => {
+    getPlaylistSimple(authState.token, playlistId).then(res => {
+      if (res.status === 'success') {
+        props.history.push(`/player/playlist/${res.data.id}`);
+        libDispatch(libActions.createPlaylist(res.data));
+      }
+    });
+  };
+
+  const handleChangeInfo = e => {
+    setData({
+      ...data,
+      [e.target.getAttribute('name')]: [true, e.target.value]
+    });
+  };
 
   const handleChangeThumbnail = () => {
     let file = thumbnailRef.current.files[0];
@@ -34,76 +65,57 @@ function GroupPlaylistDialog(props) {
       reader.readAsDataURL(file);
 
       reader.onloadend = e => {
-        setThumbnail(file);
+        setData({ ...data, thumbnail: [true, file] });
         setThumbnailSrc(reader.result);
       };
     }
   };
 
-  const handleChangeInfo = e => {
-    setInfo({
-      ...info,
-      [e.target.getAttribute('name')]: e.target.value
-    });
-  };
-
   const handleSubmit = () => {
-    setStatus({ ...status, submit: 1 });
-    if (!info.title) return;
+    setSubmitted(1);
+    if (!data.title[1]) return;
 
-    setStatus({ ...status, submit: 2 });
-    createPlaylist(authState.token, info.title, info.description, thumbnail)
-      .then(response => response.json())
+    setSubmitted(2);
+    createOrEditPlaylist(authState.token, data, editPlaylist.type, playlist.id)
       .then(res => {
         if (res.status === 'success') {
-          setStatus({ ...status, success: 'Playlist created' });
           handleCreatePlaylistSuccess(res.data);
-          setTimeout(() => {
-            handleCloseDialog();
-          }, 500);
+          handleCloseDialog();
+          libDispatch(
+            libActions.setNotification(
+              true,
+              true,
+              isEdit ? 'Playlist edited' : 'Playlist created'
+            )
+          );
         } else {
-          setStatus({ ...status, error: 'Failed to create playlist' });
-          setTimeout(() => {
-            setStatus({
-              ...status,
-              submit: 0,
-              error: ''
-            });
-          }, 500);
+          throw 'Error';
         }
       })
       .catch(error => {
-        console.log(error);
+        libDispatch(
+          libActions.setNotification(
+            true,
+            false,
+            `Failed to ${editPlaylist.type} playlist`
+          )
+        );
+        setSubmitted(0);
       });
   };
 
-  const handlePropagateDialog = e => {
-    e.stopPropagation();
-  };
-
   return (
-    <div className='playlist-dialog-wrapper' onClick={handleCloseDialog}>
+    <div
+      className='screen-overlay playlist-dialog fadein'
+      onClick={handleCloseDialog}
+    >
       <div className='playlist-dialog' onClick={handlePropagateDialog}>
-        {status.error ? (
-          <div className='notification'>
-            <CardError message='Failed to create the playlist' />
-          </div>
-        ) : (
-          ''
-        )}
-        {status.success ? (
-          <div className='notification'>
-            <CardSuccess message='Playlist created' />
-          </div>
-        ) : (
-          ''
-        )}
         <CloseIcon
-          className='svg--regular svg--cursor svg--scale'
+          className='close svg--regular svg--cursor svg--scale'
           onClick={handleCloseDialog}
         />
         <div className='playlist-dialog__header font-short-big font-weight-bold font-white'>
-          Create Playlist
+          {isEdit ? 'Edit Playlist' : 'Create playlist'}
         </div>
         <div className='playlist-dialog__body'>
           <div className='left'>
@@ -111,10 +123,10 @@ function GroupPlaylistDialog(props) {
               <InputText
                 type='text'
                 name='title'
-                value={info.title}
+                value={data.title[1]}
                 placeholder='Playlist name'
                 onChange={handleChangeInfo}
-                error={status.submit && !info.title}
+                error={submitted && !data.title[1]}
                 errMessage='Must have a title'
               />
             </div>
@@ -125,7 +137,7 @@ function GroupPlaylistDialog(props) {
                 placeholder='Description for this playlist (optional)'
                 onChange={handleChangeInfo}
               >
-                {info.description}
+                {data.description[1]}
               </textarea>
             </div>
           </div>
@@ -151,10 +163,10 @@ function GroupPlaylistDialog(props) {
             <div className='right__button'>
               <ButtonMain
                 onClick={handleSubmit}
-                disabled={status.submit === 2 ? true : false}
+                disabled={submitted === 2 ? true : false}
               >
-                {isUpdated ? 'Save' : 'Create'}
-                {status.submit === 2 ? '...' : ''}
+                {isEdit ? 'Save' : 'Create'}
+                {submitted === 2 ? '...' : ''}
               </ButtonMain>
             </div>
           </div>

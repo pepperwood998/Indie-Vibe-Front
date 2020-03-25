@@ -21,11 +21,10 @@
     width: 100%;
     margin-bottom: 10px;
     cursor: pointer;
+    overflow: hidden;
 
     &.profile {
-      .cover {
-        border-radius: 50%;
-      }
+      border-radius: 50%;
     }
 
     .dummy {
@@ -102,7 +101,7 @@
         }
       }
 
-      &.ctx-menu {
+      &.active {
         opacity: 1;
       }
     }
@@ -126,15 +125,18 @@
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      margin-top: 5px;
       -webkit-box-orient: vertical;
 
-      &.playlist-release {
-        -webkit-line-clamp: 2;
+      &.bottom {
+        margin-top: 5px;
       }
 
-      &.profile {
+      &.one-line {
         -webkit-line-clamp: 1;
+      }
+
+      &.two-line {
+        -webkit-line-clamp: 2;
       }
     }
   }

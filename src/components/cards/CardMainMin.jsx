@@ -20,12 +20,23 @@ function CardMainMin(props) {
       authState.token,
       content.id,
       libState.browsePlaylists.trackId
-    ).then(res => {
-      if (res.status === 'success') {
-        libDispatch(libActions.setBrowsePlaylists(false, ''));
-        console.log('track added');
-      }
-    });
+    )
+      .then(res => {
+        if (res.status === 'success') {
+          libDispatch(
+            libActions.setNotification(true, true, 'Track added to playlist')
+          );
+          libDispatch(libActions.setBrowsePlaylists(false, ''));
+          libDispatch(libActions.addTrackToPlaylist(content.id));
+        } else {
+          throw 'Error';
+        }
+      })
+      .catch(error => {
+        libDispatch(
+          libActions.setNotification(true, false, 'Track already in playlist')
+        );
+      });
   };
   return (
     <div className='card-main'>

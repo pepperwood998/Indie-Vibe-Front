@@ -10,6 +10,7 @@ const initState = {
   ctxFav: { id: '', type: '', relation: [] },
   ctxDelPlaylistId: '',
   ctxPlaylistPrivate: { id: '', status: '' },
+  ctxDelPlaylistTrackId: '',
   myPlaylists: {
     items: [],
     offset: 0,
@@ -19,6 +20,20 @@ const initState = {
   browsePlaylists: {
     opened: false,
     trackId: ''
+  },
+  editPlaylist: {
+    opened: false,
+    type: 'create',
+    playlist: {}
+  },
+  trackCredits: {
+    opened: false,
+    trackId: ''
+  },
+  notification: {
+    opened: false,
+    success: false,
+    message: ''
   }
 };
 
@@ -64,8 +79,36 @@ const actions = {
   },
   setBrowsePlaylists: (opened, trackId) => {
     return {
-      type: 'SET_BROWSE_PLAYLSITS',
+      type: 'SET_BROWSE_PLAYLISTS',
       payload: { opened, trackId }
+    };
+  },
+  setEditPlaylist: (opened, type = 'create', playlist = {}) => {
+    return {
+      type: 'SET_EDIT_PLAYLIST',
+      payload: { opened, type, playlist }
+    };
+  },
+  setTrackCredits: (opened, trackId = '') => {
+    return {
+      type: 'SET_TRACK_CREDITS',
+      payload: { opened, trackId }
+    };
+  },
+  addTrackToPlaylist: playlistId => {
+    return { type: 'ADD_TRACK_PLAYLIST', playlistId };
+  },
+  removeTrackFromPlaylist: (playlistId, trackId) => {
+    return { type: 'RM_TRACK_PLAYLIST', payload: { playlistId, trackId } };
+  },
+  setNotification: (opened, success = false, message = '') => {
+    return {
+      type: 'SET_NOTIFICATION',
+      payload: {
+        opened,
+        success,
+        message
+      }
     };
   }
 };
@@ -137,10 +180,62 @@ const reducer = (state, action) => {
         }
       };
     }
-    case 'SET_BROWSE_PLAYLSITS': {
+    case 'SET_BROWSE_PLAYLISTS': {
       return {
         ...state,
         browsePlaylists: action.payload
+      };
+    }
+    case 'SET_EDIT_PLAYLIST': {
+      return {
+        ...state,
+        editPlaylist: action.payload
+      };
+    }
+    case 'SET_TRACK_CREDITS': {
+      return {
+        ...state,
+        trackCredits: action.payload
+      };
+    }
+    case 'ADD_TRACK_PLAYLIST': {
+      const playlists = [...state.myPlaylists.items];
+      playlists.some(item => {
+        if (action.playlistId === item.id) {
+          item.tracksCount += 1;
+          return true;
+        }
+      });
+      return {
+        ...state,
+        myPlaylists: {
+          ...state.myPlaylists,
+          items: playlists
+        }
+      };
+    }
+    case 'RM_TRACK_PLAYLIST': {
+      const { payload } = action;
+      const playlists = [...state.myPlaylists.items];
+      playlists.some(item => {
+        if (payload.playlistId === item.id) {
+          item.tracksCount -= 1;
+          return true;
+        }
+      });
+      return {
+        ...state,
+        ctxDelPlaylistTrackId: action.payload.trackId,
+        myPlaylists: {
+          ...state.myPlaylists,
+          items: playlists
+        }
+      };
+    }
+    case 'SET_NOTIFICATION': {
+      return {
+        ...state,
+        notification: action.payload
       };
     }
     default:

@@ -21,10 +21,6 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { useEffectSkip, getDatePart } from '../../../utils/Common';
 
 function TrackList(props) {
-  // props
-  const { type } = props;
-  const id = props.match.params.id;
-
   // contexts
   const { state: authState } = useContext(AuthContext);
   const {
@@ -32,9 +28,14 @@ function TrackList(props) {
     actions: streamAction,
     dispatch: streamDispatch
   } = useContext(StreamContext);
-  const { state: libState } = useContext(LibraryContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   // states
+  const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     tracks: {
       items: [],
@@ -45,20 +46,26 @@ function TrackList(props) {
     relation: [],
     followersCount: 0
   });
-
   const [owner, setOwner] = useState({ role: {} });
 
-  // effects
+  // props
+  const { type } = props;
+  const id = props.match.params.id;
+  let isCurrentList =
+    type === streamState.playFromType && id === streamState.playFromId;
+
+  // effect: init
   useEffect(() => {
+    setFirstRender(true);
     getTrackList(authState.token, id, type)
       .then(res => {
         if (res.status === 'success' && res.data) {
           if (type !== res.data.type) {
-            window.location.href = '/player/home';
-            return;
+            throw 'Error';
           }
 
           setData({ ...data, ...res.data });
+          setFirstRender(false);
           if (type === 'playlist') {
             setOwner({ ...owner, ...res.data.owner });
           } else {
@@ -73,6 +80,7 @@ function TrackList(props) {
       });
   }, [id]);
 
+  // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
     if (ctxFav.type === 'playlist' || ctxFav.type === 'release') {
@@ -96,6 +104,7 @@ function TrackList(props) {
     }
   }, [libState.ctxFav]);
 
+  // effect-skip: delete playlist
   useEffectSkip(() => {
     if (type === 'playlist') {
       if (id === libState.ctxDelPlaylistId) {
@@ -104,17 +113,38 @@ function TrackList(props) {
     }
   }, [libState.ctxDelPlaylistId]);
 
-  // playlist privacy
+  // effect-skip: playlist privacy
   useEffectSkip(() => {
     const { ctxPlaylistPrivate } = libState;
     setData({ ...data, status: ctxPlaylistPrivate.status });
   }, [libState.ctxPlaylistPrivate]);
 
+  // effect-skip: remove track playlist
+  useEffectSkip(() => {
+    if (type === 'playlist') {
+      const { ctxDelPlaylistTrackId } = libState;
+      if (ctxDelPlaylistTrackId) {
+        const { tracks } = data;
+        setData({
+          ...data,
+          tracks: {
+            ...tracks,
+            items: tracks.items.filter(
+              item => item.track.id !== ctxDelPlaylistTrackId
+            ),
+            total: tracks.total - 1
+          }
+        });
+        libDispatch(libActions.removeTrackFromPlaylist(''));
+      }
+    }
+  }, [libState.ctxDelPlaylistTrackId]);
+
   const handlePaused = () => {
     streamDispatch(streamAction.togglePaused(true));
   };
   const handlePlay = () => {
-    if (id === streamState.playFromId) {
+    if (isCurrentList) {
       streamDispatch(streamAction.togglePaused(false));
     } else {
       streamCollection(authState.token, type, id).then(res => {
@@ -135,8 +165,10 @@ function TrackList(props) {
       });
   };
 
-  return (
-    <div className='content-page'>
+  return firstRender ? (
+    ''
+  ) : (
+    <div className='content-page fadein'>
       <div className='mono-page track-list'>
         <div className='track-list__header'>
           <div className='avatar'>
@@ -181,7 +213,7 @@ function TrackList(props) {
         </div>
         <div className='track-list__action'>
           <div className='action'>
-            {id === streamState.playFromId && !streamState.paused ? (
+            {isCurrentList && !streamState.paused ? (
               <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
             ) : (
               <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>

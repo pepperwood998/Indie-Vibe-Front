@@ -51,7 +51,7 @@ function Register() {
         setRegistering(false);
       })
       .catch(err => {
-        if (err.type && err.type==='wrong') {
+        if (err.type && err.type === 'wrong') {
           setRegisterError(err.msg);
         } else {
           setRegisterError('Server error');
@@ -93,7 +93,7 @@ function Register() {
             setRegisteringFb(false);
           })
           .catch(err => {
-            if (err.type && err.type==='wrong') {
+            if (err.type && err.type === 'wrong') {
               setRegisterError(err.msg);
             } else {
               setRegisterError('Server error');
@@ -152,22 +152,25 @@ function Register() {
           name='gender'
           label='Female'
           value='0'
+          checked={gender == 0}
           onChange={handleInputsChange}
         />
         <InputRadioBox
           name='gender'
           label='Male'
           value='1'
+          checked={gender == 1}
           onChange={handleInputsChange}
         />
         <InputRadioBox
           name='gender'
           label='Other'
           value='2'
+          checked={gender == 2}
           onChange={handleInputsChange}
         />
       </div>
-      {!gender && submitted ? (
+      {gender == undefined && submitted ? (
         <CardError message={'Please provide your gender'} />
       ) : (
         ''

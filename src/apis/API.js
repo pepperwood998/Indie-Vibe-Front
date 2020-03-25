@@ -39,19 +39,30 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
   });
 };
 
-export const createPlaylist = (token, title, description, thumbnail) => {
-  let data = new FormData();
-  data.append('title', title);
-  if (description) data.append('description', description);
-  if (thumbnail) data.append('thumbnail', thumbnail);
+export const createOrEditPlaylist = (
+  token,
+  data = { title: [], description: [], thumbnail: [] },
+  type = 'create',
+  playlistId = ''
+) => {
+  let formData = new FormData();
+  for (let key in data) {
+    if (data[key][0]) {
+      formData.append(key, data[key][1]);
+    }
+  }
 
-  return fetch(`${host}/playlists`, {
-    method: 'POST',
+  let url = `${host}/playlists`;
+  if (type === 'edit') url += `/${playlistId}`;
+  url = new URL(url);
+
+  return fetch(url, {
+    method: type === 'edit' ? 'UPDATE' : 'POST',
     headers: {
       Authorization: 'Bearer ' + token
     },
-    body: data
-  });
+    body: formData
+  }).then(response => response.json());
 };
 
 export const deleteTrackList = (token, type, id) => {
@@ -103,6 +114,18 @@ export const addTrackToPlaylist = (token, playlistId, trackId) => {
   }).then(response => response.json());
 };
 
+export const removeTrackFromPlaylist = (token, playlistId, trackId) => {
+  let url = new URL(`${host}/playlists/${playlistId}/track`);
+  url.search = new URLSearchParams({ trackId });
+
+  return fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
 export const search = (token, key, type = '', offset = 0, limit = 20) => {
   let url = `${host}/search/${key}`;
   if (type) url += `/${type}s`;
@@ -120,7 +143,7 @@ export const search = (token, key, type = '', offset = 0, limit = 20) => {
 
 export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   let url = `${host}/library/${userId}`;
-  if (type) url += `/${type}s`;
+  if (type) url += `/${type}s/favorite`;
 
   url = new URL(url);
   url.search = new URLSearchParams({ offset, limit }).toString();
@@ -133,8 +156,13 @@ export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   }).then(response => response.json());
 };
 
-export const profile = (token, userId) => {
-  let url = `${host}/library/${userId}/profile`;
+export const profile = (token, userId, type = 'user') => {
+  let url = '';
+  if (type === 'artist') {
+    url = `${host}/artists/${userId}`;
+  } else {
+    url = `${host}/library/${userId}/profile`;
+  }
 
   return fetch(url, {
     method: 'GET',
@@ -144,8 +172,29 @@ export const profile = (token, userId) => {
   }).then(response => response.json());
 };
 
-export const getPlaylistsMe = (token, offset = 0, limit = 20) => {
-  let url = new URL(`${host}/library/playlists`);
+export const getPlaylistsMeOwn = (token, offset = 0, limit = 20) => {
+  return getPlaylists(token, '', '', 'own', offset, limit);
+};
+
+export const getPlaylistsMeFav = (token, offset = 0, limit = 20) => {
+  return getPlaylists(token, '', '', 'favorite', offset, limit);
+};
+
+export const getPlaylists = (
+  token,
+  fromId,
+  targetId,
+  relation = 'own',
+  offset = 0,
+  limit = 20
+) => {
+  let urlStr = '';
+  if (fromId === targetId) {
+    urlStr = `${host}/library/playlists/${relation}`;
+  } else {
+    urlStr = `${host}/library/${targetId}/playlists/${relation}`;
+  }
+  let url = new URL(urlStr);
   url.search = new URLSearchParams({ offset, limit }).toString();
 
   return fetch(url, {
@@ -165,6 +214,17 @@ export const getPlaylistSimple = (token, playlistId) => {
   }).then(response => response.json());
 };
 
+export const getTrackFull = (token, id) => {
+  let url = new URL(`${host}/tracks/${id}`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
 export const getTrackList = (token, id, type, offset = 0, limit = 20) => {
   let url = new URL(`${host}/${type}s/full/${id}`);
   url.search = new URLSearchParams({ offset, limit }).toString();
@@ -174,5 +234,65 @@ export const getTrackList = (token, id, type, offset = 0, limit = 20) => {
     headers: {
       Authorization: 'Bearer ' + token
     }
+  }).then(response => response.json());
+};
+
+export const getReleasesByType = (
+  token,
+  artistId,
+  type = 're-album',
+  offset = 0,
+  limit = 20
+) => {
+  let url = new URL(`${host}/artists/${artistId}/releases/${type}`);
+  url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const updateAccount = (token, data) => {
+  let formData = new FormData();
+  let changeCounter = 0;
+  for (let key in data) {
+    if (data[key][0]) {
+      formData.append(key, data[key][1]);
+      changeCounter++;
+    }
+  }
+  if (!changeCounter)
+    return new Promise((resolve, reject) => {
+      resolve({ status: 'unchanged' });
+    });
+
+  let url = new URL(`${host}/account`);
+  return fetch(url, {
+    method: 'UPDATE',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
+
+export const updatePassword = (token, data) => {
+  let formData = new FormData();
+  for (let key in data) {
+    if (data[key][0]) {
+      formData.append(key, data[key][1]);
+    }
+  }
+
+  let url = new URL(`${host}/account/password`);
+  return fetch('http://www.mocky.io/v2/5e7ac9b5300000e5c9930f06', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
   }).then(response => response.json());
 };

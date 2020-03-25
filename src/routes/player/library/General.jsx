@@ -1,48 +1,59 @@
-import React, { useState, useEffect, useContext } from 'react';
-
-import { capitalize, useEffectSkip } from '../../../utils/Common';
-import { NavLinkColor } from '../../../components/links';
-import { CollectionMain } from '../../../components/collections';
-import { AuthContext, LibraryContext } from '../../../contexts';
+import React, { useContext, useEffect, useState } from 'react';
 import { library } from '../../../apis/API';
-
 import { ArrowRight } from '../../../assets/svgs';
+import { CollectionMain } from '../../../components/collections';
+import { NavLinkColor } from '../../../components/links';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { capitalize, useEffectSkip } from '../../../utils/Common';
 
 function General(props) {
-  const { id: userId } = props.match.params;
-
+  // contexts
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
+  // states
+  const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     playlists: [],
     artists: []
   });
 
+  // props
+  const { id: userId } = props.match.params;
+  let exist = Object.keys(data).find(key => data[key].length > 0);
+  let render = '';
+
+  // effect: init
   useEffect(() => {
-    library(authState.token, props.match.params.id)
+    library(authState.token, userId)
       .then(res => {
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
+          setFirstRender(false);
         }
       })
       .catch(err => {
         console.error(err);
       });
-  }, []);
+  }, [userId]);
 
+  // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
-    let target = [...data[`${ctxFav.type}s`]];
-    target.some(item => {
-      if (ctxFav.id === item.id) {
-        item.relation = [...ctxFav.relation];
-        return true;
-      }
-    });
-    setData({ ...data, [`${ctxFav.type}s`]: target });
+    const items = data[`${ctxFav.type}s`];
+    if (items) {
+      let target = [...items];
+      target.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
+      setData({ ...data, [`${ctxFav.type}s`]: target });
+    }
   }, [libState.ctxFav]);
 
+  // effect-skip: delete playlist
   useEffectSkip(() => {
     let target = [...data.playlists];
     setData({
@@ -51,7 +62,7 @@ function General(props) {
     });
   }, [libState.ctxDelPlaylistId]);
 
-  // playlist privacy
+  // effect-skip: playlist privacy
   useEffectSkip(() => {
     const { ctxPlaylistPrivate } = libState;
     let playlists = [...data.playlists];
@@ -64,8 +75,6 @@ function General(props) {
     setData({ ...data, playlists });
   }, [libState.ctxPlaylistPrivate]);
 
-  let exist = Object.keys(data).find(key => data[key].length > 0);
-  let render = '';
   if (exist) {
     render = Object.keys(data).map((key, index) => {
       if (data[key].length > 0) {
@@ -97,7 +106,7 @@ function General(props) {
     );
   }
 
-  return render;
+  return firstRender ? '' : <div className='fadein'>{render}</div>;
 }
 
 export default General;

@@ -19,36 +19,53 @@ const initState = {
     // '5UmNONJQaXmNmbdmr2On',
     // 'gKen4p6Y37lf2OkVuMNg'
   ],
+  queueExtra: [],
   currentSongIndex: 0,
-  bitrate: 128,
+  mainQueueMarkIndex: 0,
   playFromId: '',
   playFromType: '', // 'playlist' or 'release' or 'favorite'
   info: {},
   volume: 50,
   muted: false,
-  autoplay: false,
   paused: true,
   repeat: 'none',
-  shuffled: false
+  shuffled: false,
+  settings: {
+    bitrate: '128',
+    shouldPlay: false
+  }
 };
 
 function StreamContextProvider(props) {
-  const [state, dispatch] = useReducer(reducer, initState);
+  const [state, dispatch] = useReducer(reducer, initState, () => {
+    let settings = localStorage.getItem('settings');
+    if (settings) {
+      return {
+        ...initState,
+        settings: JSON.parse(settings)
+      };
+    }
+  });
 
   const { state: authState } = useContext(AuthContext);
 
   // init stream states
   useEffect(() => {
-    stream.api = (id, bitrate) => {
-      return getStreamInfo(authState.token, id, bitrate);
-    };
     stream.onInfo = info => {
       dispatch(actions.setInfo(info));
     };
     stream.onTogglePaused = paused => {
       dispatch(actions.onTogglePaused(paused));
     };
+    if (state.settings)
+      localStorage.setItem('settings', JSON.stringify(state.settings));
   }, []);
+
+  useEffect(() => {
+    stream.api = (id, bitrate) => {
+      return getStreamInfo(authState.token, id, bitrate);
+    };
+  }, [authState.token]);
 
   //
   useEffect(() => {
@@ -93,6 +110,12 @@ const actions = {
         playFromId,
         targetTrackId
       }
+    };
+  },
+  addToQueue: extra => {
+    return {
+      type: 'ADD_TO_QUEUE',
+      extra
     };
   },
   repeatTrack: () => {
@@ -174,6 +197,9 @@ const actions = {
         relation
       }
     };
+  },
+  setSettings: settings => {
+    return { type: 'SET_SETTINGS', settings };
   }
 };
 
@@ -185,8 +211,7 @@ const reducer = (state, action) => {
         payload.audio,
         payload.onProgress,
         payload.onDurationChange,
-        state.autoplay,
-        state.bitrate
+        state.settings
       );
       return state;
     }
@@ -206,6 +231,14 @@ const reducer = (state, action) => {
         currentSongIndex: 0
       };
     }
+    case 'ADD_TO_QUEUE': {
+      if (!state.queue.length && !state.queueExtra.length)
+        stream.start(action.extra[0], stream.settings.shouldPlay);
+      return {
+        ...state,
+        queueExtra: [...state.queueExtra, ...action.extra]
+      };
+    }
     case 'REPEAT_TRACK': {
       stream.continue(state.queue[state.currentSongIndex]);
       return state;
@@ -220,50 +253,74 @@ const reducer = (state, action) => {
       };
     }
     case 'SKIP_BACKWARD': {
-      if (!state.queue.length) return state;
+      if (!state.queue.length && !state.queueExtra.length) return state;
+
+      let shouldPlay = !state.paused;
+      // when reachs the end of the song
+      if (!shouldPlay) {
+        if (action.payload) {
+          shouldPlay = action.payload;
+        }
+      }
 
       let backwardId = getCircularIndex(
         state.currentSongIndex - 1,
         state.queue.length
       );
 
-      let autoplay = !state.paused;
-      // when reachs the end of the song
-      if (!autoplay) {
-        if (action.payload) {
-          autoplay = action.payload;
-        } else {
-          autoplay = state.autoplay;
-        }
+      const { queue, queueExtra } = state;
+      if (queueExtra.length && backwardId === state.mainQueueMarkIndex) {
+        let queueTemp = [...queueExtra];
+        let nextTrack = queueTemp.pop();
+        stream.start(nextTrack, shouldPlay);
+
+        return {
+          ...state,
+          queueExtra: queueTemp
+        };
+      } else {
+        stream.start(queue[backwardId], shouldPlay);
+
+        return {
+          ...state,
+          currentSongIndex: backwardId
+        };
       }
-      stream.start(state.queue[backwardId], autoplay);
-      return {
-        ...state,
-        currentSongIndex: backwardId
-      };
     }
     case 'SKIP_FORWARD': {
-      if (!state.queue.length) return state;
+      if (!state.queue.length && !state.queueExtra.length) return state;
 
-      let forwardId = getCircularIndex(
-        state.currentSongIndex + 1,
-        state.queue.length
-      );
-
-      let autoplay = !state.paused;
+      let shouldPlay = !state.paused;
       // when reachs the end of the song
-      if (!autoplay) {
+      if (!shouldPlay) {
         if (action.payload) {
-          autoplay = action.payload;
-        } else {
-          autoplay = state.autoplay;
+          shouldPlay = action.payload;
         }
       }
-      stream.start(state.queue[forwardId], autoplay);
-      return {
-        ...state,
-        currentSongIndex: forwardId
-      };
+
+      const { queue, queueExtra } = state;
+      if (queueExtra.length) {
+        let queueTemp = [...queueExtra];
+        let nextTrack = queueTemp.shift();
+        stream.start(nextTrack, shouldPlay);
+
+        return {
+          ...state,
+          queueExtra: queueTemp,
+          mainQueueMarkIndex: state.currentSongIndex
+        };
+      } else {
+        let forwardId = getCircularIndex(
+          state.currentSongIndex + 1,
+          state.queue.length
+        );
+        stream.start(queue[forwardId], shouldPlay);
+
+        return {
+          ...state,
+          currentSongIndex: forwardId
+        };
+      }
     }
     case 'TOGGLE_PAUSED':
       stream.togglePaused();
@@ -330,6 +387,12 @@ const reducer = (state, action) => {
       }
 
       return state;
+    }
+    case 'SET_SETTINGS': {
+      stream.setSettings(action.settings);
+      let newSettings = { ...state.settings, ...action.settings };
+      localStorage.setItem('settings', JSON.stringify(newSettings));
+      return { ...state, settings: newSettings };
     }
     default:
       return state;

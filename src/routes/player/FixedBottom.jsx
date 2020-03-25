@@ -84,7 +84,13 @@ function NowPayingLeft() {
         </div>
         <div className='now-playing__info'>
           <NavLinkUnderline
-            href={`/player/${playFromType}/${playFromId}`}
+            href={
+              playFromType
+                ? playFromType === 'favorite'
+                  ? `/player/library/${authState.id}/tracks`
+                  : `/player/${playFromType}/${playFromId}`
+                : '/player/queue'
+            }
             className='font-short-regular font-weight-bold font-white'
           >
             {title}

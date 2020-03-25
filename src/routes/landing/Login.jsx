@@ -53,7 +53,6 @@ function Login() {
       })
       .then(json => {
         dispatch(loginSuccess({ ...json, remembered }));
-        window.location.href = '/home';
       })
       .catch(err => {
         if (err === 'wrong') setLoginError('Wrong email or password');

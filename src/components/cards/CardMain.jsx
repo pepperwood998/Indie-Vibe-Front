@@ -16,8 +16,6 @@ import {
 } from '../../assets/svgs';
 
 function CardMain(props) {
-  const { content } = props;
-
   const { state: authState } = useContext(AuthContext);
   const {
     state: streamState,
@@ -29,6 +27,12 @@ function CardMain(props) {
     actions: libActions,
     dispatch: libDispatch
   } = useContext(LibraryContext);
+
+  const { content } = props;
+  const { artist } = content;
+  let isCurrentList =
+    content.type === streamState.playFromType &&
+    content.id === streamState.playFromId;
 
   const handleToggleFavorite = action => {
     performActionFavorite(
@@ -71,7 +75,7 @@ function CardMain(props) {
   };
 
   const handlePlay = () => {
-    if (content.id === streamState.playFromId) {
+    if (isCurrentList) {
       streamDispatch(streamAction.togglePaused(false));
     } else {
       streamCollection(authState.token, content.type, content.id).then(res => {
@@ -85,8 +89,11 @@ function CardMain(props) {
   };
 
   let ctxClasses = 'action playlist-release';
-  if (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
-    ctxClasses += ' ctx-menu';
+  if (
+    isCurrentList ||
+    (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
+  )
+    ctxClasses += ' active';
   return (
     <div className='card-main'>
       <div className='card-main__cover-wrapper'>
@@ -99,7 +106,7 @@ function CardMain(props) {
         </Link>
         <div className={ctxClasses}>
           <ButtonIcon>
-            {content.id === streamState.playFromId && !streamState.paused ? (
+            {isCurrentList && !streamState.paused ? (
               <PauseIcon onClick={handlePaused} />
             ) : (
               <PlayIcon onClick={handlePlay} />
@@ -143,26 +150,24 @@ function CardMain(props) {
       <div className='card-main__info'>
         <NavLinkUnderline
           href={`/player/${content.type}/${content.id}`}
-          className='font-short-big font-weight-bold font-white'
+          className='content one-line font-short-big font-weight-bold font-white'
         >
           {content.title}
         </NavLinkUnderline>
-        <div className='content playlist-release font-short-s font-gray-light'>
-          <span>
-            {content.type === 'release' ? (
-              <React.Fragment>
-                <span>by&nbsp;</span>
-                <NavLinkUnderline
-                  href={`/player/artist/${content.artist.id}`}
-                  className='font-gray-light'
-                >
-                  {content.artist.displayName}
-                </NavLinkUnderline>
-              </React.Fragment>
-            ) : (
-              content.description
-            )}
-          </span>
+        <div className='content bottom two-line playlist-release font-short-s font-gray-light'>
+          {content.type === 'release' ? (
+            <React.Fragment>
+              <span>by&nbsp;</span>
+              <NavLinkUnderline
+                href={`/player/artist/${artist ? artist.id : ''}`}
+                className='font-gray-light'
+              >
+                {artist ? artist.displayName : ''}
+              </NavLinkUnderline>
+            </React.Fragment>
+          ) : (
+            content.description
+          )}
         </div>
       </div>
     </div>

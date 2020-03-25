@@ -1,18 +1,24 @@
-import React from 'react';
-
-import { NavigationTab } from '../../../components/navigation';
+import React, { useState } from 'react';
 import { UserRoute } from '../../../components/custom-routes';
-import { TemplateNavPage } from '../template';
-import Mono from './Mono';
-import General from './General';
 import { GroupProfileBox } from '../../../components/groups';
+import { NavigationTab } from '../../../components/navigation';
+import { TemplateNavPage } from '../template';
+import General from './General';
+import LibraryPlaylists from './LibraryPlaylists';
+import Mono from './Mono';
 
 function Library(props) {
   const { id } = props.match.params;
 
+  const [collapsed, setCollapsed] = useState(false);
+
+  const handleScrollOver = over => {
+    setCollapsed(over);
+  };
+
   const nav = (
     <React.Fragment>
-      <GroupProfileBox id={id} />
+      <GroupProfileBox id={id} collapsed={collapsed} />
       <NavigationTab
         items={[
           {
@@ -20,7 +26,7 @@ function Library(props) {
             label: 'General'
           },
           {
-            href: `/player/library/${id}/favorites`,
+            href: `/player/library/${id}/tracks`,
             label: 'Favorite songs'
           },
           {
@@ -48,18 +54,16 @@ function Library(props) {
     </React.Fragment>
   );
 
-  const tabs = [
-    'favorites',
-    'playlists',
-    'releases',
-    'artists',
-    'followings',
-    'followers'
-  ];
+  const tabs = ['tracks', 'releases', 'artists', 'followings', 'followers'];
 
   const body = (
     <React.Fragment>
       <UserRoute exact path='/player/library/:id' component={General} />
+      <UserRoute
+        exact
+        path='/player/library/:id/playlists'
+        component={LibraryPlaylists}
+      />
       {tabs.map((value, index) => (
         <UserRoute
           exact
@@ -72,7 +76,13 @@ function Library(props) {
     </React.Fragment>
   );
 
-  return <TemplateNavPage nav={nav} body={body} />;
+  return (
+    <TemplateNavPage
+      nav={nav}
+      body={body}
+      handleScrollOver={handleScrollOver}
+    />
+  );
 }
 
 export default Library;

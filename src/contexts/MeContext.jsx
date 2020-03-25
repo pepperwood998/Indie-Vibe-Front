@@ -50,7 +50,10 @@ const reducer = (state, action) => {
         ...json
       };
     case 'UNLOAD_ME':
-      return Object.assign({}, ...initState);
+      return {
+        ...state,
+        ...initState
+      };
   }
 };
 

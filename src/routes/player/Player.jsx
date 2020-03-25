@@ -1,20 +1,27 @@
-import React, { useContext, useRef, useEffect } from 'react';
-
-import Top from './FixedTop';
+import React, { useContext, useEffect, useRef } from 'react';
+import { getPlaylistsMeOwn } from '../../apis/API';
+import { CloseIcon } from '../../assets/svgs';
+import { ButtonLoadMore } from '../../components/buttons';
+import { CardError, CardSuccess } from '../../components/cards';
+import { CollectionMain } from '../../components/collections';
+import { ContextSwitch } from '../../components/context-menu';
+import { ArtistRoute, UserRoute } from '../../components/custom-routes';
+import {
+  GroupPlaylistDialog,
+  GroupTrackCredits
+} from '../../components/groups';
+import { AuthContext, LibraryContext } from '../../contexts';
+import { Artist } from './artist';
+import './css/player.scss';
+import Bottom from './FixedBottom';
 import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
-import Bottom from './FixedBottom';
-import { UserRoute, ArtistRoute } from '../../components/custom-routes';
-import { Browse, Home, Account, Artist, TrackList } from './monopage';
-import { Workspace } from './workspace';
-import { Search } from './search';
+import Top from './FixedTop';
 import { Library } from './library';
-import { LibraryContext } from '../../contexts';
-import { ContextSwitch } from '../../components/context-menu';
-
-import './css/player.scss';
-import { CollectionMain } from '../../components/collections';
-import { CloseIcon } from '../../assets/svgs';
+import { Browse, Home, TrackList } from './monopage';
+import { Search } from './search';
+import { Workspace } from './workspace';
+import { Account } from './account';
 
 function Player(props) {
   const {
@@ -38,7 +45,7 @@ function Player(props) {
         <NavMenu />
       </div>
       <div className='player__quick-access'>
-        <QuickAccess />
+        <QuickAccess history={props.history} />
       </div>
       <div className='player__bottom'>
         <Bottom />
@@ -48,7 +55,7 @@ function Player(props) {
         <UserRoute path='/player/browse' component={Browse} />
         <UserRoute path='/player/library/:id' component={Library} />
         <UserRoute path='/player/account' component={Account} />
-        <UserRoute path='/player/artist' component={Artist} />
+        <UserRoute path='/player/artist/:id' component={Artist} />
         <UserRoute path='/player/search/:key' component={Search} />
         <UserRoute
           path='/player/release/:id'
@@ -76,26 +83,44 @@ function Player(props) {
           ''
         )}
       </div>
-      {libState.browsePlaylists.opened ? (
-        <BrowsePlaylist src={libState.myPlaylists} />
+      {libState.browsePlaylists.opened ? <BrowsePlaylist /> : ''}
+      {libState.editPlaylist.opened ? (
+        <GroupPlaylistDialog history={props.history} />
       ) : (
         ''
       )}
+      {libState.trackCredits.opened ? <GroupTrackCredits /> : ''}
+      {libState.notification.opened ? <Notification /> : ''}
     </div>
   );
 }
 
-function BrowsePlaylist(props) {
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
+function BrowsePlaylist() {
+  const { state: authState } = useContext(AuthContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
-  const myOwnPlaylists = props.src.items.filter(item =>
+  const { myPlaylists } = libState;
+  const myOwnPlaylists = myPlaylists.items.filter(item =>
     item.relation.includes('own')
   );
 
+  const handleLoadMore = () => {
+    getPlaylistsMeOwn(
+      authState.token,
+      myPlaylists.offset + myPlaylists.limit
+    ).then(res => {
+      if (res.status === 'success' && res.data.items) {
+        libDispatch(libActions.loadMorePlaylists(res.data));
+      }
+    });
+  };
+
   return (
-    <div className='screen-overlay'>
+    <div className='screen-overlay browse-playlists fadein'>
       <CloseIcon
         className='close svg--cursor svg--scale'
         onClick={() => {
@@ -109,6 +134,40 @@ function BrowsePlaylist(props) {
           type='browse-playlist'
         />
       </div>
+      {myPlaylists.total > myPlaylists.offset + myPlaylists.limit ? (
+        <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
+      ) : (
+        ''
+      )}
+    </div>
+  );
+}
+
+function Notification() {
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
+
+  const { notification } = libState;
+  let timeout;
+
+  useEffect(() => {
+    clearTimeout(timeout);
+    if (notification.opened)
+      timeout = setTimeout(() => {
+        libDispatch(libActions.setNotification(false));
+      }, 1500);
+  });
+
+  return (
+    <div className='action-notification'>
+      {notification.success ? (
+        <CardSuccess message={notification.message} />
+      ) : (
+        <CardError message={notification.message} />
+      )}
     </div>
   );
 }

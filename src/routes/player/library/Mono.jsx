@@ -5,17 +5,17 @@ import {
   CollectionMain
 } from '../../../components/collections';
 import { capitalize, useEffectSkip } from '../../../utils/Common';
-import { library, getPlaylistsMe } from '../../../apis/API';
+import { library } from '../../../apis/API';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
 
 function Mono(props) {
-  const { type } = props;
-  const userId = props.match ? props.match.params.id : '';
-
+  // contexts
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
+  // states
+  const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     items: [],
     offset: 0,
@@ -23,18 +23,25 @@ function Mono(props) {
     total: 0
   });
 
+  // props
+  const { type } = props;
+  const userId = props.match ? props.match.params.id : '';
+
+  // effect: init
   useEffect(() => {
-    getLibraryTarget(authState, userId, type)
+    library(authState.token, userId, type)
       .then(res => {
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
+          setFirstRender(false);
         }
       })
       .catch(err => {
         console.error(err);
       });
-  }, []);
+  }, [userId]);
 
+  // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
     let items = [...data.items];
@@ -47,32 +54,8 @@ function Mono(props) {
     setData({ ...data, items });
   }, [libState.ctxFav]);
 
-  useEffectSkip(() => {
-    if (type === 'playlist') {
-      setData({
-        ...data,
-        items: data.items.filter(item => item.id !== libState.ctxDelPlaylistId),
-        total: data.total - 1
-      });
-    }
-  }, [libState.ctxDelPlaylistId]);
-
-  useEffectSkip(() => {
-    if (type === 'playlist') {
-      const { ctxPlaylistPrivate } = libState;
-      let items = [...data.items];
-      items.some(playlist => {
-        if (ctxPlaylistPrivate.id === playlist.id) {
-          playlist.status = ctxPlaylistPrivate.status;
-          return true;
-        }
-      });
-      setData({ ...data, items });
-    }
-  }, [libState.ctxPlaylistPrivate]);
-
   const handleLoadMore = () => {
-    getLibraryTarget(authState, userId, type, data.offset + data.limit)
+    library(authState.token, userId, type, data.offset + data.limit)
       .then(res => {
         if (res.status === 'success' && res.data.items) {
           setData({
@@ -90,8 +73,7 @@ function Mono(props) {
   };
 
   let collection = '';
-
-  if (type === 'favorite') {
+  if (type === 'track') {
     collection = (
       <CollectionTracks
         header={
@@ -113,24 +95,18 @@ function Mono(props) {
     );
   }
 
-  return (
-    <React.Fragment>
+  return firstRender ? (
+    ''
+  ) : (
+    <div className='fadein'>
       {collection}
       {data.total > data.offset + data.limit ? (
         <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
       ) : (
         ''
       )}
-    </React.Fragment>
+    </div>
   );
 }
-
-const getLibraryTarget = (authState, userId, type, offset, limit) => {
-  if (type === 'playlist' && userId === authState.id) {
-    return getPlaylistsMe(authState.token, offset, limit);
-  }
-
-  return library(authState.token, userId, type, offset, limit);
-};
 
 export default Mono;

@@ -4,6 +4,8 @@ import { ArtistRoute } from '../../../components/custom-routes';
 import { NavigationTab } from '../../../components/navigation';
 import { TemplateNavPage } from '../template';
 import Upload from './Upload';
+import Releases from './Releases';
+import Statistics from './Statistics';
 
 function Workspace() {
   const nav = (
@@ -32,20 +34,12 @@ function Workspace() {
         path={['/player/workspace', '/player/workspace/releases']}
         component={Releases}
       />
-      <ArtistRoute path='/player/workspace/statistic' component={Statistic} />
+      <ArtistRoute path='/player/workspace/statistic' component={Statistics} />
       <ArtistRoute path='/player/workspace/upload' component={Upload} />
     </React.Fragment>
   );
 
   return <TemplateNavPage nav={nav} body={body} />;
-}
-
-function Releases() {
-  return <div className='workspace-releases'></div>;
-}
-
-function Statistic() {
-  return <div className='workspace-statistic'></div>;
 }
 
 export default Workspace;

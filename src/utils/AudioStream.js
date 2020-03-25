@@ -5,7 +5,7 @@ class AudioStream {
     this.audio = new Audio();
     this.isPlaying = false;
     this.trackId = '';
-    this.bitrate = 0;
+    this.settings = { bitrate: 0, shouldPlay: false };
     this.ready = false;
 
     this.api = trackId => undefined;
@@ -29,12 +29,12 @@ class AudioStream {
     this.eventPause = e => undefined;
   }
 
-  init(audio, onProgress, onDurationChange, autoplay, bitrate) {
+  init(audio, onProgress, onDurationChange, settings) {
+    this.settings = settings;
     this.audio = audio;
-    this.audio.autoplay = autoplay;
+    this.audio.autoplay = settings.shouldPlay;
     this.onProgress = onProgress;
     this.onDurationChange = onDurationChange;
-    this.bitrate = bitrate;
 
     this.eventDurationChange = e => {
       this.onDurationChange(getFormattedTime(this.audio.duration));
@@ -79,9 +79,9 @@ class AudioStream {
     this.api = api;
   }
 
-  start(id, autoplay) {
+  start(id, shouldPlay) {
     this.trackId = id;
-    this.audio.autoplay = autoplay;
+    this.audio.autoplay = shouldPlay;
     this.fetchInfo().then(() => {
       this.seek(0);
     });
@@ -89,7 +89,7 @@ class AudioStream {
 
   continue(id) {
     this.start(id, true);
-  } 
+  }
 
   volume(per) {
     this.audio.volume = per / 100;
@@ -114,6 +114,10 @@ class AudioStream {
     if (!this.audio.paused && this.isPlaying) this.audio.pause();
   }
 
+  setSettings(settings) {
+    this.settings = { ...this.settings, ...settings };
+  }
+
   clean() {
     this.audio.removeEventListener('durationchange', this.eventDurationChange);
     this.audio.removeEventListener('canplay', this.eventCanPlay);
@@ -127,7 +131,7 @@ class AudioStream {
     this.ready = false;
     this.audio.pause();
 
-    return this.api(this.trackId, this.bitrate)
+    return this.api(this.trackId, this.settings.bitrate)
       .then(response => response.json())
       .then(info => {
         let { data } = info;

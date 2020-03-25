@@ -97,6 +97,7 @@ function CollectionTrackTable(props) {
                   item={item}
                   key={index}
                   serial={index}
+                  playFromType={type}
                   playFromId={item.release ? item.release.id : ''}
                 />
               );
@@ -129,9 +130,10 @@ function RowPlaylist(props) {
         title={item.title}
         fromType='playlist'
         releaseId={item.release.id}
-        artistId={item.release.artist.id}
+        artistId={item.release.artist ? item.release.artist.id : ''}
         index={serial}
         relation={item.relation}
+        playlistId={props.playFromId}
         playlistRelation={props.playlistRelation}
         collectionKey='playlist'
       />
@@ -208,7 +210,8 @@ function RowRelease(props) {
 function RowSearch(props) {
   const { item, serial } = props;
 
-  const playFromType = props.type === 'favorite' ? props.type : 'release';
+  const playFromType =
+    props.playFromType === 'favorite' ? 'favorite' : 'release';
 
   return (
     <div className='collection-table__row collection-table__row--data'>
@@ -229,7 +232,7 @@ function RowSearch(props) {
         title={item.title}
         fromType='release'
         releaseId={item.release.id}
-        artistId={item.release.artist.id}
+        artistId={item.release.artist ? item.release.artist.id : ''}
         index={serial}
         relation={item.relation}
         collectionKey='track'
@@ -304,16 +307,18 @@ function CellAction(props) {
     }
   };
 
+  let isCurrent =
+    id === current &&
+    playFromType === streamState.playFromType &&
+    playFromId === streamState.playFromId;
   let classesAction = 'action';
-  if (id === current) {
-    classesAction += ' active';
-  }
+  classesAction += isCurrent ? ' active' : '';
   return (
     <div className='collection-table__cell collection-table__cell--action'>
       <span>{serial}</span>
       <div className={classesAction}>
         <ButtonIcon>
-          {id === current && !streamState.paused ? (
+          {isCurrent && !streamState.paused ? (
             <PauseIcon onClick={handlePause} />
           ) : (
             <PlayIcon onClick={handlePlay} />
@@ -401,6 +406,7 @@ function CellTitle(props) {
           relation: props.relation,
           releaseId: props.releaseId,
           artistId: props.artistId,
+          playlistId: props.playlistId,
           playlistRelation: props.playlistRelation
         },
         pos: [x, y + height + 10]
@@ -408,11 +414,19 @@ function CellTitle(props) {
     );
   };
 
+  const handleBrowsePlaylists = () => {
+    libDispatch(libActions.closeCtxMenu());
+    libDispatch(libActions.setBrowsePlaylists(true, props.id));
+  };
+
   return (
     <div className='collection-table__cell collection-table__cell--title'>
       <span className='main'>{title}</span>
       <span className='extra'>
-        <PlusIcon className='svg--cursor svg--gray-light svg--bright' />
+        <PlusIcon
+          className='svg--cursor svg--gray-light svg--bright'
+          onClick={handleBrowsePlaylists}
+        />
         <MoreIcon
           className='svg--cursor svg--gray-light svg--bright'
           onClick={handleToggleCtxMenu}

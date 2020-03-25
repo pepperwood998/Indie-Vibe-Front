@@ -3,9 +3,14 @@ import React from 'react';
 import { CardMain, CardMainMin, CardProfile } from '../cards';
 
 function CollectionMain(props) {
+  let headerClasses = 'collection-main__header';
+  headerClasses += props.full ? ' full' : '';
+
   return (
     <div className='collection-main collection-main--extended'>
-      <div className='collection-main__header'>{props.header}</div>
+      <div className={headerClasses}>
+        {props.header}
+      </div>
       <div className='collection-main__content grid'>
         <Content items={props.items} type={props.type} />
       </div>

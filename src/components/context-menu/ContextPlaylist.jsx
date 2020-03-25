@@ -2,7 +2,11 @@ import React, { useContext } from 'react';
 
 import { LinkWhiteColor } from '../links';
 import { LibraryContext, AuthContext } from '../../contexts';
-import { deleteTrackList, performAction } from '../../apis/API';
+import {
+  deleteTrackList,
+  performAction,
+  getPlaylistSimple
+} from '../../apis/API';
 
 function ContextPlaylist(props) {
   const { content } = props;
@@ -23,7 +27,7 @@ function ContextPlaylist(props) {
 }
 
 function Me(props) {
-  const { content } = props;
+  const { content, handlers } = props;
 
   const { state: authState } = useContext(AuthContext);
   const { actions: libActions, dispatch: libDispatch } = useContext(
@@ -31,10 +35,13 @@ function Me(props) {
   );
 
   const handleDeletePlaylist = id => {
-    libDispatch(libActions.closeCtxMenu());
+    handlers.handleClose();
     deleteTrackList(authState.token, 'playlist', id)
       .then(res => {
         if (res.status === 'success') {
+          libDispatch(
+            libActions.setNotification(true, true, 'Playlist deleted')
+          );
           libDispatch(libActions.deletePlaylist(id));
         }
       })
@@ -44,7 +51,7 @@ function Me(props) {
   };
 
   const handleTogglePlaylistPrivate = action => {
-    libDispatch(libActions.closeCtxMenu());
+    handlers.handleClose();
     performAction(authState.token, content.id, action, 'playlist').then(res => {
       if (res.status === 'success') {
         libDispatch(
@@ -57,11 +64,18 @@ function Me(props) {
     });
   };
 
+  const handleEditPlaylist = () => {
+    handlers.handleClose();
+    getPlaylistSimple(authState.token, content.id).then(res => {
+      if (res.status === 'success') {
+        libDispatch(libActions.setEditPlaylist(true, 'edit', res.data));
+      }
+    });
+  };
+
   return (
     <ul>
-      <li>
-        <LinkWhiteColor>Add to queue</LinkWhiteColor>
-      </li>
+      <li>{props.AddToQueue}</li>
       <li>
         {content.status === 'public' ? (
           <LinkWhiteColor
@@ -82,7 +96,7 @@ function Me(props) {
         )}
       </li>
       <li>
-        <LinkWhiteColor>Edit</LinkWhiteColor>
+        <LinkWhiteColor onClick={handleEditPlaylist}>Edit</LinkWhiteColor>
       </li>
       <li>
         <LinkWhiteColor
@@ -102,9 +116,7 @@ function Other(props) {
 
   return (
     <ul>
-      <li>
-        <LinkWhiteColor>Add to queue</LinkWhiteColor>
-      </li>
+      <li>{props.AddToQueue}</li>
       <li>
         {content.relation.includes('favorite') ? (
           <LinkWhiteColor

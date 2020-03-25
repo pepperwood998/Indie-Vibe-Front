@@ -1,15 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
-
-import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
-import { AuthContext, LibraryContext } from '../../contexts';
-import { GroupPlaylistDialog } from '../../components/groups';
-import { LinkWhiteColor } from '../../components/links';
-import { getPlaylistsMe, getPlaylistSimple } from '../../apis/API';
-
+import React, { useContext, useEffect, useState } from 'react';
+import { getPlaylistsMeOwn } from '../../apis/API';
 import { AddPlaylistIcon } from '../../assets/svgs';
-import { useEffectSkip } from '../../utils/Common';
+import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
+import { LinkWhiteColor } from '../../components/links';
+import { AuthContext, LibraryContext } from '../../contexts';
 
-function QuickAccess() {
+function QuickAccess(props) {
   const { state: authState } = useContext(AuthContext);
   const {
     state: libState,
@@ -18,10 +14,8 @@ function QuickAccess() {
   } = useContext(LibraryContext);
   const { role } = authState;
 
-  const [dialogOpened, setDialogOpened] = useState(false);
-
   useEffect(() => {
-    getPlaylistsMe(authState.token).then(res => {
+    getPlaylistsMeOwn(authState.token).then(res => {
       if (res.status === 'success' && res.data) {
         libDispatch(libActions.setMyPlaylists(res.data));
       }
@@ -31,23 +25,11 @@ function QuickAccess() {
   let playlists = libState.myPlaylists;
 
   const handleOpenDialog = () => {
-    setDialogOpened(true);
-  };
-
-  const handleCloseDialog = () => {
-    setDialogOpened(false);
-  };
-
-  const handleCreatePlaylistSuccess = playlistId => {
-    getPlaylistSimple(authState.token, playlistId).then(res => {
-      if (res.status === 'success') {
-        libDispatch(libActions.createPlaylist(res.data));
-      }
-    });
+    libDispatch(libActions.setEditPlaylist(true));
   };
 
   const handleLoadMore = () => {
-    getPlaylistsMe(authState.token, playlists.offset + playlists.limit).then(
+    getPlaylistsMeOwn(authState.token, playlists.offset + playlists.limit).then(
       res => {
         if (res.status === 'success' && res.data.items) {
           libDispatch(libActions.loadMorePlaylists(res.data));
@@ -58,14 +40,6 @@ function QuickAccess() {
 
   return (
     <div className='quick-access'>
-      {dialogOpened ? (
-        <GroupPlaylistDialog
-          handleCloseDialog={handleCloseDialog}
-          handleCreatePlaylistSuccess={handleCreatePlaylistSuccess}
-        />
-      ) : (
-        ''
-      )}
       <div className='quick-access__role'>
         <RoleBanner role={role} />
       </div>

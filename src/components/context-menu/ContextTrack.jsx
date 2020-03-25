@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 
 import { LinkWhiteColor } from '../links';
-import { LibraryContext } from '../../contexts';
+import { LibraryContext, AuthContext } from '../../contexts';
+import { removeTrackFromPlaylist } from '../../apis/API';
 
 function ContextTrack(props) {
   const { content, handlers } = props;
 
+  const { state: authState } = useContext(AuthContext);
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
   );
@@ -14,12 +16,45 @@ function ContextTrack(props) {
     ? content.playlistRelation
     : [];
 
+  const handleRemoveTrackFromPlaylist = () => {
+    handlers.handleClose();
+    removeTrackFromPlaylist(authState.token, content.playlistId, content.id)
+      .then(res => {
+        if (res.status === 'success') {
+          libDispatch(
+            libActions.removeTrackFromPlaylist(content.playlistId, content.id)
+          );
+          libDispatch(
+            libActions.setNotification(
+              true,
+              true,
+              'Track removed from playlist'
+            )
+          );
+        } else {
+          throw 'Error';
+        }
+      })
+      .catch(error => {
+        libDispatch(
+          libActions.setNotification(
+            true,
+            false,
+            'Failed to remove track from playlist'
+          )
+        );
+      });
+  };
+
+  const handleOpenTrackCredits = () => {
+    handlers.handleClose();
+    libDispatch(libActions.setTrackCredits(true, content.id));
+  };
+
   return (
     <div className='context-menu' ref={props.elemRef}>
       <ul>
-        <li>
-          <LinkWhiteColor>Add to queue</LinkWhiteColor>
-        </li>
+        <li>{props.AddToQueue}</li>
         <li
           onClick={() => {
             handlers.handleClose();
@@ -49,11 +84,13 @@ function ContextTrack(props) {
           ''
         )}
         <li>
-          <LinkWhiteColor>Show credits</LinkWhiteColor>
+          <LinkWhiteColor onClick={handleOpenTrackCredits}>
+            Show credits
+          </LinkWhiteColor>
         </li>
         {playlistRelation.includes('own') && content.fromType === 'playlist' ? (
           <li>
-            <LinkWhiteColor onClick={() => {}}>
+            <LinkWhiteColor onClick={handleRemoveTrackFromPlaylist}>
               Remove from playlist
             </LinkWhiteColor>
           </li>
