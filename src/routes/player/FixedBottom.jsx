@@ -78,6 +78,7 @@ function NowPayingLeft() {
     return (
       <div className='now-playing'>
         <div className='now-playing__cover-container'>
+          <div className='dummy'></div>
           <Link to={`/player/release/${release.id}`}>
             <img src={release.thumbnail ? release.thumbnail : Placeholder} />
           </Link>
