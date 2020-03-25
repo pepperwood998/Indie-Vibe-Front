@@ -1,0 +1,69 @@
+.account-information {
+  display: flex;
+  flex-direction: row;
+
+  &__thumbnail {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    overflow: hidden;
+
+    img {
+      width: 150px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__info {
+    padding: 0px 40px;
+    flex: 1;
+
+    .plan-tier {
+      padding-bottom: 50px;
+    }
+
+    .details {
+      max-width: 450px;
+
+      .label {
+        font: $shortRegular;
+        color: $grayLight;
+        text-align: end;
+      }
+
+      .genders {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.account-password {
+  .form-password {
+    max-width: 550px;
+  }
+
+  .label {
+    font: $shortRegular;
+    color: $grayLight;
+    text-align: end;
+  }
+}
+
+.account-settings {
+  .form-settings {
+    max-width: 400px;
+  }
+
+  .label {
+    font: $shortRegular;
+    color: $grayLight;
+    text-align: end;
+  }
+}

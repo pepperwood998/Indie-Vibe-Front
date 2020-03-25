@@ -22,16 +22,18 @@ const initState = {
   queueExtra: [],
   currentSongIndex: 0,
   mainQueueMarkIndex: 0,
-  bitrate: 128,
   playFromId: '',
   playFromType: '', // 'playlist' or 'release' or 'favorite'
   info: {},
   volume: 50,
   muted: false,
-  autoplay: false,
   paused: true,
   repeat: 'none',
-  shuffled: false
+  shuffled: false,
+  settings: {
+    bitrate: '128',
+    shouldPlay: false
+  }
 };
 
 function StreamContextProvider(props) {
@@ -185,6 +187,9 @@ const actions = {
         relation
       }
     };
+  },
+  setSettings: settings => {
+    return { type: 'SET_SETTINGS', settings };
   }
 };
 
@@ -196,8 +201,7 @@ const reducer = (state, action) => {
         payload.audio,
         payload.onProgress,
         payload.onDurationChange,
-        state.autoplay,
-        state.bitrate
+        state.settings
       );
       return state;
     }
@@ -219,7 +223,7 @@ const reducer = (state, action) => {
     }
     case 'ADD_TO_QUEUE': {
       if (!state.queue.length && !state.queueExtra.length)
-        stream.continue(action.extra[0], true);
+        stream.start(action.extra[0], stream.settings.shouldPlay);
       return {
         ...state,
         queueExtra: [...state.queueExtra, ...action.extra]
@@ -241,13 +245,11 @@ const reducer = (state, action) => {
     case 'SKIP_BACKWARD': {
       if (!state.queue.length && !state.queueExtra.length) return state;
 
-      let autoplay = !state.paused;
+      let shouldPlay = !state.paused;
       // when reachs the end of the song
-      if (!autoplay) {
+      if (!shouldPlay) {
         if (action.payload) {
-          autoplay = action.payload;
-        } else {
-          autoplay = state.autoplay;
+          shouldPlay = action.payload;
         }
       }
 
@@ -260,14 +262,14 @@ const reducer = (state, action) => {
       if (queueExtra.length && backwardId === state.mainQueueMarkIndex) {
         let queueTemp = [...queueExtra];
         let nextTrack = queueTemp.pop();
-        stream.start(nextTrack, autoplay);
+        stream.start(nextTrack, shouldPlay);
 
         return {
           ...state,
           queueExtra: queueTemp
         };
       } else {
-        stream.start(queue[backwardId], autoplay);
+        stream.start(queue[backwardId], shouldPlay);
 
         return {
           ...state,
@@ -278,13 +280,11 @@ const reducer = (state, action) => {
     case 'SKIP_FORWARD': {
       if (!state.queue.length && !state.queueExtra.length) return state;
 
-      let autoplay = !state.paused;
+      let shouldPlay = !state.paused;
       // when reachs the end of the song
-      if (!autoplay) {
+      if (!shouldPlay) {
         if (action.payload) {
-          autoplay = action.payload;
-        } else {
-          autoplay = state.autoplay;
+          shouldPlay = action.payload;
         }
       }
 
@@ -292,7 +292,7 @@ const reducer = (state, action) => {
       if (queueExtra.length) {
         let queueTemp = [...queueExtra];
         let nextTrack = queueTemp.shift();
-        stream.start(nextTrack, autoplay);
+        stream.start(nextTrack, shouldPlay);
 
         return {
           ...state,
@@ -304,7 +304,7 @@ const reducer = (state, action) => {
           state.currentSongIndex + 1,
           state.queue.length
         );
-        stream.start(queue[forwardId], autoplay);
+        stream.start(queue[forwardId], shouldPlay);
 
         return {
           ...state,
@@ -377,6 +377,10 @@ const reducer = (state, action) => {
       }
 
       return state;
+    }
+    case 'SET_SETTINGS': {
+      stream.setSettings(action.settings);
+      return { ...state, settings: { ...state.settings, ...action.settings } };
     }
     default:
       return state;

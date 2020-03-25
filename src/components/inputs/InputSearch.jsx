@@ -6,12 +6,15 @@ function InputSearch({ placeholder = 'Search', onChange = () => {} }) {
   return (
     <div className='input-search'>
       <SearchIcon />
-      <input
-        type='text'
-        className='font-white font-short-s'
-        placeholder={placeholder}
-        onChange={onChange}
-      />
+      <form>
+        <input
+          type='search'
+          className='font-white font-short-s'
+          placeholder={placeholder}
+          onChange={onChange}
+          autoComplete='new-password'
+        />
+      </form>
     </div>
   );
 }

@@ -18,9 +18,10 @@ import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
 import Top from './FixedTop';
 import { Library } from './library';
-import { Account, Browse, Home, TrackList } from './monopage';
+import { Browse, Home, TrackList } from './monopage';
 import { Search } from './search';
 import { Workspace } from './workspace';
+import { Account } from './account';
 
 function Player(props) {
   const {

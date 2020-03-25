@@ -7,7 +7,8 @@ function InputForm({
   error = false,
   errMessage = '',
   value = '',
-  name = ''
+  name = '',
+  autocomplete = 'on'
 }) {
   let classes = 'input-text input-text--clear input-text--full font-white';
   if (error) {
@@ -23,6 +24,7 @@ function InputForm({
       placeholder={placeholder}
       onChange={onChange}
       value={value}
+      autoComplete={autocomplete}
     />
   );
 }

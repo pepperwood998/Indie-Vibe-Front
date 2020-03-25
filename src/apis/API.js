@@ -254,3 +254,45 @@ export const getReleasesByType = (
     }
   }).then(response => response.json());
 };
+
+export const updateAccount = (token, data) => {
+  let formData = new FormData();
+  let changeCounter = 0;
+  for (let key in data) {
+    if (data[key][0]) {
+      formData.append(key, data[key][1]);
+      changeCounter++;
+    }
+  }
+  if (!changeCounter)
+    return new Promise((resolve, reject) => {
+      resolve({ status: 'unchanged' });
+    });
+
+  let url = new URL(`${host}/account`);
+  return fetch(url, {
+    method: 'UPDATE',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
+
+export const updatePassword = (token, data) => {
+  let formData = new FormData();
+  for (let key in data) {
+    if (data[key][0]) {
+      formData.append(key, data[key][1]);
+    }
+  }
+
+  let url = new URL(`${host}/account/password`);
+  return fetch('http://www.mocky.io/v2/5e7ac9b5300000e5c9930f06', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};

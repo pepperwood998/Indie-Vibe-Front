@@ -2,15 +2,20 @@
   padding: 20px 0px;
 
   &__header {
-    padding: 0px 0px 20px;
+    padding: 0px 0px 10px;
+    margin-bottom: 10px;
     font: $shortExtra;
     color: $white;
     font-weight: bold;
-    display: inline-block;
+
+    &.full {
+      border-bottom: 1px solid $grayDark;
+    }
 
     .header-title {
       display: flex;
       align-items: center;
+      display: inline-block;
 
       svg {
         transition: ease 0.2s;
