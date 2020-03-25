@@ -23,16 +23,25 @@
 
 .now-playing {
   height: 100%;
-  padding: 20px 0px;
+  padding: 15px 0px;
   display: flex;
 
   &__cover-container {
     height: inherit;
-    width: 60px;
+    width: 50px;
+    position: relative;
+    overflow: hidden;
+
+    .dummy {
+      margin-top: 100%;
+    }
 
     img {
       width: 100%;
-      height: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 
@@ -42,14 +51,10 @@
     justify-content: center;
     flex-direction: column;
     flex: 1;
-    padding: 20px 15px;
+    padding: 0px 15px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-
-    > *:not(:last-child) {
-      margin-bottom: 5px;
-    }
   }
 
   &__action {
