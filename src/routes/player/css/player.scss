@@ -75,16 +75,6 @@
 
         .body {
           height: 100%;
-          padding: 30px 40px;
-
-          &.full {
-            padding: 0px;
-          }
-
-          > :last-child {
-            padding-bottom: 100px;
-            margin-bottom: 50px;
-          }
 
           &__bound {
             background-color: $blackBlueLight;
@@ -255,5 +245,17 @@
         }
       }
     }
+  }
+
+  .empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font: $shortExtra;
+    font-weight: bold;
+    color: $grayLight;
+    background-color: $blackBlueLight;
   }
 }

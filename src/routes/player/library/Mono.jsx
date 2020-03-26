@@ -98,7 +98,7 @@ function Mono(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='fadein'>
+    <div className='fadein content-padding'>
       {collection}
       {data.total > data.offset + data.limit ? (
         <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>

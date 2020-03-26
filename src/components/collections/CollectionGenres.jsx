@@ -6,7 +6,7 @@ function CollectionGenres(props) {
   headerClasses += props.full ? ' full' : '';
 
   return (
-    <div className='collection-main collection-main--genres padder'>
+    <div className='collection-main collection-main--genres'>
       <div className={headerClasses}>{props.header}</div>
       <div className='collection-main__content grid genres'>
         {props.items.map((item, index) => (

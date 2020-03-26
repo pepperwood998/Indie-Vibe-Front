@@ -4,4 +4,5 @@ export { default as GroupPlaylistDialog } from './GroupPlaylistDialog';
 export { default as GroupReleaseUpload } from './GroupReleaseUpload';
 export { default as GroupProfileBox } from './GroupProfileBox';
 export { default as GroupTrackCredits } from './GroupTrackCredits';
+export { default as GroupEmpty } from './GroupEmpty';
 

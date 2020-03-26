@@ -136,7 +136,7 @@ function LibraryPlaylists(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='library-playlists'>
+    <div className='library-playlists content-padding'>
       {own.total <= 0 && fav.total <= 0 ? (
         <span className='font-short-extra font-weight-bold font-white'>
           No Playlists

@@ -169,7 +169,7 @@ function TrackList(props) {
     ''
   ) : (
     <div className='content-page fadein'>
-      <div className='mono-page track-list'>
+      <div className='track-list content-padding'>
         <div className='track-list__header'>
           <div className='avatar'>
             <img src={data.thumbnail ? data.thumbnail : Placeholder} />

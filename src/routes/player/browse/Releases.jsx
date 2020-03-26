@@ -5,6 +5,7 @@ import { NavLinkColor } from '../../../components/links';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { browseReleases } from '../../../apis/API';
 import { useEffectSkip } from '../../../utils/Common';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 function Releases(props) {
   const { state: authState } = useContext(AuthContext);
@@ -54,32 +55,34 @@ function Releases(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='browse-releases fadein'>
-      <div className='header'>
-        <span className='font-short-extra font-weight-bold font-white'>
-          New releases by Genres
-        </span>
+    <GroupEmpty isEmpty={!data.length} message='No new releases available.'>
+      <div className='browse-releases fadein content-padding'>
+        <div className='header'>
+          <span className='font-short-extra font-weight-bold font-white'>
+            New releases by Genres
+          </span>
+        </div>
+        {data.map((collection, index) => {
+          const { genre, items } = collection;
+          return (
+            <CollectionMain
+              header={
+                <NavLinkColor
+                  href={`/player/genre/${genre.id}/releases`}
+                  className='header-title font-white'
+                >
+                  {genre.name}
+                  <ArrowRight />
+                </NavLinkColor>
+              }
+              items={items}
+              type='release'
+              key={index}
+            />
+          );
+        })}
       </div>
-      {data.map((collection, index) => {
-        const { genre, items } = collection;
-        return (
-          <CollectionMain
-            header={
-              <NavLinkColor
-                href={`/player/genre/${genre.id}/releases`}
-                className='header-title font-white'
-              >
-                {genre.name}
-                <ArrowRight />
-              </NavLinkColor>
-            }
-            items={items}
-            type='release'
-            key={index}
-          />
-        );
-      })}
-    </div>
+    </GroupEmpty>
   );
 }
 

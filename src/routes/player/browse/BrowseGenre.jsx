@@ -5,6 +5,7 @@ import { CollectionMain } from '../../../components/collections';
 import { NavLinkColor } from '../../../components/links';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 function BrowseGenre(props) {
   const { state: authState } = useContext(AuthContext);
@@ -12,12 +13,13 @@ function BrowseGenre(props) {
 
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
-    genre: {},
+    genre: { name: 'Acoustic' },
     playlists: [],
     releases: []
   });
 
   const { id } = props.match.params;
+  const isEmpty = !data.playlists.length && !data.releases.length;
 
   // effect: init
   useEffect(() => {
@@ -63,34 +65,37 @@ function BrowseGenre(props) {
           {data.genre.name}
         </span>
       </div>
-      <div className='mono-page genre-content'>
-        <CollectionMain
-          header={
-            <NavLinkColor
-              href={`/player/genre/${id}/playlists`}
-              className='header-title font-white'
-            >
-              Editor's curated
-              <ArrowRight />
-            </NavLinkColor>
-          }
-          items={data.playlists}
-          type='playlist'
-        />
-        <CollectionMain
-          header={
-            <NavLinkColor
-              href={`/player/genre/${id}/releases`}
-              className='header-title font-white'
-            >
-              New releases
-              <ArrowRight />
-            </NavLinkColor>
-          }
-          items={data.releases}
-          type='release'
-        />
-      </div>
+
+      <GroupEmpty isEmpty={isEmpty} message='No browsing for this genre'>
+        <div className='genre-content mono-page content-padding'>
+          <CollectionMain
+            header={
+              <NavLinkColor
+                href={`/player/genre/${id}/playlists`}
+                className='header-title font-white'
+              >
+                Editor's curated
+                <ArrowRight />
+              </NavLinkColor>
+            }
+            items={data.playlists}
+            type='playlist'
+          />
+          <CollectionMain
+            header={
+              <NavLinkColor
+                href={`/player/genre/${id}/releases`}
+                className='header-title font-white'
+              >
+                New releases
+                <ArrowRight />
+              </NavLinkColor>
+            }
+            items={data.releases}
+            type='release'
+          />
+        </div>
+      </GroupEmpty>
     </div>
   );
 }

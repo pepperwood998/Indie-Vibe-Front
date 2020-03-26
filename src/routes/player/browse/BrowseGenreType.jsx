@@ -3,6 +3,7 @@ import { browseGenreType } from '../../../apis/API';
 import { CollectionMain } from '../../../components/collections';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 function BrowseGenreType(props) {
   const { state: authState } = useContext(AuthContext);
@@ -68,13 +69,19 @@ function BrowseGenreType(props) {
           {data.genre.name}
         </span>
       </div>
-      <div className='mono-page genre-content'>
-        <CollectionMain
-          header={isPlaylist ? "Editor's curated" : 'New releases'}
-          items={data.data.items}
-          type={isPlaylist ? 'playlist' : 'release'}
-        />
-      </div>
+
+      <GroupEmpty
+        isEmpty={!data.data.items.length}
+        message={`No available ${type}`}
+      >
+        <div className='genre-content mono-page content-padding'>
+          <CollectionMain
+            header={isPlaylist ? "Editor's curated" : 'New releases'}
+            items={data.data.items}
+            type={isPlaylist ? 'playlist' : 'release'}
+          />
+        </div>
+      </GroupEmpty>
     </div>
   );
 }

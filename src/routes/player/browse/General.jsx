@@ -9,6 +9,7 @@ import {
 import { NavLinkColor } from '../../../components/links';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 function General(props) {
   const { state: authState } = useContext(AuthContext);
@@ -16,6 +17,8 @@ function General(props) {
 
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({ releases: [], collections: [] });
+
+  const isEmpty = !data.releases.length && !data.collections.length;
 
   useEffect(() => {
     browseGeneral(authState.token)
@@ -56,43 +59,49 @@ function General(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='browse-general fadein'>
-      <div className='releases'>
-        <CollectionWide
-          header={
-            <NavLink
-              to='/player/browse/releases'
-              className='header-title all-white font-white'
-            >
-              New releases
-              <ArrowRight />
-            </NavLink>
-          }
-          items={data.releases}
-        />
-      </div>
-      <div className='playlists-collections'>
-        {data.collections.map((collection, index) => {
-          const { genre, items } = collection;
-          return (
-            <CollectionMain
+    <GroupEmpty isEmpty={isEmpty} message='No available browsing.'>
+      <div className='browse-general fadein'>
+        <div className='releases'>
+          {data.releases.length ? (
+            <CollectionWide
               header={
-                <NavLinkColor
-                  href={`/player/genre/${genre.id}/playlists`}
-                  className='header-title font-white'
+                <NavLink
+                  to='/player/browse/releases'
+                  className='header-title all-white font-white'
                 >
-                  {genre.name}
+                  New releases
                   <ArrowRight />
-                </NavLinkColor>
+                </NavLink>
               }
-              items={items}
-              type='playlist'
-              key={index}
+              items={data.releases}
             />
-          );
-        })}
+          ) : (
+            ''
+          )}
+        </div>
+        <div className='playlists-collections'>
+          {data.collections.map((collection, index) => {
+            const { genre, items } = collection;
+            return (
+              <CollectionMain
+                header={
+                  <NavLinkColor
+                    href={`/player/genre/${genre.id}/playlists`}
+                    className='header-title font-white'
+                  >
+                    {genre.name}
+                    <ArrowRight />
+                  </NavLinkColor>
+                }
+                items={items}
+                type='playlist'
+                key={index}
+              />
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </GroupEmpty>
   );
 }
 

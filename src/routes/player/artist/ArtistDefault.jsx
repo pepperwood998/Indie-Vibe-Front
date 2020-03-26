@@ -71,7 +71,7 @@ function ArtistDefault(props) {
   return firstRender < 3 ? (
     ''
   ) : (
-    <div className='artist-default fadein'>
+    <div className='artist-default content-page fadein'>
       {albums.total <= 0 && singles.total <= 0 && eps.total <= 0 ? (
         <span className='font-short-extra font-weight-bold font-white'>
           No public releases.

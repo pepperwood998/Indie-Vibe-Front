@@ -106,7 +106,7 @@ function General(props) {
     );
   }
 
-  return firstRender ? '' : <div className='fadein'>{render}</div>;
+  return firstRender ? '' : <div className='fadein content-padding'>{render}</div>;
 }
 
 export default General;
