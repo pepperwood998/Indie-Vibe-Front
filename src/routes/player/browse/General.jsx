@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ArrowRight } from '../../../assets/svgs';
 import {
@@ -6,68 +6,29 @@ import {
   CollectionWide
 } from '../../../components/collections';
 import { NavLinkColor } from '../../../components/links';
+import { AuthContext } from '../../../contexts';
+import { browseGeneral } from '../../../apis/API';
 
 function General(props) {
-  const releases = [
-    {
-      id: '892j39jf923jf',
-      title: 'Intention',
-      thumbnail: '',
-      artist: {
-        id: 'j9283f923f',
-        displayName: 'Justin Bieber'
-      }
-    },
-    {
-      id: 'f298hf923hf23',
-      title: 'Know your words',
-      thumbnail: '',
-      artist: {
-        id: 'j01jf01j290f',
-        displayName: 'Khalid'
-      }
-    },
-    {
-      id: '93j89239jv923j9',
-      title: 'Birthday',
-      thumbnail: '',
-      artist: {
-        id: '029v009v3v',
-        displayName: 'Annie marie'
-      }
-    }
-  ];
-  const collections = [
-    {
-      genre: { id: 'r-acoustic', name: 'Acoustic' },
-      items: [
-        {
-          id: 'j02j3c02j392j0',
-          title: 'Curator #1',
-          description: 'Description for curator #1',
-          relation: [],
-          type: 'playlist',
-          owner: {
-            role: {
-              id: 'r-curator'
-            }
-          }
-        },
-        {
-          id: 'fj29j38892j3f',
-          title: 'Curator #2',
-          description: 'Description for curator #2',
-          relation: [],
-          type: 'playlist',
-          owner: {
-            role: {
-              id: 'r-curator'
-            }
-          }
+  const { state: authState } = useContext(AuthContext);
+
+  const [firstRender, setFirstRender] = useState(true);
+  const [data, setData] = useState({ releases: [], collections: [] });
+
+  useEffect(() => {
+    browseGeneral(authState.token)
+      .then(res => {
+        setFirstRender(false);
+        if (res.status === 'success') {
+          setData(res.data);
+        } else {
+          throw 'Error';
         }
-      ]
-    }
-  ];
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <div className='browse-general fadein'>
@@ -82,17 +43,17 @@ function General(props) {
               <ArrowRight />
             </NavLink>
           }
-          items={releases}
+          items={data.releases}
         />
       </div>
       <div className='playlists-collections'>
-        {collections.map((collection, index) => {
+        {data.collections.map((collection, index) => {
           const { genre, items } = collection;
           return (
             <CollectionMain
               header={
                 <NavLinkColor
-                  href={`/player/browse/genre/${genre.id}/playlists`}
+                  href={`/player/genre/${genre.id}/playlists`}
                   className='header-title font-white'
                 >
                   {genre.name}

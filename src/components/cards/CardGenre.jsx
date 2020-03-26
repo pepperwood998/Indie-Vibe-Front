@@ -8,7 +8,7 @@ function CardGenre(props) {
   return (
     <div className='card-simple'>
       <NavLink
-        to={`/player/browse/genre/${content.id}`}
+        to={`/player/genre/${content.id}`}
         className='link font-short-extra font-weight-bold font-white'
       >
         <div className='background'>

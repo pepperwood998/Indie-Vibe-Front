@@ -11,7 +11,12 @@ function NavLinkColor(props) {
         to={props.href[0]}
         className={classes}
         isActive={(match, location) => {
-          return props.href.includes(location.pathname);
+          const { pathname } = location;
+          return (
+            props.href.includes(pathname) ||
+            (!props.shallow &&
+              props.href.some(path => pathname.indexOf(path) >= 0))
+          );
         }}
       >
         {props.children}
