@@ -68,32 +68,40 @@ function BrowseGenre(props) {
 
       <GroupEmpty isEmpty={isEmpty} message='No browsing for this genre'>
         <div className='genre-content mono-page content-padding'>
-          <CollectionMain
-            header={
-              <NavLinkColor
-                href={`/player/genre/${id}/playlists`}
-                className='header-title font-white'
-              >
-                Editor's curated
-                <ArrowRight />
-              </NavLinkColor>
-            }
-            items={data.playlists}
-            type='playlist'
-          />
-          <CollectionMain
-            header={
-              <NavLinkColor
-                href={`/player/genre/${id}/releases`}
-                className='header-title font-white'
-              >
-                New releases
-                <ArrowRight />
-              </NavLinkColor>
-            }
-            items={data.releases}
-            type='release'
-          />
+          {!data.playlists.length ? (
+            ''
+          ) : (
+            <CollectionMain
+              header={
+                <NavLinkColor
+                  href={`/player/genre/${id}/playlists`}
+                  className='header-title font-white'
+                >
+                  Editor's curated
+                  <ArrowRight />
+                </NavLinkColor>
+              }
+              items={data.playlists}
+              type='playlist'
+            />
+          )}
+          {!data.releases.length ? (
+            ''
+          ) : (
+            <CollectionMain
+              header={
+                <NavLinkColor
+                  href={`/player/genre/${id}/releases`}
+                  className='header-title font-white'
+                >
+                  New releases
+                  <ArrowRight />
+                </NavLinkColor>
+              }
+              items={data.releases}
+              type='release'
+            />
+          )}
         </div>
       </GroupEmpty>
     </div>

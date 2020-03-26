@@ -18,7 +18,8 @@ import { streamCollection } from '../../../apis/StreamAPI';
 
 import { UnFavoriteIcon, FavoriteIcon } from '../../../assets/svgs';
 import Placeholder from '../../../assets/imgs/placeholder.png';
-import { useEffectSkip, getDatePart } from '../../../utils/Common';
+import { useEffectSkip, getDatePart, capitalize } from '../../../utils/Common';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 function TrackList(props) {
   // contexts
@@ -47,6 +48,7 @@ function TrackList(props) {
     followersCount: 0
   });
   const [owner, setOwner] = useState({ role: {} });
+  const [existed, setExisted] = useState(true);
 
   // props
   const { type } = props;
@@ -59,13 +61,13 @@ function TrackList(props) {
     setFirstRender(true);
     getTrackList(authState.token, id, type)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           if (type !== res.data.type) {
             throw 'Error';
           }
 
           setData({ ...data, ...res.data });
-          setFirstRender(false);
           if (type === 'playlist') {
             setOwner({ ...owner, ...res.data.owner });
           } else {
@@ -76,7 +78,7 @@ function TrackList(props) {
         }
       })
       .catch(error => {
-        window.location.href = '/player/home';
+        setExisted(false);
       });
   }, [id]);
 
@@ -168,105 +170,110 @@ function TrackList(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='content-page fadein'>
-      <div className='track-list content-padding'>
-        <div className='track-list__header'>
-          <div className='avatar'>
-            <img src={data.thumbnail ? data.thumbnail : Placeholder} />
-          </div>
-          <div className='info'>
-            <div className='info__top'>
-              <span className='font-short-extra font-weight-bold font-white'>
-                {data.title}
-              </span>
-              <div>
-                <span className='font-short-regular font-gray-light'>
-                  by&nbsp;
+    <GroupEmpty
+      isEmpty={!existed}
+      message={`${capitalize(type)} doesn't exist`}
+    >
+      <div className='content-page fadein content-padding'>
+        <div className='track-list'>
+          <div className='track-list__header'>
+            <div className='avatar'>
+              <img src={data.thumbnail ? data.thumbnail : Placeholder} />
+            </div>
+            <div className='info'>
+              <div className='info__top'>
+                <span className='font-short-extra font-weight-bold font-white'>
+                  {data.title}
                 </span>
-                <NavLinkUnderline
-                  href={`/player/${
-                    type === 'release' || owner.role.id === 'r-artist'
-                      ? 'artist'
-                      : 'library'
-                  }/${owner.id}`}
-                  className='font-short-regular font-white'
-                >
-                  {owner.displayName}
-                </NavLinkUnderline>
+                <div>
+                  <span className='font-short-regular font-gray-light'>
+                    by&nbsp;
+                  </span>
+                  <NavLinkUnderline
+                    href={`/player/${
+                      type === 'release' || owner.role.id === 'r-artist'
+                        ? 'artist'
+                        : 'library'
+                    }/${owner.id}`}
+                    className='font-short-regular font-white'
+                  >
+                    {owner.displayName}
+                  </NavLinkUnderline>
+                </div>
+                <p className='description font-short-big font-white'>
+                  {data.description}
+                </p>
               </div>
-              <p className='description font-short-big font-white'>
-                {data.description}
-              </p>
-            </div>
-            <div className='info__bottom font-short-regular font-gray-light'>
-              <span>{type.toUpperCase()}</span>
-              <span className='dot'>&#8226;</span>
-              <span>{data.tracks.total} tracks</span>
-              <span className='dot'>&#8226;</span>
-              <span>
-                {type === 'playlist'
-                  ? `${data.followersCount} followers`
-                  : getDatePart(data.date)}
-              </span>
+              <div className='info__bottom font-short-regular font-gray-light'>
+                <span>{type.toUpperCase()}</span>
+                <span className='dot'>&#8226;</span>
+                <span>{data.tracks.total} tracks</span>
+                <span className='dot'>&#8226;</span>
+                <span>
+                  {type === 'playlist'
+                    ? `${data.followersCount} followers`
+                    : getDatePart(data.date)}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div className='track-list__action'>
-          <div className='action'>
-            {isCurrentList && !streamState.paused ? (
-              <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
-            ) : (
-              <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
-            )}
-            {data.relation.includes('own') ? (
-              ''
-            ) : data.relation.includes('favorite') ? (
-              <ButtonIcon>
-                <FavoriteIcon
-                  className='svg--blue'
-                  onClick={() => handleListToggleFavorite('unfavorite')}
-                />
-              </ButtonIcon>
-            ) : (
-              <ButtonIcon>
-                <UnFavoriteIcon
-                  onClick={() => handleListToggleFavorite('favorite')}
-                />
-              </ButtonIcon>
-            )}
-            <ButtonMore
-              ctxData={{
-                type: type,
-                id: id,
-                relation: data.relation,
-                status: data.status,
-                artistId: data.artist ? data.artist.id : ''
-              }}
-            />
+          <div className='track-list__action'>
+            <div className='action'>
+              {isCurrentList && !streamState.paused ? (
+                <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
+              ) : (
+                <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
+              )}
+              {data.relation.includes('own') ? (
+                ''
+              ) : data.relation.includes('favorite') ? (
+                <ButtonIcon>
+                  <FavoriteIcon
+                    className='svg--blue'
+                    onClick={() => handleListToggleFavorite('unfavorite')}
+                  />
+                </ButtonIcon>
+              ) : (
+                <ButtonIcon>
+                  <UnFavoriteIcon
+                    onClick={() => handleListToggleFavorite('favorite')}
+                  />
+                </ButtonIcon>
+              )}
+              <ButtonMore
+                ctxData={{
+                  type: type,
+                  id: id,
+                  relation: data.relation,
+                  status: data.status,
+                  artistId: data.artist ? data.artist.id : ''
+                }}
+              />
+            </div>
+            <div className='filter'>
+              <InputForm placeholder='Filter' />
+            </div>
           </div>
-          <div className='filter'>
-            <InputForm placeholder='Filter' />
+          <div className='track-list__content'>
+            {type === 'playlist' ? (
+              <CollectionTrackTable
+                items={data.tracks.items}
+                playFromId={data.id}
+                type={type}
+                playlistRelation={data.relation}
+              />
+            ) : (
+              <CollectionTrackTable
+                items={data.tracks.items}
+                releaseArtistId={data.artist ? data.artist.id : ''}
+                playFromId={data.id}
+                type={type}
+              />
+            )}
           </div>
-        </div>
-        <div className='track-list__content'>
-          {type === 'playlist' ? (
-            <CollectionTrackTable
-              items={data.tracks.items}
-              playFromId={data.id}
-              type={type}
-              playlistRelation={data.relation}
-            />
-          ) : (
-            <CollectionTrackTable
-              items={data.tracks.items}
-              releaseArtistId={data.artist ? data.artist.id : ''}
-              playFromId={data.id}
-              type={type}
-            />
-          )}
         </div>
       </div>
-    </div>
+    </GroupEmpty>
   );
 }
 

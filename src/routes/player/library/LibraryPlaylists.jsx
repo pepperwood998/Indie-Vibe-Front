@@ -4,6 +4,7 @@ import { CollectionMain } from '../../../components/collections';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
 import { ButtonLoadMore } from '../../../components/buttons';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 const model = {
   items: [],
@@ -20,6 +21,7 @@ function LibraryPlaylists(props) {
   const [fav, setFav] = useState({ ...model });
 
   const { id: targetId } = props.match.params;
+  const isEmpty = own.total === 0 && fav.total === 0;
 
   // effect: init
   useEffect(() => {
@@ -136,54 +138,48 @@ function LibraryPlaylists(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='library-playlists content-padding'>
-      {own.total <= 0 && fav.total <= 0 ? (
-        <span className='font-short-extra font-weight-bold font-white'>
-          No Playlists
-        </span>
-      ) : (
-        <React.Fragment>
-          {own.items.length <= 0 ? (
-            ''
-          ) : (
-            <div className='fadein'>
-              <CollectionMain
-                header='Created playlists'
-                items={own.items}
-                type='playlist'
-                full={true}
-              />
-              {own.total > own.offset + own.limit ? (
-                <ButtonLoadMore onClick={handleLoadMoreOwn}>
-                  Load more
-                </ButtonLoadMore>
-              ) : (
-                ''
-              )}
-            </div>
-          )}
-          {fav.items.length <= 0 ? (
-            ''
-          ) : (
-            <div className='fadein'>
-              <CollectionMain
-                header='Favorite playlists'
-                items={fav.items}
-                type='playlist'
-                full={true}
-              />
-              {fav.total > fav.offset + fav.limit ? (
-                <ButtonLoadMore onClick={handleLoadMoreFav}>
-                  Load more
-                </ButtonLoadMore>
-              ) : (
-                ''
-              )}
-            </div>
-          )}
-        </React.Fragment>
-      )}
-    </div>
+    <GroupEmpty isEmpty={isEmpty} message='No playlists in library'>
+      <div className='library-playlists fadein content-padding'>
+        {own.items.length <= 0 ? (
+          ''
+        ) : (
+          <section>
+            <CollectionMain
+              header='Created playlists'
+              items={own.items}
+              type='playlist'
+              full={true}
+            />
+            {own.total > own.offset + own.limit ? (
+              <ButtonLoadMore onClick={handleLoadMoreOwn}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
+          </section>
+        )}
+        {fav.items.length <= 0 ? (
+          ''
+        ) : (
+          <section>
+            <CollectionMain
+              header='Favorite playlists'
+              items={fav.items}
+              type='playlist'
+              full={true}
+            />
+            {fav.total > fav.offset + fav.limit ? (
+              <ButtonLoadMore onClick={handleLoadMoreFav}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
+          </section>
+        )}
+      </div>
+    </GroupEmpty>
   );
 }
 

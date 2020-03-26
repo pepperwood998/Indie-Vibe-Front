@@ -82,22 +82,26 @@ function General(props) {
         <div className='playlists-collections'>
           {data.collections.map((collection, index) => {
             const { genre, items } = collection;
-            return (
-              <CollectionMain
-                header={
-                  <NavLinkColor
-                    href={`/player/genre/${genre.id}/playlists`}
-                    className='header-title font-white'
-                  >
-                    {genre.name}
-                    <ArrowRight />
-                  </NavLinkColor>
-                }
-                items={items}
-                type='playlist'
-                key={index}
-              />
-            );
+            if (items.length) {
+              return (
+                <CollectionMain
+                  header={
+                    <NavLinkColor
+                      href={`/player/genre/${genre.id}/playlists`}
+                      className='header-title font-white'
+                    >
+                      {genre.name}
+                      <ArrowRight />
+                    </NavLinkColor>
+                  }
+                  items={items}
+                  type='playlist'
+                  key={index}
+                />
+              );
+            }
+
+            return '';
           })}
         </div>
       </div>

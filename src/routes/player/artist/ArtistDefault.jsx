@@ -3,6 +3,7 @@ import { CollectionMain } from '../../../components/collections';
 import { ButtonLoadMore } from '../../../components/buttons';
 import { getReleasesByType } from '../../../apis/API';
 import { AuthContext } from '../../../contexts';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 const model = {
   items: [],
@@ -24,15 +25,17 @@ function ArtistDefault(props) {
     're-single': ['Singles', singles, setSingles],
     're-eps': ['EPs', eps, setEps]
   };
+  const isEmpty =
+    !albums.items.length && !singles.items.length && !eps.items.length;
 
   useEffect(() => {
     for (let type in struct) {
       getReleasesByType(authState.token, artistId, type)
         .then(res => {
+          setFirstRender(firstRender => firstRender + 1);
           if (res.status === 'success' && res.data) {
             const value = struct[type];
             value[2]({ ...value[1], ...res.data });
-            setFirstRender(firstRender => firstRender + 1);
           } else {
             throw 'Error';
           }
@@ -71,42 +74,36 @@ function ArtistDefault(props) {
   return firstRender < 3 ? (
     ''
   ) : (
-    <div className='artist-default content-page fadein'>
-      {albums.total <= 0 && singles.total <= 0 && eps.total <= 0 ? (
-        <span className='font-short-extra font-weight-bold font-white'>
-          No public releases.
-        </span>
-      ) : (
-        <React.Fragment>
-          {Object.keys(struct).map((key, index) => {
-            const value = struct[key];
-            if (value[1].items.length <= 0) return '';
+    <GroupEmpty isEmpty={isEmpty} message='No public releases available'>
+      <div className='artist-default fadein content-padding'>
+        {Object.keys(struct).map((key, index) => {
+          const value = struct[key];
+          if (value[1].items.length <= 0) return '';
 
-            return (
-              <section key={index}>
-                <CollectionMain
-                  header={value[0]}
-                  items={value[1].items}
-                  type='release'
-                  full={true}
-                />
-                {value[1].total > value[1].offset + value[1].limit ? (
-                  <ButtonLoadMore
-                    onClick={() => {
-                      handleLoadMore(key);
-                    }}
-                  >
-                    Load more
-                  </ButtonLoadMore>
-                ) : (
-                  ''
-                )}
-              </section>
-            );
-          })}
-        </React.Fragment>
-      )}
-    </div>
+          return (
+            <section key={index}>
+              <CollectionMain
+                header={value[0]}
+                items={value[1].items}
+                type='release'
+                full={true}
+              />
+              {value[1].total > value[1].offset + value[1].limit ? (
+                <ButtonLoadMore
+                  onClick={() => {
+                    handleLoadMore(key);
+                  }}
+                >
+                  Load more
+                </ButtonLoadMore>
+              ) : (
+                ''
+              )}
+            </section>
+          );
+        })}
+      </div>
+    </GroupEmpty>
   );
 }
 

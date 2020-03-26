@@ -110,111 +110,113 @@ function Information(props) {
   };
 
   return (
-    <div className='account-information body__bound fadein'>
-      <div className='account-information__thumbnail'>
-        <input
-          type='file'
-          ref={thumbnailRef}
-          name='thumbnail'
-          id='account-thumbnail'
-          className='input-custom'
-          accept='image/*'
-          onChange={handleChangeThumbnail}
-        />
-        <InputFileLabel
-          for='account-thumbnail'
-          keep={true}
-          className='input-label--img'
-        >
-          <img src={thumbnailSrc ? thumbnailSrc : AvatarPlaceholder} />
-        </InputFileLabel>
-      </div>
-      <div className='account-information__info'>
-        <section className='plan-tier catalog'>
-          <div className='catalog__header plan font-short-extra font-weight-bold font-white'>
-            Free
-          </div>
-          <div className='due font-short-regular font-gray-light'>
-            Your are using Indie Vibe free.
-          </div>
-        </section>
-        <section className='account-details catalog'>
-          <div className='catalog__header font-short-extra font-weight-bold font-white'>
-            Details
-          </div>
-          <div className='details table-layout'>
-            <div className='table-row'>
-              <span className='label'>Display name</span>
-              <InputForm
-                placeholder='Your display name'
-                name='displayName'
-                value={data.displayName[1]}
-                onChange={handleChangeInfo}
-                error={status.submitted && !data.displayName[1]}
-                errMessage='What will we call your?'
-              />
+    <div className='fadein content-padding'>
+      <div className='account-information body__bound'>
+        <div className='account-information__thumbnail'>
+          <input
+            type='file'
+            ref={thumbnailRef}
+            name='thumbnail'
+            id='account-thumbnail'
+            className='input-custom'
+            accept='image/*'
+            onChange={handleChangeThumbnail}
+          />
+          <InputFileLabel
+            for='account-thumbnail'
+            keep={true}
+            className='input-label--img'
+          >
+            <img src={thumbnailSrc ? thumbnailSrc : AvatarPlaceholder} />
+          </InputFileLabel>
+        </div>
+        <div className='account-information__info'>
+          <section className='plan-tier catalog'>
+            <div className='catalog__header plan font-short-extra font-weight-bold font-white'>
+              Free
             </div>
-            <div className='table-row'>
-              <span className='label'>Email</span>
-              <InputForm
-                placeholder='Email address'
-                name='email'
-                value={data.email[1]}
-                onChange={handleChangeInfo}
-                error={status.submitted && !account.fbId && !data.email[1]}
-                errMessage='Your account need an email'
-              />
+            <div className='due font-short-regular font-gray-light'>
+              Your are using Indie Vibe free.
             </div>
-            <div className='table-row'>
-              <span className='label'>Gender</span>
-              <div className='genders'>
-                <InputRadioBox
-                  name='gender'
-                  label='Female'
-                  value='0'
-                  checked={data.gender[1] == 0}
+          </section>
+          <section className='account-details catalog'>
+            <div className='catalog__header font-short-extra font-weight-bold font-white'>
+              Details
+            </div>
+            <div className='details table-layout'>
+              <div className='table-row'>
+                <span className='label'>Display name</span>
+                <InputForm
+                  placeholder='Your display name'
+                  name='displayName'
+                  value={data.displayName[1]}
                   onChange={handleChangeInfo}
+                  error={status.submitted && !data.displayName[1]}
+                  errMessage='What will we call your?'
                 />
-                <InputRadioBox
-                  name='gender'
-                  label='Male'
-                  value='1'
-                  checked={data.gender[1] == 1}
+              </div>
+              <div className='table-row'>
+                <span className='label'>Email</span>
+                <InputForm
+                  placeholder='Email address'
+                  name='email'
+                  value={data.email[1]}
                   onChange={handleChangeInfo}
+                  error={status.submitted && !account.fbId && !data.email[1]}
+                  errMessage='Your account need an email'
                 />
-                <InputRadioBox
-                  name='gender'
-                  label='Other'
-                  value='2'
-                  checked={data.gender[1] == 2}
+              </div>
+              <div className='table-row'>
+                <span className='label'>Gender</span>
+                <div className='genders'>
+                  <InputRadioBox
+                    name='gender'
+                    label='Female'
+                    value='0'
+                    checked={data.gender[1] == 0}
+                    onChange={handleChangeInfo}
+                  />
+                  <InputRadioBox
+                    name='gender'
+                    label='Male'
+                    value='1'
+                    checked={data.gender[1] == 1}
+                    onChange={handleChangeInfo}
+                  />
+                  <InputRadioBox
+                    name='gender'
+                    label='Other'
+                    value='2'
+                    checked={data.gender[1] == 2}
+                    onChange={handleChangeInfo}
+                  />
+                </div>
+              </div>
+              <div className='table-row'>
+                <span className='label'>Date of birth</span>
+                <InputForm
+                  type='date'
+                  placeholder='Your birthday'
+                  name='dob'
+                  value={data.dob[1]}
                   onChange={handleChangeInfo}
                 />
               </div>
-            </div>
-            <div className='table-row'>
-              <span className='label'>Date of birth</span>
-              <InputForm
-                type='date'
-                placeholder='Your birthday'
-                name='dob'
-                value={data.dob[1]}
-                onChange={handleChangeInfo}
-              />
-            </div>
-            <div className='table-row'>
-              <span className='label'></span>
-              <div>
-                <ButtonMain
-                  isFitted={true}
-                  onClick={handleSubmit}
-                  disabled={status.updating}
-                >
-                  Save
-                </ButtonMain>
+              <div className='table-row'>
+                <span className='label'></span>
+                <div>
+                  <ButtonMain
+                    isFitted={true}
+                    onClick={handleSubmit}
+                    disabled={status.updating}
+                  >
+                    Save
+                  </ButtonMain>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </div>
   );

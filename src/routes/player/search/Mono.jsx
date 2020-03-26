@@ -8,6 +8,7 @@ import { capitalize, useEffectSkip } from '../../../utils/Common';
 import { search } from '../../../apis/API';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 function Mono(props) {
   // contexts
@@ -26,7 +27,6 @@ function Mono(props) {
   // props
   const { key: searchKey } = props.match.params;
   const { type } = props;
-  let collection = '';
 
   // effect: init
   useEffect(() => {
@@ -104,43 +104,34 @@ function Mono(props) {
       });
   };
 
-  if (type === 'track') {
-    collection = (
-      <CollectionTracks
-        header={
-          data.total > 0
-            ? data.total + ` ${type}s`
-            : `No results for ${capitalize(type)}`
-        }
-        items={data.items}
-        type='search'
-      />
-    );
-  } else {
-    collection = (
-      <CollectionMain
-        header={
-          data.total > 0
-            ? data.total + ` ${type}s`
-            : `No results for ${capitalize(type)}`
-        }
-        items={data.items}
-        type={type}
-      />
-    );
-  }
-
   return firstRender ? (
     ''
   ) : (
-    <div className='fadein'>
-      {collection}
-      {data.total > data.offset + data.limit ? (
-        <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
-      ) : (
-        ''
-      )}
-    </div>
+    <GroupEmpty
+      isEmpty={!data.items.length}
+      message={`No ${type}s from "${searchKey}"`}
+    >
+      <div className='fadein content-padding'>
+        {type === 'track' ? (
+          <CollectionTracks
+            header={data.total + ` ${type}s`}
+            items={data.items}
+            type='search'
+          />
+        ) : (
+          <CollectionMain
+            header={data.total + ` ${type}s`}
+            items={data.items}
+            type={type}
+          />
+        )}
+        {data.total > data.offset + data.limit ? (
+          <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
+        ) : (
+          ''
+        )}
+      </div>
+    </GroupEmpty>
   );
 }
 

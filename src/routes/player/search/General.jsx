@@ -10,6 +10,7 @@ import { AuthContext, LibraryContext } from '../../../contexts';
 import { search } from '../../../apis/API';
 
 import { ArrowRight } from '../../../assets/svgs';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 const model = {
   items: [],
@@ -35,8 +36,7 @@ function General(props) {
 
   // props
   const { key: searchKey } = props.match.params;
-  let exist = Object.keys(data).some(key => data[key].total > 0);
-  let render = '';
+  const exist = Object.keys(data).some(key => data[key].total > 0);
 
   // effect: init
   useEffect(() => {
@@ -96,56 +96,56 @@ function General(props) {
     setData({ ...data, playlists: { ...data.playlists, items: playlists } });
   }, [libState.ctxPlaylistPrivate]);
 
-  if (exist) {
-    render = Object.keys(data).map((key, index) => {
-      if (data[key].total > 0) {
-        let type = key.substr(0, key.length - 1);
-        if (type === 'track') {
-          return (
-            <CollectionTracks
-              header={
-                <NavLinkColor
-                  href={`/player/search/${searchKey}/${key}`}
-                  className='header-title font-white'
-                >
-                  {capitalize(key)}
-                  <ArrowRight />
-                </NavLinkColor>
-              }
-              items={data[key].items}
-              type='search'
-              key={index}
-            />
-          );
-        }
-
-        return (
-          <CollectionMain
-            header={
-              <NavLinkColor
-                href={`/player/search/${searchKey}/${key}`}
-                className='header-title font-white'
-              >
-                {capitalize(key)}
-                <ArrowRight />
-              </NavLinkColor>
+  return firstRender ? (
+    ''
+  ) : (
+    <GroupEmpty
+      isEmpty={!exist}
+      message={`No search results for "${searchKey}"`}
+    >
+      <div className='fadein content-padding'>
+        {Object.keys(data).map((key, index) => {
+          if (data[key].total > 0) {
+            if (key === 'tracks') {
+              return (
+                <CollectionTracks
+                  header={
+                    <NavLinkColor
+                      href={`/player/search/${searchKey}/${key}`}
+                      className='header-title font-white'
+                    >
+                      {capitalize(key)}
+                      <ArrowRight />
+                    </NavLinkColor>
+                  }
+                  items={data[key].items}
+                  type='search'
+                  key={index}
+                />
+              );
+            } else {
+              return (
+                <CollectionMain
+                  header={
+                    <NavLinkColor
+                      href={`/player/search/${searchKey}/${key}`}
+                      className='header-title font-white'
+                    >
+                      {capitalize(key)}
+                      <ArrowRight />
+                    </NavLinkColor>
+                  }
+                  items={data[key].items}
+                  type={key.substr(0, key.length - 1)}
+                  key={index}
+                />
+              );
             }
-            items={data[key].items}
-            type={type}
-            key={index}
-          />
-        );
-      }
-    });
-  } else {
-    render = (
-      <span className='font-short-extra font-white font-weight-bold'>
-        No results found
-      </span>
-    );
-  }
-
-  return firstRender ? '' : <div className='fadein'>{render}</div>;
+          }
+        })}
+      </div>
+    </GroupEmpty>
+  );
 }
 
 export default General;
