@@ -49,7 +49,7 @@ function CardMainMin(props) {
         />
       </div>
       <div className='card-main__info'>
-        <div className='font-short-big font-weight-bold font-white'>
+        <div className='ellipsis one-line font-short-big font-weight-bold font-white'>
           {content.title}
         </div>
         <div className='content font-short-s font-gray-light'>{`${content.tracksCount} tracks`}</div>

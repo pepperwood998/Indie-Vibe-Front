@@ -150,11 +150,11 @@ function CardMain(props) {
       <div className='card-main__info'>
         <NavLinkUnderline
           href={`/player/${content.type}/${content.id}`}
-          className='content one-line font-short-big font-weight-bold font-white'
+          className='ellipsis one-line font-short-big font-weight-bold font-white'
         >
           {content.title}
         </NavLinkUnderline>
-        <div className='content bottom two-line playlist-release font-short-s font-gray-light'>
+        <div className='bottom ellipsis two-line playlist-release font-short-s font-gray-light'>
           {content.type === 'release' ? (
             <React.Fragment>
               <span>by&nbsp;</span>

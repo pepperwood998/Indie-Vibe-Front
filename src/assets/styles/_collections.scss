@@ -21,7 +21,9 @@
         transition: ease 0.2s;
       }
       &:hover {
-        color: $white;
+        &.all-white {
+          color: $white;
+        }
 
         svg {
           margin-left: 5px;

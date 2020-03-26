@@ -42,7 +42,7 @@ function General(props) {
         header={
           <NavLink
             to='/player/browse/releases'
-            className='header-title font-white'
+            className='header-title all-white font-white'
           >
             New releases
             <ArrowRight />

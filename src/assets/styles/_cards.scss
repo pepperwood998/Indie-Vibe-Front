@@ -90,9 +90,6 @@
           margin-right: 5px;
         }
 
-        &.playlist-release {
-        }
-
         &.profile {
           position: absolute;
           bottom: 10px;
@@ -121,23 +118,8 @@
       align-items: center;
     }
 
-    .content {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-
-      &.bottom {
-        margin-top: 5px;
-      }
-
-      &.one-line {
-        -webkit-line-clamp: 1;
-      }
-
-      &.two-line {
-        -webkit-line-clamp: 2;
-      }
+    .bottom {
+      margin-top: 5px;
     }
   }
 }
@@ -165,7 +147,7 @@
     z-index: 1;
     filter: blur(5px);
 
-    .layer {
+    * {
       background-color: $blackBlurHalf;
       width: inherit;
       height: inherit;
@@ -174,6 +156,16 @@
 
   &__info {
     z-index: 2;
+    flex: 1;
+
+    .title,
+    .description {
+      display: table;
+    }
+
+    .description {
+      margin-top: 5px;
+    }
   }
 
   &__thumbnail {
@@ -213,7 +205,7 @@
     &:hover {
       text-decoration: none;
       color: $white;
-      
+
       .background__layer {
         background-color: $blackBlurSemi;
       }
