@@ -2,15 +2,18 @@ import React, { useContext, useState, useEffect } from 'react';
 import { ArrowRight } from '../../../assets/svgs';
 import { CollectionMain } from '../../../components/collections';
 import { NavLinkColor } from '../../../components/links';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, LibraryContext } from '../../../contexts';
 import { browseReleases } from '../../../apis/API';
+import { useEffectSkip } from '../../../utils/Common';
 
 function Releases(props) {
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
 
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState([]);
 
+  // effect: init
   useEffect(() => {
     browseReleases(authState.token)
       .then(res => {
@@ -25,6 +28,28 @@ function Releases(props) {
         console.error(err);
       });
   }, []);
+
+  // effect-skip: favorite
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
+    const collections = [...data];
+
+    collections.some(group => {
+      const { items } = group;
+      if (
+        items.some(item => {
+          if (ctxFav.id === item.id) {
+            item.relation = [...ctxFav.relation];
+            return true;
+          }
+        })
+      ) {
+        return true;
+      }
+    });
+
+    setData(collections);
+  }, [libState.ctxFav]);
 
   return firstRender ? (
     ''

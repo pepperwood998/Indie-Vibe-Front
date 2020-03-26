@@ -3,10 +3,12 @@ import { browseGenre } from '../../../apis/API';
 import { ArrowRight } from '../../../assets/svgs';
 import { CollectionMain } from '../../../components/collections';
 import { NavLinkColor } from '../../../components/links';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { useEffectSkip } from '../../../utils/Common';
 
 function BrowseGenre(props) {
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
 
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
@@ -17,6 +19,7 @@ function BrowseGenre(props) {
 
   const { id } = props.match.params;
 
+  // effect: init
   useEffect(() => {
     browseGenre(authState.token, id)
       .then(res => {
@@ -31,6 +34,25 @@ function BrowseGenre(props) {
         console.error(err);
       });
   }, [id]);
+
+  // effect-skip: favorite
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
+    const targetKey = `${ctxFav.type}s`;
+    const collections = [...data[targetKey]];
+
+    collections.some(item => {
+      if (ctxFav.id === item.id) {
+        item.relation = [...ctxFav.relation];
+        return true;
+      }
+    });
+
+    setData({
+      ...data,
+      [targetKey]: collections
+    });
+  }, [libState.ctxFav]);
 
   return firstRender ? (
     ''

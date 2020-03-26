@@ -1,16 +1,18 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { browseGeneral } from '../../../apis/API';
 import { ArrowRight } from '../../../assets/svgs';
 import {
   CollectionMain,
   CollectionWide
 } from '../../../components/collections';
 import { NavLinkColor } from '../../../components/links';
-import { AuthContext } from '../../../contexts';
-import { browseGeneral } from '../../../apis/API';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { useEffectSkip } from '../../../utils/Common';
 
 function General(props) {
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
 
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({ releases: [], collections: [] });
@@ -30,7 +32,30 @@ function General(props) {
       });
   }, []);
 
-  return (
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
+    const collections = [...data.collections];
+
+    collections.some(group => {
+      const { items } = group;
+      if (
+        items.some(item => {
+          if (ctxFav.id === item.id) {
+            item.relation = [...ctxFav.relation];
+            return true;
+          }
+        })
+      ) {
+        return true;
+      }
+    });
+
+    setData({ ...data, collections });
+  }, [libState.ctxFav]);
+
+  return firstRender ? (
+    ''
+  ) : (
     <div className='browse-general fadein'>
       <div className='releases'>
         <CollectionWide

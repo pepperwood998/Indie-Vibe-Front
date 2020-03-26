@@ -329,3 +329,14 @@ export const browseGenre = (token, id) => {
     }
   }).then(response => response.json());
 };
+
+export const browseGenreType = (token, id, type) => {
+  let url = new URL(`${host}/browse/genres/${id}/${type}`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
