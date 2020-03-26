@@ -56,15 +56,13 @@
     }
   }
 
-  &--wide {
-    background-color: $blueMain;
+  &.padder {
     padding-left: 40px;
     padding-right: 40px;
   }
 
-  &--genres {
-    padding-left: 40px;
-    padding-right: 40px;
+  &--wide {
+    background-color: $blueMain;
   }
 }
 

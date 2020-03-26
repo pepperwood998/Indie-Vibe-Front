@@ -6,7 +6,7 @@ function CollectionWide(props) {
   headerClasses += props.full ? ' full' : '';
 
   return (
-    <div className='collection-main collection-main--wide'>
+    <div className='collection-main collection-main--wide padder'>
       <div className={headerClasses}>{props.header}</div>
       <div className='collection-main__content grid wide'>
         {props.items.map((item, index) => (

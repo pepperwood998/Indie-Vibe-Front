@@ -31,12 +31,26 @@
       margin-top: 100%;
     }
 
+    .curator {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+      display: flex;
+
+      .svg {
+        width: 13px;
+        height: 13px;
+      }
+    }
+
     .cover {
       width: 100%;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      z-index: 1;
 
       &-profile {
         border-radius: 50%;
