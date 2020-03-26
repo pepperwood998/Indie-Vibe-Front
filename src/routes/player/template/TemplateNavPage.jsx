@@ -14,12 +14,13 @@ function TemplateNavPage(props) {
     }
   };
 
+  let bodyClasses = 'body' + (props.full ? ' full' : '');
   return (
     <div className={classes}>
       {props.header}
       {props.nav}
       <div className='body-scroll' onScroll={handleScroll}>
-        <div className='body'>{props.body}</div>
+        <div className={bodyClasses}>{props.body}</div>
       </div>
     </div>
   );

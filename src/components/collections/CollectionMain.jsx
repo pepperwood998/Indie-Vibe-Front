@@ -7,11 +7,9 @@ function CollectionMain(props) {
   headerClasses += props.full ? ' full' : '';
 
   return (
-    <div className='collection-main collection-main--extended'>
-      <div className={headerClasses}>
-        {props.header}
-      </div>
-      <div className='collection-main__content grid'>
+    <div className='collection-main'>
+      <div className={headerClasses}>{props.header}</div>
+      <div className='collection-main__content grid crowded'>
         <Content items={props.items} type={props.type} />
       </div>
     </div>

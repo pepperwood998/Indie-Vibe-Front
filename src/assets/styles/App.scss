@@ -83,3 +83,18 @@ label {
     }
   }
 }
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  &.one-line {
+    -webkit-line-clamp: 1;
+  }
+
+  &.two-line {
+    -webkit-line-clamp: 2;
+  }
+}

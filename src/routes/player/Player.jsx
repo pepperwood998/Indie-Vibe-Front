@@ -13,7 +13,7 @@ import {
 import { AuthContext, LibraryContext } from '../../contexts';
 import { Account } from './account';
 import { Artist } from './artist';
-import { Browse } from './browse';
+import { Browse, BrowseGenre, BrowseGenreType } from './browse';
 import './css/player.scss';
 import Bottom from './FixedBottom';
 import NavMenu from './FixedNavMenu';
@@ -54,6 +54,15 @@ function Player(props) {
       <div className='player__content'>
         <UserRoute exact path={['/player', '/player/home']} component={Home} />
         <UserRoute path='/player/browse' component={Browse} />
+        <UserRoute
+          exact
+          path='/player/genre/:id'
+          component={BrowseGenre}
+        />
+        <UserRoute
+          path='/player/genre/:id/:type'
+          component={BrowseGenreType}
+        />
         <UserRoute path='/player/library/:id' component={Library} />
         <UserRoute path='/player/account' component={Account} />
         <UserRoute path='/player/artist/:id' component={Artist} />

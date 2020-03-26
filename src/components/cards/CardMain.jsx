@@ -12,7 +12,8 @@ import {
   PlayIcon,
   UnFavoriteIcon,
   FavoriteIcon,
-  PauseIcon
+  PauseIcon,
+  LogoTinyIcon
 } from '../../assets/svgs';
 
 function CardMain(props) {
@@ -29,7 +30,7 @@ function CardMain(props) {
   } = useContext(LibraryContext);
 
   const { content } = props;
-  const { artist } = content;
+  const { artist, owner } = content;
   let isCurrentList =
     content.type === streamState.playFromType &&
     content.id === streamState.playFromId;
@@ -98,6 +99,17 @@ function CardMain(props) {
     <div className='card-main'>
       <div className='card-main__cover-wrapper'>
         <div className='dummy'></div>
+        {owner ? (
+          owner.role.id === 'r-curator' ? (
+            <div className='curator'>
+              <LogoTinyIcon className='svg' />
+            </div>
+          ) : (
+            ''
+          )
+        ) : (
+          ''
+        )}
         <Link to={`/player/${content.type}/${content.id}`}>
           <img
             src={content.thumbnail ? content.thumbnail : Placeholder}
@@ -139,7 +151,7 @@ function CardMain(props) {
                 id: content.id,
                 relation: content.relation,
                 status: content.status,
-                artistId: content.artist ? content.artist.id : ''
+                artistId: artist ? artist.id : ''
               }}
               handleToggleFavorite={handleToggleFavorite}
               handleDeletePlaylist={handleDeletePlaylist}
@@ -150,11 +162,11 @@ function CardMain(props) {
       <div className='card-main__info'>
         <NavLinkUnderline
           href={`/player/${content.type}/${content.id}`}
-          className='content one-line font-short-big font-weight-bold font-white'
+          className='ellipsis one-line font-short-big font-weight-bold font-white'
         >
           {content.title}
         </NavLinkUnderline>
-        <div className='content bottom two-line playlist-release font-short-s font-gray-light'>
+        <div className='bottom ellipsis two-line playlist-release font-short-s font-gray-light'>
           {content.type === 'release' ? (
             <React.Fragment>
               <span>by&nbsp;</span>

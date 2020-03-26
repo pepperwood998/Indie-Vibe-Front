@@ -34,4 +34,5 @@ export { ReactComponent as MoreIcon } from './more.svg';
 export { ReactComponent as TimerIcon } from './timer.svg';
 export { ReactComponent as DateIcon } from './date.svg';
 export { ReactComponent as PlusIcon } from './plus.svg';
+export { ReactComponent as LogoTinyIcon } from './tiny.svg';
 

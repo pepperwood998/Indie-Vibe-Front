@@ -25,12 +25,11 @@ function NavMenu() {
 
   useEffect(() => {
     if (!meState.id) {
-      profile(authState.token, authState.id)
-        .then(json => {
-          if (json.status === 'success') {
-            meDispatch(meActions.loadMe(json.data));
-          }
-        });
+      profile(authState.token, authState.id).then(json => {
+        if (json.status === 'success') {
+          meDispatch(meActions.loadMe(json.data));
+        }
+      });
     }
   });
 
@@ -62,6 +61,7 @@ function NavMenu() {
           <NavLinkColor
             href={['/player', '/player/home']}
             className='font-short-big font-weight-bold font-white'
+            shallow={true}
           >
             <HomeIcon />
             Home
@@ -69,7 +69,7 @@ function NavMenu() {
         </li>
         <li>
           <NavLinkColor
-            href='/player/browse'
+            href={['/player/browse', '/player/genre']}
             className='font-short-big font-weight-bold font-white'
           >
             <BrowseIcon />

@@ -289,10 +289,43 @@ export const updatePassword = (token, data) => {
 
   let url = new URL(`${host}/account/password`);
   return fetch(url, {
-    method: 'POST',
+    method: 'UPDATE',
     headers: {
       Authorization: 'Bearer ' + token
     },
     body: formData
+  }).then(response => response.json());
+};
+
+export const browseGeneral = token => {
+  let url = new URL(`${host}/browse/general`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const browseReleases = token => {
+  let url = new URL(`${host}/browse/releases`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const browseGenre = (token, id) => {
+  let url = new URL(`${host}/browse/genres/${id}`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
   }).then(response => response.json());
 };

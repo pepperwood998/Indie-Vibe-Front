@@ -7,14 +7,6 @@ import Genres from './Genres';
 import Releases from './Releases';
 
 function Browse(props) {
-  const header = (
-    <div className='browse-header fadein'>
-      <span className='font-short-extra font-weight-bold font-white'>
-        Browse
-      </span>
-    </div>
-  );
-
   const nav = (
     <NavigationTab
       items={[
@@ -33,7 +25,7 @@ function Browse(props) {
     </React.Fragment>
   );
 
-  return <TemplateNavPage header={header} nav={nav} body={body} />;
+  return <TemplateNavPage nav={nav} body={body} full={true} />;
 }
 
 export default Browse;
