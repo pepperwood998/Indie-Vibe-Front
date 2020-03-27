@@ -28,9 +28,9 @@ function LibraryPlaylists(props) {
     // owned playlists
     getPlaylists(authState.token, authState.id, targetId)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setOwn({ ...own, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {
@@ -40,9 +40,9 @@ function LibraryPlaylists(props) {
     // favorite playlists
     getPlaylists(authState.token, authState.id, targetId, 'favorite')
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setFav({ ...fav, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {

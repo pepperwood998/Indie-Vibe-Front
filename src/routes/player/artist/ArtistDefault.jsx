@@ -30,9 +30,9 @@ function ArtistDefault(props) {
 
   useEffect(() => {
     for (let type in struct) {
+      setFirstRender(firstRender => firstRender + 1);
       getReleasesByType(authState.token, artistId, type)
         .then(res => {
-          setFirstRender(firstRender => firstRender + 1);
           if (res.status === 'success' && res.data) {
             const value = struct[type];
             value[2]({ ...value[1], ...res.data });

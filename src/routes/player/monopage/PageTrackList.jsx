@@ -48,7 +48,7 @@ function TrackList(props) {
     followersCount: 0
   });
   const [owner, setOwner] = useState({ role: {} });
-  const [existed, setExisted] = useState(true);
+  const [existed, setExisted] = useState(false);
 
   // props
   const { type } = props;
@@ -67,6 +67,7 @@ function TrackList(props) {
             throw 'Error';
           }
 
+          setExisted(true);
           setData({ ...data, ...res.data });
           if (type === 'playlist') {
             setOwner({ ...owner, ...res.data.owner });

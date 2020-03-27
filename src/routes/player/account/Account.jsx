@@ -1,21 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { getAccount } from '../../../apis/API';
 import { UserRoute } from '../../../components/custom-routes';
 import { NavigationTab } from '../../../components/navigation';
+import { AuthContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
 import Information from './Information';
 import Password from './Password';
 import Settings from './Settings';
 import Social from './Social';
+import { GroupEmpty } from '../../../components/groups';
 
 function Account(props) {
+  const { state: authState } = useContext(AuthContext);
+
+  const [status, setStatus] = useState({
+    firstRender: true,
+    existed: false
+  });
   const [account, setAccount] = useState({
-    displayName: 'Tuan',
-    email: 'tuandt66742@gmail.com',
+    fbId: '',
+    displayName: '',
+    email: '',
     gender: 0,
-    dob: '2000-10-10'
+    dob: '',
+    artistStatus: '',
+    role: {}
   });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getAccount(authState.token)
+      .then(res => {
+        setStatus({ ...status, firstRender: false });
+        if (res.status === 'success') {
+        setStatus({ ...status, existed: true });
+        setAccount({ ...account, ...res.data });
+        } else {
+          throw 'Error';
+        }
+      })
+      .catch();
+  }, []);
 
   const nav = (
     <NavigationTab
@@ -54,7 +78,13 @@ function Account(props) {
     </React.Fragment>
   );
 
-  return <TemplateNavPage nav={nav} body={body} />;
+  return status.firstRender ? (
+    ''
+  ) : (
+    <GroupEmpty isEmpty={!status.existed} message='Account not found'>
+      <TemplateNavPage nav={nav} body={body} />;
+    </GroupEmpty>
+  );
 }
 
 export default Account;

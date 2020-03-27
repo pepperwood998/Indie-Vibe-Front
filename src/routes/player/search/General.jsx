@@ -43,9 +43,9 @@ function General(props) {
     setFirstRender(true);
     search(authState.token, searchKey)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success') {
           setData({ ...data, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {

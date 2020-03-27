@@ -31,9 +31,9 @@ function Mono(props) {
   useEffect(() => {
     library(authState.token, userId, type)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {

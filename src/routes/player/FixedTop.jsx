@@ -20,8 +20,18 @@ function Top(props) {
         }}
       />
       <div className='linear-nav'>
-        <ArrowBack className='svg-nav' />
-        <ArrowForward className='svg-nav' />
+        <ArrowBack
+          className='svg--small svg--cursor svg--bright'
+          onClick={() => {
+            history.goBack();
+          }}
+        />
+        <ArrowForward
+          className='svg--small svg--cursor svg--bright'
+          onClick={() => {
+            history.goForward();
+          }}
+        />
       </div>
     </div>
   );

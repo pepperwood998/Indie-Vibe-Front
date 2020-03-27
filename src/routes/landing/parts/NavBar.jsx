@@ -1,13 +1,11 @@
 import React, { useContext, useEffect } from 'react';
-
-import { LinkWhiteColor } from '../../../components/links';
+import { getProfile } from '../../../apis/API';
+import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
+import { ArrowDown, Logo } from '../../../assets/svgs';
 import { ButtonFrame } from '../../../components/buttons';
 import { ContextMenuAccount } from '../../../components/context-menu';
-import { MeContext, AuthContext } from '../../../contexts';
-import { profile } from '../../../apis/API';
-
-import { Logo, ArrowDown } from '../../../assets/svgs';
-import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
+import { LinkWhiteColor } from '../../../components/links';
+import { AuthContext, MeContext } from '../../../contexts';
 
 function NavBar(props) {
   const { state: authState } = useContext(AuthContext);
@@ -19,12 +17,11 @@ function NavBar(props) {
 
   useEffect(() => {
     if (authState.token && !meState.id) {
-      profile(authState.token, authState.id)
-        .then(json => {
-          if (json.status === 'success') {
-            meDispatch(meActions.loadMe(json.data));
-          }
-        });
+      getProfile(authState.token, authState.id).then(json => {
+        if (json.status === 'success') {
+          meDispatch(meActions.loadMe(json.data));
+        }
+      });
     } else if (!authState.token && meState.id) {
       meDispatch(meActions.unloadMe());
     }

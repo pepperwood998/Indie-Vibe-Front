@@ -32,10 +32,10 @@ function Releases(props) {
     for (let type in struct) {
       getReleasesByType(authState.token, id, type)
         .then(res => {
+          setFirstRender(firstRender => firstRender + 1);
           if (res.status === 'success' && res.data) {
             const value = struct[type];
             value[2]({ ...value[1], ...res.data });
-            setFirstRender(firstRender => firstRender + 1);
           } else {
             throw 'Error';
           }

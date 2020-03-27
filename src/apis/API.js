@@ -156,13 +156,19 @@ export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   }).then(response => response.json());
 };
 
-export const profile = (token, userId, type = 'user') => {
-  let url = '';
-  if (type === 'artist') {
-    url = `${host}/artists/${userId}`;
-  } else {
-    url = `${host}/library/${userId}/profile`;
-  }
+export const getProfile = (token, userId) => {
+  let url = `${host}/library/${userId}/profile`;
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getArtist = (token, artistId) => {
+  let url = new URL(`${host}/artists/${artistId}`);
 
   return fetch(url, {
     method: 'GET',
@@ -246,6 +252,17 @@ export const getReleasesByType = (
 ) => {
   let url = new URL(`${host}/artists/${artistId}/releases/${type}`);
   url.search = new URLSearchParams({ offset, limit }).toString();
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getAccount = token => {
+  let url = new URL(`${host}/account`);
 
   return fetch(url, {
     method: 'GET',

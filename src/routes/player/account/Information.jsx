@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import { updateAccount, profile } from '../../../apis/API';
+import { getProfile, updateAccount } from '../../../apis/API';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonMain } from '../../../components/buttons';
 import {
@@ -79,7 +79,7 @@ function Information(props) {
               gender: [false, data.gender[1]],
               dob: [false, data.dob[1]]
             });
-            profile(authState.token, authState.id).then(res => {
+            getProfile(authState.token, authState.id).then(res => {
               if (res.status === 'success') {
                 meDispatch(meActions.loadMe(res.data));
               }

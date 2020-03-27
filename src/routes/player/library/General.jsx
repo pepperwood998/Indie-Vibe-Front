@@ -27,9 +27,9 @@ function General(props) {
   useEffect(() => {
     library(authState.token, userId)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {
