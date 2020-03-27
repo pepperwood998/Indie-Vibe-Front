@@ -16,9 +16,9 @@ function General(props) {
   const { state: libState } = useContext(LibraryContext);
 
   const [firstRender, setFirstRender] = useState(true);
-  const [data, setData] = useState({ releases: [], collections: [] });
+  const [data, setData] = useState({ releases: [], playlists: [] });
 
-  const isEmpty = !data.releases.length && !data.collections.length;
+  const isEmpty = !data.releases.length && !data.playlists.length;
 
   useEffect(() => {
     browseGeneral(authState.token)
@@ -37,9 +37,9 @@ function General(props) {
 
   useEffectSkip(() => {
     const { ctxFav } = libState;
-    const collections = [...data.collections];
+    const playlists = [...data.playlists];
 
-    collections.some(group => {
+    playlists.some(group => {
       const { items } = group;
       if (
         items.some(item => {
@@ -53,7 +53,7 @@ function General(props) {
       }
     });
 
-    setData({ ...data, collections });
+    setData({ ...data, playlists });
   }, [libState.ctxFav]);
 
   return firstRender ? (
@@ -80,7 +80,7 @@ function General(props) {
           )}
         </div>
         <div className='playlists-collections'>
-          {data.collections.map((collection, index) => {
+          {data.playlists.map((collection, index) => {
             const { genre, items } = collection;
             if (items.length) {
               return (

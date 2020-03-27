@@ -36,7 +36,7 @@ function Register() {
     setSubmitted(true);
     setRegisterError('');
     setRegisterSuccess('');
-    if (!email || !pwd || !cfPwd || !displayName || !gender) return;
+    if (!email || !pwd || !cfPwd || !displayName) return;
 
     setRegistering(true);
     register(email, pwd, cfPwd, displayName, gender)

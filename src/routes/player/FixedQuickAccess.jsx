@@ -97,6 +97,8 @@ function RoleBanner(props) {
           Artist
         </div>
       );
+    default:
+      return '';
   }
 }
 
