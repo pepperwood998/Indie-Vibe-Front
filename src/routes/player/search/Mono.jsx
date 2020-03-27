@@ -109,7 +109,7 @@ function Mono(props) {
   ) : (
     <GroupEmpty
       isEmpty={!data.items.length}
-      message={`No ${type}s from "${searchKey}"`}
+      message={`No ${type}s for "${searchKey}"`}
     >
       <div className='fadein content-padding'>
         {type === 'track' ? (

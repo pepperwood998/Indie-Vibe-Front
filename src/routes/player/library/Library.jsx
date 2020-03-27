@@ -23,6 +23,7 @@ function Library(props) {
   };
 
   useEffect(() => {
+    setFirstRender(true);
     getProfile(authState.token, id)
       .then(res => {
         setFirstRender(false);
@@ -37,9 +38,7 @@ function Library(props) {
       });
   }, [id]);
 
-  const header = (
-    <GroupProfileBox id={id} collapsed={collapsed} data={profile} />
-  );
+  const header = <GroupProfileBox collapsed={collapsed} data={profile} />;
 
   const nav = (
     <NavigationTab

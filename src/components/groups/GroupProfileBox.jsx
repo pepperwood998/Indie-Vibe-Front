@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { performActionFavorite } from '../../apis/API';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { FavoriteIcon, UnFavoriteIcon } from '../../assets/svgs';
@@ -10,10 +10,15 @@ function GroupProfileBox(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
-  const [data, setData] = useState({ ...props.data });
+  const [data, setData] = useState({});
 
   let wrapperClasses =
     'profile-header-wrapper' + (props.collapsed ? ' collapsed' : '');
+
+  // effect: init
+  useEffect(() => {
+    setData({ ...data, ...props.data });
+  }, [props.data.id]);
 
   // effect-skip: favorite
   useEffectSkip(() => {
@@ -41,7 +46,9 @@ function GroupProfileBox(props) {
     <div className={wrapperClasses}>
       <div className='profile-header fadein'>
         <div className='profile-header__avatar'>
-          <img src={data.thumbnail ? data.thumbnail : AvatarPlaceholder} />
+          <img
+            src={data.thumbnail ? data.thumbnail : AvatarPlaceholder}
+          />
         </div>
         <div className='profile-header__info'>
           <span className='font-short-extra font-weight-bold font-white'>
@@ -79,7 +86,8 @@ function GroupProfileBox(props) {
                 )}
                 <ButtonMore
                   ctxData={{
-                    type: data.role.id === 'r-artist' ? 'artist' : 'profile',
+                    type:
+                    data.role.id === 'r-artist' ? 'artist' : 'profile',
                     id: data.id,
                     relation: data.relation
                   }}

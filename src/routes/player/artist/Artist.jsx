@@ -22,6 +22,7 @@ function Artist(props) {
   };
 
   useEffect(() => {
+    setFirstRender(true);
     getArtist(authState.token, id)
       .then(res => {
         setFirstRender(false);
@@ -36,9 +37,7 @@ function Artist(props) {
       });
   }, [id]);
 
-  const header = (
-    <GroupProfileBox id={id} collapsed={collapsed} data={artist} />
-  );
+  const header = <GroupProfileBox collapsed={collapsed} data={artist} />;
   const nav = (
     <NavigationTab
       items={[
