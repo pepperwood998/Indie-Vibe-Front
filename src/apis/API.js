@@ -143,7 +143,12 @@ export const search = (token, key, type = '', offset = 0, limit = 20) => {
 
 export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   let url = `${host}/library/${userId}`;
-  if (type) url += `/${type}s/favorite`;
+  if (type) {
+    url += `/${type}s`;
+    if (type !== 'artist' && type !== 'following' && type !== 'follower') {
+      url += '/favorite';
+    }
+  }
 
   url = new URL(url);
   url.search = new URLSearchParams({ offset, limit }).toString();

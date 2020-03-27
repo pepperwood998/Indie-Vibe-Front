@@ -243,7 +243,7 @@ function TrackList(props) {
               )}
               <ButtonMore
                 ctxData={{
-                  type: type,
+                  type,
                   id: id,
                   relation: data.relation,
                   status: data.status,

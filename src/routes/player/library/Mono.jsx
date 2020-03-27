@@ -87,7 +87,9 @@ function Mono(props) {
           <CollectionMain
             header={data.total + ` ${type}s`}
             items={data.items}
-            type={type}
+            type={
+              type === 'following' || type === 'follower' ? 'profile' : type
+            }
           />
         )}
         {data.total > data.offset + data.limit ? (
