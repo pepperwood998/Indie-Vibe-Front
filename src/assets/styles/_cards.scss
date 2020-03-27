@@ -258,3 +258,106 @@
     }
   }
 }
+
+.card-benefit {
+  display: flex;
+  flex-direction: row;
+  padding: 0 30px;
+
+  .thumbnail {
+    position: relative;
+    border-radius: 50%;
+    border: 5px solid $white;
+    width: 180px;
+    height: 180px;
+    overflow: hidden;
+    background-color: $white;
+
+    .img {
+      width: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .desc {
+      margin-top: 10px;
+    }
+  }
+}
+
+.card-payment {
+  border-radius: 5px;
+  padding: 5px;
+  background-color: $white;
+  width: 100%;
+  max-width: 480px;
+
+  .header {
+    background-color: $blackMain;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-right: 15px;
+
+      .desc {
+        margin-top: 10px;
+      }
+    }
+
+    .thumbnail {
+      position: relative;
+      border-radius: 5px;
+      width: 70px;
+      height: 70px;
+      overflow: hidden;
+
+      .img {
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
+  .body {
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-around;
+
+    .payment-body-single {
+      width: 70%;
+    }
+
+    .payment-body-full {
+      width: 90%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      .select {
+        max-width: 100px;
+        margin-right: 10px;
+      }
+    }
+  }
+}

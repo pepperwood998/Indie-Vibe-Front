@@ -1,10 +1,4 @@
 import React, { useContext } from 'react';
-
-import { ButtonFrame, ButtonMain } from '../../components/buttons';
-import Landing from './Landing';
-import { AuthContext } from '../../contexts';
-
-import './style.scss';
 import cell1 from '../../assets/imgs/cell-1.png';
 import cell2 from '../../assets/imgs/cell-2.png';
 import cell3 from '../../assets/imgs/cell-3.png';
@@ -14,6 +8,9 @@ import cell6 from '../../assets/imgs/cell-6.png';
 import cell7 from '../../assets/imgs/cell-7.png';
 import cell8 from '../../assets/imgs/cell-8.png';
 import LandingIntro from '../../assets/imgs/landing-intro.png';
+import { ButtonFrame, ButtonMain } from '../../components/buttons';
+import { AuthContext } from '../../contexts';
+import Landing from './Landing';
 
 function Home() {
   const { state } = useContext(AuthContext);
@@ -111,7 +108,7 @@ function Home() {
     </div>
   );
 
-  return <Landing intro={intro} body={body} />;
+  return <Landing intro={intro} body={body} active='home' />;
 }
 
 export default Home;

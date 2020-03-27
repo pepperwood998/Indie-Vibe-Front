@@ -24,3 +24,13 @@
 .content-padding {
   padding: 30px 40px 180px;
 }
+
+.custom-grid {
+  display: grid;
+
+  &.two-cols {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 20px;
+    grid-row-gap: 40px;
+  }
+}

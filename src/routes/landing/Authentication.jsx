@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './style.scss';
+import './css/style.scss';
 
 function Authentication(props) {
   return (

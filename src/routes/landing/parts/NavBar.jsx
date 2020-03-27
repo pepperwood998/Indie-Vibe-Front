@@ -41,14 +41,16 @@ function NavBar(props) {
               <LinkWhiteColor
                 href='/home'
                 className='font-short-regular font-weight-bold font-white'
+                active={props.active === 'home'}
               >
                 Home
               </LinkWhiteColor>
             </li>
             <li className='nav-menu__item'>
               <LinkWhiteColor
-                href='#'
+                href='/premium'
                 className='font-short-regular font-weight-bold font-white'
+                active={props.active === 'premium'}
               >
                 Premium
               </LinkWhiteColor>

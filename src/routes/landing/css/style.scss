@@ -1,0 +1,14 @@
+@import '../../../assets/styles/colors';
+
+@import './landing';
+@import './authen';
+
+body {
+  background-color: $blackBlur;
+}
+
+ul {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+}
