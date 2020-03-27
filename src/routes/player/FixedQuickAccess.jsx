@@ -87,14 +87,20 @@ function RoleBanner(props) {
       );
     case 'r-premium':
       return (
-        <div className='role-premium font-short-big font-white font-weight-bold'>
+        <div className='role-banner premium font-short-big font-white font-weight-bold'>
           Premium
         </div>
       );
     case 'r-artist':
       return (
-        <div className='role-artist font-short-big font-white font-weight-bold'>
+        <div className='role-banner artist font-short-big font-white font-weight-bold'>
           Artist
+        </div>
+      );
+    case 'r-curator':
+      return (
+        <div className='role-banner curator font-short-big font-white font-weight-bold'>
+          Editor
         </div>
       );
     default:

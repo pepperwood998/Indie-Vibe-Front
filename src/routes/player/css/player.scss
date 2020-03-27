@@ -115,18 +115,22 @@
         margin: 10px 0;
       }
 
-      .role-premium {
+      .role-banner {
         padding: 20px;
         width: 100%;
         text-align: center;
-        background-color: $blueMain;
-      }
 
-      .role-artist {
-        padding: 20px;
-        width: 100%;
-        text-align: center;
-        background-color: $purple;
+        &.premium {
+          background-color: $blueMain;
+        }
+
+        &.artist {
+          background-color: $purple;
+        }
+
+        &.curator {
+          background-color: $green;
+        }
       }
     }
 
