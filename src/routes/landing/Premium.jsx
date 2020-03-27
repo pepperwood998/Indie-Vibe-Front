@@ -31,7 +31,7 @@ function Premium(props) {
       value: target.value,
       text: `${target.options[target.selectedIndex].text} for ${
         fixedPrices[target.value]
-      }`
+      }đ`
     });
   };
 
