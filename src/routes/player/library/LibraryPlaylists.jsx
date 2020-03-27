@@ -53,6 +53,15 @@ function LibraryPlaylists(props) {
   // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
+    let ownPlaylists = [...own.items];
+    ownPlaylists.some(item => {
+      if (ctxFav.id === item.id) {
+        item.relation = [...ctxFav.relation];
+        return true;
+      }
+    });
+    setOwn({ ...fav, items: ownPlaylists });
+
     let favPlaylists = [...fav.items];
     favPlaylists.some(item => {
       if (ctxFav.id === item.id) {
@@ -60,7 +69,6 @@ function LibraryPlaylists(props) {
         return true;
       }
     });
-
     setFav({ ...fav, items: favPlaylists });
   }, [libState.ctxFav]);
 

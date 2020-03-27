@@ -23,7 +23,11 @@ function GroupProfileBox(props) {
   // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
-    setData({ ...data, relation: [...ctxFav.relation] });
+    if (
+      (ctxFav.type === 'profile' || ctxFav.type == 'artist') &&
+      ctxFav.id === data.id
+    )
+      setData({ ...data, relation: [...ctxFav.relation] });
   }, [libState.ctxFav]);
 
   const handleToggleFavorite = action => {
@@ -46,9 +50,7 @@ function GroupProfileBox(props) {
     <div className={wrapperClasses}>
       <div className='profile-header fadein'>
         <div className='profile-header__avatar'>
-          <img
-            src={data.thumbnail ? data.thumbnail : AvatarPlaceholder}
-          />
+          <img src={data.thumbnail ? data.thumbnail : AvatarPlaceholder} />
         </div>
         <div className='profile-header__info'>
           <span className='font-short-extra font-weight-bold font-white'>
@@ -86,8 +88,7 @@ function GroupProfileBox(props) {
                 )}
                 <ButtonMore
                   ctxData={{
-                    type:
-                    data.role.id === 'r-artist' ? 'artist' : 'profile',
+                    type: data.role.id === 'r-artist' ? 'artist' : 'profile',
                     id: data.id,
                     relation: data.relation
                   }}
