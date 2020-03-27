@@ -60,7 +60,7 @@ function BrowseGenre(props) {
     ''
   ) : (
     <div className='browse-genre-overview content-page fadein'>
-      <div className='browse-header'>
+      <div className='page-banner'>
         <span className='font-short-extra font-weight-bold font-white'>
           {data.genre.name}
         </span>
