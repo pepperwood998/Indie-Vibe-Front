@@ -107,6 +107,7 @@ function Me(props) {
           Delete
         </LinkWhiteColor>
       </li>
+      <li>{props.ShareFacebook}</li>
     </ul>
   );
 }
@@ -136,6 +137,7 @@ function Other(props) {
           </LinkWhiteColor>
         )}
       </li>
+      <li>{props.ShareFacebook}</li>
     </ul>
   );
 }

@@ -78,7 +78,7 @@ function Login() {
     loginFb(id, accessToken)
       .then(response => response.json())
       .then(json => {
-        if (json.status && json.status === 'failed') {
+        if (json.status && json.status === 'fail') {
           throw 'wrong';
         } else {
           dispatch(loginSuccess({ ...json, remembered }));

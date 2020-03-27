@@ -38,6 +38,7 @@ function Me(props) {
           Manage
         </LinkWhiteColor>
       </li>
+      <li>{props.ShareFacebook}</li>
     </ul>
   );
 }
@@ -76,6 +77,7 @@ function Other(props) {
           </LinkWhiteColor>
         )}
       </li>
+      <li>{props.ShareFacebook}</li>
     </ul>
   );
 }
