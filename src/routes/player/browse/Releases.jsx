@@ -37,16 +37,12 @@ function Releases(props) {
 
     collections.some(group => {
       const { items } = group;
-      if (
-        items.some(item => {
-          if (ctxFav.id === item.id) {
-            item.relation = [...ctxFav.relation];
-            return true;
-          }
-        })
-      ) {
-        return true;
-      }
+      items.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
     });
 
     setData(collections);

@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-
-import { capitalize, useEffectSkip } from '../../../utils/Common';
-import { NavLinkColor } from '../../../components/links';
-import {
-  CollectionTracks,
-  CollectionMain
-} from '../../../components/collections';
-import { AuthContext, LibraryContext } from '../../../contexts';
+import React, { useContext, useEffect, useState } from 'react';
 import { search } from '../../../apis/API';
-
 import { ArrowRight } from '../../../assets/svgs';
+import {
+  CollectionGenres,
+  CollectionMain,
+  CollectionTracks
+} from '../../../components/collections';
 import GroupEmpty from '../../../components/groups/GroupEmpty';
+import { NavLinkColor } from '../../../components/links';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { capitalize, useEffectSkip } from '../../../utils/Common';
 
 const model = {
   items: [],
@@ -106,12 +105,14 @@ function General(props) {
       <div className='fadein content-padding'>
         {Object.keys(data).map((key, index) => {
           if (data[key].total > 0) {
+            let href = `/player/search/${searchKey}/${key}`;
+
             if (key === 'tracks') {
               return (
                 <CollectionTracks
                   header={
                     <NavLinkColor
-                      href={`/player/search/${searchKey}/${key}`}
+                      href={href}
                       className='header-title font-white'
                     >
                       {capitalize(key)}
@@ -123,12 +124,27 @@ function General(props) {
                   key={index}
                 />
               );
+            } else if (key === 'genres') {
+              return (
+                <CollectionGenres
+                  header={
+                    <NavLinkColor
+                      href={href}
+                      className='header-title font-white'
+                    >
+                      {capitalize(key)}
+                      <ArrowRight />
+                    </NavLinkColor>
+                  }
+                  items={data[key].items}
+                />
+              );
             } else {
               return (
                 <CollectionMain
                   header={
                     <NavLinkColor
-                      href={`/player/search/${searchKey}/${key}`}
+                      href={href}
                       className='header-title font-white'
                     >
                       {capitalize(key)}

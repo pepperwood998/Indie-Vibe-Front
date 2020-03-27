@@ -20,6 +20,7 @@ function General(props) {
 
   const isEmpty = !data.releases.length && !data.playlists.length;
 
+  // effect: init
   useEffect(() => {
     browseGeneral(authState.token)
       .then(res => {
@@ -35,22 +36,19 @@ function General(props) {
       });
   }, []);
 
+  // effect-skip: init
   useEffectSkip(() => {
     const { ctxFav } = libState;
     const playlists = [...data.playlists];
 
-    playlists.some(group => {
+    playlists.forEach(group => {
       const { items } = group;
-      if (
-        items.some(item => {
-          if (ctxFav.id === item.id) {
-            item.relation = [...ctxFav.relation];
-            return true;
-          }
-        })
-      ) {
-        return true;
-      }
+      items.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
     });
 
     setData({ ...data, playlists });
