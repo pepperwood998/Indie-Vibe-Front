@@ -175,8 +175,8 @@ function TrackList(props) {
       isEmpty={!existed}
       message={`${capitalize(type)} doesn't exist`}
     >
-      <div className='content-page fadein content-padding'>
-        <div className='track-list'>
+      <div className='content-page fadein'>
+        <div className='track-list mono-page content-padding'>
           <div className='track-list__header'>
             <div className='avatar'>
               <img src={data.thumbnail ? data.thumbnail : Placeholder} />
