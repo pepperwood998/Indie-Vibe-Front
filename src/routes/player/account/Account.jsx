@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getAccount } from '../../../apis/API';
 import { UserRoute } from '../../../components/custom-routes';
 import { NavigationTab } from '../../../components/navigation';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, MeContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
 import Information from './Information';
 import Password from './Password';
@@ -11,35 +11,9 @@ import Social from './Social';
 import { GroupEmpty } from '../../../components/groups';
 
 function Account(props) {
-  const { state: authState } = useContext(AuthContext);
+  const { state: meState } = useContext(MeContext);
 
-  const [status, setStatus] = useState({
-    firstRender: true,
-    existed: false
-  });
-  const [account, setAccount] = useState({
-    fbId: '',
-    displayName: '',
-    email: '',
-    gender: 0,
-    dob: '',
-    artistStatus: '',
-    role: {}
-  });
-
-  useEffect(() => {
-    getAccount(authState.token)
-      .then(res => {
-        setStatus({ ...status, firstRender: false });
-        if (res.status === 'success') {
-        setStatus({ ...status, existed: true });
-        setAccount({ ...account, ...res.data });
-        } else {
-          throw 'Error';
-        }
-      })
-      .catch();
-  }, []);
+  const account = meState;
 
   const nav = (
     <NavigationTab
@@ -66,22 +40,15 @@ function Account(props) {
 
   const body = (
     <React.Fragment>
-      <UserRoute
-        exact
-        path='/player/account'
-        component={Information}
-        account={account}
-      />
+      <UserRoute exact path='/player/account' component={Information} />
       <UserRoute path='/player/account/password' component={Password} />
       <UserRoute path='/player/account/social' component={Social} />
       <UserRoute path='/player/account/settings' component={Settings} />
     </React.Fragment>
   );
 
-  return status.firstRender ? (
-    ''
-  ) : (
-    <GroupEmpty isEmpty={!status.existed} message='Account not found'>
+  return (
+    <GroupEmpty isEmpty={!account.id} message='Account not found'>
       <TemplateNavPage nav={nav} body={body} />;
     </GroupEmpty>
   );

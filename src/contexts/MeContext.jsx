@@ -6,7 +6,13 @@ const initState = {
   id: '',
   displayName: '',
   thumbnail: '',
-  followersCount: 0
+  followersCount: 0,
+  role: {},
+  email: '',
+  fbId: '',
+  gender: 0,
+  dob: '',
+  artistStatus: 'opend'
 };
 
 function MeContextProvider(props) {

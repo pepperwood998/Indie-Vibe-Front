@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import { getProfile, updateAccount } from '../../../apis/API';
+import { getProfile, updateAccount, getAccount } from '../../../apis/API';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonMain } from '../../../components/buttons';
 import {
@@ -8,6 +8,7 @@ import {
   InputRadioBox
 } from '../../../components/inputs';
 import { AuthContext, LibraryContext, MeContext } from '../../../contexts';
+import { getDatePart } from '../../../utils/Common';
 
 function Information(props) {
   const { state: authState } = useContext(AuthContext);
@@ -24,7 +25,7 @@ function Information(props) {
 
   const thumbnailRef = useRef();
 
-  const { account } = props;
+  const account = meState;
 
   const [data, setData] = useState({
     displayName: [false, account.displayName],
@@ -62,7 +63,8 @@ function Information(props) {
     setStatus({ ...status, submitted: true });
     if (
       (data.displayName[0] && !data.displayName[1]) ||
-      (!account.fbId && data.email[0] && !data.email[1])
+      (!account.fbId && data.email[0] && !data.email[1]) ||
+      (data.dob[0] && !data.dob[1])
     )
       return;
 
@@ -79,7 +81,7 @@ function Information(props) {
               gender: [false, data.gender[1]],
               dob: [false, data.dob[1]]
             });
-            getProfile(authState.token, authState.id).then(res => {
+            getAccount(authState.token, authState.id).then(res => {
               if (res.status === 'success') {
                 meDispatch(meActions.loadMe(res.data));
               }
@@ -198,8 +200,9 @@ function Information(props) {
                   type='date'
                   placeholder='Your birthday'
                   name='dob'
-                  value={data.dob[1]}
+                  value={getDatePart(data.dob[1])}
                   onChange={handleChangeInfo}
+                  error={status.submitted && data.dob[0] && !data.dob[1]}
                 />
               </div>
               <div className='table-row'>

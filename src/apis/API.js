@@ -57,7 +57,7 @@ export const createOrEditPlaylist = (
   url = new URL(url);
 
   return fetch(url, {
-    method: type === 'edit' ? 'UPDATE' : 'POST',
+    method: type === 'edit' ? 'PUT' : 'POST',
     headers: {
       Authorization: 'Bearer ' + token
     },
@@ -293,7 +293,7 @@ export const updateAccount = (token, data) => {
 
   let url = new URL(`${host}/account`);
   return fetch(url, {
-    method: 'UPDATE',
+    method: 'PUT',
     headers: {
       Authorization: 'Bearer ' + token
     },
@@ -311,7 +311,7 @@ export const updatePassword = (token, data) => {
 
   let url = new URL(`${host}/account/password`);
   return fetch(url, {
-    method: 'UPDATE',
+    method: 'PUT',
     headers: {
       Authorization: 'Bearer ' + token
     },

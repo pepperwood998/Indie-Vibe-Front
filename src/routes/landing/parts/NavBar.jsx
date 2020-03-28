@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { getProfile } from '../../../apis/API';
+import { getProfile, getAccount } from '../../../apis/API';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { ArrowDown, Logo } from '../../../assets/svgs';
 import { ButtonFrame } from '../../../components/buttons';
@@ -17,7 +17,7 @@ function NavBar(props) {
 
   useEffect(() => {
     if (authState.token && !meState.id) {
-      getProfile(authState.token, authState.id).then(json => {
+      getAccount(authState.token).then(json => {
         if (json.status === 'success') {
           meDispatch(meActions.loadMe(json.data));
         }

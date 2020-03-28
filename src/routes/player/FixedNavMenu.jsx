@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { getProfile } from '../../apis/API';
+import { getAccount } from '../../apis/API';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import {
   BrowseIcon,
@@ -23,7 +23,7 @@ function NavMenu() {
 
   useEffect(() => {
     if (!meState.id) {
-      getProfile(authState.token, authState.id).then(json => {
+      getAccount(authState.token).then(json => {
         if (json.status === 'success') {
           meDispatch(meActions.loadMe(json.data));
         }
