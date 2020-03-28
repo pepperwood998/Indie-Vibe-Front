@@ -133,13 +133,10 @@ function Information(props) {
           </InputFileLabel>
         </div>
         <div className='account-information__info'>
-          <section className='plan-tier catalog'>
-            <div className='catalog__header plan font-short-extra font-weight-bold font-white'>
-              Free
-            </div>
-            <div className='due font-short-regular font-gray-light'>
-              Your are using Indie Vibe free.
-            </div>
+          <section className='plan-tier'>
+            <GroupPlanBox
+              plan={{ ...account.userPlan, due: account.planDue }}
+            />
           </section>
           <section className='account-details catalog'>
             <div className='catalog__header font-short-extra font-weight-bold font-white'>
@@ -220,6 +217,30 @@ function Information(props) {
             </div>
           </section>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function GroupPlanBox(props) {
+  const { plan } = props;
+
+  return (
+    <div className='catalog'>
+      <div className='catalog__header plan font-short-extra font-weight-bold font-white'>
+        {plan.name}
+      </div>
+      <div className='due font-short-regular font-gray-light'>
+        <p>You are using Indie Vibe {plan.name}.</p>
+        {plan.id === 'p-fixed' || plan.id === 'p-monthly' ? (
+          plan.id === 'p-fixed' ? (
+            <p>Premium ends at {new Date(plan.due).toString()}.</p>
+          ) : (
+            <p>Next payment will be at {new Date(plan.due).toString()}.</p>
+          )
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );
