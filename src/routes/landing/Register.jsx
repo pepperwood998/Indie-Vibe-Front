@@ -79,7 +79,7 @@ function Register() {
         registerWithFb(email, name, url, id, accessToken)
           .then(response => response.json())
           .then(json => {
-            if (json.status === 'failed') {
+            if (json.status === 'fail') {
               throw {
                 type: 'wrong',
                 msg: json.data
