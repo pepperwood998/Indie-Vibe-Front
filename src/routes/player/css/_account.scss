@@ -7,6 +7,11 @@
     height: 150px;
     position: relative;
     overflow: hidden;
+    transition: 0.05s ease;
+
+    &:hover {
+      opacity: 0.5;
+    }
 
     img {
       width: 150px;

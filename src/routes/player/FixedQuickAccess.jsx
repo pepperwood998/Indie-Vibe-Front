@@ -81,7 +81,7 @@ function RoleBanner(props) {
   switch (role) {
     case 'r-free':
       return (
-        <a href='/home/premium' className='role-free'>
+        <a href='/premium' className='role-free'>
           <ButtonFrame isFitted={true}>Upgrade</ButtonFrame>
         </a>
       );

@@ -7,7 +7,7 @@ import {
   MeContextProvider,
   StreamContextProvider
 } from './contexts';
-import { Home, Login, Premium, Register } from './routes/landing';
+import { Home, Login, Premium, Purchase, Register } from './routes/landing';
 import { Player } from './routes/player';
 
 class App extends Component {
@@ -19,6 +19,7 @@ class App extends Component {
             <MeContextProvider>
               <Route exact path={['/', '/home']} component={Home} />
               <Route exact path='/premium' component={Premium} />
+              <UserRoute exact path='/purchase/:type/:packageType?' component={Purchase} />
               <GuestRoute path='/login' component={Login} />
               <GuestRoute path='/register' component={Register} />
               <StreamContextProvider>

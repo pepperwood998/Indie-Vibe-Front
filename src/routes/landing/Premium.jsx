@@ -8,31 +8,13 @@ import CreditCard from '../../assets/imgs/credit-card.png';
 import Placeholder from '../../assets/imgs/placeholder.png';
 import { ButtonMain } from '../../components/buttons';
 import Landing from './Landing';
+import { fixedPrices } from '../../utils/Common';
 
 function Premium(props) {
-  const fixedPrices = {
-    one: 4900,
-    week: 10000,
-    month: 49000,
-    month3: 135000,
-    month6: 289000,
-    year: 490000
-  };
-
-  const [fixedPrice, setFixedPrice] = useState({
-    type: 'one',
-    text: '1 day for 4900đ'
-  });
+  const [fixedPrice, setFixedPrice] = useState('one');
 
   const handleChangeFixed = e => {
-    const { target } = e;
-    setFixedPrice({
-      ...fixedPrice,
-      value: target.value,
-      text: `${target.options[target.selectedIndex].text} for ${
-        fixedPrices[target.value]
-      }đ`
-    });
+    setFixedPrice(e.target.value);
   };
 
   const benefits = [
@@ -65,7 +47,9 @@ function Premium(props) {
       thumbnail: CreditCardMonthly,
       body: (
         <div className='payment-body-single'>
-          <ButtonMain>SUBSCRIBE</ButtonMain>
+          <a href='/purchase/monthly'>
+            <ButtonMain>SUBSCRIBE</ButtonMain>
+          </a>
         </div>
       )
     },
@@ -79,16 +63,17 @@ function Premium(props) {
             name='bitrate'
             className='select custom-select release-type'
             onChange={handleChangeFixed}
-            value={fixedPrice.value}
+            value={fixedPrice}
           >
-            <option value='one'>1 day</option>
-            <option value='week'>1 week</option>
-            <option value='month'>1 month</option>
-            <option value='month3'>3 months</option>
-            <option value='month6'>6 months</option>
-            <option value='year'>1 year</option>
+            {Object.keys(fixedPrices).map((key, index) => (
+              <option value={key} key={index}>
+                {fixedPrices[key][1]}
+              </option>
+            ))}
           </select>
-          <ButtonMain>{fixedPrice.text}</ButtonMain>
+          <a href={`/purchase/fixed/${fixedPrice}`}>
+            <ButtonMain>{`${fixedPrices[fixedPrice][1]} for ${fixedPrices[fixedPrice][0]}`}</ButtonMain>
+          </a>
         </div>
       )
     }

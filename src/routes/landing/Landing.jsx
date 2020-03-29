@@ -15,7 +15,11 @@ function Landing(props) {
         <div className='intro-layer'></div>
         {props.intro}
       </div>
-      <div className='page-landing__body side-space'>{props.body}</div>
+      {props.body ? (
+        <div className='page-landing__body side-space'>{props.body}</div>
+      ) : (
+        ''
+      )}
       <div className='page-landing__footer side-space'>
         <Footer short={props.short} />
       </div>

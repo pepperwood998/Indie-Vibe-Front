@@ -304,8 +304,8 @@ export const updateAccount = (token, data) => {
 export const updatePassword = (token, data) => {
   let formData = new FormData();
   for (let key in data) {
-    if (data[key][0]) {
-      formData.append(key, data[key][1]);
+    if (data[key]) {
+      formData.append(key, data[key]);
     }
   }
 
@@ -360,5 +360,40 @@ export const browseGenreType = (token, id, type) => {
     headers: {
       Authorization: 'Bearer ' + token
     }
+  }).then(response => response.json());
+};
+
+export const purchase = (token, type, stripeToken, packageType) => {
+  if (type === 'monthly') {
+    return purchaseMonthly(token, stripeToken);
+  } else {
+    return purchaseFixed(token, stripeToken, packageType);
+  }
+};
+
+const purchaseMonthly = (token, stripeToken) => {
+  let url = new URL(`${host}/purchase/monthly`);
+  let formData = new FormData();
+  formData.append('stripeToken', stripeToken);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
+const purchaseFixed = (token, stripeToken, packageType) => {
+  let url = new URL(`${host}/purchase/fixed/${packageType}`);
+  let formData = new FormData();
+  formData.append('stripeToken', stripeToken);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
   }).then(response => response.json());
 };

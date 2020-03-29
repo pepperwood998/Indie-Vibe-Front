@@ -36,6 +36,18 @@ function Password(props) {
       return;
     }
 
+    if (data.pwd === data.newPwd) {
+      libDispatch(
+        libActions.setNotification(
+          true,
+          false,
+          'New password cannot be the same as the old one'
+        )
+      );
+      setData({ ...data, newPwd: '', cfNewPwd: '' });
+      return;
+    }
+
     setStatus({ ...status, updating: true });
     updatePassword(authState.token, data)
       .then(res => {
@@ -45,18 +57,12 @@ function Password(props) {
             libActions.setNotification(true, true, 'Password refreshed')
           );
         } else {
-          throw 'Error';
+          throw res.data;
         }
       })
       .catch(err => {
         setStatus({ ...status, updating: false });
-        libDispatch(
-          libActions.setNotification(
-            true,
-            false,
-            'Failed to update information'
-          )
-        );
+        libDispatch(libActions.setNotification(true, false, err.toString()));
       });
   };
 
@@ -80,7 +86,9 @@ function Password(props) {
                   autocomplete='new-password'
                   value={data.pwd}
                   onChange={handleChangeData}
-                  error={status.submitted && !data.pwd}
+                  error={
+                    status.submitted && (!data.pwd || data.pwd === data.newPwd)
+                  }
                   errMessage='Verify your old password'
                 />
               </div>
