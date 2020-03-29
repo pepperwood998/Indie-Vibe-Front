@@ -116,6 +116,12 @@ function TrackList(props) {
     }
   }, [libState.ctxDelPlaylistId]);
 
+  useEffectSkip(() => {
+    if (type === 'playlist') {
+      setData({ ...data, ...libState.editedPlaylist });
+    }
+  }, [libState.editedPlaylist]);
+
   // effect-skip: playlist privacy
   useEffectSkip(() => {
     const { ctxPlaylistPrivate } = libState;

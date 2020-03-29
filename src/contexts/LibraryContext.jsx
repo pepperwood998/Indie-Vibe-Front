@@ -17,6 +17,7 @@ const initState = {
     limit: 0,
     total: 0
   },
+  editedPlaylist: {},
   browsePlaylists: {
     opened: false,
     trackId: ''
@@ -70,6 +71,9 @@ const actions = {
   },
   setMyPlaylists: payload => {
     return { type: 'SET_MY_PLAYLISTS', payload };
+  },
+  setEditedPlaylist: playlist => {
+    return { type: 'SET_EDITED_PLAYLIST', playlist };
   },
   createPlaylist: payload => {
     return { type: 'CREATE_PLAYLIST', payload };
@@ -156,6 +160,21 @@ const reducer = (state, action) => {
       return { ...state, ctxPlaylistPrivate: action.payload };
     case 'SET_MY_PLAYLISTS':
       return { ...state, myPlaylists: { ...action.payload } };
+    case 'SET_EDITED_PLAYLIST': {
+      const editedPlaylist = action.playlist;
+      const myPlaylists = [...state.myPlaylists.items];
+      myPlaylists.some((item, index) => {
+        if (editedPlaylist.id === item.id) {
+          myPlaylists[index] = { ...editedPlaylist };
+          return true;
+        }
+      });
+      return {
+        ...state,
+        myPlaylists: { ...state.myPlaylists, items: myPlaylists },
+        editedPlaylist: { ...editedPlaylist }
+      };
+    }
     case 'CREATE_PLAYLIST': {
       const { myPlaylists } = state;
       return {
