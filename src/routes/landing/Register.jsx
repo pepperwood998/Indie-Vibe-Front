@@ -29,7 +29,8 @@ function Register() {
     });
   };
 
-  const handleRegister = () => {
+  const handleRegister = e => {
+    e.preventDefault();
     setSubmitted(true);
     setRegisterError('');
     setRegisterSuccess('');
@@ -104,7 +105,7 @@ function Register() {
   const logo = () => <LogoRegister height='60' />;
 
   const inputs = () => (
-    <React.Fragment>
+    <form onSubmit={handleRegister}>
       {registerError ? <CardError message={registerError} /> : ''}
       {registerSuccess ? <CardSuccess message={registerSuccess} /> : ''}
       <InputForm
@@ -172,7 +173,8 @@ function Register() {
       ) : (
         ''
       )}
-    </React.Fragment>
+      <input type='submit' style={{ display: 'none' }}></input>
+    </form>
   );
 
   const submits = () => (
