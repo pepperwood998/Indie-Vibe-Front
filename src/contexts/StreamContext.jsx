@@ -45,6 +45,8 @@ function StreamContextProvider(props) {
         settings: JSON.parse(settings)
       };
     }
+
+    return initState;
   });
 
   const { state: authState } = useContext(AuthContext);

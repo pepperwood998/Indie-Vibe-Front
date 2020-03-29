@@ -1,15 +1,3 @@
-@import '../../assets/styles/colors';
-
-body {
-  background-color: $blackBlur;
-}
-
-ul {
-  margin: 0px;
-  padding: 0px;
-  list-style-type: none;
-}
-
 .page-landing {
   display: flex;
   min-height: 100vh;
@@ -30,9 +18,15 @@ ul {
       justify-content: space-between;
 
       .nav-menu__item {
-        a, span {
+        a,
+        span {
           display: block;
           padding: 20px 20px;
+        }
+
+        a.active,
+        span.active {
+          color: $blueMain;
         }
       }
 
@@ -72,7 +66,7 @@ ul {
     padding-bottom: 100px;
 
     .intro-background {
-      background: url('../../assets/imgs/bg.jpg') no-repeat center;
+      background: url('../../../assets/imgs/bg.jpg') no-repeat center;
       background-size: cover;
       filter: blur(10px);
       height: 100%;
@@ -116,6 +110,16 @@ ul {
           width: 100%;
         }
       }
+
+      .payments {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        > :not(:last-child) {
+          margin-bottom: 40px;
+        }
+      }
     }
   }
 
@@ -137,65 +141,5 @@ ul {
         padding: 10px 0px;
       }
     }
-  }
-}
-
-.page-authen {
-  &__banner {
-    min-height: 10vh;
-    padding: 20px;
-    background-image: $blackPop;
-  }
-
-  .logo {
-    text-align: center;
-  }
-
-  &__body {
-    height: 100vh;
-    background: url('../../assets/imgs/bg.jpg') no-repeat center;
-    background-size: cover;
-    position: relative;
-  }
-
-  &__body__layer {
-    background-image: $blackLinear;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .form-authen {
-    max-width: 450px;
-    padding: 50px 30px 30px;
-    margin: auto;
-
-    &__input {
-      padding: 20px 0px;
-
-      > *:not(:last-child) {
-        margin-bottom: 15px;
-      }
-
-      .input-addition {
-        display: flex;
-
-        &-span {
-          justify-content: space-between;
-          align-items: center;
-        }
-        &-inline {
-          > *:not(:last-child) {
-            padding-right: 30px;
-          }
-        }
-      }
-    }
-  }
-
-  .box-addition {
-    text-align: center;
   }
 }

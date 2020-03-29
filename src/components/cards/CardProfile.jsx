@@ -19,10 +19,12 @@ function CardProfile(props) {
     dispatch: libDispatch
   } = useContext(LibraryContext);
 
+  const type = content.role.id === 'r-artist' ? 'artist' : 'profile';
+
   const handleToggleFavorite = action => {
     performActionFavorite(
       authState.token,
-      content.type,
+      type,
       content.id,
       content.relation,
       action
@@ -31,7 +33,7 @@ function CardProfile(props) {
         libDispatch(
           libActions.toggleFavorite({
             id: content.id,
-            type: content.type,
+            type,
             relation: r
           })
         );
@@ -56,12 +58,12 @@ function CardProfile(props) {
           <Link
             className='action__link'
             to={
-              content.type === 'artist'
-                ? `/player/${content.type}/${content.id}`
+              type === 'artist'
+                ? `/player/artist/${content.id}`
                 : `/player/library/${content.id}`
             }
           ></Link>
-          {content.type === 'artist' ? (
+          {type === 'artist' ? (
             <div className='action__play'>
               <ButtonIcon>
                 <PlayIcon />
@@ -95,7 +97,7 @@ function CardProfile(props) {
             )}
             <ButtonMore
               ctxData={{
-                type: content.type,
+                type,
                 id: content.id,
                 relation: content.relation,
                 status: content.status
@@ -106,15 +108,17 @@ function CardProfile(props) {
       </div>
       <div className='card-main__info profile'>
         <NavLinkUnderline
-          href={`/player/${content.type}/${content.id}`}
+          href={
+            type === 'artist'
+              ? `/player/artist/${content.id}`
+              : `/player/library/${content.id}`
+          }
           className='ellipsis one-line font-short-big font-weight-bold font-white'
         >
           {content.displayName}
         </NavLinkUnderline>
         <div className='bottom ellipsis one-line font-short-s font-gray-light'>
-          {content.type === 'artist'
-            ? content.followersCount + ' followers'
-            : ''}
+          {content.followersCount + ' followers'}
         </div>
       </div>
     </div>

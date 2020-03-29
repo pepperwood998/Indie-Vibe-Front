@@ -86,3 +86,12 @@ export const useEffectSkip = (fn, inputs) => {
     else didMountRef.current = true;
   }, inputs);
 };
+
+export const fixedPrices = {
+  one: [4900, '1 day'],
+  week: [10000, '1 week'],
+  month: [49000, '1 month'],
+  month3: [135000, '3 months'],
+  month6: [289000, '6 months'],
+  year: [490000, '1 year']
+};

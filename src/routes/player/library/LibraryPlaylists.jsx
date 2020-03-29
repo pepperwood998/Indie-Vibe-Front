@@ -4,6 +4,7 @@ import { CollectionMain } from '../../../components/collections';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
 import { ButtonLoadMore } from '../../../components/buttons';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 const model = {
   items: [],
@@ -20,15 +21,16 @@ function LibraryPlaylists(props) {
   const [fav, setFav] = useState({ ...model });
 
   const { id: targetId } = props.match.params;
+  const isEmpty = own.total === 0 && fav.total === 0;
 
   // effect: init
   useEffect(() => {
     // owned playlists
     getPlaylists(authState.token, authState.id, targetId)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setOwn({ ...own, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {
@@ -38,9 +40,9 @@ function LibraryPlaylists(props) {
     // favorite playlists
     getPlaylists(authState.token, authState.id, targetId, 'favorite')
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setFav({ ...fav, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {
@@ -51,6 +53,15 @@ function LibraryPlaylists(props) {
   // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
+    let ownPlaylists = [...own.items];
+    ownPlaylists.some(item => {
+      if (ctxFav.id === item.id) {
+        item.relation = [...ctxFav.relation];
+        return true;
+      }
+    });
+    setOwn({ ...fav, items: ownPlaylists });
+
     let favPlaylists = [...fav.items];
     favPlaylists.some(item => {
       if (ctxFav.id === item.id) {
@@ -58,7 +69,6 @@ function LibraryPlaylists(props) {
         return true;
       }
     });
-
     setFav({ ...fav, items: favPlaylists });
   }, [libState.ctxFav]);
 
@@ -136,54 +146,48 @@ function LibraryPlaylists(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='library-playlists'>
-      {own.total <= 0 && fav.total <= 0 ? (
-        <span className='font-short-extra font-weight-bold font-white'>
-          No Playlists
-        </span>
-      ) : (
-        <React.Fragment>
-          {own.items.length <= 0 ? (
-            ''
-          ) : (
-            <div className='fadein'>
-              <CollectionMain
-                header='Created playlists'
-                items={own.items}
-                type='playlist'
-                full={true}
-              />
-              {own.total > own.offset + own.limit ? (
-                <ButtonLoadMore onClick={handleLoadMoreOwn}>
-                  Load more
-                </ButtonLoadMore>
-              ) : (
-                ''
-              )}
-            </div>
-          )}
-          {fav.items.length <= 0 ? (
-            ''
-          ) : (
-            <div className='fadein'>
-              <CollectionMain
-                header='Favorite playlists'
-                items={fav.items}
-                type='playlist'
-                full={true}
-              />
-              {fav.total > fav.offset + fav.limit ? (
-                <ButtonLoadMore onClick={handleLoadMoreFav}>
-                  Load more
-                </ButtonLoadMore>
-              ) : (
-                ''
-              )}
-            </div>
-          )}
-        </React.Fragment>
-      )}
-    </div>
+    <GroupEmpty isEmpty={isEmpty} message='No playlists in library'>
+      <div className='library-playlists fadein content-padding'>
+        {own.items.length <= 0 ? (
+          ''
+        ) : (
+          <section>
+            <CollectionMain
+              header='Created playlists'
+              items={own.items}
+              type='playlist'
+              full={true}
+            />
+            {own.total > own.offset + own.limit ? (
+              <ButtonLoadMore onClick={handleLoadMoreOwn}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
+          </section>
+        )}
+        {fav.items.length <= 0 ? (
+          ''
+        ) : (
+          <section>
+            <CollectionMain
+              header='Favorite playlists'
+              items={fav.items}
+              type='playlist'
+              full={true}
+            />
+            {fav.total > fav.offset + fav.limit ? (
+              <ButtonLoadMore onClick={handleLoadMoreFav}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
+          </section>
+        )}
+      </div>
+    </GroupEmpty>
   );
 }
 

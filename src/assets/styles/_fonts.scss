@@ -26,6 +26,10 @@ $tip: 0.7em Montserrat;
   font: $shortBig;
 }
 
+.font-short-semi {
+  font: $shortSemi;
+}
+
 .font-short-extra {
   font: $shortExtra;
 }
@@ -48,4 +52,8 @@ $tip: 0.7em Montserrat;
 
 .font-gray-light {
   color: $grayLight;
+}
+
+.font-green {
+  color: $green;
 }

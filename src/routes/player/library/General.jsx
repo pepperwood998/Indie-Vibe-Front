@@ -5,6 +5,7 @@ import { CollectionMain } from '../../../components/collections';
 import { NavLinkColor } from '../../../components/links';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { capitalize, useEffectSkip } from '../../../utils/Common';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 function General(props) {
   // contexts
@@ -21,15 +22,14 @@ function General(props) {
   // props
   const { id: userId } = props.match.params;
   let exist = Object.keys(data).find(key => data[key].length > 0);
-  let render = '';
 
   // effect: init
   useEffect(() => {
     library(authState.token, userId)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {
@@ -75,38 +75,36 @@ function General(props) {
     setData({ ...data, playlists });
   }, [libState.ctxPlaylistPrivate]);
 
-  if (exist) {
-    render = Object.keys(data).map((key, index) => {
-      if (data[key].length > 0) {
-        let type = key.substr(0, key.length - 1);
+  return firstRender ? (
+    ''
+  ) : (
+    <GroupEmpty isEmpty={!exist} message='No playlists or following artists'>
+      <div className='fadein content-padding'>
+        {Object.keys(data).map((key, index) => {
+          if (data[key].length > 0) {
+            let type = key.substr(0, key.length - 1);
 
-        return (
-          <CollectionMain
-            header={
-              <NavLinkColor
-                href={`/player/library/${userId}/${key}`}
-                className='header-title font-white'
-              >
-                {capitalize(key)}
-                <ArrowRight />
-              </NavLinkColor>
-            }
-            items={data[key]}
-            type={type}
-            key={index}
-          />
-        );
-      }
-    });
-  } else {
-    render = (
-      <span className='font-short-extra font-white font-weight-bold'>
-        Library empty
-      </span>
-    );
-  }
-
-  return firstRender ? '' : <div className='fadein'>{render}</div>;
+            return (
+              <CollectionMain
+                header={
+                  <NavLinkColor
+                    href={`/player/library/${userId}/${key}`}
+                    className='header-title font-white'
+                  >
+                    {capitalize(key)}
+                    <ArrowRight />
+                  </NavLinkColor>
+                }
+                items={data[key]}
+                type={type}
+                key={index}
+              />
+            );
+          }
+        })}
+      </div>
+    </GroupEmpty>
+  );
 }
 
 export default General;

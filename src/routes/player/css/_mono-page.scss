@@ -1,11 +1,4 @@
-.mono-page {
-  padding: 0px 60px;
-}
-
 .track-list {
-  padding-top: 40px;
-  padding-bottom: 40px;
-
   &__header {
     display: flex;
     flex-direction: row;
@@ -68,7 +61,5 @@
         margin-right: 10px;
       }
     }
-  }
-  &__content {
   }
 }

@@ -3,8 +3,10 @@ import { GroupReleaseUpload } from '../../../components/groups';
 
 function Upload() {
   return (
-    <div className='workspace-upload body__bound fadein'>
-      <GroupReleaseUpload />
+    <div className='workspace-upload fadein content-padding'>
+      <div className=' body__bound'>
+        <GroupReleaseUpload />
+      </div>
     </div>
   );
 }

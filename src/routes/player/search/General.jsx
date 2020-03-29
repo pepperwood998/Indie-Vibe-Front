@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-
-import { capitalize, useEffectSkip } from '../../../utils/Common';
-import { NavLinkColor } from '../../../components/links';
-import {
-  CollectionTracks,
-  CollectionMain
-} from '../../../components/collections';
-import { AuthContext, LibraryContext } from '../../../contexts';
+import React, { useContext, useEffect, useState } from 'react';
 import { search } from '../../../apis/API';
-
 import { ArrowRight } from '../../../assets/svgs';
+import {
+  CollectionGenres,
+  CollectionMain,
+  CollectionTracks
+} from '../../../components/collections';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
+import { NavLinkColor } from '../../../components/links';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { capitalize, useEffectSkip } from '../../../utils/Common';
 
 const model = {
   items: [],
@@ -35,17 +35,16 @@ function General(props) {
 
   // props
   const { key: searchKey } = props.match.params;
-  let exist = Object.keys(data).some(key => data[key].total > 0);
-  let render = '';
+  const exist = Object.keys(data).some(key => data[key].total > 0);
 
   // effect: init
   useEffect(() => {
     setFirstRender(true);
     search(authState.token, searchKey)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success') {
           setData({ ...data, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {
@@ -96,56 +95,73 @@ function General(props) {
     setData({ ...data, playlists: { ...data.playlists, items: playlists } });
   }, [libState.ctxPlaylistPrivate]);
 
-  if (exist) {
-    render = Object.keys(data).map((key, index) => {
-      if (data[key].total > 0) {
-        let type = key.substr(0, key.length - 1);
-        if (type === 'track') {
-          return (
-            <CollectionTracks
-              header={
-                <NavLinkColor
-                  href={`/player/search/${searchKey}/${key}`}
-                  className='header-title font-white'
-                >
-                  {capitalize(key)}
-                  <ArrowRight />
-                </NavLinkColor>
-              }
-              items={data[key].items}
-              type='search'
-              key={index}
-            />
-          );
-        }
+  return firstRender ? (
+    ''
+  ) : (
+    <GroupEmpty
+      isEmpty={!exist}
+      message={`No search results for "${searchKey}"`}
+    >
+      <div className='fadein content-padding'>
+        {Object.keys(data).map((key, index) => {
+          if (data[key].total > 0) {
+            let href = `/player/search/${searchKey}/${key}`;
 
-        return (
-          <CollectionMain
-            header={
-              <NavLinkColor
-                href={`/player/search/${searchKey}/${key}`}
-                className='header-title font-white'
-              >
-                {capitalize(key)}
-                <ArrowRight />
-              </NavLinkColor>
+            if (key === 'tracks') {
+              return (
+                <CollectionTracks
+                  header={
+                    <NavLinkColor
+                      href={href}
+                      className='header-title font-white'
+                    >
+                      {capitalize(key)}
+                      <ArrowRight />
+                    </NavLinkColor>
+                  }
+                  items={data[key].items}
+                  type='search'
+                  key={index}
+                />
+              );
+            } else if (key === 'genres') {
+              return (
+                <CollectionGenres
+                  header={
+                    <NavLinkColor
+                      href={href}
+                      className='header-title font-white'
+                    >
+                      {capitalize(key)}
+                      <ArrowRight />
+                    </NavLinkColor>
+                  }
+                  items={data[key].items}
+                />
+              );
+            } else {
+              return (
+                <CollectionMain
+                  header={
+                    <NavLinkColor
+                      href={href}
+                      className='header-title font-white'
+                    >
+                      {capitalize(key)}
+                      <ArrowRight />
+                    </NavLinkColor>
+                  }
+                  items={data[key].items}
+                  type={key.substr(0, key.length - 1)}
+                  key={index}
+                />
+              );
             }
-            items={data[key].items}
-            type={type}
-            key={index}
-          />
-        );
-      }
-    });
-  } else {
-    render = (
-      <span className='font-short-extra font-white font-weight-bold'>
-        No results found
-      </span>
-    );
-  }
-
-  return firstRender ? '' : <div className='fadein'>{render}</div>;
+          }
+        })}
+      </div>
+    </GroupEmpty>
+  );
 }
 
 export default General;

@@ -57,7 +57,7 @@ export const createOrEditPlaylist = (
   url = new URL(url);
 
   return fetch(url, {
-    method: type === 'edit' ? 'UPDATE' : 'POST',
+    method: type === 'edit' ? 'PUT' : 'POST',
     headers: {
       Authorization: 'Bearer ' + token
     },
@@ -143,7 +143,12 @@ export const search = (token, key, type = '', offset = 0, limit = 20) => {
 
 export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   let url = `${host}/library/${userId}`;
-  if (type) url += `/${type}s/favorite`;
+  if (type) {
+    url += `/${type}s`;
+    if (type !== 'artist' && type !== 'following' && type !== 'follower') {
+      url += '/favorite';
+    }
+  }
 
   url = new URL(url);
   url.search = new URLSearchParams({ offset, limit }).toString();
@@ -156,13 +161,19 @@ export const library = (token, userId, type = '', offset = 0, limit = 20) => {
   }).then(response => response.json());
 };
 
-export const profile = (token, userId, type = 'user') => {
-  let url = '';
-  if (type === 'artist') {
-    url = `${host}/artists/${userId}`;
-  } else {
-    url = `${host}/library/${userId}/profile`;
-  }
+export const getProfile = (token, userId) => {
+  let url = `${host}/library/${userId}/profile`;
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getArtist = (token, artistId) => {
+  let url = new URL(`${host}/artists/${artistId}`);
 
   return fetch(url, {
     method: 'GET',
@@ -255,6 +266,17 @@ export const getReleasesByType = (
   }).then(response => response.json());
 };
 
+export const getAccount = token => {
+  let url = new URL(`${host}/account`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
 export const updateAccount = (token, data) => {
   let formData = new FormData();
   let changeCounter = 0;
@@ -271,7 +293,7 @@ export const updateAccount = (token, data) => {
 
   let url = new URL(`${host}/account`);
   return fetch(url, {
-    method: 'UPDATE',
+    method: 'PUT',
     headers: {
       Authorization: 'Bearer ' + token
     },
@@ -282,14 +304,14 @@ export const updateAccount = (token, data) => {
 export const updatePassword = (token, data) => {
   let formData = new FormData();
   for (let key in data) {
-    if (data[key][0]) {
-      formData.append(key, data[key][1]);
+    if (data[key]) {
+      formData.append(key, data[key]);
     }
   }
 
   let url = new URL(`${host}/account/password`);
   return fetch(url, {
-    method: 'UPDATE',
+    method: 'PUT',
     headers: {
       Authorization: 'Bearer ' + token
     },
@@ -327,5 +349,51 @@ export const browseGenre = (token, id) => {
     headers: {
       Authorization: 'Bearer ' + token
     }
+  }).then(response => response.json());
+};
+
+export const browseGenreType = (token, id, type) => {
+  let url = new URL(`${host}/browse/genres/${id}/${type}`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const purchase = (token, type, stripeToken, packageType) => {
+  if (type === 'monthly') {
+    return purchaseMonthly(token, stripeToken);
+  } else {
+    return purchaseFixed(token, stripeToken, packageType);
+  }
+};
+
+const purchaseMonthly = (token, stripeToken) => {
+  let url = new URL(`${host}/purchase/monthly`);
+  let formData = new FormData();
+  formData.append('stripeToken', stripeToken);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
+const purchaseFixed = (token, stripeToken, packageType) => {
+  let url = new URL(`${host}/purchase/fixed/${packageType}`);
+  let formData = new FormData();
+  formData.append('stripeToken', stripeToken);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
   }).then(response => response.json());
 };

@@ -62,7 +62,8 @@
   }
 
   &--wide {
-    background-color: $blueMain;
+    background-color: $blackGray;
+    box-shadow: 0 0 10px $black;
   }
 }
 

@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
-
-import {
-  CollectionTracks,
-  CollectionMain
-} from '../../../components/collections';
-import { capitalize, useEffectSkip } from '../../../utils/Common';
+import React, { useContext, useEffect, useState } from 'react';
 import { search } from '../../../apis/API';
-import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
+import {
+  CollectionGenres,
+  CollectionMain,
+  CollectionTracks
+} from '../../../components/collections';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { useEffectSkip } from '../../../utils/Common';
 
 function Mono(props) {
   // contexts
@@ -26,15 +27,14 @@ function Mono(props) {
   // props
   const { key: searchKey } = props.match.params;
   const { type } = props;
-  let collection = '';
 
   // effect: init
   useEffect(() => {
     search(authState.token, searchKey, props.type)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {
@@ -104,43 +104,39 @@ function Mono(props) {
       });
   };
 
-  if (type === 'track') {
-    collection = (
-      <CollectionTracks
-        header={
-          data.total > 0
-            ? data.total + ` ${type}s`
-            : `No results for ${capitalize(type)}`
-        }
-        items={data.items}
-        type='search'
-      />
-    );
-  } else {
-    collection = (
-      <CollectionMain
-        header={
-          data.total > 0
-            ? data.total + ` ${type}s`
-            : `No results for ${capitalize(type)}`
-        }
-        items={data.items}
-        type={type}
-      />
-    );
-  }
-
   return firstRender ? (
     ''
   ) : (
-    <div className='fadein'>
-      {collection}
-      {data.total > data.offset + data.limit ? (
-        <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
-      ) : (
-        ''
-      )}
-    </div>
+    <GroupEmpty
+      isEmpty={!data.items.length}
+      message={`No ${type}s for "${searchKey}"`}
+    >
+      <div className='fadein content-padding'>
+        {type === 'track' ? (
+          <CollectionTracks
+            header={data.total + ` ${type}s`}
+            items={data.items}
+            type='search'
+          />
+        ) : type === 'genre' ? (
+          <CollectionGenres
+            header={data.total + ` ${type}s`}
+            items={data.items}
+          />
+        ) : (
+          <CollectionMain
+            header={data.total + ` ${type}s`}
+            items={data.items}
+            type={type}
+          />
+        )}
+        {data.total > data.offset + data.limit ? (
+          <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
+        ) : (
+          ''
+        )}
+      </div>
+    </GroupEmpty>
   );
 }
 

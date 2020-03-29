@@ -1,33 +1,43 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { UserRoute } from '../../../components/custom-routes';
-import { GroupProfileBox } from '../../../components/groups';
+import { GroupEmpty, GroupProfileBox } from '../../../components/groups';
 import { NavigationTab } from '../../../components/navigation';
+import { AuthContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
 import ArtistAbout from './ArtistAbout';
 import ArtistDefault from './ArtistDefault';
+import { getArtist } from '../../../apis/API';
 
 function Artist(props) {
-  const { id } = props.match.params;
+  const { state: authState } = useContext(AuthContext);
 
+  const [firstRender, setFirstRender] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
   const [artist, setArtist] = useState({});
+
+  const { id } = props.match.params;
 
   const handleScrollOver = over => {
     setCollapsed(over);
   };
 
-  const handleProfile = artist => {
-    setArtist(artist);
-  };
+  useEffect(() => {
+    setFirstRender(true);
+    getArtist(authState.token, id)
+      .then(res => {
+        setFirstRender(false);
+        if (res.status === 'success') {
+          setArtist({ ...artist, ...res.data });
+        } else {
+          throw 'Error';
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [id]);
 
-  const header = (
-    <GroupProfileBox
-      id={id}
-      collapsed={collapsed}
-      type='artist'
-      handleProfile={handleProfile}
-    />
-  );
+  const header = <GroupProfileBox collapsed={collapsed} data={artist} />;
   const nav = (
     <NavigationTab
       items={[
@@ -54,13 +64,17 @@ function Artist(props) {
     </React.Fragment>
   );
 
-  return (
-    <TemplateNavPage
-      header={header}
-      nav={nav}
-      body={body}
-      handleScrollOver={handleScrollOver}
-    />
+  return firstRender ? (
+    ''
+  ) : (
+    <GroupEmpty isEmpty={!artist.id} message='Artist not found.'>
+      <TemplateNavPage
+        header={header}
+        nav={nav}
+        body={body}
+        handleScrollOver={handleScrollOver}
+      />
+    </GroupEmpty>
   );
 }
 

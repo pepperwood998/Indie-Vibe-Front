@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
-
-import {
-  CollectionTracks,
-  CollectionMain
-} from '../../../components/collections';
-import { capitalize, useEffectSkip } from '../../../utils/Common';
+import React, { useContext, useEffect, useState } from 'react';
 import { library } from '../../../apis/API';
-import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonLoadMore } from '../../../components/buttons';
+import {
+  CollectionMain,
+  CollectionTracks
+} from '../../../components/collections';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { useEffectSkip } from '../../../utils/Common';
 
 function Mono(props) {
   // contexts
@@ -31,9 +31,9 @@ function Mono(props) {
   useEffect(() => {
     library(authState.token, userId, type)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setData({ ...data, ...res.data });
-          setFirstRender(false);
         }
       })
       .catch(err => {
@@ -72,40 +72,33 @@ function Mono(props) {
       });
   };
 
-  let collection = '';
-  if (type === 'track') {
-    collection = (
-      <CollectionTracks
-        header={
-          data.total > 0 ? data.total + ` ${type}s` : `No ${capitalize(type)}`
-        }
-        items={data.items}
-        type='favorite'
-      />
-    );
-  } else {
-    collection = (
-      <CollectionMain
-        header={
-          data.total > 0 ? data.total + ` ${type}s` : `No ${capitalize(type)}`
-        }
-        items={data.items}
-        type={type}
-      />
-    );
-  }
-
   return firstRender ? (
     ''
   ) : (
-    <div className='fadein'>
-      {collection}
-      {data.total > data.offset + data.limit ? (
-        <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
-      ) : (
-        ''
-      )}
-    </div>
+    <GroupEmpty isEmpty={data.total === 0} message={`No ${type}s in library`}>
+      <div className='fadein content-padding'>
+        {type === 'track' ? (
+          <CollectionTracks
+            header={data.total + ` ${type}s`}
+            items={data.items}
+            type='favorite'
+          />
+        ) : (
+          <CollectionMain
+            header={data.total + ` ${type}s`}
+            items={data.items}
+            type={
+              type === 'following' || type === 'follower' ? 'profile' : type
+            }
+          />
+        )}
+        {data.total > data.offset + data.limit ? (
+          <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
+        ) : (
+          ''
+        )}
+      </div>
+    </GroupEmpty>
   );
 }
 

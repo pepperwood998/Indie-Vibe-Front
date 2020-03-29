@@ -1,13 +1,11 @@
 import React, { useContext, useEffect } from 'react';
-
-import { LinkWhiteColor } from '../../../components/links';
+import { getProfile, getAccount } from '../../../apis/API';
+import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
+import { ArrowDown, Logo } from '../../../assets/svgs';
 import { ButtonFrame } from '../../../components/buttons';
 import { ContextMenuAccount } from '../../../components/context-menu';
-import { MeContext, AuthContext } from '../../../contexts';
-import { profile } from '../../../apis/API';
-
-import { Logo, ArrowDown } from '../../../assets/svgs';
-import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
+import { LinkWhiteColor } from '../../../components/links';
+import { AuthContext, MeContext } from '../../../contexts';
 
 function NavBar(props) {
   const { state: authState } = useContext(AuthContext);
@@ -19,12 +17,11 @@ function NavBar(props) {
 
   useEffect(() => {
     if (authState.token && !meState.id) {
-      profile(authState.token, authState.id)
-        .then(json => {
-          if (json.status === 'success') {
-            meDispatch(meActions.loadMe(json.data));
-          }
-        });
+      getAccount(authState.token).then(json => {
+        if (json.status === 'success') {
+          meDispatch(meActions.loadMe(json.data));
+        }
+      });
     } else if (!authState.token && meState.id) {
       meDispatch(meActions.unloadMe());
     }
@@ -44,14 +41,16 @@ function NavBar(props) {
               <LinkWhiteColor
                 href='/home'
                 className='font-short-regular font-weight-bold font-white'
+                active={props.active === 'home'}
               >
                 Home
               </LinkWhiteColor>
             </li>
             <li className='nav-menu__item'>
               <LinkWhiteColor
-                href='#'
+                href='/premium'
                 className='font-short-regular font-weight-bold font-white'
+                active={props.active === 'premium'}
               >
                 Premium
               </LinkWhiteColor>

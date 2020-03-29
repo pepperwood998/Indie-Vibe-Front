@@ -28,6 +28,7 @@ function Me(props) {
           Library
         </LinkWhiteColor>
       </li>
+      <li>{props.ShareFacebook}</li>
     </ul>
   );
 }
@@ -63,6 +64,7 @@ function Other(props) {
       ) : (
         ''
       )}
+      <li>{props.ShareFacebook}</li>
     </ul>
   );
 }

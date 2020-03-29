@@ -1,19 +1,17 @@
 import React, { useContext, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
-
-import { NavLinkColor, NavLinkUnderline } from '../../components/links';
-import { ContextMenuAccount } from '../../components/context-menu';
-import { MeContext, AuthContext } from '../../contexts';
-
+import { Link, NavLink } from 'react-router-dom';
+import { getAccount } from '../../apis/API';
+import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import {
-  HomeIcon,
   BrowseIcon,
+  HomeIcon,
   LibraryIcon,
   SettingIcon
 } from '../../assets/svgs';
-import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonFrame } from '../../components/buttons';
-import { profile } from '../../apis/API';
+import { ContextMenuAccount } from '../../components/context-menu';
+import { NavLinkColor, NavLinkUnderline } from '../../components/links';
+import { AuthContext, MeContext } from '../../contexts';
 
 function NavMenu() {
   const { state: authState } = useContext(AuthContext);
@@ -25,7 +23,7 @@ function NavMenu() {
 
   useEffect(() => {
     if (!meState.id) {
-      profile(authState.token, authState.id).then(json => {
+      getAccount(authState.token).then(json => {
         if (json.status === 'success') {
           meDispatch(meActions.loadMe(json.data));
         }

@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-
-import { InputForm, InputRadioBox } from '../../components/inputs';
-import { ButtonMain, ButtonFacebook } from '../../components/buttons/';
-import Authentication from './Authentication';
-import { register, registerWithFb, getFbPictureUrl } from '../../apis/AuthAPI';
-
+import { getFbPictureUrl, register, registerWithFb } from '../../apis/AuthAPI';
 import { LogoRegister } from '../../assets/svgs';
-import './style.scss';
+import { ButtonFacebook, ButtonMain } from '../../components/buttons/';
 import { CardError, CardSuccess } from '../../components/cards';
+import { InputForm, InputRadioBox } from '../../components/inputs';
+import Authentication from './Authentication';
 
 function Register() {
   const [registerError, setRegisterError] = useState('');
@@ -36,7 +33,7 @@ function Register() {
     setSubmitted(true);
     setRegisterError('');
     setRegisterSuccess('');
-    if (!email || !pwd || !cfPwd || !displayName || !gender) return;
+    if (!email || !pwd || !cfPwd || !displayName) return;
 
     setRegistering(true);
     register(email, pwd, cfPwd, displayName, gender)

@@ -77,17 +77,31 @@ function ContextSwitch(props) {
     }
   };
 
+  const handleShare = () => {
+    handleClose();
+    window.FB.ui({
+      method: 'share',
+      href: `${window.location.origin}/player/${content.type}/${content.id}`
+    });
+  };
+
   let AddToQueue = (
     <LinkWhiteColor onClick={handleAddToQueue}>Add to queue</LinkWhiteColor>
+  );
+
+  let ShareFacebook = (
+    <LinkWhiteColor onClick={handleShare}>Share on Facebook</LinkWhiteColor>
   );
   let superprops = {
     elemRef: ref,
     content,
     AddToQueue,
+    ShareFacebook,
     handlers: {
       handleClose,
       handleToggleFavorite,
-      handleAddToQueue
+      handleAddToQueue,
+      handleShare
     }
   };
 

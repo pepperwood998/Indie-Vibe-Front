@@ -33,7 +33,14 @@ function CardRelease(props) {
           src={content.thumbnail ? content.thumbnail : Placeholder}
         />
       </div>
-      <div className='card-wide__bg'>
+      <div
+        className='card-wide__bg'
+        style={{
+          backgroundImage: `url(${
+            content.thumbnail ? content.thumbnail : Placeholder
+          })`
+        }}
+      >
         <NavLink to={`/player/release/${content.id}`}>
           <div className='layer'></div>
         </NavLink>

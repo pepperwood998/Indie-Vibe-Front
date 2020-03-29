@@ -1,19 +1,16 @@
-import React, { useState, useContext } from 'react';
-
-import { InputForm, InputCheckbox } from '../../components/inputs';
-import {
-  ButtonMain,
-  ButtonFacebook,
-  ButtonFrame
-} from '../../components/buttons';
-import Authentication from './Authentication';
+import React, { useContext, useState } from 'react';
 import { login } from '../../apis';
-import { CardError } from '../../components/cards';
-import { AuthContext } from '../../contexts';
-
-import { LogoSignIn } from '../../assets/svgs';
-import './style.scss';
 import { loginFb } from '../../apis/AuthAPI';
+import { LogoSignIn } from '../../assets/svgs';
+import {
+  ButtonFacebook,
+  ButtonFrame,
+  ButtonMain
+} from '../../components/buttons';
+import { CardError } from '../../components/cards';
+import { InputCheckbox, InputForm } from '../../components/inputs';
+import { AuthContext } from '../../contexts';
+import Authentication from './Authentication';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -78,7 +75,7 @@ function Login() {
     loginFb(id, accessToken)
       .then(response => response.json())
       .then(json => {
-        if (json.status && json.status === 'failed') {
+        if (json.status && json.status === 'fail') {
           throw 'wrong';
         } else {
           dispatch(loginSuccess({ ...json, remembered }));
