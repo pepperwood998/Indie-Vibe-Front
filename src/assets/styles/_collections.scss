@@ -46,11 +46,13 @@
       &.wide {
         grid-template-columns: repeat(3, 1fr);
         grid-column-gap: 10px;
+        grid-row-gap: 10px;
       }
 
       &.genres {
         grid-template-columns: repeat(4, 1fr);
         grid-column-gap: 10px;
+        grid-row-gap: 15px;
         grid-auto-rows: 130px;
       }
     }

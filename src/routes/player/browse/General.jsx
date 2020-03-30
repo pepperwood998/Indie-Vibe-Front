@@ -71,7 +71,7 @@ function General(props) {
                   <ArrowRight />
                 </NavLink>
               }
-              items={data.releases}
+              items={data.releases.slice(0, 3)}
             />
           ) : (
             ''

@@ -35,9 +35,11 @@ function NavMenu() {
     <div className='nav-menu'>
       <div className='user-box'>
         <div className='avatar-box'>
-          <img
-            src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
-          />
+          <div className='img-wrapper'>
+            <img
+              src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
+            />
+          </div>
           <div className='avatar-box__layer'>
             <SettingIcon data-toggle='dropdown' />
             <div className='dropdown-menu'>

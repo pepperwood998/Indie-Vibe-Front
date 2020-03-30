@@ -31,7 +31,7 @@ const missingSomething = (info, audio) => {
 function GroupReleaseUpload() {
   const { state: authState } = useContext(AuthContext);
 
-  const [release, setRelease] = useState({ title: '', typeId: 'r-album' });
+  const [release, setRelease] = useState({ title: '', typeId: 're-album' });
   const [info, setInfo] = useState([Object.assign({}, infoModel)]);
   const [thumbnail, setThumbnail] = useState(null);
   const [audio, setAudio] = useState([Object.assign({}, audioModel)]);
