@@ -7,7 +7,7 @@ function TemplateNavPage(props) {
     : () => undefined;
 
   const handleScroll = e => {
-    if (e.target.scrollTop >= 100) {
+    if (e.target.scrollTop >= 50) {
       handleScrollOver(true);
     } else {
       handleScrollOver(false);

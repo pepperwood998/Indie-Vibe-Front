@@ -174,7 +174,7 @@ function NowPayingMiddle() {
       <div className='player-controls__action'>
         <div className='player-action-wrapper'>
           <SkipPreviousIcon
-            className='svg--cursor svg--bright'
+            className='svg--big svg--cursor svg--bright'
             onClick={() => {
               streamDispatch(streamActions.skipBackward());
             }}
@@ -183,14 +183,14 @@ function NowPayingMiddle() {
         <div className='player-action-wrapper'>
           {streamState.paused ? (
             <PlayIcon
-              className='svg--cursor svg--bright'
+              className='svg--big svg--cursor svg--bright'
               onClick={() => {
                 streamDispatch(streamActions.togglePaused());
               }}
             />
           ) : (
             <PauseIcon
-              className='svg--cursor svg--bright'
+              className='svg--big svg--cursor svg--bright'
               onClick={() => {
                 streamDispatch(streamActions.togglePaused());
               }}
@@ -199,7 +199,7 @@ function NowPayingMiddle() {
         </div>
         <div className='player-action-wrapper'>
           <SkipNextIcon
-            className='svg--cursor svg--bright'
+            className='svg--big svg--cursor svg--bright'
             onClick={() => {
               streamDispatch(streamActions.skipForward());
             }}
