@@ -7,6 +7,9 @@ class AudioStream {
     this.trackId = '';
     this.settings = { bitrate: 0, shouldPlay: false };
     this.ready = false;
+    this.startTime = 0;
+    this.started = false;
+    this.recorded = false;
 
     this.api = trackId => undefined;
 
@@ -16,6 +19,7 @@ class AudioStream {
 
     // manual event handler
     this.onTogglePaused = paused => undefined;
+    this.onRecorded = trackId => undefined;
     this.onEnded = () => undefined;
 
     this.onInfo = info => undefined;
@@ -24,6 +28,7 @@ class AudioStream {
     this.eventDurationChange = e => undefined;
     this.eventCanPlay = e => undefined;
     this.eventTimeUpdate = e => undefined;
+    this.eventStarted = e => undefined;
     this.eventEnded = e => undefined;
     this.eventPlaying = e => undefined;
     this.eventPause = e => undefined;
@@ -43,11 +48,22 @@ class AudioStream {
       this.ready = true;
     };
     this.eventTimeUpdate = e => {
-      var ratio = this.audio.currentTime / this.audio.duration;
+      let currentTime = this.audio.currentTime;
+      var ratio = currentTime / this.audio.duration;
       this.onProgress(
         getFormattedTime(this.audio.duration * ratio),
         ratio * 100
       );
+      if (!this.recorded && currentTime - this.startTime >= 5) {
+        this.recorded = true;
+        this.onRecorded(this.trackId);
+      }
+    };
+    this.eventStarted = e => {
+      if (!this.started) {
+        this.started = true;
+        this.startTime = this.audio.currentTime;
+      }
     };
     this.eventEnded = e => {
       this.onEnded();
@@ -64,6 +80,7 @@ class AudioStream {
     this.audio.addEventListener('durationchange', this.eventDurationChange);
     this.audio.addEventListener('canplay', this.eventCanPlay);
     this.audio.addEventListener('timeupdate', this.eventTimeUpdate);
+    this.audio.addEventListener('play', this.eventStarted);
     this.audio.addEventListener('ended', this.eventEnded);
     this.audio.addEventListener('playing', this.eventPlaying);
     this.audio.addEventListener('pause', this.eventPause);
@@ -137,6 +154,8 @@ class AudioStream {
         let { data } = info;
         if (!data) throw 'Info Not Found';
 
+        this.started = false;
+        this.recorded = false;
         this.audio.src = data.url;
         this.audio.load();
         if (this.audio.autoplay) this.audio.play();

@@ -397,3 +397,14 @@ const purchaseFixed = (token, stripeToken, packageType) => {
     body: formData
   }).then(response => response.json());
 };
+
+export const streamCount = (token, type, id) => {
+  let url = new URL(`${host}/stream/count/${type}/${id}`);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};

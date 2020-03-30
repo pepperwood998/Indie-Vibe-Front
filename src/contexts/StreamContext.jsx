@@ -3,27 +3,21 @@ import AudioStream from '../utils/AudioStream';
 import { getStreamInfo } from '../apis/StreamAPI';
 import { AuthContext } from './AuthContext';
 import { reorder, shuffle, swap, getCircularIndex } from '../utils/Common';
+import { streamCount } from '../apis/API';
 
 const StreamContext = createContext();
 
 const stream = new AudioStream();
 
 const initState = {
-  queue: [
-    // '3AUo1uunXOxigzt6JIsZ',
-    // '5UmNONJQaXmNmbdmr2On',
-    // 'gKen4p6Y37lf2OkVuMNg'
-  ],
-  queueSrc: [
-    // '3AUo1uunXOxigzt6JIsZ',
-    // '5UmNONJQaXmNmbdmr2On',
-    // 'gKen4p6Y37lf2OkVuMNg'
-  ],
+  queue: [],
+  queueSrc: [],
   queueExtra: [],
   currentSongIndex: 0,
   mainQueueMarkIndex: 0,
   playFromId: '',
   playFromType: '', // 'playlist' or 'release' or 'favorite'
+  collectionRecorded: false,
   info: {},
   volume: 50,
   muted: false,
@@ -68,6 +62,16 @@ function StreamContextProvider(props) {
       return getStreamInfo(authState.token, id, bitrate);
     };
   }, [authState.token]);
+
+  useEffect(() => {
+    stream.onRecorded = trackId => {
+      streamCount(authState.token, 'track', trackId);
+      if (!state.collectionRecorded && state.playFromType !== 'favorite') {
+        dispatch(actions.recordCollection());
+        streamCount(authState.token, state.playFromType, state.playFromId);
+      }
+    };
+  }, [authState.token, state.playFromId, state.collectionRecorded]);
 
   //
   useEffect(() => {
@@ -202,6 +206,9 @@ const actions = {
   },
   setSettings: settings => {
     return { type: 'SET_SETTINGS', settings };
+  },
+  recordCollection: () => {
+    return { type: 'RECORD_COLLECTION' };
   }
 };
 
@@ -230,6 +237,7 @@ const reducer = (state, action) => {
         queueSrc: [...queue],
         playFromType: payload.playFromType,
         playFromId: payload.playFromId,
+        collectionRecorded: false,
         currentSongIndex: 0
       };
     }
@@ -395,6 +403,9 @@ const reducer = (state, action) => {
       let newSettings = { ...state.settings, ...action.settings };
       localStorage.setItem('settings', JSON.stringify(newSettings));
       return { ...state, settings: newSettings };
+    }
+    case 'RECORD_COLLECTION': {
+      return { ...state, collectionRecorded: true };
     }
     default:
       return state;
