@@ -63,28 +63,28 @@
       width: 50px;
     }
   }
+
+  .plan {
+    margin-bottom: 20px;
+    padding: 15px 15px 5px;
+    background-color: $blackBlueLight;
+    border-radius: 5px;
+    transition: 0.5s ease;
+
+    &.success {
+      background-color: $green;
+      padding: 15px;
+      text-align: center;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+  }
 }
 
 .addition {
   margin-bottom: 5px;
-}
-
-.plan {
-  margin-bottom: 20px;
-  padding: 15px 15px 5px;
-  background-color: $blackBlueLight;
-  border-radius: 5px;
-  transition: 0.5s ease;
-
-  &.success {
-    background-color: $green;
-    padding: 15px;
-    text-align: center;
-  }
-
-  p {
-    margin-bottom: 10px;
-  }
 }
 
 .term {

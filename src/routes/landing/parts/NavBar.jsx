@@ -92,7 +92,9 @@ function NavBar(props) {
               <ArrowDown />
             </div>
             <div className='dropdown-menu dropdown-menu--fixed dropdown-menu-right'>
-              <ContextMenuAccount fromLanding={true} />
+              <div className='context-wrapper'>
+                <ContextMenuAccount fromLanding={true} />
+              </div>
             </div>
           </div>
         )}

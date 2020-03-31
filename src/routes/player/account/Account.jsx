@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { getAccount } from '../../../apis/API';
-import { UserRoute } from '../../../components/custom-routes';
+import React, { useContext } from 'react';
+import { PremiumRoute, UserRoute } from '../../../components/custom-routes';
+import { GroupEmpty } from '../../../components/groups';
 import { NavigationTab } from '../../../components/navigation';
-import { AuthContext, MeContext } from '../../../contexts';
+import { MeContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
+import BecomeArtist from './BecomeArtist';
 import Information from './Information';
 import Password from './Password';
 import Settings from './Settings';
 import Social from './Social';
-import { GroupEmpty } from '../../../components/groups';
 
 function Account(props) {
   const { state: meState } = useContext(MeContext);
@@ -33,6 +33,13 @@ function Account(props) {
         {
           href: `/player/account/settings`,
           label: 'Settings'
+        },
+        {
+          href: `/player/account/baa`,
+          label: 'Become an Artist',
+          isDisabled: meState.role.id === 'r-free',
+          isSpecial: true,
+          disabledReason: 'Upgrade to premium to use this feature'
         }
       ]}
     />
@@ -44,6 +51,7 @@ function Account(props) {
       <UserRoute path='/player/account/password' component={Password} />
       <UserRoute path='/player/account/social' component={Social} />
       <UserRoute path='/player/account/settings' component={Settings} />
+      <PremiumRoute path='/player/account/baa' component={BecomeArtist} />
     </React.Fragment>
   );
 

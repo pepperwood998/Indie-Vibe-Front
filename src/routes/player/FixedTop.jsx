@@ -1,7 +1,6 @@
 import React from 'react';
-
+import { ArrowBack, ArrowForward, LogoIcon } from '../../assets/svgs';
 import { InputSearch } from '../../components/inputs';
-import { ArrowBack, ArrowForward } from '../../assets/svgs';
 
 function Top(props) {
   let { history } = props;
@@ -19,7 +18,12 @@ function Top(props) {
           }, 300);
         }}
       />
-      <div className='linear-nav'>
+      <section>
+        <a href='/home'>
+          <LogoIcon />
+        </a>
+      </section>
+      <section className='linear-nav'>
         <ArrowBack
           className='svg--small svg--cursor svg--bright'
           onClick={() => {
@@ -32,7 +36,7 @@ function Top(props) {
             history.goForward();
           }}
         />
-      </div>
+      </section>
     </div>
   );
 }

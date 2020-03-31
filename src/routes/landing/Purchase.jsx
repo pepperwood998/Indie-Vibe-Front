@@ -16,7 +16,7 @@ import { AuthContext } from '../../contexts';
 import { fixedPrices } from '../../utils/Common';
 import Landing from './Landing';
 
-const stripePromise = loadStripe('pk_test_N64DLefNNYKJ4ZO82k4GcFmI00r6PCS6Lh');
+const stripePromise = loadStripe('pk_test_Cqzq3qkNsz4wFC7qeSVaU4t600sGbm1kF4');
 
 function Purchase(props) {
   const { type, packageType } = props.match.params;
@@ -35,7 +35,6 @@ function Purchase(props) {
 const CheckoutForm = props => {
   const { state: authState } = useContext(AuthContext);
 
-  const [error, setError] = useState(null);
   const [status, setStatus] = useState({
     purchasing: false,
     error: '',

@@ -1,4 +1,5 @@
 export { ReactComponent as Logo } from './logo.svg';
+export { ReactComponent as LogoIcon } from './logo-icon.svg';
 export { ReactComponent as LogoSignIn } from './logo-sign-in.svg';
 export { ReactComponent as LogoRegister } from './logo-register.svg';
 export { ReactComponent as Facebook } from './facebook.svg';
@@ -35,4 +36,3 @@ export { ReactComponent as TimerIcon } from './timer.svg';
 export { ReactComponent as DateIcon } from './date.svg';
 export { ReactComponent as PlusIcon } from './plus.svg';
 export { ReactComponent as LogoTinyIcon } from './tiny.svg';
-

@@ -9,15 +9,19 @@ function ContextMenuAccount(props) {
   );
   const { actions: meActions, dispatch: meDispatch } = useContext(MeContext);
 
+  const { handlers } = props;
+
   const handleLogout = () => {
     authDispatch(authAction.logout());
     meDispatch(meActions.unloadMe());
   };
 
+  const handleClose = handlers ? handlers.handleClose : () => undefined;
+
   return (
-    <div className='context-wrapper'>
-      <ul className='context-menu d-flex flex-column'>
-        <li>
+    <div className='context-menu'>
+      <ul>
+        <li onClick={handleClose}>
           {props.fromLanding ? (
             <LinkWhiteColor
               href='/player/account'
@@ -34,7 +38,7 @@ function ContextMenuAccount(props) {
             </NavLinkColor>
           )}
         </li>
-        <li>
+        <li onClick={handleClose}>
           <LinkWhiteColor
             onClick={handleLogout}
             className='font-short-regular font-weight-bold font-white'

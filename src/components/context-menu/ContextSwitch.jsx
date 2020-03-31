@@ -7,6 +7,7 @@ import ContextTrack from './ContextTrack';
 import ContextUser from './ContextUser';
 import { streamCollection } from '../../apis/StreamAPI';
 import { LinkWhiteColor } from '../links';
+import { ContextMenuAccount } from '.';
 
 function ContextSwitch(props) {
   const { content } = props;
@@ -22,17 +23,19 @@ function ContextSwitch(props) {
   const ref = useRef();
 
   useEffect(() => {
-    let ctxMenuBoudingRect = ref.current.getBoundingClientRect();
-    if (
-      ctxMenuBoudingRect.y + ctxMenuBoudingRect.height >=
-      window.innerHeight
-    ) {
-      libDispatch(
-        libActions.updateCtxPos([
-          ctxMenuBoudingRect.x + 30,
-          window.innerHeight - ctxMenuBoudingRect.height - 10
-        ])
-      );
+    if (ref.current) {
+      let ctxMenuBoudingRect = ref.current.getBoundingClientRect();
+      if (
+        ctxMenuBoudingRect.y + ctxMenuBoudingRect.height >=
+        window.innerHeight
+      ) {
+        libDispatch(
+          libActions.updateCtxPos([
+            ctxMenuBoudingRect.x + 30,
+            window.innerHeight - ctxMenuBoudingRect.height - 10
+          ])
+        );
+      }
     }
   }, []);
 
@@ -115,6 +118,8 @@ function ContextSwitch(props) {
     case 'profile':
     case 'artist':
       return <ContextUser {...superprops} />;
+    case 'account':
+      return <ContextMenuAccount {...superprops} />;
     default:
       return '';
   }
