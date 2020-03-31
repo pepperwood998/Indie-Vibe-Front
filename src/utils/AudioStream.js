@@ -7,9 +7,12 @@ class AudioStream {
     this.trackId = '';
     this.settings = { bitrate: 0, shouldPlay: false };
     this.ready = false;
-    this.startTime = 0;
-    this.started = false;
-    this.recorded = false;
+    this.recorder = {
+      started: false,
+      startTime: 0,
+      recorded: false,
+      recordedDur: 0
+    };
 
     this.api = trackId => undefined;
 
@@ -54,15 +57,29 @@ class AudioStream {
         getFormattedTime(this.audio.duration * ratio),
         ratio * 100
       );
-      if (!this.recorded && currentTime - this.startTime >= 5) {
-        this.recorded = true;
+      const recorder = this.recorder;
+      if (!recorder.recorded && recorder.recordedDur >= 5) {
+        this.recorder = {
+          ...recorder,
+          recordedDur: 0,
+          recorded: true
+        };
         this.onRecorded(this.trackId);
+      } else {
+        this.recorder = {
+          ...recorder,
+          startTime: currentTime,
+          recordedDur: recorder.recordedDur + (currentTime - recorder.startTime)
+        };
       }
     };
     this.eventStarted = e => {
-      if (!this.started) {
-        this.started = true;
-        this.startTime = this.audio.currentTime;
+      if (!this.recorder.started) {
+        this.recorder = {
+          ...this.recorder,
+          started: true,
+          startTime: this.audio.currentTime
+        };
       }
     };
     this.eventEnded = e => {
@@ -88,7 +105,9 @@ class AudioStream {
 
   seek(per) {
     if (!this.audio.duration) return;
+
     let time = (per / 100) * this.audio.duration;
+    this.recorder = { ...this.recorder, startTime: time };
     this.audio.currentTime = time;
   }
 
@@ -154,8 +173,12 @@ class AudioStream {
         let { data } = info;
         if (!data) throw 'Info Not Found';
 
-        this.started = false;
-        this.recorded = false;
+        this.recorder = {
+          started: false,
+          startTime: 0,
+          recorded: false,
+          recordedDur: 0
+        };
         this.audio.src = data.url;
         this.audio.load();
         if (this.audio.autoplay) this.audio.play();
