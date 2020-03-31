@@ -128,7 +128,7 @@ const CheckoutForm = props => {
               <div>
                 <p className='font-short-regular font-white'>
                   <span className='font-weight-bold'>
-                    {fixedPrices[props.packageType][0]}
+                    {fixedPrices[props.packageType][0]}đ
                   </span>
                   &nbsp;for&nbsp;
                   <span className='font-weight-bold'>

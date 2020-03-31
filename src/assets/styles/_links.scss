@@ -42,7 +42,7 @@ a.active .button {
       color: $white;
     }
 
-    &:hover {
+    &.underline:hover {
       color: inherit;
     }
   }

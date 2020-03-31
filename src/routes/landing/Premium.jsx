@@ -72,7 +72,7 @@ function Premium(props) {
             ))}
           </select>
           <a href={`/purchase/fixed/${fixedPrice}`}>
-            <ButtonMain>{`${fixedPrices[fixedPrice][1]} for ${fixedPrices[fixedPrice][0]}`}</ButtonMain>
+            <ButtonMain>{`${fixedPrices[fixedPrice][1]} for ${fixedPrices[fixedPrice][0]}`}đ</ButtonMain>
           </a>
         </div>
       )
