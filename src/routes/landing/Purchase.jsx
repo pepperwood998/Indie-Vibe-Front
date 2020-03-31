@@ -6,20 +6,21 @@ import {
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import React, { useContext, useState } from 'react';
-import { purchase } from '../../apis/API';
+import { purchase, getAccount } from '../../apis/API';
 import CreditCardLine from '../../assets/imgs/credit-card-line.png';
 import Loading from '../../assets/imgs/loading.gif';
 import { ButtonMain } from '../../components/buttons';
 import { CardError } from '../../components/cards';
 import { LinkUnderline } from '../../components/links';
-import { AuthContext } from '../../contexts';
+import { AuthContext, MeContext } from '../../contexts';
 import { fixedPrices } from '../../utils/Common';
 import Landing from './Landing';
 
-const stripePromise = loadStripe('pk_test_Cqzq3qkNsz4wFC7qeSVaU4t600sGbm1kF4');
-
 function Purchase(props) {
   const { type, packageType } = props.match.params;
+  const stripePromise = loadStripe(
+    'pk_test_Cqzq3qkNsz4wFC7qeSVaU4t600sGbm1kF4'
+  );
 
   const intro = (
     <div className='content'>
@@ -34,6 +35,11 @@ function Purchase(props) {
 
 const CheckoutForm = props => {
   const { state: authState } = useContext(AuthContext);
+  const {
+    state: meState,
+    actions: meActions,
+    dispatch: meDispatch
+  } = useContext(MeContext);
 
   const [status, setStatus] = useState({
     purchasing: false,
@@ -71,9 +77,14 @@ const CheckoutForm = props => {
 
           if (res.status === 'success') {
             setStatus({ ...status, success: true });
-            setTimeout(() => {
-              window.location.href = '/home';
-            }, 500);
+            getAccount(authState.token).then(res => {
+              if (res.status === 'success') {
+                meDispatch(meActions.loadMe(res.data));
+                setTimeout(() => {
+                  window.location.href = '/home';
+                }, 500);
+              }
+            });
           } else {
             throw 'Server Error';
           }

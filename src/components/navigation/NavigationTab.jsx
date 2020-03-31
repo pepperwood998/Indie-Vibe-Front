@@ -8,6 +8,8 @@ function NavigationTab(props) {
     <div className='tab-menu-wrapper'>
       <ul className='tab-menu'>
         {items.map((item, index) => {
+          if (item.isGone) return '';
+
           let linkClasses = 'font-short-big font-weight-bold';
           if (item.isSpecial) {
             linkClasses += ' special link-blue-main font-blue-main';

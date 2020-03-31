@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { PremiumRoute, UserRoute } from '../../../components/custom-routes';
 import { GroupEmpty } from '../../../components/groups';
 import { NavigationTab } from '../../../components/navigation';
-import { MeContext } from '../../../contexts';
+import { MeContext, AuthContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
 import BecomeArtist from './BecomeArtist';
 import Information from './Information';
@@ -11,6 +11,7 @@ import Settings from './Settings';
 import Social from './Social';
 
 function Account(props) {
+  const { state: authState } = useContext(AuthContext);
   const { state: meState } = useContext(MeContext);
 
   const account = meState;
@@ -37,8 +38,10 @@ function Account(props) {
         {
           href: `/player/account/baa`,
           label: 'Become an Artist',
-          isDisabled: meState.role.id === 'r-free',
+          isDisabled: authState.role === 'r-free',
           isSpecial: true,
+          isGone:
+            authState.role === 'r-artist' || authState.role === 'r-curator',
           disabledReason: 'Upgrade to premium to use this feature'
         }
       ]}

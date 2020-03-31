@@ -12,7 +12,8 @@ const initState = {
   fbId: '',
   gender: 0,
   dob: '',
-  artistStatus: 'opend'
+  artistStatus: '',
+  userPlan: {}
 };
 
 function MeContextProvider(props) {

@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-
-import { InputForm, InputFileLabel, InputTextarea } from '../inputs';
-import { ButtonMain, ButtonFrame } from '../buttons';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
+  getAccount,
   getGenresList,
-  publishRelease,
-  getReleaseTypeList
+  getReleaseTypeList,
+  publishRelease
 } from '../../apis/API';
-import { AuthContext } from '../../contexts';
-import { GroupTrackUpload } from '../groups';
-import { CardSuccess, CardError } from '../cards';
-
 import Placeholder from '../../assets/imgs/placeholder.png';
+import { AuthContext, MeContext } from '../../contexts';
+import { ButtonFrame, ButtonMain } from '../buttons';
+import { CardError, CardSuccess } from '../cards';
+import { GroupTrackUpload } from '../groups';
+import { InputFileLabel, InputForm, InputTextarea } from '../inputs';
 
 const infoModel = {
   title: '',
@@ -30,6 +29,11 @@ const missingSomething = (info, audio) => {
 };
 function GroupReleaseUpload(props) {
   const { state: authState } = useContext(AuthContext);
+  const {
+    state: meState,
+    actions: meActions,
+    dispatch: meDispatch
+  } = useContext(MeContext);
 
   const [biography, setBiography] = useState('');
   const [release, setRelease] = useState({ title: '', typeId: 're-album' });
@@ -70,9 +74,17 @@ function GroupReleaseUpload(props) {
     let failTimeout;
     if (publishing === 2) {
       if (success) {
-        successTimeout = setTimeout(() => {
-          window.location.href = '/player/workspace';
-        }, 1000);
+        if (props.baa) {
+          getAccount(authState.token).then(res => {
+            if (res.status === 'success') {
+              meDispatch(meActions.loadMe(res.data));
+            }
+          });
+        } else {
+          successTimeout = setTimeout(() => {
+            window.location.href = '/player/workspace';
+          }, 1000);
+        }
       } else {
         failTimeout = setTimeout(() => {
           setPublishing(0);
@@ -194,6 +206,19 @@ function GroupReleaseUpload(props) {
         setPublishing(2);
       });
   };
+
+  if (props.baa && meState.artistStatus === 'pending')
+    return (
+      <div className='upload-pending'>
+        <p className='font-short-semi font-weight-bold font-white'>
+          Artist Pending
+        </p>
+        <p className='font-short-regular font-white'>
+          Your request to become an Artist is being processed, your first
+          release is currently public for browsing.
+        </p>
+      </div>
+    );
 
   return (
     <div className='upload-main'>

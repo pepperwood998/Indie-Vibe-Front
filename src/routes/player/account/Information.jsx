@@ -223,23 +223,32 @@ function Information(props) {
 }
 
 function GroupPlanBox(props) {
+  const { state: authState } = useContext(AuthContext);
   const { plan } = props;
+
+  const isCurator = authState.role === 'r-curator';
 
   return (
     <div className='catalog'>
       <div className='catalog__header plan font-short-extra font-weight-bold font-white'>
-        {plan.name}
+        {isCurator ? 'Music Curator' : plan.name}
       </div>
       <div className='due font-short-regular font-gray-light'>
-        <p>You are using Indie Vibe {plan.name}.</p>
-        {plan.id === 'p-fixed' || plan.id === 'p-monthly' ? (
-          plan.id === 'p-fixed' ? (
-            <p>Premium ends at {new Date(plan.due).toString()}.</p>
-          ) : (
-            <p>Next payment will be at {new Date(plan.due).toString()}.</p>
-          )
+        {isCurator ? (
+          <p>Your are a music curator.</p>
         ) : (
-          ''
+          <React.Fragment>
+            <p>You are using Indie Vibe {plan.name}.</p>
+            {plan.id === 'p-fixed' || plan.id === 'p-monthly' ? (
+              plan.id === 'p-fixed' ? (
+                <p>Premium ends at {new Date(plan.due).toString()}.</p>
+              ) : (
+                <p>Next payment will be at {new Date(plan.due).toString()}.</p>
+              )
+            ) : (
+              ''
+            )}
+          </React.Fragment>
         )}
       </div>
     </div>

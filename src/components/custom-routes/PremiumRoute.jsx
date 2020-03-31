@@ -3,14 +3,13 @@ import { Route, Redirect } from 'react-router-dom';
 import { AuthContext, MeContext } from '../../contexts';
 
 function PremiumRoute({ component: Component, ...rest }) {
-  const { state: authState } = useContext(AuthContext);
-  const { state: meState } = useContext(MeContext);
+  const { state } = useContext(AuthContext);
 
   return (
     <Route
       {...rest}
       render={props => {
-        if (!authState.token) {
+        if (!state.token) {
           return (
             <Redirect
               to={{
@@ -20,7 +19,7 @@ function PremiumRoute({ component: Component, ...rest }) {
             />
           );
         } else {
-          if (meState.role.id === 'r-free') {
+          if (state.role === 'r-free') {
             return (
               <Redirect
                 to={{

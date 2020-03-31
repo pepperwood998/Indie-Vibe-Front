@@ -84,11 +84,13 @@ function NavBar(props) {
         ) : (
           <div className='dropdown'>
             <div className='user-box' data-toggle='dropdown'>
-              <img
-                src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
-                width='50px'
-                height='50px'
-              />
+              <div className='thumbnail-wrapper'>
+                <img
+                  src={
+                    meState.thumbnail ? meState.thumbnail : AvatarPlaceholder
+                  }
+                />
+              </div>
               <ArrowDown />
             </div>
             <div className='dropdown-menu dropdown-menu--fixed dropdown-menu-right'>
