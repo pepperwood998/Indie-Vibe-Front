@@ -19,24 +19,39 @@ function CollectionMain(props) {
 function Content(props) {
   let { items } = props;
 
-  switch (props.type) {
-    case 'playlist':
-    case 'release':
-      return items.map((item, index) => (
-        <CardMain content={item} key={index} index={index} />
-      ));
-    case 'artist':
-    case 'profile':
-      return items.map((item, index) => (
-        <CardProfile content={item} key={index} index={index} />
-      ));
-    case 'browse-playlist':
-      return items.map((item, index) => (
-        <CardMainMin content={item} key={index} index={index} />
-      ));
-  }
+  return items.map((item, index) => {
+    switch (item.type) {
+      case 'playlist':
+      case 'release':
+        return <CardMain content={item} key={index} index={index} />;
+      case 'artist':
+      case 'profile':
+        return <CardProfile content={item} key={index} index={index} />;
+      case 'browse-playlist':
+        return <CardMainMin content={item} key={index} index={index} />;
+      default:
+        return '';
+    }
+  });
 
-  return '';
+  // switch (props.type) {
+  //   case 'playlist':
+  //   case 'release':
+  //     return items.map((item, index) => (
+  //       <CardMain content={item} key={index} index={index} />
+  //     ));
+  //   case 'artist':
+  //   case 'profile':
+  //     return items.map((item, index) => (
+  //       <CardProfile content={item} key={index} index={index} />
+  //     ));
+  //   case 'browse-playlist':
+  //     return items.map((item, index) => (
+  //       <CardMainMin content={item} key={index} index={index} />
+  //     ));
+  // }
+
+  // return '';
 }
 
 export default CollectionMain;

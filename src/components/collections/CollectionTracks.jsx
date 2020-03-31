@@ -1,6 +1,5 @@
 import React from 'react';
-
-import CollectionTrackTable from './CollectionTrackTable';
+import { TrackTable } from './track-table';
 
 function CollectionTracks(props) {
   return (
@@ -8,7 +7,7 @@ function CollectionTracks(props) {
       <div className='collection-main__header'>{props.header}</div>
       <div className='collection-main__content'>
         {/* {items.slice(offset, limit).map((item, index) => '')} */}
-        <CollectionTrackTable
+        <TrackTable
           items={props.items}
           type={props.type}
           playFromId={props.playFromId}
