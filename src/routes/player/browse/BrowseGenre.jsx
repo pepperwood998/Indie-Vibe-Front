@@ -82,7 +82,6 @@ function BrowseGenre(props) {
                 </NavLinkColor>
               }
               items={data.playlists}
-              type='playlist'
             />
           )}
           {!data.releases.length ? (
@@ -99,7 +98,6 @@ function BrowseGenre(props) {
                 </NavLinkColor>
               }
               items={data.releases}
-              type='release'
             />
           )}
         </div>

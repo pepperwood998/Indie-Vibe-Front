@@ -121,7 +121,6 @@ function ArtistDefault(props) {
               <CollectionMain
                 header={value[0]}
                 items={value[1].items}
-                type='release'
                 full={true}
               />
               {value[1].total > value[1].offset + value[1].limit ? (

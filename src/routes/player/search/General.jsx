@@ -152,7 +152,6 @@ function General(props) {
                     </NavLinkColor>
                   }
                   items={data[key].items}
-                  type={key.substr(0, key.length - 1)}
                   key={index}
                 />
               );

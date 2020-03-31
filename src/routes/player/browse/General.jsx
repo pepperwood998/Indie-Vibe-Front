@@ -93,7 +93,6 @@ function General(props) {
                     </NavLinkColor>
                   }
                   items={items}
-                  type='playlist'
                   key={index}
                 />
               );

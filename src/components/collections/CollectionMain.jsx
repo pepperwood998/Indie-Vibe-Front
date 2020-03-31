@@ -10,7 +10,7 @@ function CollectionMain(props) {
     <div className='collection-main'>
       <div className={headerClasses}>{props.header}</div>
       <div className='collection-main__content grid crowded'>
-        <Content items={props.items} type={props.type} />
+        <Content items={props.items} generalType={props.generalType} />
       </div>
     </div>
   );
@@ -18,6 +18,12 @@ function CollectionMain(props) {
 
 function Content(props) {
   let { items } = props;
+
+  if (props.generalType === 'browse-playlist') {
+    return items.map((item, index) => (
+      <CardMainMin content={item} key={index} index={index} />
+    ));
+  }
 
   return items.map((item, index) => {
     switch (item.type) {
@@ -27,8 +33,6 @@ function Content(props) {
       case 'artist':
       case 'profile':
         return <CardProfile content={item} key={index} index={index} />;
-      case 'browse-playlist':
-        return <CardMainMin content={item} key={index} index={index} />;
       default:
         return '';
     }

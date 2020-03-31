@@ -82,8 +82,6 @@ function General(props) {
       <div className='fadein content-padding'>
         {Object.keys(data).map((key, index) => {
           if (data[key].length > 0) {
-            let type = key.substr(0, key.length - 1);
-
             return (
               <CollectionMain
                 header={
@@ -96,7 +94,6 @@ function General(props) {
                   </NavLinkColor>
                 }
                 items={data[key]}
-                type={type}
                 key={index}
               />
             );
