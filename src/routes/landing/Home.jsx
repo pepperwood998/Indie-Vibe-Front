@@ -18,7 +18,10 @@ function Home() {
   const intro = (
     <div className='content'>
       <div className='intro-body'>
-        <img src={LandingIntro} width='300px' />
+        <div className='intro-thumbnail'>
+          <div className='dummy'></div>
+          <img src={LandingIntro} />
+        </div>
         <div className='intro-text'>
           <div className='font-banner font-white pb-4'>
             Vibe your music freedom

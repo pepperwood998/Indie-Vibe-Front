@@ -28,7 +28,7 @@ function GroupPlaylistDialog(props) {
 
   const [data, setData] = useState({
     title: [false, playlist.title],
-    description: [false, playlist.description],
+    description: [false, playlist.description ? playlist.description : ''],
     thumbnail: [false, null]
   });
   const [thumbnailSrc, setThumbnailSrc] = useState(playlist.thumbnail);
@@ -42,11 +42,15 @@ function GroupPlaylistDialog(props) {
     libDispatch(libActions.setEditPlaylist(false));
   };
 
-  const handleCreatePlaylistSuccess = playlistId => {
+  const handleCreateOrEditPlaylistSuccess = playlistId => {
     getPlaylistSimple(authState.token, playlistId).then(res => {
       if (res.status === 'success') {
-        props.history.push(`/player/playlist/${res.data.id}`);
-        libDispatch(libActions.createPlaylist(res.data));
+        if (isEdit) {
+          libDispatch(libActions.setEditedPlaylist(res.data));
+        } else {
+          props.history.push(`/player/playlist/${res.data.id}`);
+          libDispatch(libActions.createPlaylist(res.data));
+        }
       }
     });
   };
@@ -79,7 +83,8 @@ function GroupPlaylistDialog(props) {
     createOrEditPlaylist(authState.token, data, editPlaylist.type, playlist.id)
       .then(res => {
         if (res.status === 'success') {
-          handleCreatePlaylistSuccess(res.data);
+          handleCreateOrEditPlaylistSuccess(isEdit ? playlist.id : res.data);
+
           handleCloseDialog();
           libDispatch(
             libActions.setNotification(
@@ -136,9 +141,8 @@ function GroupPlaylistDialog(props) {
                 className='input-text input-text--full'
                 placeholder='Description for this playlist (optional)'
                 onChange={handleChangeInfo}
-              >
-                {data.description[1]}
-              </textarea>
+                value={data.description[1]}
+              />
             </div>
           </div>
           <div className='right'>

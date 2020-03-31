@@ -20,7 +20,17 @@ export const getReleaseTypeList = token => {
   });
 };
 
-export const publishRelease = (token, info, thumbnail, audioFiles) => {
+export const publishRelease = (
+  token,
+  info,
+  thumbnail,
+  audioFiles,
+  biography = '',
+  baa = false
+) => {
+  let url = `${host}/releases`;
+  if (baa) url = `${host}/account/baa`;
+
   let data = new FormData();
   data.append('info', JSON.stringify(info));
   data.append('thumbnail', thumbnail);
@@ -29,8 +39,9 @@ export const publishRelease = (token, info, thumbnail, audioFiles) => {
     data.append('audioFiles', item.audio128);
     data.append('audioFiles', item.audio320);
   });
+  if (biography) data.append('biography', biography);
 
-  return fetch(`${host}/releases`, {
+  return fetch(url, {
     method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
@@ -395,5 +406,27 @@ const purchaseFixed = (token, stripeToken, packageType) => {
       Authorization: 'Bearer ' + token
     },
     body: formData
+  }).then(response => response.json());
+};
+
+export const streamCount = (token, type, id) => {
+  let url = new URL(`${host}/stream/count/${type}/${id}`);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getHome = token => {
+  let url = new URL(`${host}/home`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
   }).then(response => response.json());
 };

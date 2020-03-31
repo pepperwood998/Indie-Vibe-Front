@@ -1,25 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
-
-import { NavLinkUnderline } from '../../../components/links';
+import React, { useContext, useEffect, useState } from 'react';
+import { getTrackList, performActionFavorite } from '../../../apis/API';
+import { streamCollection } from '../../../apis/StreamAPI';
+import Placeholder from '../../../assets/imgs/placeholder.png';
+import { FavoriteIcon, UnFavoriteIcon } from '../../../assets/svgs';
 import {
-  ButtonMain,
   ButtonIcon,
+  ButtonMain,
   ButtonMore
 } from '../../../components/buttons';
-import { InputForm } from '../../../components/inputs';
-import { CollectionTrackTable } from '../../../components/collections';
-import {
-  getTrackList,
-  performActionFavorite,
-  deleteTrackList
-} from '../../../apis/API';
-import { AuthContext, StreamContext, LibraryContext } from '../../../contexts';
-import { streamCollection } from '../../../apis/StreamAPI';
-
-import { UnFavoriteIcon, FavoriteIcon } from '../../../assets/svgs';
-import Placeholder from '../../../assets/imgs/placeholder.png';
-import { useEffectSkip, getDatePart, capitalize } from '../../../utils/Common';
+import { TrackTable } from '../../../components/collections/track-table';
 import GroupEmpty from '../../../components/groups/GroupEmpty';
+import { InputForm } from '../../../components/inputs';
+import { NavLinkUnderline } from '../../../components/links';
+import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
+import { capitalize, getDatePart, useEffectSkip } from '../../../utils/Common';
 
 function TrackList(props) {
   // contexts
@@ -115,6 +109,12 @@ function TrackList(props) {
       }
     }
   }, [libState.ctxDelPlaylistId]);
+
+  useEffectSkip(() => {
+    if (type === 'playlist') {
+      setData({ ...data, ...libState.editedPlaylist });
+    }
+  }, [libState.editedPlaylist]);
 
   // effect-skip: playlist privacy
   useEffectSkip(() => {
@@ -257,14 +257,14 @@ function TrackList(props) {
           </div>
           <div className='track-list__content'>
             {type === 'playlist' ? (
-              <CollectionTrackTable
+              <TrackTable
                 items={data.tracks.items}
                 playFromId={data.id}
                 type={type}
                 playlistRelation={data.relation}
               />
             ) : (
-              <CollectionTrackTable
+              <TrackTable
                 items={data.tracks.items}
                 releaseArtistId={data.artist ? data.artist.id : ''}
                 playFromId={data.id}

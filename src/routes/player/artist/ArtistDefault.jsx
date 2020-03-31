@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { CollectionMain } from '../../../components/collections';
-import { ButtonLoadMore } from '../../../components/buttons';
+import React, { useContext, useEffect, useState } from 'react';
 import { getReleasesByType } from '../../../apis/API';
-import { AuthContext } from '../../../contexts';
+import { ButtonLoadMore } from '../../../components/buttons';
+import { CollectionMain } from '../../../components/collections';
 import GroupEmpty from '../../../components/groups/GroupEmpty';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { useEffectSkip } from '../../../utils/Common';
 
 const model = {
   items: [],
@@ -13,6 +14,7 @@ const model = {
 };
 function ArtistDefault(props) {
   const { state: authState } = useContext(AuthContext);
+  const { state: libState } = useContext(LibraryContext);
 
   const [firstRender, setFirstRender] = useState(0);
   const [albums, setAlbums] = useState({ ...model });
@@ -35,7 +37,7 @@ function ArtistDefault(props) {
         .then(res => {
           if (res.status === 'success' && res.data) {
             const value = struct[type];
-            value[2]({ ...value[1], ...res.data });
+            value[2]({ ...value[1], ...res.data.releases });
           } else {
             throw 'Error';
           }
@@ -45,6 +47,39 @@ function ArtistDefault(props) {
         });
     }
   }, [artistId]);
+
+  // effect-skip: favorite
+  useEffectSkip(() => {
+    const { ctxFav } = libState;
+    if (ctxFav.type === 'release') {
+      let found = false;
+      const itemsAlbum = [...albums.items];
+      found = itemsAlbum.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
+
+      if (found) return;
+      const itemsSingle = [...singles.items];
+      found = itemsSingle.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
+
+      if (found) return;
+      const itemsEp = [...eps.items];
+      itemsEp.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
+    }
+  }, [libState.ctxFav]);
 
   const handleLoadMore = type => {
     const value = struct[type];
@@ -57,12 +92,13 @@ function ArtistDefault(props) {
     )
       .then(res => {
         if (res.status === 'success' && res.data) {
+          const { releases } = res.data;
           value[2]({
             ...value[1],
-            items: [...value[1].items, ...res.data.items],
-            offset: res.data.offset,
-            limit: res.data.limit,
-            total: res.data.total
+            items: [...value[1].items, ...releases.items],
+            offset: releases.offset,
+            limit: releases.limit,
+            total: releases.total
           });
         }
       })
@@ -85,7 +121,6 @@ function ArtistDefault(props) {
               <CollectionMain
                 header={value[0]}
                 items={value[1].items}
-                type='release'
                 full={true}
               />
               {value[1].total > value[1].offset + value[1].limit ? (

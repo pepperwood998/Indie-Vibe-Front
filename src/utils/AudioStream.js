@@ -7,6 +7,12 @@ class AudioStream {
     this.trackId = '';
     this.settings = { bitrate: 0, shouldPlay: false };
     this.ready = false;
+    this.recorder = {
+      started: false,
+      startTime: 0,
+      recorded: false,
+      recordedDur: 0
+    };
 
     this.api = trackId => undefined;
 
@@ -16,6 +22,7 @@ class AudioStream {
 
     // manual event handler
     this.onTogglePaused = paused => undefined;
+    this.onRecorded = trackId => undefined;
     this.onEnded = () => undefined;
 
     this.onInfo = info => undefined;
@@ -24,6 +31,7 @@ class AudioStream {
     this.eventDurationChange = e => undefined;
     this.eventCanPlay = e => undefined;
     this.eventTimeUpdate = e => undefined;
+    this.eventStarted = e => undefined;
     this.eventEnded = e => undefined;
     this.eventPlaying = e => undefined;
     this.eventPause = e => undefined;
@@ -43,11 +51,36 @@ class AudioStream {
       this.ready = true;
     };
     this.eventTimeUpdate = e => {
-      var ratio = this.audio.currentTime / this.audio.duration;
+      let currentTime = this.audio.currentTime;
+      var ratio = currentTime / this.audio.duration;
       this.onProgress(
         getFormattedTime(this.audio.duration * ratio),
         ratio * 100
       );
+      const recorder = this.recorder;
+      if (!recorder.recorded && recorder.recordedDur >= 5) {
+        this.recorder = {
+          ...recorder,
+          recordedDur: 0,
+          recorded: true
+        };
+        this.onRecorded(this.trackId);
+      } else {
+        this.recorder = {
+          ...recorder,
+          startTime: currentTime,
+          recordedDur: recorder.recordedDur + (currentTime - recorder.startTime)
+        };
+      }
+    };
+    this.eventStarted = e => {
+      if (!this.recorder.started) {
+        this.recorder = {
+          ...this.recorder,
+          started: true,
+          startTime: this.audio.currentTime
+        };
+      }
     };
     this.eventEnded = e => {
       this.onEnded();
@@ -64,6 +97,7 @@ class AudioStream {
     this.audio.addEventListener('durationchange', this.eventDurationChange);
     this.audio.addEventListener('canplay', this.eventCanPlay);
     this.audio.addEventListener('timeupdate', this.eventTimeUpdate);
+    this.audio.addEventListener('play', this.eventStarted);
     this.audio.addEventListener('ended', this.eventEnded);
     this.audio.addEventListener('playing', this.eventPlaying);
     this.audio.addEventListener('pause', this.eventPause);
@@ -71,7 +105,9 @@ class AudioStream {
 
   seek(per) {
     if (!this.audio.duration) return;
+
     let time = (per / 100) * this.audio.duration;
+    this.recorder = { ...this.recorder, startTime: time };
     this.audio.currentTime = time;
   }
 
@@ -137,6 +173,12 @@ class AudioStream {
         let { data } = info;
         if (!data) throw 'Info Not Found';
 
+        this.recorder = {
+          started: false,
+          startTime: 0,
+          recorded: false,
+          recordedDur: 0
+        };
         this.audio.src = data.url;
         this.audio.load();
         if (this.audio.autoplay) this.audio.play();

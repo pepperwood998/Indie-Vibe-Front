@@ -41,5 +41,9 @@ a.active .button {
       text-decoration: underline;
       color: $white;
     }
+
+    &.underline:hover {
+      color: inherit;
+    }
   }
 }

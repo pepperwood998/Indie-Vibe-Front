@@ -35,7 +35,7 @@ function Releases(props) {
           setFirstRender(firstRender => firstRender + 1);
           if (res.status === 'success' && res.data) {
             const value = struct[type];
-            value[2]({ ...value[1], ...res.data });
+            value[2]({ ...value[1], ...res.data.releases });
           } else {
             throw 'Error';
           }
@@ -57,12 +57,13 @@ function Releases(props) {
     )
       .then(res => {
         if (res.status === 'success' && res.data) {
+          const { releases } = res.data;
           value[2]({
             ...value[1],
-            items: [...value[1].items, ...res.data.items],
-            offset: res.data.offset,
-            limit: res.data.limit,
-            total: res.data.total
+            items: [...value[1].items, ...releases.items],
+            offset: releases.offset,
+            limit: releases.limit,
+            total: releases.total
           });
         }
       })
@@ -85,7 +86,6 @@ function Releases(props) {
               <CollectionMain
                 header={value[0]}
                 items={value[1].items}
-                type='release'
                 full={true}
               />
               {value[1].total > value[1].offset + value[1].limit ? (

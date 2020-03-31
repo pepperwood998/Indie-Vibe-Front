@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
-
-import { InputForm, InputFileLabel } from '../inputs';
-import { ButtonMain, ButtonFrame } from '../buttons';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
+  getAccount,
   getGenresList,
-  publishRelease,
-  getReleaseTypeList
+  getReleaseTypeList,
+  publishRelease
 } from '../../apis/API';
-import { AuthContext } from '../../contexts';
-import { GroupTrackUpload } from '../groups';
-import { CardSuccess, CardError } from '../cards';
-
 import Placeholder from '../../assets/imgs/placeholder.png';
+import { AuthContext, MeContext } from '../../contexts';
+import { ButtonFrame, ButtonMain } from '../buttons';
+import { CardError, CardSuccess } from '../cards';
+import { GroupTrackUpload } from '../groups';
+import { InputFileLabel, InputForm, InputTextarea } from '../inputs';
 
 const infoModel = {
   title: '',
@@ -28,10 +27,16 @@ const missingSomething = (info, audio) => {
     audio.some(a => !a.audio128 || !a.audio320)
   );
 };
-function GroupReleaseUpload() {
+function GroupReleaseUpload(props) {
   const { state: authState } = useContext(AuthContext);
+  const {
+    state: meState,
+    actions: meActions,
+    dispatch: meDispatch
+  } = useContext(MeContext);
 
-  const [release, setRelease] = useState({ title: '', typeId: 'r-album' });
+  const [biography, setBiography] = useState('');
+  const [release, setRelease] = useState({ title: '', typeId: 're-album' });
   const [info, setInfo] = useState([Object.assign({}, infoModel)]);
   const [thumbnail, setThumbnail] = useState(null);
   const [audio, setAudio] = useState([Object.assign({}, audioModel)]);
@@ -69,9 +74,17 @@ function GroupReleaseUpload() {
     let failTimeout;
     if (publishing === 2) {
       if (success) {
-        successTimeout = setTimeout(() => {
-          window.location.href = '/player/workspace';
-        }, 1000);
+        if (props.baa) {
+          getAccount(authState.token).then(res => {
+            if (res.status === 'success') {
+              meDispatch(meActions.loadMe(res.data));
+            }
+          });
+        } else {
+          successTimeout = setTimeout(() => {
+            window.location.href = '/player/workspace';
+          }, 1000);
+        }
       } else {
         failTimeout = setTimeout(() => {
           setPublishing(0);
@@ -84,6 +97,10 @@ function GroupReleaseUpload() {
       clearTimeout(failTimeout);
     };
   }, [publishing]);
+
+  const handleBiographyChange = e => {
+    setBiography(e.target.value);
+  };
 
   const handleThumbnailChange = () => {
     let file = thumbnailRef.current.files[0];
@@ -173,7 +190,14 @@ function GroupReleaseUpload() {
     resInfo = { ...resInfo, tracks };
 
     setPublishing(1);
-    publishRelease(authState.token, resInfo, thumbnail, audio)
+    publishRelease(
+      authState.token,
+      resInfo,
+      thumbnail,
+      audio,
+      biography,
+      props.baa
+    )
       .then(response => response.json())
       .then(res => {
         if (res.status === 'success') {
@@ -183,86 +207,120 @@ function GroupReleaseUpload() {
       });
   };
 
+  if (props.baa && meState.artistStatus === 'pending')
+    return (
+      <div className='upload-pending'>
+        <p className='font-short-semi font-weight-bold font-white'>
+          Artist Pending
+        </p>
+        <p className='font-short-regular font-white'>
+          Your request to become an Artist is being processed, your first
+          release is currently public for browsing.
+        </p>
+      </div>
+    );
+
   return (
-    <div className='release-upload'>
-      {publishing ? (
-        <div className='upload-layer'>
-          <span className='font-short-extra font-weight-bold font-white'>
-            {publishing === 1 ? (
-              'Pulbishing...'
-            ) : success ? (
-              <CardSuccess message='Your release has been published' />
-            ) : (
-              <CardError message='Failed to publish' />
-            )}
-          </span>
+    <div className='upload-main'>
+      {props.baa ? (
+        <div className='biography-wrapper pb-4'>
+          <p className='font-short-semi font-weight-bold font-white'>
+            Self biography
+          </p>
+          <InputTextarea
+            placeholder='Enter your biography'
+            value={biography}
+            onChange={handleBiographyChange}
+          />
         </div>
       ) : (
         ''
       )}
-      <div className='upload-cover-wrapper'>
-        <input
-          ref={thumbnailRef}
-          type='file'
-          name='thumbnail'
-          id='thumbnail'
-          className='input-custom'
-          onChange={handleThumbnailChange}
-          accept='image/*'
-        />
-        <InputFileLabel
-          for='thumbnail'
-          error={submitted && !thumbnail}
-          keep={true}
-          className='input-custom__label--img'
-        >
-          <img src={thumbnailSrc ? thumbnailSrc : Placeholder} />
-        </InputFileLabel>
-      </div>
-      <div className='upload-content'>
-        <div className='upload-item upload-header'>
-          <InputForm
-            placeholder='Enter release title'
-            onChange={handleReleaseChange}
-            name='title'
-            value={release.title}
-            error={submitted && !release.title}
-            errMessage='Missing release title'
-          />
-          <select
-            name='typeId'
-            className='custom-select release-type'
-            onChange={handleReleaseChange}
-          >
-            {releaseTypeList.map((releaseType, index) => (
-              <option value={releaseType.id} key={index}>
-                {releaseType.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className='upload-body'>
-          {info.map((track, index) => (
-            <div className='upload-item' key={index}>
-              <GroupTrackUpload
-                index={index}
-                handleItemChange={handleItemChange}
-                handleItemDelete={handleItemDelete}
-                info={info[index]}
-                audio={audio[index]}
-                audioSrc={audioSrc[index]}
-                genreList={genreList}
-                submitted={submitted}
-              />
+      <section className='release-wrapper'>
+        <p className='font-short-semi font-weight-bold font-white'>
+          {props.baa ? 'Your first release' : 'Publish your release'}
+        </p>
+        <div className='release-upload'>
+          {publishing ? (
+            <div className='upload-layer'>
+              <span className='font-short-extra font-weight-bold font-white'>
+                {publishing === 1 ? (
+                  'Pulbishing...'
+                ) : success ? (
+                  <CardSuccess message='Your release has been published' />
+                ) : (
+                  <CardError message='Failed to publish' />
+                )}
+              </span>
             </div>
-          ))}
+          ) : (
+            ''
+          )}
+          <div className='upload-cover-wrapper'>
+            <input
+              ref={thumbnailRef}
+              type='file'
+              name='thumbnail'
+              id='thumbnail'
+              className='input-custom'
+              onChange={handleThumbnailChange}
+              accept='image/*'
+            />
+            <InputFileLabel
+              for='thumbnail'
+              error={submitted && !thumbnail}
+              keep={true}
+              className='input-custom__label--img'
+            >
+              <img src={thumbnailSrc ? thumbnailSrc : Placeholder} />
+            </InputFileLabel>
+          </div>
+          <div className='upload-content'>
+            <div className='upload-item upload-header'>
+              <InputForm
+                placeholder='Enter release title'
+                onChange={handleReleaseChange}
+                name='title'
+                value={release.title}
+                error={submitted && !release.title}
+                errMessage='Missing release title'
+              />
+              <select
+                name='typeId'
+                className='custom-select release-type'
+                onChange={handleReleaseChange}
+              >
+                {releaseTypeList.map((releaseType, index) => (
+                  <option value={releaseType.id} key={index}>
+                    {releaseType.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className='upload-body'>
+              {info.map((track, index) => (
+                <div className='upload-item' key={index}>
+                  <GroupTrackUpload
+                    index={index}
+                    handleItemChange={handleItemChange}
+                    handleItemDelete={handleItemDelete}
+                    info={info[index]}
+                    audio={audio[index]}
+                    audioSrc={audioSrc[index]}
+                    genreList={genreList}
+                    submitted={submitted}
+                  />
+                </div>
+              ))}
 
-          <ButtonMain onClick={handleAddSong}>ADD SONG</ButtonMain>
+              <ButtonMain onClick={handleAddSong}>ADD SONG</ButtonMain>
+            </div>
+          </div>
+          <div>
+            <ButtonFrame onClick={handlePublish}>Publish</ButtonFrame>
+          </div>
         </div>
-      </div>
-      <div>
-        <ButtonFrame onClick={handlePublish}>Publish</ButtonFrame>
-      </div>
+      </section>
     </div>
   );
 }

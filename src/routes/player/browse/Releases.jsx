@@ -73,7 +73,6 @@ function Releases(props) {
                   </NavLinkColor>
                 }
                 items={items}
-                type='release'
                 key={index}
               />
             );

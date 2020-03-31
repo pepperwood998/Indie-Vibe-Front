@@ -78,7 +78,6 @@ function BrowseGenreType(props) {
           <CollectionMain
             header={isPlaylist ? "Editor's curated" : 'New releases'}
             items={data.data.items}
-            type={isPlaylist ? 'playlist' : 'release'}
           />
         </div>
       </GroupEmpty>

@@ -50,9 +50,24 @@
 
         .user-box {
           cursor: pointer;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
 
-          img {
+          .thumbnail-wrapper {
+            width: 50px;
+            height: 50px;
+            position: relative;
             border-radius: 5px;
+            overflow: hidden;
+
+            img {
+              width: 100%;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
           }
         }
       }
@@ -92,8 +107,27 @@
         width: 100%;
         display: flex;
 
+        .intro-thumbnail {
+          min-width: 300px;
+          position: relative;
+          overflow: hidden;
+
+          .dummy {
+            margin-top: 100%;
+          }
+
+          img {
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+
         .intro-text {
           padding: 30px 0px 0px 80px;
+          flex: 1;
         }
       }
     }

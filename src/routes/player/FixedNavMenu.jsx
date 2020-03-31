@@ -11,7 +11,7 @@ import {
 import { ButtonFrame } from '../../components/buttons';
 import { ContextMenuAccount } from '../../components/context-menu';
 import { NavLinkColor, NavLinkUnderline } from '../../components/links';
-import { AuthContext, MeContext } from '../../contexts';
+import { AuthContext, MeContext, LibraryContext } from '../../contexts';
 
 function NavMenu() {
   const { state: authState } = useContext(AuthContext);
@@ -20,6 +20,11 @@ function NavMenu() {
     actions: meActions,
     dispatch: meDispatch
   } = useContext(MeContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   useEffect(() => {
     if (!meState.id) {
@@ -31,18 +36,35 @@ function NavMenu() {
     }
   });
 
+  const handleToggleCtxMenu = e => {
+    if (libState.ctxMenuOpened) return;
+
+    const { x, y, width, height } = e.target.getBoundingClientRect();
+    libDispatch(
+      libActions.openCtxMenu({
+        content: {
+          type: 'account'
+        },
+        pos: [x, y + height + 10]
+      })
+    );
+  };
+
+  let ctxClasses = 'avatar-box__layer';
+  if (libState.ctxMenuOpened && libState.ctxMenuContent.type === 'account') {
+    ctxClasses += ' active';
+  }
   return (
     <div className='nav-menu'>
       <div className='user-box'>
         <div className='avatar-box'>
-          <img
-            src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
-          />
-          <div className='avatar-box__layer'>
-            <SettingIcon data-toggle='dropdown' />
-            <div className='dropdown-menu'>
-              <ContextMenuAccount fromLanding={false} />
-            </div>
+          <div className='img-wrapper'>
+            <img
+              src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
+            />
+          </div>
+          <div className={ctxClasses}>
+            <SettingIcon onClick={handleToggleCtxMenu} />
           </div>
         </div>
         <span className='user-title'>

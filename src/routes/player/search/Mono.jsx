@@ -127,7 +127,6 @@ function Mono(props) {
           <CollectionMain
             header={data.total + ` ${type}s`}
             items={data.items}
-            type={type}
           />
         )}
         {data.total > data.offset + data.limit ? (

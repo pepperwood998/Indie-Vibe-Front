@@ -71,7 +71,7 @@ function General(props) {
                   <ArrowRight />
                 </NavLink>
               }
-              items={data.releases}
+              items={data.releases.slice(0, 3)}
             />
           ) : (
             ''
@@ -93,7 +93,6 @@ function General(props) {
                     </NavLinkColor>
                   }
                   items={items}
-                  type='playlist'
                   key={index}
                 />
               );

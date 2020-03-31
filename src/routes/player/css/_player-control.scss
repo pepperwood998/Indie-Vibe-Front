@@ -4,7 +4,7 @@
   justify-content: space-between;
   height: inherit;
   max-height: 100px;
-  padding: 0px 20px;
+  padding: 0px 10px;
 
   &__left {
     width: 16%;
@@ -23,7 +23,7 @@
 
 .now-playing {
   height: 100%;
-  padding: 15px 0px;
+  padding: 10px 0px;
   display: flex;
 
   &__cover-container {
@@ -52,9 +52,6 @@
     flex-direction: column;
     flex: 1;
     padding: 0px 15px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   &__action {
@@ -121,12 +118,12 @@
   &__action {
     display: flex;
     flex-direction: row;
-    width: 150px;
   }
 
   &__progress {
     display: flex;
     flex: 1;
+    padding-left: 10px;
   }
 }
 

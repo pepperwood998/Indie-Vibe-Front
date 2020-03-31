@@ -30,7 +30,8 @@ label {
   .tab-menu {
     display: flex;
 
-    li a {
+    li a,
+    li span {
       display: block;
       padding: 15px 0px 15px;
       margin: 0px 40px 0px 0px;
@@ -38,6 +39,15 @@ label {
       &.active {
         border-bottom: 2px solid $blueMain;
         color: $white;
+      }
+
+      &.special.active {
+        color: $blueMain;
+      }
+
+      &.disabled {
+        opacity: 0.5;
+        cursor: pointer;
       }
     }
   }
@@ -52,6 +62,11 @@ label {
   &--regular {
     width: 24px;
     height: 24px;
+  }
+
+  &--big {
+    width: 33px;
+    height: 33px;
   }
 
   &--cursor {

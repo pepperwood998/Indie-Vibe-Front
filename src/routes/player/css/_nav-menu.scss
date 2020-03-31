@@ -11,10 +11,20 @@
       position: relative;
       overflow: visible;
 
-      img {
-        height: inherit;
+      .img-wrapper {
         width: inherit;
+        height: inherit;
+        position: relative;
+        overflow: hidden;
         border-radius: 50%;
+
+        img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: inherit;
+        }
       }
 
       &__layer {
@@ -39,6 +49,10 @@
           a {
             padding: 15px 50px 15px 30px;
           }
+        }
+
+        &.active {
+          display: block;
         }
       }
 

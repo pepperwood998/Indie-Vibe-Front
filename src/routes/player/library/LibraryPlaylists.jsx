@@ -155,7 +155,6 @@ function LibraryPlaylists(props) {
             <CollectionMain
               header='Created playlists'
               items={own.items}
-              type='playlist'
               full={true}
             />
             {own.total > own.offset + own.limit ? (
@@ -174,7 +173,6 @@ function LibraryPlaylists(props) {
             <CollectionMain
               header='Favorite playlists'
               items={fav.items}
-              type='playlist'
               full={true}
             />
             {fav.total > fav.offset + fav.limit ? (

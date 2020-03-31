@@ -36,7 +36,8 @@ function Login() {
     setRemembered(e.target.checked);
   };
 
-  const handleLogIn = () => {
+  const handleLogIn = e => {
+    e.preventDefault();
     setSubmitted(true);
     setLoginError('');
     if (!email || !pwd) return;
@@ -94,7 +95,7 @@ function Login() {
   const logo = () => <LogoSignIn height='60' />;
 
   const inputs = () => (
-    <React.Fragment>
+    <form onSubmit={handleLogIn}>
       {loginError ? <CardError message={loginError} /> : ''}
       <InputForm
         type='text'
@@ -123,7 +124,8 @@ function Login() {
           Forgot your password?
         </a>
       </div>
-    </React.Fragment>
+      <input type='submit' style={{ display: 'none' }}></input>
+    </form>
   );
 
   const submits = () => (

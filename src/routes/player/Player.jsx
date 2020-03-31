@@ -54,15 +54,8 @@ function Player(props) {
       <div className='player__content'>
         <UserRoute exact path={['/player', '/player/home']} component={Home} />
         <UserRoute path='/player/browse' component={Browse} />
-        <UserRoute
-          exact
-          path='/player/genre/:id'
-          component={BrowseGenre}
-        />
-        <UserRoute
-          path='/player/genre/:id/:type'
-          component={BrowseGenreType}
-        />
+        <UserRoute exact path='/player/genre/:id' component={BrowseGenre} />
+        <UserRoute path='/player/genre/:id/:type' component={BrowseGenreType} />
         <UserRoute path='/player/library/:id' component={Library} />
         <UserRoute path='/player/account' component={Account} />
         <UserRoute path='/player/artist/:id' component={Artist} />
@@ -141,7 +134,7 @@ function BrowsePlaylist() {
         <CollectionMain
           header={<span>Choose playlist</span>}
           items={myOwnPlaylists}
-          type='browse-playlist'
+          generalType='browse-playlist'
         />
       </div>
       {myPlaylists.total > myPlaylists.offset + myPlaylists.limit ? (
