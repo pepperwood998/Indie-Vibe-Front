@@ -27,9 +27,10 @@
   flex-direction: column;
   margin: auto;
   border-radius: 5px;
-  border: 1px solid $grayLight;
+  border: 0.5px solid $grayLight;
   background-color: $white;
   padding: 20px;
+  position: relative;
 
   .form {
     flex: 1;
@@ -40,5 +41,52 @@
     > :not(:last-child) {
       margin-bottom: 10px;
     }
+
+    .credit-card img {
+      height: 30px;
+    }
   }
+
+  .layer {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 100;
+    background-color: $blackBlurHalf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 50px;
+    }
+  }
+}
+
+.addition {
+  margin-bottom: 5px;
+}
+
+.plan {
+  margin-bottom: 20px;
+  padding: 15px 15px 5px;
+  background-color: $blackBlueLight;
+  border-radius: 5px;
+  transition: 0.5s ease;
+
+  &.success {
+    background-color: $green;
+    padding: 15px;
+    text-align: center;
+  }
+
+  p {
+    margin-bottom: 10px;
+  }
+}
+
+.term {
+  line-height: 1.6em !important;
 }
