@@ -92,11 +92,11 @@ function NowPayingLeft() {
                   : `/player/${playFromType}/${playFromId}`
                 : '/player/queue'
             }
-            className='font-short-regular font-weight-bold font-white'
+            className='font-short-regular font-weight-bold font-white ellipsis one-line'
           >
             {title}
           </NavLinkUnderline>
-          <div>
+          <div className='ellipsis one-line'>
             {artists
               ? artists
                   .map(artist => (

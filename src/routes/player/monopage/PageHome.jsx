@@ -1,4 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { getHome } from '../../../apis/API';
+import { CollectionMain } from '../../../components/collections';
 import { AuthContext } from '../../../contexts';
 
 function Home() {
@@ -8,8 +10,23 @@ function Home() {
     recent: [],
     most: [],
     newReleases: [],
-    popularReleases: []
+    popularReleases: [],
+    myPlaylists: []
   });
+
+  useEffect(() => {
+    getHome(authState.token)
+      .then(res => {
+        if (res.status === 'success') {
+          setData({ ...data, ...res.data });
+        } else {
+          throw 'Error';
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <div className='content-page fadein'>
@@ -19,6 +36,34 @@ function Home() {
         </span>
       </div>
       <div className='home-page mono-page content-padding'>
+        {!data.recent.length ? (
+          ''
+        ) : (
+          <CollectionMain header='Recent played' items={data.recent} />
+        )}
+        {!data.most.length ? (
+          ''
+        ) : (
+          <CollectionMain header='Your heavy rotation' items={data.most} />
+        )}
+        {!data.newReleases.length ? (
+          ''
+        ) : (
+          <CollectionMain header='New releases' items={data.newReleases} />
+        )}
+        {!data.popularReleases.length ? (
+          ''
+        ) : (
+          <CollectionMain
+            header='Popular releases'
+            items={data.popularReleases}
+          />
+        )}
+        {!data.myPlaylists.length ? (
+          ''
+        ) : (
+          <CollectionMain header='Your playlists' items={data.myPlaylists} />
+        )}
       </div>
     </div>
   );

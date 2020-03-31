@@ -419,3 +419,14 @@ export const streamCount = (token, type, id) => {
     }
   }).then(response => response.json());
 };
+
+export const getHome = token => {
+  let url = new URL(`${host}/home`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
