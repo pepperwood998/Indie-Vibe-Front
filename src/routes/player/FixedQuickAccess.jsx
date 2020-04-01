@@ -1,18 +1,19 @@
 import React, { useContext, useEffect } from 'react';
 import { getPlaylistsMeOwn } from '../../apis/API';
-import { AddPlaylistIcon } from '../../assets/svgs';
+import { AddPlaylistIcon, ArrowDown } from '../../assets/svgs';
 import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
 import { LinkWhiteColor } from '../../components/links';
-import { AuthContext, LibraryContext } from '../../contexts';
+import { AuthContext, LibraryContext, MeContext } from '../../contexts';
+import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
 function QuickAccess(props) {
   const { state: authState } = useContext(AuthContext);
+  const { state: meState } = useContext(MeContext);
   const {
     state: libState,
     actions: libActions,
     dispatch: libDispatch
   } = useContext(LibraryContext);
-  const { role } = authState;
 
   useEffect(() => {
     getPlaylistsMeOwn(authState.token).then(res => {
@@ -23,6 +24,20 @@ function QuickAccess(props) {
   }, []);
 
   let playlists = libState.myPlaylists;
+
+  const handleToggleCtxMenu = e => {
+    if (libState.ctxMenuOpened) return;
+
+    const { x, y, width, height } = e.target.getBoundingClientRect();
+    libDispatch(
+      libActions.openCtxMenu({
+        content: {
+          type: 'account'
+        },
+        pos: [x, y + height + 10]
+      })
+    );
+  };
 
   const handleOpenDialog = () => {
     libDispatch(libActions.setEditPlaylist(true));
@@ -38,10 +53,28 @@ function QuickAccess(props) {
     );
   };
 
+  let userBoxClasses = 'user-box';
+  if (libState.ctxMenuOpened && libState.ctxMenuContent.type === 'account') {
+    userBoxClasses += ' active';
+  }
   return (
     <div className='quick-access'>
-      <div className='quick-access__role'>
-        <RoleBanner role={role} />
+      <div className='quick-access__account'>
+        <div className={userBoxClasses} onClick={handleToggleCtxMenu}>
+          <section className='title'>
+            <span className='font-short-regular font-weight-bold font-white ellipsis one-line'>
+              {meState.displayName}
+            </span>
+          </section>
+          <section className='thumbnail'>
+            <img
+              src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
+            />
+          </section>
+          <section>
+            <ArrowDown className='svg--small' />
+          </section>
+        </div>
       </div>
       <div className='quick-access__playlists'>
         <div className='banner'>

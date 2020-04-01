@@ -1,12 +1,12 @@
 .context-wrapper {
   position: absolute;
-  min-width: 190px;
+  min-width: 180px;
   white-space: nowrap;
   box-shadow: 0 0 10px $blackBlurHalf;
   z-index: 100;
 
   .context-menu {
-    background-color: $blackGray;
+    background-color: $blackBlueLight;
     border-radius: 5px;
 
     a,

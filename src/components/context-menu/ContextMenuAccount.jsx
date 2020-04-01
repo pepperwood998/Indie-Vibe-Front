@@ -19,7 +19,7 @@ function ContextMenuAccount(props) {
   const handleClose = handlers ? handlers.handleClose : () => undefined;
 
   return (
-    <div className='context-menu'>
+    <div className='context-menu' ref={props.elemRef}>
       <ul>
         <li onClick={handleClose}>
           {props.fromLanding ? (

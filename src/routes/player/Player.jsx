@@ -95,7 +95,10 @@ function Player(props) {
         }}
       >
         {libState.ctxMenuOpened ? (
-          <ContextSwitch content={libState.ctxMenuContent} />
+          <ContextSwitch
+            content={libState.ctxMenuContent}
+            pos={libState.ctxMenuPos}
+          />
         ) : (
           ''
         )}

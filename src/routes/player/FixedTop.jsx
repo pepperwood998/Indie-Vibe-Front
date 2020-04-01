@@ -19,11 +19,6 @@ function Top(props) {
           }, 300);
         }}
       />
-      <section>
-        <a href='/home'>
-          <LogoIcon />
-        </a>
-      </section>
       <section className='linear-nav'>
         <Tooltip tooltip='Go back' pos='bottom'>
           <ArrowBack

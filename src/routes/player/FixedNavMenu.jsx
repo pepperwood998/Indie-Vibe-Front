@@ -1,17 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { getAccount } from '../../apis/API';
-import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
-import {
-  BrowseIcon,
-  HomeIcon,
-  LibraryIcon,
-  SettingIcon
-} from '../../assets/svgs';
+import { BrowseIcon, HomeIcon, LibraryIcon, Logo } from '../../assets/svgs';
 import { ButtonFrame } from '../../components/buttons';
-import { ContextMenuAccount } from '../../components/context-menu';
-import { NavLinkColor, NavLinkUnderline } from '../../components/links';
-import { AuthContext, MeContext, LibraryContext } from '../../contexts';
+import { NavLinkColor } from '../../components/links';
+import { AuthContext, LibraryContext, MeContext } from '../../contexts';
 
 function NavMenu() {
   const { state: authState } = useContext(AuthContext);
@@ -50,31 +43,24 @@ function NavMenu() {
     );
   };
 
-  let ctxClasses = 'avatar-box__layer';
-  if (libState.ctxMenuOpened && libState.ctxMenuContent.type === 'account') {
-    ctxClasses += ' active';
-  }
   return (
     <div className='nav-menu'>
-      <div className='user-box'>
-        <div className='avatar-box'>
-          <div className='img-wrapper'>
-            <img
-              src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
-            />
-          </div>
-          <div className={ctxClasses}>
-            <SettingIcon onClick={handleToggleCtxMenu} />
-          </div>
-        </div>
-        <span className='user-title'>
-          <NavLinkUnderline
-            href='/player/account'
-            className='font-short-regular font-weight-bold font-white'
-          >
-            {meState.displayName}
-          </NavLinkUnderline>
-        </span>
+      <div className='banner'>
+        <section className='logo-wrapper'>
+          <NavLink to='/player'>
+            <Logo className='logo' />
+          </NavLink>
+        </section>
+
+        {authState.role === 'r-free' ? (
+          <section className='upgrade'>
+            <a href='/premium'>
+              <ButtonFrame>UPGRADE</ButtonFrame>
+            </a>
+          </section>
+        ) : (
+          ''
+        )}
       </div>
       <ul className='menu'>
         <li>
