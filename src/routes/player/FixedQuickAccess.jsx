@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { getPlaylistsMeOwn } from '../../apis/API';
 import { AddPlaylistIcon } from '../../assets/svgs';
 import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
@@ -45,7 +45,7 @@ function QuickAccess(props) {
       </div>
       <div className='quick-access__playlists'>
         <div className='banner'>
-          <span className='font-short-regular font-gray-light'>Playlists</span>
+          <span className='font-short-s font-gray-light'>Playlists</span>
           <AddPlaylistIcon
             className='svg--regular svg--cursor svg--scale'
             onClick={handleOpenDialog}
@@ -57,7 +57,7 @@ function QuickAccess(props) {
               <li className='item-wrapper' key={index}>
                 <LinkWhiteColor
                   href={`/player/playlist/${item.id}`}
-                  className='item font-short-big font-weight-bold'
+                  className='item font-short-regular font-weight-bold'
                   nav={true}
                 >
                   {item.title}

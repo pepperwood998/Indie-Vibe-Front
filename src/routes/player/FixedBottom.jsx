@@ -22,6 +22,7 @@ import {
 } from '../../assets/svgs';
 import { performActionFavorite } from '../../apis/API';
 import { AuthContext, LibraryContext } from '../../contexts';
+import Tooltip from '../../components/tooltips/Tooltip';
 
 function Bottom() {
   return (
@@ -316,19 +317,25 @@ function NowPayingRight() {
           <ShuffleControl />
         </div>
         <div className='control-wrapper'>
-          <MusicQueueIcon className='svg--small svg--cursor svg--bright' />
+          <Tooltip tooltip='Play queue'>
+            <MusicQueueIcon className='svg--small svg--cursor svg--bright' />
+          </Tooltip>
         </div>
         <div className='control-wrapper control-volume'>
           {!streamState.muted && streamState.volume !== 0 ? (
-            <UnmuteIcon
-              className='svg--small svg--cursor svg--bright'
-              onClick={handleMute}
-            />
+            <Tooltip tooltip='Mute'>
+              <UnmuteIcon
+                className='svg--small svg--cursor svg--bright'
+                onClick={handleMute}
+              />
+            </Tooltip>
           ) : (
-            <MuteIcon
-              className='svg--small svg--cursor svg--bright'
-              onClick={handleUnmute}
-            />
+            <Tooltip tooltip='Unmute'>
+              <MuteIcon
+                className='svg--small svg--cursor svg--bright'
+                onClick={handleUnmute}
+              />
+            </Tooltip>
           )}
           <ProgressBar
             progressPer={streamState.muted ? 0 : streamState.volume}
@@ -352,30 +359,36 @@ function RepeatControl() {
   switch (streamState.repeat) {
     case 'none':
       return (
-        <RepeatOffIcon
-          className='svg--small svg--cursor svg--bright'
-          onClick={() => {
-            streamDispatch(streamActions.setRepeat('one'));
-          }}
-        />
+        <Tooltip tooltip='Repeat one'>
+          <RepeatOffIcon
+            className='svg--small svg--cursor svg--bright'
+            onClick={() => {
+              streamDispatch(streamActions.setRepeat('one'));
+            }}
+          />
+        </Tooltip>
       );
     case 'one':
       return (
-        <RepeatTrackIcon
-          className='svg--small svg--cursor svg--bright'
-          onClick={() => {
-            streamDispatch(streamActions.setRepeat('all'));
-          }}
-        />
+        <Tooltip tooltip='Repeat all'>
+          <RepeatTrackIcon
+            className='svg--small svg--cursor svg--bright'
+            onClick={() => {
+              streamDispatch(streamActions.setRepeat('all'));
+            }}
+          />
+        </Tooltip>
       );
     case 'all':
       return (
-        <RepeatListIcon
-          className='svg--small svg--cursor svg--bright'
-          onClick={() => {
-            streamDispatch(streamActions.setRepeat('none'));
-          }}
-        />
+        <Tooltip tooltip='Repeat off'>
+          <RepeatListIcon
+            className='svg--small svg--cursor svg--bright'
+            onClick={() => {
+              streamDispatch(streamActions.setRepeat('none'));
+            }}
+          />
+        </Tooltip>
       );
     default:
       return '';
@@ -391,21 +404,25 @@ function ShuffleControl() {
 
   if (streamState.shuffled) {
     return (
-      <UnShuffleIcon
-        className='svg--small svg--cursor svg--bright'
-        onClick={() => {
-          streamDispatch(streamActions.setShuffle(false));
-        }}
-      />
+      <Tooltip tooltip='Shuffle off'>
+        <UnShuffleIcon
+          className='svg--small svg--cursor svg--bright'
+          onClick={() => {
+            streamDispatch(streamActions.setShuffle(false));
+          }}
+        />
+      </Tooltip>
     );
   } else {
     return (
-      <ShuffleIcon
-        className='svg--small svg--cursor svg--bright'
-        onClick={() => {
-          streamDispatch(streamActions.setShuffle(true));
-        }}
-      />
+      <Tooltip tooltip='Shuffle'>
+        <ShuffleIcon
+          className='svg--small svg--cursor svg--bright'
+          onClick={() => {
+            streamDispatch(streamActions.setShuffle(true));
+          }}
+        />
+      </Tooltip>
     );
   }
 }

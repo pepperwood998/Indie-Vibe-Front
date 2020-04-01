@@ -6,17 +6,29 @@ import { AuthContext } from '../../../contexts';
 function Home() {
   const { state: authState } = useContext(AuthContext);
 
+  const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
     recent: [],
     most: [],
     newReleases: [],
     popularReleases: [],
-    myPlaylists: []
+    myPlaylists: [],
+    myArtists: []
   });
+
+  const struct = {
+    recent: 'Recently played',
+    most: 'Your heavy rotation',
+    newReleases: 'New publised releases',
+    myPlaylists: 'Your created playlists',
+    popularReleases: 'Popular release',
+    myArtists: 'Your favorite artists'
+  };
 
   useEffect(() => {
     getHome(authState.token)
       .then(res => {
+        setFirstRender(false);
         if (res.status === 'success') {
           setData({ ...data, ...res.data });
         } else {
@@ -28,7 +40,9 @@ function Home() {
       });
   }, []);
 
-  return (
+  return firstRender ? (
+    ''
+  ) : (
     <div className='content-page fadein'>
       <div className='page-banner'>
         <span className='font-short-extra font-weight-bold font-white'>
@@ -36,34 +50,19 @@ function Home() {
         </span>
       </div>
       <div className='home-page mono-page content-padding'>
-        {!data.recent.length ? (
-          ''
-        ) : (
-          <CollectionMain header='Recent played' items={data.recent} />
-        )}
-        {!data.most.length ? (
-          ''
-        ) : (
-          <CollectionMain header='Your heavy rotation' items={data.most} />
-        )}
-        {!data.newReleases.length ? (
-          ''
-        ) : (
-          <CollectionMain header='New releases' items={data.newReleases} />
-        )}
-        {!data.popularReleases.length ? (
-          ''
-        ) : (
-          <CollectionMain
-            header='Popular releases'
-            items={data.popularReleases}
-          />
-        )}
-        {!data.myPlaylists.length ? (
-          ''
-        ) : (
-          <CollectionMain header='Your playlists' items={data.myPlaylists} />
-        )}
+        {Object.keys(struct).map((key, index) => {
+          const items = data[key];
+          if (!items.length) return '';
+
+          return (
+            <CollectionMain
+              header={struct[key]}
+              items={items}
+              full={true}
+              key={index}
+            />
+          );
+        })}
       </div>
     </div>
   );

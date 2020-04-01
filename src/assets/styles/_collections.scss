@@ -56,6 +56,11 @@
         grid-auto-rows: 130px;
       }
     }
+
+    > [class^='card-'] {
+      animation-name: fadein;
+      animation-duration: 0.3s;
+    }
   }
 
   &.padder {

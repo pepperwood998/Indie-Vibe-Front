@@ -1,0 +1,45 @@
+.custom-tooltip {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .tooltip-text {
+    visibility: hidden;
+    min-width: 80px;
+    background-color: $white;
+    color: $black;
+    font: $shortSmall;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    box-shadow: 0 0 10px $black;
+
+    /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+    opacity: 0;
+    transition: opacity 0.5s;
+
+    &.top {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-bottom: 5px;
+    }
+
+    &.bottom {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 5px;
+    }
+  }
+
+  &:hover {
+    .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
