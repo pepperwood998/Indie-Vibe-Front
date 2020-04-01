@@ -22,7 +22,7 @@ import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
 import Top from './FixedTop';
 import { Library } from './library';
-import { Home, TrackList } from './monopage';
+import { Home, TrackList, Playlist, Release } from './monopage';
 import { Search } from './search';
 import { Workspace } from './workspace';
 
@@ -70,16 +70,8 @@ function Player(props) {
           <UserRoute path='/player/account' component={Account} />
           <UserRoute path='/player/artist/:id' component={Artist} />
           <UserRoute path='/player/search/:key' component={Search} />
-          <UserRoute
-            path='/player/release/:id'
-            type='release'
-            component={TrackList}
-          />
-          <UserRoute
-            path='/player/playlist/:id'
-            type='playlist'
-            component={TrackList}
-          />
+          <UserRoute path='/player/release/:id' component={Release} />
+          <UserRoute path='/player/playlist/:id' component={Playlist} />
           <ArtistRoute path='/player/workspace' component={Workspace} />
           <Route path='*'>
             <Redirect to='/404' />

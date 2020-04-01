@@ -15,7 +15,7 @@ import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
 import { capitalize, getDatePart, useEffectSkip } from '../../../utils/Common';
 
-function TrackList(props) {
+function Release(props) {
   // contexts
   const { state: authState } = useContext(AuthContext);
   const {
@@ -45,31 +45,22 @@ function TrackList(props) {
   const [existed, setExisted] = useState(false);
 
   // props
-  const { type } = props;
   const id = props.match.params.id;
   let isCurrentList =
-    type === streamState.playFromType && id === streamState.playFromId;
+    streamState.playFromType === 'release' && id === streamState.playFromId;
 
   // effect: init
   useEffect(() => {
     setFirstRender(true);
-    getTrackList(authState.token, id, type)
+    getTrackList(authState.token, id, 'release')
       .then(res => {
         setFirstRender(false);
         if (res.status === 'success' && res.data) {
-          if (type !== res.data.type) {
-            throw 'Error';
-          }
-
           setExisted(true);
           setData({ ...data, ...res.data });
-          if (type === 'playlist') {
-            setOwner({ ...owner, ...res.data.owner });
-          } else {
-            setOwner({ ...owner, ...res.data.artist });
-          }
+          setOwner({ ...owner, ...res.data.artist });
         } else {
-          throw `Error viewing ${type}`;
+          throw 'Error viewing release';
         }
       })
       .catch(error => {
@@ -80,68 +71,19 @@ function TrackList(props) {
   // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
-    if (ctxFav.type === 'playlist' || ctxFav.type === 'release') {
+    if (ctxFav.type === 'release') {
       setData({ ...data, relation: ctxFav.relation });
     } else {
       let tracks = { ...data.tracks };
       tracks.items.some(item => {
-        if (type === 'playlist') {
-          if (ctxFav.id === item.track.id) {
-            item.track.relation = [...ctxFav.relation];
-            return true;
-          }
-        } else {
-          if (ctxFav.id === item.id) {
-            item.relation = [...ctxFav.relation];
-            return true;
-          }
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
         }
       });
       setData({ ...data, tracks });
     }
   }, [libState.ctxFav]);
-
-  // effect-skip: delete playlist
-  useEffectSkip(() => {
-    if (type === 'playlist') {
-      if (id === libState.ctxDelPlaylistId) {
-        props.history.push(`/player/library/${authState.id}`);
-      }
-    }
-  }, [libState.ctxDelPlaylistId]);
-
-  useEffectSkip(() => {
-    if (type === 'playlist') {
-      setData({ ...data, ...libState.editedPlaylist });
-    }
-  }, [libState.editedPlaylist]);
-
-  // effect-skip: playlist privacy
-  useEffectSkip(() => {
-    const { ctxPlaylistPrivate } = libState;
-    setData({ ...data, status: ctxPlaylistPrivate.status });
-  }, [libState.ctxPlaylistPrivate]);
-
-  // effect-skip: remove track playlist
-  useEffectSkip(() => {
-    if (type === 'playlist') {
-      const { ctxDelPlaylistTrackId } = libState;
-      if (ctxDelPlaylistTrackId) {
-        const { tracks } = data;
-        setData({
-          ...data,
-          tracks: {
-            ...tracks,
-            items: tracks.items.filter(
-              item => item.track.id !== ctxDelPlaylistTrackId
-            ),
-            total: tracks.total - 1
-          }
-        });
-        libDispatch(libActions.removeTrackFromPlaylist(''));
-      }
-    }
-  }, [libState.ctxDelPlaylistTrackId]);
 
   const handlePaused = () => {
     streamDispatch(streamAction.togglePaused(true));
@@ -150,16 +92,16 @@ function TrackList(props) {
     if (isCurrentList) {
       streamDispatch(streamAction.togglePaused(false));
     } else {
-      streamCollection(authState.token, type, id).then(res => {
+      streamCollection(authState.token, 'release', id).then(res => {
         if (res.status === 'success' && res.data.length) {
-          streamDispatch(streamAction.start(res.data, type, id));
+          streamDispatch(streamAction.start(res.data, 'release', id));
         }
       });
     }
   };
 
   const handleListToggleFavorite = action => {
-    performActionFavorite(authState.token, type, id, data.relation, action)
+    performActionFavorite(authState.token, 'release', id, data.relation, action)
       .then(r => {
         setData({ ...data, relation: r });
       })
@@ -171,10 +113,7 @@ function TrackList(props) {
   return firstRender ? (
     ''
   ) : (
-    <GroupEmpty
-      isEmpty={!existed}
-      message={`${capitalize(type)} doesn't exist`}
-    >
+    <GroupEmpty isEmpty={!existed} message="Release doesn't exist.">
       <div className='content-page fadein'>
         <div className='track-list mono-page content-padding'>
           <div className='track-list__header'>
@@ -191,11 +130,7 @@ function TrackList(props) {
                     by&nbsp;
                   </span>
                   <NavLinkUnderline
-                    href={`/player/${
-                      type === 'release' || owner.role.id === 'r-artist'
-                        ? 'artist'
-                        : 'library'
-                    }/${owner.id}`}
+                    href={`/player/artist/${owner.id}`}
                     className='font-short-regular font-white'
                   >
                     {owner.displayName}
@@ -206,15 +141,11 @@ function TrackList(props) {
                 </p>
               </div>
               <div className='info__bottom font-short-regular font-gray-light'>
-                <span>{type.toUpperCase()}</span>
+                <span>RELEASE</span>
                 <span className='dot'>&#8226;</span>
                 <span>{data.tracks.total} tracks</span>
                 <span className='dot'>&#8226;</span>
-                <span>
-                  {type === 'playlist'
-                    ? `${data.followersCount} followers`
-                    : getDatePart(data.date)}
-                </span>
+                <span>{getDatePart(data.date)}</span>
               </div>
             </div>
           </div>
@@ -243,7 +174,7 @@ function TrackList(props) {
               )}
               <ButtonMore
                 ctxData={{
-                  type,
+                  type: 'release',
                   id: id,
                   relation: data.relation,
                   status: data.status,
@@ -256,21 +187,12 @@ function TrackList(props) {
             </div>
           </div>
           <div className='track-list__content'>
-            {type === 'playlist' ? (
-              <TrackTable
-                items={data.tracks.items}
-                playFromId={data.id}
-                type={type}
-                playlistRelation={data.relation}
-              />
-            ) : (
-              <TrackTable
-                items={data.tracks.items}
-                releaseArtistId={data.artist ? data.artist.id : ''}
-                playFromId={data.id}
-                type={type}
-              />
-            )}
+            <TrackTable
+              items={data.tracks.items}
+              releaseArtistId={data.artist ? data.artist.id : ''}
+              playFromId={data.id}
+              type='release'
+            />
           </div>
         </div>
       </div>
@@ -278,4 +200,4 @@ function TrackList(props) {
   );
 }
 
-export default TrackList;
+export default Release;
