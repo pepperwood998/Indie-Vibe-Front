@@ -5,7 +5,13 @@ import {
   Route,
   Switch
 } from 'react-router-dom';
-import { GuestRoute, UserRoute, FreeRoute } from './components/custom-routes';
+import {
+  CMSGuestRoute,
+  CMSRoute,
+  FreeRoute,
+  GuestRoute,
+  UserRoute
+} from './components/custom-routes';
 import {
   AuthContextProvider,
   LibraryContextProvider,
@@ -13,6 +19,7 @@ import {
   StreamContextProvider
 } from './contexts';
 import NotFound from './NotFound';
+import { CMS, CMSLogin } from './routes/cms';
 import { Home, Login, Premium, Purchase, Register } from './routes/landing';
 import { Player } from './routes/player';
 
@@ -36,6 +43,8 @@ class App extends Component {
                     <GuestRoute exact path='/login' component={Login} />
                     <GuestRoute path='/register' component={Register} />
                     <UserRoute path='/player' component={Player} />
+                    <CMSRoute path='/cms' component={CMS} />
+                    <CMSGuestRoute path='/cms-login' component={CMSLogin} />
                     <Route path='/404' component={NotFound} />
                     <Route path='*'>
                       <Redirect to='/404' />
