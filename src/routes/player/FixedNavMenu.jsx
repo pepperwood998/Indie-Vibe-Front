@@ -4,7 +4,7 @@ import { getAccount } from '../../apis/API';
 import { BrowseIcon, HomeIcon, LibraryIcon, Logo } from '../../assets/svgs';
 import { ButtonFrame } from '../../components/buttons';
 import { NavLinkColor } from '../../components/links';
-import { AuthContext, LibraryContext, MeContext } from '../../contexts';
+import { AuthContext, MeContext } from '../../contexts';
 
 function NavMenu() {
   const { state: authState } = useContext(AuthContext);
@@ -13,11 +13,6 @@ function NavMenu() {
     actions: meActions,
     dispatch: meDispatch
   } = useContext(MeContext);
-  const {
-    state: libState,
-    actions: libActions,
-    dispatch: libDispatch
-  } = useContext(LibraryContext);
 
   useEffect(() => {
     if (!meState.id) {
@@ -29,25 +24,11 @@ function NavMenu() {
     }
   });
 
-  const handleToggleCtxMenu = e => {
-    if (libState.ctxMenuOpened) return;
-
-    const { x, y, width, height } = e.target.getBoundingClientRect();
-    libDispatch(
-      libActions.openCtxMenu({
-        content: {
-          type: 'account'
-        },
-        pos: [x, y + height + 10]
-      })
-    );
-  };
-
   return (
     <div className='nav-menu'>
       <div className='banner'>
         <section className='logo-wrapper'>
-          <NavLink to='/player'>
+          <NavLink to='/home'>
             <Logo className='logo' />
           </NavLink>
         </section>
