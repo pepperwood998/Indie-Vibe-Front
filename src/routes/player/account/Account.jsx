@@ -27,10 +27,10 @@ function Account(props) {
           href: `/player/account/password`,
           label: 'Update password'
         },
-        {
-          href: `/player/account/social`,
-          label: 'Social'
-        },
+//        {
+//          href: `/player/account/social`,
+//          label: 'Social'
+//        },
         {
           href: `/player/account/settings`,
           label: 'Settings'

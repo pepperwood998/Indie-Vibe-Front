@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import { GuestRoute, UserRoute } from './components/custom-routes';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch
+} from 'react-router-dom';
+import { GuestRoute, UserRoute, FreeRoute } from './components/custom-routes';
 import {
   AuthContextProvider,
   LibraryContextProvider,
   MeContextProvider,
   StreamContextProvider
 } from './contexts';
+import NotFound from './NotFound';
 import { Home, Login, Premium, Purchase, Register } from './routes/landing';
 import { Player } from './routes/player';
 
@@ -17,14 +23,24 @@ class App extends Component {
         <div className='App'>
           <AuthContextProvider>
             <MeContextProvider>
-              <Route exact path={['/', '/home']} component={Home} />
-              <Route exact path='/premium' component={Premium} />
-              <UserRoute exact path='/purchase/:type/:packageType?' component={Purchase} />
-              <GuestRoute path='/login' component={Login} />
-              <GuestRoute path='/register' component={Register} />
               <StreamContextProvider>
                 <LibraryContextProvider>
-                  <UserRoute path='/player' component={Player} />
+                  <Switch>
+                    <Route exact path={['/', '/home']} component={Home} />
+                    <Route exact path='/premium' component={Premium} />
+                    <FreeRoute
+                      exact
+                      path='/purchase/:type/:packageType?'
+                      component={Purchase}
+                    />
+                    <GuestRoute exact path='/login' component={Login} />
+                    <GuestRoute path='/register' component={Register} />
+                    <UserRoute path='/player' component={Player} />
+                    <Route path='/404' component={NotFound} />
+                    <Route path='*'>
+                      <Redirect to='/404' />
+                    </Route>
+                  </Switch>
                 </LibraryContextProvider>
               </StreamContextProvider>
             </MeContextProvider>

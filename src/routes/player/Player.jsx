@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { getPlaylistsMeOwn } from '../../apis/API';
 import { CloseIcon } from '../../assets/svgs';
 import { ButtonLoadMore } from '../../components/buttons';
@@ -11,6 +12,7 @@ import {
   GroupTrackCredits
 } from '../../components/groups';
 import { AuthContext, LibraryContext } from '../../contexts';
+import NotFound from '../../NotFound';
 import { Account } from './account';
 import { Artist } from './artist';
 import { Browse, BrowseGenre, BrowseGenreType } from './browse';
@@ -52,25 +54,37 @@ function Player(props) {
         <Bottom />
       </div>
       <div className='player__content'>
-        <UserRoute exact path={['/player', '/player/home']} component={Home} />
-        <UserRoute path='/player/browse' component={Browse} />
-        <UserRoute exact path='/player/genre/:id' component={BrowseGenre} />
-        <UserRoute path='/player/genre/:id/:type' component={BrowseGenreType} />
-        <UserRoute path='/player/library/:id' component={Library} />
-        <UserRoute path='/player/account' component={Account} />
-        <UserRoute path='/player/artist/:id' component={Artist} />
-        <UserRoute path='/player/search/:key' component={Search} />
-        <UserRoute
-          path='/player/release/:id'
-          type='release'
-          component={TrackList}
-        />
-        <UserRoute
-          path='/player/playlist/:id'
-          type='playlist'
-          component={TrackList}
-        />
-        <ArtistRoute path='/player/workspace' component={Workspace} />
+        <Switch>
+          <UserRoute
+            exact
+            path={['/player', '/player/home']}
+            component={Home}
+          />
+          <UserRoute path='/player/browse' component={Browse} />
+          <UserRoute exact path='/player/genre/:id' component={BrowseGenre} />
+          <UserRoute
+            path='/player/genre/:id/:type'
+            component={BrowseGenreType}
+          />
+          <UserRoute path='/player/library/:id' component={Library} />
+          <UserRoute path='/player/account' component={Account} />
+          <UserRoute path='/player/artist/:id' component={Artist} />
+          <UserRoute path='/player/search/:key' component={Search} />
+          <UserRoute
+            path='/player/release/:id'
+            type='release'
+            component={TrackList}
+          />
+          <UserRoute
+            path='/player/playlist/:id'
+            type='playlist'
+            component={TrackList}
+          />
+          <ArtistRoute path='/player/workspace' component={Workspace} />
+          <Route path='*'>
+            <Redirect to='/404' />
+          </Route>
+        </Switch>
       </div>
       <div
         ref={menuRef}
