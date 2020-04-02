@@ -1,13 +1,12 @@
-import React, { useState, useContext } from 'react';
-import { LogoIcon } from '../../assets/svgs';
-import './css/cms.scss';
-import { InputTextRegular } from './components/inputs';
-import { cmsLogin } from '../../apis/APICms';
-import { CardError } from '../../components/cards';
-import { ButtonRegular } from './components/buttons';
+import React, { useContext, useState } from 'react';
 import { login } from '../../apis';
 import { getAccount } from '../../apis/API';
+import { LogoIcon } from '../../assets/svgs';
+import { CardError } from '../../components/cards';
 import { AuthContext, MeContext } from '../../contexts';
+import { ButtonRegular } from './components/buttons';
+import { InputTextRegular } from './components/inputs';
+import './css/cms.scss';
 
 function CMSLogin(props) {
   const { actions: authActions, dispatch: authDispatch } = useContext(
@@ -40,6 +39,10 @@ function CMSLogin(props) {
 
         return getAccount(res['access_token']).then(accountRes => {
           if (accountRes.status === 'success') {
+            if (accountRes.data.role.id !== 'r-admin') {
+              throw 'The account does not have admin priviledge';
+            }
+
             meDispatch(meActions.loadMe(accountRes.data));
             authDispatch(authActions.loginSuccess({ ...res }));
           } else {
