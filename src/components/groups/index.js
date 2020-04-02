@@ -5,4 +5,5 @@ export { default as GroupReleaseUpload } from './GroupReleaseUpload';
 export { default as GroupProfileBox } from './GroupProfileBox';
 export { default as GroupTrackCredits } from './GroupTrackCredits';
 export { default as GroupEmpty } from './GroupEmpty';
+export { default as GroupConfirmDialog } from './GroupConfirmDialog';
 

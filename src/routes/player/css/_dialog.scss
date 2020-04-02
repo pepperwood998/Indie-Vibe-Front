@@ -59,6 +59,10 @@
     position: absolute;
   }
 
+  .dialog {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.74);
+  }
+
   &.browse-playlists {
     background-color: $blackBlurDark;
 
@@ -165,6 +169,42 @@
       &__footer {
         padding: 10px;
         background-color: $blackGray;
+      }
+    }
+  }
+
+  &.center-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .confirm-dialog {
+    background-color: $blackBlueLight;
+    border-radius: 5px;
+    min-width: 500px;
+
+    &__header {
+      position: relative;
+      text-align: center;
+      color: $white;
+      font: $shortExtra;
+      font-weight: bold;
+      padding: 25px;
+
+      .close {
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+      }
+    }
+
+    &__body {
+      padding: 10px 0 15px;
+      text-align: center;
+
+      .cancel {
+        margin-left: 15px;
       }
     }
   }

@@ -9,7 +9,8 @@ import { ContextSwitch } from '../../components/context-menu';
 import { ArtistRoute, UserRoute } from '../../components/custom-routes';
 import {
   GroupPlaylistDialog,
-  GroupTrackCredits
+  GroupTrackCredits,
+  GroupConfirmDialog
 } from '../../components/groups';
 import { AuthContext, LibraryContext } from '../../contexts';
 import NotFound from '../../NotFound';
@@ -102,6 +103,7 @@ function Player(props) {
         ''
       )}
       {libState.trackCredits.opened ? <GroupTrackCredits /> : ''}
+      {libState.confirmDialog.opened ? <GroupConfirmDialog /> : ''}
       {libState.notification.opened ? <Notification /> : ''}
     </div>
   );

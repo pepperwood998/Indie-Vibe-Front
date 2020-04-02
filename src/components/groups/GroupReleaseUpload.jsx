@@ -6,7 +6,7 @@ import {
   publishRelease
 } from '../../apis/API';
 import Placeholder from '../../assets/imgs/placeholder.png';
-import { AuthContext, MeContext } from '../../contexts';
+import { AuthContext, LibraryContext, MeContext } from '../../contexts';
 import { ButtonFrame, ButtonMain } from '../buttons';
 import { CardError, CardSuccess } from '../cards';
 import { GroupTrackUpload } from '../groups';
@@ -34,6 +34,9 @@ function GroupReleaseUpload(props) {
     actions: meActions,
     dispatch: meDispatch
   } = useContext(MeContext);
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
 
   const [biography, setBiography] = useState('');
   const [release, setRelease] = useState({ title: '', typeId: 're-album' });
@@ -181,30 +184,38 @@ function GroupReleaseUpload(props) {
       return;
     }
 
-    let resInfo = { ...release };
-    let tracks = info.map(track => ({
-      title: track.title,
-      producer: track.producer,
-      genres: track.genres.map(g => g.id)
-    }));
-    resInfo = { ...resInfo, tracks };
+    libDispatch(
+      libActions.setConfirmDialog(
+        true,
+        'Confirm publishing this release?',
+        () => {
+          let resInfo = { ...release };
+          let tracks = info.map(track => ({
+            title: track.title,
+            producer: track.producer,
+            genres: track.genres.map(g => g.id)
+          }));
+          resInfo = { ...resInfo, tracks };
 
-    setPublishing(1);
-    publishRelease(
-      authState.token,
-      resInfo,
-      thumbnail,
-      audio,
-      biography,
-      props.baa
-    )
-      .then(response => response.json())
-      .then(res => {
-        if (res.status === 'success') {
-          setSuccess(true);
+          setPublishing(1);
+          publishRelease(
+            authState.token,
+            resInfo,
+            thumbnail,
+            audio,
+            biography,
+            props.baa
+          )
+            .then(response => response.json())
+            .then(res => {
+              if (res.status === 'success') {
+                setSuccess(true);
+              }
+              setPublishing(2);
+            });
         }
-        setPublishing(2);
-      });
+      )
+    );
   };
 
   if (props.baa && meState.artistStatus === 'pending')
