@@ -102,6 +102,12 @@ const actions = {
     return {
       type: 'SET_LAST_SESSION_TIME'
     };
+  },
+  setRole: role => {
+    return {
+      type: 'SET_ROLE',
+      role
+    };
   }
 };
 
@@ -138,31 +144,20 @@ const reducer = (state, action) => {
         ...initState
       };
     case 'REFRESH_TOKEN': {
-      const { payload } = action;
-      let decodedToken;
-      try {
-        decodedToken = jwt_decode(payload['token']);
-      } catch (err) {
-        clearTimeout(refresher);
-        localStorage.removeItem('lastTimeSession');
-        localStorage.removeItem('credentials');
-        sessionStorage.removeItem('credentials');
-        sessionStorage.removeItem('me');
-        return {
-          ...state,
-          ...initState
-        };
-      }
       return {
         ...state,
-        ...payload,
-        role: decodedToken['authorities'][0]
+        ...action.payload
       };
     }
     case 'SET_LAST_SESSION_TIME':
       return {
         ...state,
         lastSessionTime: Date.now()
+      };
+    case 'SET_ROLE':
+      return {
+        ...state,
+        role: action.role
       };
     default:
       return state;

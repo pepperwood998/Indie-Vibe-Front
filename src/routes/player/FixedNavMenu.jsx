@@ -8,21 +8,7 @@ import { AuthContext, MeContext } from '../../contexts';
 
 function NavMenu() {
   const { state: authState } = useContext(AuthContext);
-  const {
-    state: meState,
-    actions: meActions,
-    dispatch: meDispatch
-  } = useContext(MeContext);
-
-  useEffect(() => {
-    if (!meState.id) {
-      getAccount(authState.token).then(json => {
-        if (json.status === 'success') {
-          meDispatch(meActions.loadMe(json.data));
-        }
-      });
-    }
-  });
+  const { state: meState } = useContext(MeContext);
 
   return (
     <div className='nav-menu'>
@@ -33,7 +19,7 @@ function NavMenu() {
           </a>
         </section>
 
-        {authState.role === 'r-free' ? (
+        {meState.role.id === 'r-free' ? (
           <section className='upgrade'>
             <a href='/premium'>
               <ButtonFrame>UPGRADE</ButtonFrame>
@@ -94,7 +80,7 @@ function NavMenu() {
         </Link>
       </div>
       <div className='artist-box'>
-        {authState.role === 'r-artist' ? (
+        {meState.role.id === 'r-artist' ? (
           <NavLink to='/player/workspace'>
             <ButtonFrame>Your workspace</ButtonFrame>
           </NavLink>

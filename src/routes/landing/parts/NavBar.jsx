@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from 'react';
-import { getProfile, getAccount } from '../../../apis/API';
+import React, { useContext } from 'react';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { ArrowDown, Logo } from '../../../assets/svgs';
 import { ButtonFrame } from '../../../components/buttons';
@@ -9,23 +8,7 @@ import { AuthContext, MeContext } from '../../../contexts';
 
 function NavBar(props) {
   const { state: authState } = useContext(AuthContext);
-  const {
-    state: meState,
-    actions: meActions,
-    dispatch: meDispatch
-  } = useContext(MeContext);
-
-  useEffect(() => {
-    if (authState.token && !meState.id) {
-      getAccount(authState.token).then(json => {
-        if (json.status === 'success') {
-          meDispatch(meActions.loadMe(json.data));
-        }
-      });
-    } else if (!authState.token && meState.id) {
-      meDispatch(meActions.unloadMe());
-    }
-  });
+  const { state: meState } = useContext(MeContext);
 
   return (
     <div className='content'>

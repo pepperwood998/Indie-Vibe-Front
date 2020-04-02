@@ -1,0 +1,81 @@
+@import '../../../assets/styles/colors';
+@import '../../../assets/styles/fonts';
+
+.cms-login {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  &__header {
+    padding: 20px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: $blueDark;
+
+    .banner {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+    }
+
+    .title {
+      margin-left: 10px;
+    }
+  }
+
+  &__body {
+    flex: 1;
+
+    .form-wrapper {
+      margin: 50px auto;
+      padding: 20px;
+      max-width: 550px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid $grayLight;
+      border-radius: 5px;
+      background-color: $graySuperLight;
+
+      .header {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.input-text-regular {
+  border-radius: 3px;
+  border: 1px solid $grayLight;
+  padding: 10px;
+  font: $shortRegular;
+  width: 100%;
+
+  &.error {
+    border-color: $red;
+    box-shadow: 0px 0px 5px $red;
+  }
+}
+
+.btn-regular {
+  background: transparent;
+  border: 1px solid $grayDark;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font: $shortRegular;
+  font-weight: bold;
+  color: $grayDark;
+  transition: 0.2s ease;
+
+  &.active:hover {
+    border-color: $grayLight;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+  }
+}

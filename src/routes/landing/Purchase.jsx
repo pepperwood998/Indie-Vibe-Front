@@ -74,38 +74,25 @@ const CheckoutForm = props => {
       setStatus({ ...status, error: result.error.message });
     } else {
       setStatus({ ...status, error: '' });
-      // Send the token to your server.
 
+      // Send the token to your server.
       purchase(authState.token, props.type, result.token.id, props.packageType)
         .then(purchaseRes => {
-          setStatus({ ...status, purchasing: false });
-
           if (purchaseRes.status === 'success') {
-            setStatus({ ...status, success: true });
-            getAccount(authState.token).then(accountRes => {
+            setStatus({ ...status, purchasing: false, success: true });
+
+            return getAccount(authState.token).then(accountRes => {
               if (accountRes.status === 'success') {
                 meDispatch(meActions.loadMe(accountRes.data));
-
-                getNewToken(authState.refreshToken)
-                  .then(response => response.json())
-                  .then(tokenRes => {
-                    let { access_token, refresh_token, expires_in } = tokenRes;
-                    if (access_token) {
-                      authDispatch(
-                        authActions.refreshToken({
-                          token: access_token,
-                          refreshToken: refresh_token,
-                          expiry: expires_in
-                        })
-                      );
-                    } else {
-                      authDispatch(authActions.logout());
-                    }
-                  });
+                setTimeout(() => {
+                  authDispatch(authActions.setRole(accountRes.data.role.id));
+                }, 500);
+              } else {
+                throw 'Purchase is proceed, try logout then login again.';
               }
             });
           } else {
-            throw 'Server Error';
+            throw purchaseRes.data;
           }
         })
         .catch(err => {

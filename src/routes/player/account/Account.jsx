@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { PremiumRoute, UserRoute } from '../../../components/custom-routes';
 import { GroupEmpty } from '../../../components/groups';
 import { NavigationTab } from '../../../components/navigation';
-import { MeContext, AuthContext } from '../../../contexts';
+import { MeContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
 import BecomeArtist from './BecomeArtist';
 import Information from './Information';
@@ -11,10 +11,9 @@ import Settings from './Settings';
 import Social from './Social';
 
 function Account(props) {
-  const { state: authState } = useContext(AuthContext);
   const { state: meState } = useContext(MeContext);
 
-  const account = meState;
+  const role = meState.role.id;
 
   const nav = (
     <NavigationTab
@@ -27,10 +26,6 @@ function Account(props) {
           href: `/player/account/password`,
           label: 'Update password'
         },
-//        {
-//          href: `/player/account/social`,
-//          label: 'Social'
-//        },
         {
           href: `/player/account/settings`,
           label: 'Settings'
@@ -38,10 +33,9 @@ function Account(props) {
         {
           href: `/player/account/baa`,
           label: 'Become an Artist',
-          isDisabled: authState.role === 'r-free',
+          isDisabled: role === 'r-free',
           isSpecial: true,
-          isGone:
-            authState.role === 'r-artist' || authState.role === 'r-curator',
+          isGone: role === 'r-artist' || role === 'r-curator',
           disabledReason: 'Upgrade to premium to use this feature'
         }
       ]}
@@ -59,7 +53,7 @@ function Account(props) {
   );
 
   return (
-    <GroupEmpty isEmpty={!account.id} message='Account not found'>
+    <GroupEmpty isEmpty={!meState.id} message='Account not found'>
       <TemplateNavPage nav={nav} body={body} />;
     </GroupEmpty>
   );

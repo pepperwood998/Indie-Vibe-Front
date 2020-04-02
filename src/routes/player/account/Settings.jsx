@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { AuthContext, StreamContext } from '../../../contexts';
+import { AuthContext, StreamContext, MeContext } from '../../../contexts';
 
 function Settings(props) {
-  const { state: authState } = useContext(AuthContext);
+  const { state: meState } = useContext(MeContext);
   const {
     state: streamState,
     actions: streamActions,
@@ -10,7 +10,7 @@ function Settings(props) {
   } = useContext(StreamContext);
 
   const { settings } = streamState;
-  let isFree = authState.role === 'r-free';
+  let isFree = meState.role.id === 'r-free';
 
   const handleChangeSettings = e => {
     streamDispatch(

@@ -81,22 +81,23 @@ function Information(props) {
               gender: [false, data.gender[1]],
               dob: [false, data.dob[1]]
             });
-            getAccount(authState.token, authState.id).then(res => {
-              if (res.status === 'success') {
-                meDispatch(meActions.loadMe(res.data));
-              }
-            });
             libDispatch(
               libActions.setNotification(true, true, 'Information updated')
             );
-            break;
+            return getAccount(authState.token, authState.id).then(res => {
+              if (res.status === 'success') {
+                meDispatch(meActions.loadMe(res.data));
+              } else {
+                throw 'Information updated, try logout and login again';
+              }
+            });
           case 'unchanged':
             libDispatch(
               libActions.setNotification(true, true, 'Information unchanged')
             );
             break;
           default:
-            throw 'Error';
+            throw null;
         }
       })
       .catch(error => {
@@ -105,7 +106,7 @@ function Information(props) {
           libActions.setNotification(
             true,
             false,
-            'Failed to update information'
+            typeof error === 'string' ? error : 'Failed to update information'
           )
         );
       });
@@ -135,7 +136,11 @@ function Information(props) {
         <div className='account-information__info'>
           <section className='plan-tier'>
             <GroupPlanBox
-              plan={{ ...account.userPlan, due: account.planDue }}
+              role={account.role.id}
+              plan={{
+                ...account.userPlan,
+                due: account.planDue
+              }}
             />
           </section>
           <section className='account-details catalog'>
@@ -223,10 +228,9 @@ function Information(props) {
 }
 
 function GroupPlanBox(props) {
-  const { state: authState } = useContext(AuthContext);
   const { plan } = props;
 
-  const isCurator = authState.role === 'r-curator';
+  const isCurator = props.role === 'r-curator';
 
   return (
     <div className='catalog'>
