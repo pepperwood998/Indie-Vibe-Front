@@ -60,6 +60,7 @@ function AuthContextProvider(props) {
     }
 
     if (state.token) {
+      clearTimeout(refresher);
       let lastTimeSession = localStorage.getItem('lastTimeSession');
       let btw = 0;
       if (lastTimeSession) {
@@ -136,11 +137,28 @@ const reducer = (state, action) => {
         ...state,
         ...initState
       };
-    case 'REFRESH_TOKEN':
+    case 'REFRESH_TOKEN': {
+      const { payload } = action;
+      let decodedToken;
+      try {
+        decodedToken = jwt_decode(payload['token']);
+      } catch (err) {
+        clearTimeout(refresher);
+        localStorage.removeItem('lastTimeSession');
+        localStorage.removeItem('credentials');
+        sessionStorage.removeItem('credentials');
+        sessionStorage.removeItem('me');
+        return {
+          ...state,
+          ...initState
+        };
+      }
       return {
         ...state,
-        ...action.payload
+        ...payload,
+        role: decodedToken['authorities'][0]
       };
+    }
     case 'SET_LAST_SESSION_TIME':
       return {
         ...state,

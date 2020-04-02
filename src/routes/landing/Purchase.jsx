@@ -15,6 +15,7 @@ import { LinkUnderline } from '../../components/links';
 import { AuthContext, MeContext } from '../../contexts';
 import { fixedPrices } from '../../utils/Common';
 import Landing from './Landing';
+import { getNewToken } from '../../apis/AuthAPI';
 
 function Purchase(props) {
   const { type, packageType } = props.match.params;
@@ -34,7 +35,11 @@ function Purchase(props) {
 }
 
 const CheckoutForm = props => {
-  const { state: authState } = useContext(AuthContext);
+  const {
+    state: authState,
+    actions: authActions,
+    dispatch: authDispatch
+  } = useContext(AuthContext);
   const {
     state: meState,
     actions: meActions,
@@ -72,17 +77,31 @@ const CheckoutForm = props => {
       // Send the token to your server.
 
       purchase(authState.token, props.type, result.token.id, props.packageType)
-        .then(res => {
+        .then(purchaseRes => {
           setStatus({ ...status, purchasing: false });
 
-          if (res.status === 'success') {
+          if (purchaseRes.status === 'success') {
             setStatus({ ...status, success: true });
-            getAccount(authState.token).then(res => {
-              if (res.status === 'success') {
-                meDispatch(meActions.loadMe(res.data));
-                setTimeout(() => {
-                  window.location.href = '/home';
-                }, 500);
+            getAccount(authState.token).then(accountRes => {
+              if (accountRes.status === 'success') {
+                meDispatch(meActions.loadMe(accountRes.data));
+
+                getNewToken(authState.refreshToken)
+                  .then(response => response.json())
+                  .then(tokenRes => {
+                    let { access_token, refresh_token, expires_in } = tokenRes;
+                    if (access_token) {
+                      authDispatch(
+                        authActions.refreshToken({
+                          token: access_token,
+                          refreshToken: refresh_token,
+                          expiry: expires_in
+                        })
+                      );
+                    } else {
+                      authDispatch(authActions.logout());
+                    }
+                  });
               }
             });
           } else {

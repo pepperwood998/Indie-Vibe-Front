@@ -28,9 +28,9 @@ function NavMenu() {
     <div className='nav-menu'>
       <div className='banner'>
         <section className='logo-wrapper'>
-          <NavLink to='/home'>
+          <a href='/home'>
             <Logo className='logo' />
-          </NavLink>
+          </a>
         </section>
 
         {authState.role === 'r-free' ? (
