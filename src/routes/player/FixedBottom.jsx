@@ -142,6 +142,7 @@ function NowPayingMiddle() {
   const [duration, setDuration] = useState('0:00');
   const [progressPer, setProgressPer] = useState(0);
 
+  const { state: authState } = useContext(AuthContext);
   const {
     state: streamState,
     actions: streamActions,
@@ -177,7 +178,7 @@ function NowPayingMiddle() {
           <SkipPreviousIcon
             className='svg--big svg--cursor svg--bright'
             onClick={() => {
-              streamDispatch(streamActions.skipBackward());
+              streamDispatch(streamActions.skipBackward(authState.role));
             }}
           />
         </div>
@@ -202,7 +203,7 @@ function NowPayingMiddle() {
           <SkipNextIcon
             className='svg--big svg--cursor svg--bright'
             onClick={() => {
-              streamDispatch(streamActions.skipForward());
+              streamDispatch(streamActions.skipForward(authState.role));
             }}
           />
         </div>

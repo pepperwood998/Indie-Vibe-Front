@@ -30,8 +30,8 @@ class App extends Component {
         <div className='App'>
           <AuthContextProvider>
             <MeContextProvider>
-              <StreamContextProvider>
-                <LibraryContextProvider>
+              <LibraryContextProvider>
+                <StreamContextProvider>
                   <Switch>
                     <Route exact path={['/', '/home']} component={Home} />
                     <Route exact path='/premium' component={Premium} />
@@ -50,8 +50,8 @@ class App extends Component {
                       <Redirect to='/404' />
                     </Route>
                   </Switch>
-                </LibraryContextProvider>
-              </StreamContextProvider>
+                </StreamContextProvider>
+              </LibraryContextProvider>
             </MeContextProvider>
           </AuthContextProvider>
         </div>
