@@ -41,6 +41,12 @@
     opacity: 0.8;
   }
 
+  &.regular {
+    border: 1px solid $grayLight;
+    background-color: $white;
+    color: $black;
+  }
+
   &.approve {
     background-color: $green;
   }

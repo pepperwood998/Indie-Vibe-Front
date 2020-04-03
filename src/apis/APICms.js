@@ -49,3 +49,17 @@ export const actionRequest = (token, userId, action) => {
     body: formData
   }).then(response => response.json());
 };
+
+export const createCurator = (token, displayName) => {
+  let url = new URL(`${host}/cms/curator`);
+  let formData = new FormData();
+  formData.append('displayName', displayName);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
