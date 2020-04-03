@@ -27,6 +27,131 @@
         font-style: italic;
       }
     }
+
+    .load-more-wrapper {
+      background-color: $blueDark;
+    }
+  }
+}
+
+.page-request-details {
+  .release-box {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+
+    .left {
+      height: 100%;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+
+      .info {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .thumbnail-wrapper {
+          width: 180px;
+          height: 180px;
+          position: relative;
+
+          .thumbnail {
+            width: inherit;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+
+        .title-wrapper {
+          text-align: center;
+          padding: 10px 5px;
+
+          .title {
+            margin-bottom: 5px;
+          }
+        }
+      }
+    }
+
+    .right {
+      flex: 1;
+      height: 100%;
+      padding: 20px 40px;
+
+      .tracks {
+        width: 60%;
+      }
+
+      .load-more-wrapper {
+        background-color: $blueDark;
+        width: 60%;
+      }
+
+      .actions {
+        width: 60%;
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+
+        > :not(:last-child) {
+          margin-right: 10px;
+        }
+      }
+
+      .track-box {
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 10px;
+
+        .header {
+          padding: 10px 20px;
+          background-color: $blueDark;
+          color: $white;
+          font: $shortBig;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+
+          .title {
+            flex: 1;
+            padding-right: 10px;
+          }
+        }
+
+        .content {
+          display: table;
+          border-collapse: collapse;
+
+          width: 100%;
+
+          .item-wrapper {
+            display: table-row;
+            border: 1px solid $grayLight;
+
+            .item {
+              display: table-cell;
+              padding: 10px 20px;
+              font: $shortRegular;
+
+              &.audio {
+                display: flex;
+                flex-direction: row;
+
+                > * {
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

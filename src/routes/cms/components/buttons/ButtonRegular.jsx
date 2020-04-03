@@ -4,7 +4,8 @@ function ButtonRegular({
   type = 'button',
   onClick = () => undefined,
   disabled = false,
-  children
+  children,
+  className = ''
 }) {
   var classes = 'btn-regular';
   if (disabled) {
@@ -12,6 +13,8 @@ function ButtonRegular({
   } else {
     classes += ' active';
   }
+
+  classes += className ? ` ${className}` : '';
 
   return (
     <button

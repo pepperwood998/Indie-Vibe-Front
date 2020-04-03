@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { getPlaylistsMeOwn } from '../../apis/API';
 import { CloseIcon } from '../../assets/svgs';
 import { ButtonLoadMore } from '../../components/buttons';
@@ -8,12 +8,11 @@ import { CollectionMain } from '../../components/collections';
 import { ContextSwitch } from '../../components/context-menu';
 import { ArtistRoute, UserRoute } from '../../components/custom-routes';
 import {
+  GroupConfirmDialog,
   GroupPlaylistDialog,
-  GroupTrackCredits,
-  GroupConfirmDialog
+  GroupTrackCredits
 } from '../../components/groups';
 import { AuthContext, LibraryContext } from '../../contexts';
-import NotFound from '../../NotFound';
 import { Account } from './account';
 import { Artist } from './artist';
 import { Browse, BrowseGenre, BrowseGenreType } from './browse';
@@ -23,7 +22,7 @@ import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
 import Top from './FixedTop';
 import { Library } from './library';
-import { Home, TrackList, Playlist, Release } from './monopage';
+import { Home, Playlist, Release } from './monopage';
 import { Search } from './search';
 import { Workspace } from './workspace';
 
@@ -157,7 +156,7 @@ function BrowsePlaylist() {
   );
 }
 
-function Notification() {
+export function Notification() {
   const {
     state: libState,
     actions: libActions,

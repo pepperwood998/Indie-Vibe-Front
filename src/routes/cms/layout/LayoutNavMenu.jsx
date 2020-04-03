@@ -26,7 +26,17 @@ function NavMenu(props) {
             </NavLink>
           </li>
           <li>
-            <NavLink className='link' to='/cms/requests'>
+            <NavLink
+              className='link'
+              to='/cms/requests'
+              isActive={(match, location) => {
+                const { pathname } = location;
+                return (
+                  pathname === '/cms/requests' ||
+                  pathname.includes('/cms/request')
+                );
+              }}
+            >
               <span>Artist requests</span>
             </NavLink>
           </li>

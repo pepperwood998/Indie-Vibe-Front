@@ -15,6 +15,18 @@
   &.disabled {
     opacity: 0.5;
   }
+
+  &.approve {
+    border: 0px;
+    background-color: $green;
+    color: $white;
+  }
+
+  &.deny {
+    border: 0px;
+    background-color: $red;
+    color: $white;
+  }
 }
 
 .btn-quick {
@@ -29,11 +41,21 @@
     opacity: 0.8;
   }
 
-  &.accept {
+  &.approve {
     background-color: $green;
   }
 
   &.deny {
     background-color: $red;
+  }
+
+  &.audio {
+    border: 1px solid $grayLight;
+    color: $grayDark;
+
+    &:hover {
+      background-color: $blueMain;
+      color: $white;
+    }
   }
 }

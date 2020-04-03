@@ -1,11 +1,18 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { getPendingUsers } from '../../../apis/APICms';
+import { getPendingUsers, actionRequest } from '../../../apis/APICms';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { ButtonRegular } from '../components/buttons';
+import { ButtonLoadMore } from '../../../components/buttons';
 
 function Requests(props) {
   const { state: authState } = useContext(AuthContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState({
@@ -30,6 +37,63 @@ function Requests(props) {
       });
   }, []);
 
+  const handleAction = (action, userId) => {
+    actionRequest(authState.token, userId, action)
+      .then(res => {
+        if (res.status === 'success') {
+          switch (action) {
+            case 'approve':
+              libDispatch(
+                libActions.setNotification(true, true, 'Request accepted')
+              );
+              break;
+            case 'deny':
+              libDispatch(
+                libActions.setNotification(true, true, 'Request rejected.')
+              );
+              break;
+            default:
+              libDispatch(
+                libActions.setNotification(true, false, 'Action not found.')
+              );
+          }
+
+          setData({
+            ...data,
+            items: data.items.filter(item => userId !== item.id),
+            total: data.total - 1
+          });
+        } else {
+          throw 'Failed to perform verify action.';
+        }
+      })
+      .catch(err => {
+        if (typeof err !== 'string') {
+          err = 'Server error';
+        }
+
+        libDispatch(libActions.setNotification(true, false, err));
+      });
+  };
+
+  const handleLoadMore = () => {
+    getPendingUsers(authState.token, data.offset + data.limit)
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const requests = res.data;
+          setData({
+            items: [...data.items, ...requests.items],
+            offset: requests.offset,
+            limit: requests.limit,
+            total: requests.total
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
   return firstRender ? (
     ''
   ) : (
@@ -47,7 +111,7 @@ function Requests(props) {
             ) : (
               <ul className='requests-table'>
                 {data.items.map((item, index) => (
-                  <li className='requests-table__row'>
+                  <li className='requests-table__row' key={index}>
                     <div className='requests-table__cell index'>
                       {index + 1}
                     </div>
@@ -70,14 +134,37 @@ function Requests(props) {
                       </NavLink>
                     </div>
                     <div className='requests-table__cell action'>
-                      <div className='btn-quick accept'>ACCEPT</div>
-                      <div className='btn-quick deny'>DENY</div>
+                      <div
+                        className='btn-quick approve'
+                        onClick={() => {
+                          handleAction('approve', item.id);
+                        }}
+                      >
+                        APPROVE
+                      </div>
+                      <div
+                        className='btn-quick deny'
+                        onClick={() => {
+                          handleAction('deny', item.id);
+                        }}
+                      >
+                        DENY
+                      </div>
                     </div>
                   </li>
                 ))}
               </ul>
             )}
           </div>
+          {data.total > data.offset + data.limit ? (
+            <div className='load-more-wrapper text-center'>
+              <ButtonLoadMore onClick={handleLoadMore}>
+                Load more
+              </ButtonLoadMore>
+            </div>
+          ) : (
+            ''
+          )}
         </section>
       </div>
     </div>

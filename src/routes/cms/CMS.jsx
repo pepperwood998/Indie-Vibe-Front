@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { CMSRoute } from '../../components/custom-routes';
+import {} from '../../components/groups';
+import { LibraryContext } from '../../contexts';
+import { Notification } from '../player/Player';
 import { NavMenu, TopBar } from './layout';
 import { Home, RequestDetails, Requests } from './monopage';
 import CreateCurator from './monopage/PageCreateCurator';
 
 function CMS(props) {
+  const { state: libState } = useContext(LibraryContext);
+
   return (
     <div className='cms'>
       <div className='cms__nav-menu'>
@@ -25,6 +30,7 @@ function CMS(props) {
           </Route>
         </Switch>
       </div>
+      {libState.notification.opened ? <Notification /> : ''}
     </div>
   );
 }
