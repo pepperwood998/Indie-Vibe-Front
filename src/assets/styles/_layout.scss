@@ -37,4 +37,8 @@
     grid-column-gap: 20px;
     grid-row-gap: 40px;
   }
+
+  &.three-cols {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

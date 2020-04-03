@@ -74,9 +74,12 @@ function NavBar(props) {
                   }
                 />
               </div>
+              <span className='font-short-regular font-weight-bold font-white pl-2'>
+                {meState.displayName}
+              </span>
               <ArrowDown />
             </div>
-            <div className='dropdown-menu dropdown-menu--fixed dropdown-menu-right'>
+            <div className='dropdown-menu'>
               <div className='context-wrapper'>
                 <ContextMenuAccount fromLanding={true} />
               </div>
