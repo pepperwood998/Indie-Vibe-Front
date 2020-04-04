@@ -183,7 +183,14 @@ function NowPayingMiddle() {
           />
         </div>
         <div className='player-action-wrapper'>
-          {streamState.paused ? (
+          {streamState.loading ? (
+            <div className='play-loading'>
+              <div className='loader loader-1'>
+                <span></span>
+              </div>
+              <PlayIcon className='icon svg--small svg--disabled' />
+            </div>
+          ) : streamState.paused ? (
             <PlayIcon
               className='svg--big svg--cursor svg--bright'
               onClick={() => {

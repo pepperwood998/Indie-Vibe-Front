@@ -94,6 +94,9 @@ label {
       fill: $blueMain !important;
     }
   }
+  &--disabled {
+    opacity: 0.6;
+  }
 }
 
 .ellipsis {

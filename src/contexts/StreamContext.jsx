@@ -32,7 +32,8 @@ const initState = {
   skipStatus: {
     count: 0,
     quota: 6
-  }
+  },
+  loading: false
 };
 
 let skipFailCb = () => undefined;
@@ -62,6 +63,12 @@ function StreamContextProvider(props) {
   useEffect(() => {
     stream.onInfo = info => {
       dispatch(actions.setInfo(info));
+    };
+    stream.onLoadStart = () => {
+      dispatch(actions.setLoading(true));
+    };
+    stream.onLoaded = () => {
+      dispatch(actions.setLoading(false));
     };
     stream.onTogglePaused = paused => {
       dispatch(actions.onTogglePaused(paused));
@@ -144,6 +151,9 @@ const actions = {
         targetTrackId
       }
     };
+  },
+  setLoading: loading => {
+    return { type: 'SET_LOADING', loading };
   },
   addToQueue: extra => {
     return {
@@ -270,6 +280,9 @@ const reducer = (state, action) => {
         collectionRecorded: false,
         currentSongIndex: 0
       };
+    }
+    case 'SET_LOADING': {
+      return { ...state, loading: action.loading };
     }
     case 'ADD_TO_QUEUE': {
       if (!state.queue.length && !state.queueExtra.length)
