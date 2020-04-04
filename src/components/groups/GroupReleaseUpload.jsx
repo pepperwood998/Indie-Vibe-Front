@@ -267,23 +267,28 @@ function GroupReleaseUpload(props) {
           ) : (
             ''
           )}
-          <div className='upload-cover-wrapper'>
-            <input
-              ref={thumbnailRef}
-              type='file'
-              name='thumbnail'
-              id='thumbnail'
-              className='input-custom'
-              onChange={handleThumbnailChange}
-              accept='image/*'
-            />
+          <div className='upload-cover'>
             <InputFileLabel
               for='thumbnail'
               error={submitted && !thumbnail}
               keep={true}
               className='input-custom__label--img'
             >
-              <img src={thumbnailSrc ? thumbnailSrc : Placeholder} />
+              <div className='cover-wrapper'>
+                <input
+                  ref={thumbnailRef}
+                  type='file'
+                  name='thumbnail'
+                  id='thumbnail'
+                  className='input-custom'
+                  onChange={handleThumbnailChange}
+                  accept='image/*'
+                />
+                <img
+                  className='img'
+                  src={thumbnailSrc ? thumbnailSrc : Placeholder}
+                />
+              </div>
             </InputFileLabel>
           </div>
           <div className='upload-content'>

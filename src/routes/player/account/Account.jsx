@@ -35,7 +35,8 @@ function Account(props) {
           label: 'Become an Artist',
           isDisabled: role === 'r-free',
           isSpecial: true,
-          isGone: role === 'r-artist' || role === 'r-curator',
+          isGone:
+            role === 'r-artist' || role === 'r-curator' || role === 'r-admin',
           disabledReason: 'Upgrade to premium to use this feature'
         }
       ]}

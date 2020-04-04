@@ -12,14 +12,8 @@ function CMSRoute({ component: Component, ...rest }) {
         if (state.token && state.role === 'r-admin') {
           return <Component {...props} {...rest} />;
         } else {
-          return (
-            <Redirect
-              to={{
-                pathname: '/cms-login',
-                state: props.location
-              }}
-            />
-          );
+          window.location.href = '/cms-login';
+          return '';
         }
       }}
     />
