@@ -24,8 +24,8 @@ export const getPendingUsers = (token, offset = 0, limit = 20) => {
   }).then(response => response.json());
 };
 
-export const getPendingRelease = (token, userId, offset, limit) => {
-  let url = new URL(`${host}/cms/requests/${userId}`);
+export const getPendingRelease = (token, userId, offset = 0, limit = 20) => {
+  let url = new URL(`${host}/cms/request/${userId}`);
   url.search = new URLSearchParams({ offset, limit });
 
   return fetch(url, {
@@ -37,12 +37,12 @@ export const getPendingRelease = (token, userId, offset, limit) => {
 };
 
 export const actionRequest = (token, userId, action) => {
-  let url = new URL(`${host}/cms/requests/${userId}`);
+  let url = new URL(`${host}/cms/request/${userId}`);
   let formData = new FormData();
   formData.append('action', action);
 
   return fetch(url, {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       Authorization: 'Bearer ' + token
     },
@@ -50,13 +50,30 @@ export const actionRequest = (token, userId, action) => {
   }).then(response => response.json());
 };
 
-export const createCurator = (token, displayName) => {
-  let url = new URL(`${host}/cms/curator`);
-  let formData = new FormData();
-  formData.append('displayName', displayName);
+export const searchSimpleUsers = (
+  token,
+  displayName,
+  offset = 0,
+  limit = 20
+) => {
+  let url = new URL(`${host}/cms/profiles/${displayName}`);
+  url.search = new URLSearchParams({ offset, limit });
 
   return fetch(url, {
-    method: 'POST',
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const delegateCurator = (token, userId) => {
+  let url = new URL(`${host}/cms/delegate`);
+  let formData = new FormData();
+  formData.append('userId', userId);
+
+  return fetch(url, {
+    method: 'PUT',
     headers: {
       Authorization: 'Bearer ' + token
     },

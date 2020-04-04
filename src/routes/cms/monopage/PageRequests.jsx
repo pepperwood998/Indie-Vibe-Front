@@ -1,10 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { getPendingUsers, actionRequest } from '../../../apis/APICms';
+import { actionRequest, getPendingUsers } from '../../../apis/APICms';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
-import { AuthContext, LibraryContext } from '../../../contexts';
-import { ButtonRegular } from '../components/buttons';
 import { ButtonLoadMore } from '../../../components/buttons';
+import { AuthContext, LibraryContext } from '../../../contexts';
 
 function Requests(props) {
   const { state: authState } = useContext(AuthContext);

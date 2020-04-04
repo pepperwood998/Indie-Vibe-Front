@@ -5,8 +5,7 @@ import {} from '../../components/groups';
 import { LibraryContext } from '../../contexts';
 import { Notification } from '../player/Player';
 import { NavMenu, TopBar } from './layout';
-import { Home, RequestDetails, Requests } from './monopage';
-import CreateCurator from './monopage/PageCreateCurator';
+import { Home, RequestDetails, Requests, DelegateCurator } from './monopage';
 
 function CMS(props) {
   const { state: libState } = useContext(LibraryContext);
@@ -24,7 +23,7 @@ function CMS(props) {
           <CMSRoute exact path={['/cms/', '/cms/home']} component={Home} />
           <CMSRoute path='/cms/requests' component={Requests} />
           <CMSRoute path='/cms/request/:id' component={RequestDetails} />
-          <CMSRoute path='/cms/create-curator' component={CreateCurator} />
+          <CMSRoute path='/cms/delegate-curator' component={DelegateCurator} />
           <Route path='*'>
             <Redirect to='/404' />
           </Route>

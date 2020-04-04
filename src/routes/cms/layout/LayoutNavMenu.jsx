@@ -41,8 +41,8 @@ function NavMenu(props) {
             </NavLink>
           </li>
           <li>
-            <NavLink className='link' to='/cms/create-curator'>
-              <span className='ellipsis one-line'>Create curator</span>
+            <NavLink className='link' to='/cms/delegate-curator'>
+              <span className='ellipsis one-line'>Delegate curator</span>
             </NavLink>
           </li>
         </ul>
