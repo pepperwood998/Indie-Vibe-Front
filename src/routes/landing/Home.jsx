@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import cell1 from '../../assets/imgs/cell-1.png';
-import cell2 from '../../assets/imgs/cell-2.png';
-import cell3 from '../../assets/imgs/cell-3.png';
-import cell4 from '../../assets/imgs/cell-4.png';
-import cell5 from '../../assets/imgs/cell-5.png';
-import cell6 from '../../assets/imgs/cell-6.png';
+import cell1 from '../../assets/imgs/trang.jpg';
+import cell2 from '../../assets/imgs/vu.jpg';
+import cell3 from '../../assets/imgs/le-cat-trong-ly.jpg';
+import cell4 from '../../assets/imgs/kenny-g.jpg';
+import cell5 from '../../assets/imgs/thinh-suy.jpg';
+import cell6 from '../../assets/imgs/ca-hoi-hoang.jpg';
 import LandingIntro from '../../assets/imgs/landing-intro.png';
 import { ButtonFrame, ButtonMain } from '../../components/buttons';
 import { AuthContext } from '../../contexts';
@@ -14,12 +14,12 @@ function Home() {
   const { state } = useContext(AuthContext);
 
   const showroom = [
-    { href: '#', img: cell1, artist: 'Kodaline' },
-    { href: '#', img: cell2, artist: 'Tessa Violet' },
-    { href: '#', img: cell3, artist: 'Doedie' },
-    { href: '#', img: cell4, artist: 'Ed Sheeran' },
-    { href: '#', img: cell5, artist: 'Ngọt.' },
-    { href: '#', img: cell6, artist: 'Cá Hồi Hoang' }
+    { id: '9IwDw6tHJMAR90UGvy0o', img: cell1, artist: 'Trang' },
+    { id: 'a98db973kwl8xp1lz94k', img: cell2, artist: 'Vũ.' },
+    { id: '9s2vQcIMmojuYEbg1Swu', img: cell3, artist: 'Lê Cát Trọng Lý' },
+    { id: 'R50A4EG8FRYEyHashx2h', img: cell4, artist: 'Kenny G' },
+    { id: 'WqyU666INm0dwM3kp06A', img: cell5, artist: 'Thịnh Suy' },
+    { id: 'ZsGjTZQUOOjizOwk2KTQ', img: cell6, artist: 'Cá Hồi Hoang' }
   ];
 
   const intro = (
@@ -107,7 +107,7 @@ function Home() {
         <section className='showroom custom-grid three-cols'>
           {showroom.map((item, index) => (
             <div className='item' key={index}>
-              <a href={item.href}>
+              <a href={`/player/artist/${item.id}`}>
                 <div className='layer'>
                   <span className='font-short-extra font-weight-bold font-white'>
                     {item.artist}

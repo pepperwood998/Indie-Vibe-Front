@@ -74,7 +74,7 @@ function NavBar(props) {
                   }
                 />
               </div>
-              <span className='font-short-regular font-weight-bold font-white pl-2'>
+              <span className='ellipsis one-line font-short-regular font-weight-bold font-white pl-2'>
                 {meState.displayName}
               </span>
               <ArrowDown />
