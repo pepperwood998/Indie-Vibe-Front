@@ -6,7 +6,7 @@ export const login = (email, password) => {
     method: 'POST',
     body: `email=${email}&password=${password}`,
     headers: { 'Content-type': 'application/x-www-form-urlencoded' }
-  });
+  }).then(response => response.json());
 };
 
 export const loginFb = (id, token) => {
@@ -14,7 +14,7 @@ export const loginFb = (id, token) => {
     method: 'POST',
     body: `userFbId=${id}&userFbToken=${token}`,
     headers: { 'Content-type': 'application/x-www-form-urlencoded' }
-  });
+  }).then(response => response.json());
 };
 
 export const register = (email, password, cfPassword, displayName, gender) => {

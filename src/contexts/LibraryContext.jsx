@@ -35,6 +35,12 @@ const initState = {
     opened: false,
     success: false,
     message: ''
+  },
+  confirmDialog: {
+    opened: false,
+    message: '',
+    confirmCb: () => undefined,
+    cancelCb: () => undefined
   }
 };
 
@@ -112,6 +118,22 @@ const actions = {
         opened,
         success,
         message
+      }
+    };
+  },
+  setConfirmDialog: (
+    opened,
+    message = '',
+    confirmCb = () => undefined,
+    cancelCb = () => undefined
+  ) => {
+    return {
+      type: 'SET_CF_DIALOG',
+      payload: {
+        opened,
+        message,
+        confirmCb,
+        cancelCb
       }
     };
   }
@@ -255,6 +277,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         notification: action.payload
+      };
+    }
+    case 'SET_CF_DIALOG': {
+      return {
+        ...state,
+        confirmDialog: { ...action.payload }
       };
     }
     default:

@@ -12,14 +12,8 @@ function UserRoute({ component: Component, ...rest }) {
         if (state.token) {
           return <Component {...props} {...rest} />;
         } else {
-          return (
-            <Redirect
-              to={{
-                pathname: '/login',
-                state: props.location
-              }}
-            />
-          );
+          window.location.href = '/login';
+          return '';
         }
       }}
     />

@@ -36,18 +36,27 @@ function Me(props) {
 
   const handleDeletePlaylist = id => {
     handlers.handleClose();
-    deleteTrackList(authState.token, 'playlist', id)
-      .then(res => {
-        if (res.status === 'success') {
-          libDispatch(
-            libActions.setNotification(true, true, 'Playlist deleted')
-          );
-          libDispatch(libActions.deletePlaylist(id));
+
+    libDispatch(
+      libActions.setConfirmDialog(
+        true,
+        'Confirm deleting this playlist?',
+        () => {
+          deleteTrackList(authState.token, 'playlist', id)
+            .then(res => {
+              if (res.status === 'success') {
+                libDispatch(
+                  libActions.setNotification(true, true, 'Playlist deleted')
+                );
+                libDispatch(libActions.deletePlaylist(id));
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
         }
-      })
-      .catch(error => {
-        console.error(error);
-      });
+      )
+    );
   };
 
   const handleTogglePlaylistPrivate = action => {

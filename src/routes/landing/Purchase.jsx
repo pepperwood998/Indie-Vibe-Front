@@ -15,6 +15,7 @@ import { LinkUnderline } from '../../components/links';
 import { AuthContext, MeContext } from '../../contexts';
 import { fixedPrices } from '../../utils/Common';
 import Landing from './Landing';
+import { getNewToken } from '../../apis/AuthAPI';
 
 function Purchase(props) {
   const { type, packageType } = props.match.params;
@@ -34,7 +35,11 @@ function Purchase(props) {
 }
 
 const CheckoutForm = props => {
-  const { state: authState } = useContext(AuthContext);
+  const {
+    state: authState,
+    actions: authActions,
+    dispatch: authDispatch
+  } = useContext(AuthContext);
   const {
     state: meState,
     actions: meActions,
@@ -69,24 +74,25 @@ const CheckoutForm = props => {
       setStatus({ ...status, error: result.error.message });
     } else {
       setStatus({ ...status, error: '' });
+
       // Send the token to your server.
-
       purchase(authState.token, props.type, result.token.id, props.packageType)
-        .then(res => {
-          setStatus({ ...status, purchasing: false });
+        .then(purchaseRes => {
+          if (purchaseRes.status === 'success') {
+            setStatus({ ...status, purchasing: false, success: true });
 
-          if (res.status === 'success') {
-            setStatus({ ...status, success: true });
-            getAccount(authState.token).then(res => {
-              if (res.status === 'success') {
-                meDispatch(meActions.loadMe(res.data));
+            return getAccount(authState.token).then(accountRes => {
+              if (accountRes.status === 'success') {
+                meDispatch(meActions.loadMe(accountRes.data));
                 setTimeout(() => {
-                  window.location.href = '/home';
+                  authDispatch(authActions.setRole(accountRes.data.role.id));
                 }, 500);
+              } else {
+                throw 'Purchase is proceed, try logout then login again.';
               }
             });
           } else {
-            throw 'Server Error';
+            throw purchaseRes.data;
           }
         })
         .catch(err => {

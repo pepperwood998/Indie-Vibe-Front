@@ -4,6 +4,7 @@ import { InputForm, InputFileLabel, InputGenre } from '../inputs';
 import { GroupGenreDialog } from '.';
 
 import { CloseIcon } from '../../assets/svgs';
+import Tooltip from '../tooltips/Tooltip';
 
 function GroupTrackUpload(props) {
   const [info, setInfo] = useState({});
@@ -14,7 +15,7 @@ function GroupTrackUpload(props) {
   useEffect(() => {
     props.handleItemChange(trackInd, info, audio, audioSrc);
   }, [info, audio, audioSrc]);
-  
+
   const ref = {
     audio128: useRef(),
     audio320: useRef()
@@ -68,10 +69,12 @@ function GroupTrackUpload(props) {
             props.handleItemDelete(props.index);
           }}
         >
-          <span className='font-short-s font-weight-bold index'>
-            {props.index + 1}
-          </span>
-          <CloseIcon className='close' />
+          <Tooltip tooltip='Remove item'>
+            <span className='font-short-s font-weight-bold index'>
+              {props.index + 1}
+            </span>
+            <CloseIcon className='close svg--small' />
+          </Tooltip>
         </div>
         <input
           id={'audio128' + props.index}

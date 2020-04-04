@@ -10,6 +10,10 @@
       display: table-cell;
       vertical-align: middle;
     }
+
+    .right {
+      text-align: right;
+    }
   }
 }
 
@@ -32,5 +36,9 @@
     grid-template-columns: repeat(2, 1fr);
     grid-column-gap: 20px;
     grid-row-gap: 40px;
+  }
+
+  &.three-cols {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

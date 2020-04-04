@@ -1,0 +1,72 @@
+.btn-regular {
+  background: transparent;
+  border: 1px solid $grayDark;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font: $shortRegular;
+  font-weight: bold;
+  color: $grayDark;
+  transition: 0.2s ease;
+
+  &.active:hover {
+    border-color: $grayLight;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+  }
+
+  &.approve {
+    border: 0px;
+    background-color: $green;
+    color: $white;
+  }
+
+  &.deny {
+    border: 0px;
+    background-color: $red;
+    color: $white;
+  }
+}
+
+.btn-quick {
+  padding: 5px;
+  border-radius: 3px;
+  cursor: pointer;
+  color: $white;
+  font: $shortSmall;
+  font-weight: bold;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &.disabled {
+    opacity: 0.7;
+    cursor: context-menu;
+  }
+
+  &.regular {
+    border: 1px solid $grayLight;
+    background-color: $white;
+    color: $black;
+  }
+
+  &.approve {
+    background-color: $green;
+  }
+
+  &.deny {
+    background-color: $red;
+  }
+
+  &.audio {
+    border: 1px solid $grayLight;
+    color: $grayDark;
+
+    &:hover {
+      background-color: $blueMain;
+      color: $white;
+    }
+  }
+}

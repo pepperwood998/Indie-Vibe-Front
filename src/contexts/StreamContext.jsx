@@ -4,6 +4,7 @@ import { getStreamInfo } from '../apis/StreamAPI';
 import { AuthContext } from './AuthContext';
 import { reorder, shuffle, swap, getCircularIndex } from '../utils/Common';
 import { streamCount } from '../apis/API';
+import { LibraryContext } from './LibraryContext';
 
 const StreamContext = createContext();
 
@@ -27,9 +28,15 @@ const initState = {
   settings: {
     bitrate: '128',
     shouldPlay: false
-  }
+  },
+  skipStatus: {
+    count: 0,
+    quota: 6
+  },
+  loading: false
 };
 
+let skipFailCb = () => undefined;
 function StreamContextProvider(props) {
   const [state, dispatch] = useReducer(reducer, initState, () => {
     let settings = localStorage.getItem('settings');
@@ -44,11 +51,24 @@ function StreamContextProvider(props) {
   });
 
   const { state: authState } = useContext(AuthContext);
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
+  skipFailCb = () => {
+    libDispatch(libActions.setNotification(true, false, 'Reach maximum skips'));
+  };
 
   // init stream states
   useEffect(() => {
     stream.onInfo = info => {
       dispatch(actions.setInfo(info));
+    };
+    stream.onLoadStart = () => {
+      dispatch(actions.setLoading(true));
+    };
+    stream.onLoaded = () => {
+      dispatch(actions.setLoading(false));
     };
     stream.onTogglePaused = paused => {
       dispatch(actions.onTogglePaused(paused));
@@ -66,7 +86,18 @@ function StreamContextProvider(props) {
   useEffect(() => {
     stream.onRecorded = trackId => {
       streamCount(authState.token, 'track', trackId);
-      if (!state.collectionRecorded && state.playFromType !== 'favorite') {
+      console.log('stream:', 'track', trackId);
+      if (
+        !state.collectionRecorded &&
+        state.playFromType &&
+        state.playFromType !== 'favorite'
+      ) {
+        console.log(
+          'stream:',
+          'from',
+          state.playFromType,
+          state.playFromId
+        );
         dispatch(actions.recordCollection());
         streamCount(authState.token, state.playFromType, state.playFromId);
       }
@@ -79,19 +110,33 @@ function StreamContextProvider(props) {
       switch (state.repeat) {
         case 'none':
           if (state.currentSongIndex < state.queue.length - 1) {
-            dispatch(actions.skipForward(true));
+            dispatch(actions.skipForward(authState.role, true));
           }
           break;
         case 'one':
           dispatch(actions.repeatTrack());
           break;
         case 'all':
-          dispatch(actions.skipForward(true));
+          dispatch(actions.skipForward(authState.role, true));
           break;
         default:
       }
     };
   }, [state.currentSongIndex, state.repeat, state.queue]);
+
+  useEffect(() => {
+    let resetSkipQuota;
+    const { skipStatus } = state;
+    if (skipStatus.count >= skipStatus.quota) {
+      resetSkipQuota = setTimeout(() => {
+        dispatch(actions.resetSkipQuota());
+      }, 5 * 1000);
+    }
+
+    return () => {
+      clearTimeout(resetSkipQuota);
+    };
+  }, [state.skipStatus]);
 
   return (
     <StreamContext.Provider value={{ state, actions, dispatch, stream }}>
@@ -118,6 +163,9 @@ const actions = {
       }
     };
   },
+  setLoading: loading => {
+    return { type: 'SET_LOADING', loading };
+  },
   addToQueue: extra => {
     return {
       type: 'ADD_TO_QUEUE',
@@ -133,16 +181,16 @@ const actions = {
       trackId
     };
   },
-  skipBackward: payload => {
+  skipBackward: (role, autoplay = false) => {
     return {
       type: 'SKIP_BACKWARD',
-      payload
+      payload: { role, autoplay }
     };
   },
-  skipForward: payload => {
+  skipForward: (role, autoplay = false) => {
     return {
       type: 'SKIP_FORWARD',
-      payload
+      payload: { role, autoplay }
     };
   },
   togglePaused: () => {
@@ -209,6 +257,9 @@ const actions = {
   },
   recordCollection: () => {
     return { type: 'RECORD_COLLECTION' };
+  },
+  resetSkipQuota: () => {
+    return { type: 'RESET_SKIP_QUOTA' };
   }
 };
 
@@ -241,6 +292,9 @@ const reducer = (state, action) => {
         currentSongIndex: 0
       };
     }
+    case 'SET_LOADING': {
+      return { ...state, loading: action.loading };
+    }
     case 'ADD_TO_QUEUE': {
       if (!state.queue.length && !state.queueExtra.length)
         stream.start(action.extra[0], stream.settings.shouldPlay);
@@ -265,12 +319,17 @@ const reducer = (state, action) => {
     case 'SKIP_BACKWARD': {
       if (!state.queue.length && !state.queueExtra.length) return state;
 
+      const { role, autoplay } = action.payload;
+      const { skipStatus } = state;
+      if (role === 'r-free' && skipStatus.count >= skipStatus.quota) {
+        skipFailCb();
+        return state;
+      }
+
       let shouldPlay = !state.paused;
       // when reachs the end of the song
       if (!shouldPlay) {
-        if (action.payload) {
-          shouldPlay = action.payload;
-        }
+        shouldPlay = autoplay;
       }
 
       let backwardId = getCircularIndex(
@@ -286,26 +345,39 @@ const reducer = (state, action) => {
 
         return {
           ...state,
-          queueExtra: queueTemp
+          queueExtra: queueTemp,
+          skipStatus: {
+            ...skipStatus,
+            count: skipStatus.count + 1
+          }
         };
       } else {
         stream.start(queue[backwardId], shouldPlay);
 
         return {
           ...state,
-          currentSongIndex: backwardId
+          currentSongIndex: backwardId,
+          skipStatus: {
+            ...skipStatus,
+            count: skipStatus.count + 1
+          }
         };
       }
     }
     case 'SKIP_FORWARD': {
       if (!state.queue.length && !state.queueExtra.length) return state;
 
+      const { role, autoplay } = action.payload;
+      const { skipStatus } = state;
+      if (role === 'r-free' && skipStatus.count >= skipStatus.quota) {
+        skipFailCb();
+        return state;
+      }
+
       let shouldPlay = !state.paused;
       // when reachs the end of the song
       if (!shouldPlay) {
-        if (action.payload) {
-          shouldPlay = action.payload;
-        }
+        shouldPlay = autoplay;
       }
 
       const { queue, queueExtra } = state;
@@ -317,7 +389,11 @@ const reducer = (state, action) => {
         return {
           ...state,
           queueExtra: queueTemp,
-          mainQueueMarkIndex: state.currentSongIndex
+          mainQueueMarkIndex: state.currentSongIndex,
+          skipStatus: {
+            ...skipStatus,
+            count: skipStatus.count + 1
+          }
         };
       } else {
         let forwardId = getCircularIndex(
@@ -328,7 +404,11 @@ const reducer = (state, action) => {
 
         return {
           ...state,
-          currentSongIndex: forwardId
+          currentSongIndex: forwardId,
+          skipStatus: {
+            ...skipStatus,
+            count: skipStatus.count + 1
+          }
         };
       }
     }
@@ -406,6 +486,9 @@ const reducer = (state, action) => {
     }
     case 'RECORD_COLLECTION': {
       return { ...state, collectionRecorded: true };
+    }
+    case 'RESET_SKIP_QUOTA': {
+      return { ...state, skipStatus: { ...state.skipStatus, count: 0 } };
     }
     default:
       return state;

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { login } from '../../apis';
+import { getAccount } from '../../apis/API';
 import { loginFb } from '../../apis/AuthAPI';
 import { LogoSignIn } from '../../assets/svgs';
 import {
@@ -9,10 +10,15 @@ import {
 } from '../../components/buttons';
 import { CardError } from '../../components/cards';
 import { InputCheckbox, InputForm } from '../../components/inputs';
-import { AuthContext } from '../../contexts';
+import { AuthContext, MeContext } from '../../contexts';
 import Authentication from './Authentication';
 
 function Login() {
+  const { actions: authActions, dispatch: authDispatch } = useContext(
+    AuthContext
+  );
+  const { actions: meActions, dispatch: meDispatch } = useContext(MeContext);
+
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [remembered, setRemembered] = useState(false);
@@ -21,8 +27,7 @@ function Login() {
   const [loggingIn, setLoggingIn] = useState(false);
   const [loggingInFb, setLoggingInFb] = useState(false);
 
-  const { actions, dispatch } = useContext(AuthContext);
-  const { loginSuccess } = actions;
+  const { loginSuccess } = authActions;
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
@@ -44,20 +49,25 @@ function Login() {
 
     setLoggingIn(true);
     login(email, pwd)
-      .then(response => {
-        if (response.status !== 200) throw 'wrong';
+      .then(res => {
+        if (!res['access_token']) throw 'Wrong email or password';
 
-        return response.json();
-      })
-      .then(json => {
-        dispatch(loginSuccess({ ...json, remembered }));
+        return getAccount(res['access_token']).then(accountRes => {
+          if (accountRes.status === 'success') {
+            meDispatch(meActions.loadMe(accountRes.data));
+            authDispatch(loginSuccess({ ...res, remembered }));
+          } else {
+            throw 'Unexpected error, try again!';
+          }
+        });
       })
       .catch(err => {
-        if (err === 'wrong') setLoginError('Wrong email or password');
-        else setLoginError('Server error');
-
+        if (typeof err !== 'string') {
+          err = 'Server error';
+        }
         setPwd('');
         setLoggingIn(false);
+        setLoginError(err);
       });
   };
 
@@ -74,21 +84,24 @@ function Login() {
 
     const { id, accessToken } = response;
     loginFb(id, accessToken)
-      .then(response => response.json())
-      .then(json => {
-        if (json.status && json.status === 'fail') {
-          throw 'wrong';
-        } else {
-          dispatch(loginSuccess({ ...json, remembered }));
-        }
+      .then(res => {
+        if (!res['access_token']) throw 'Facebook account not connected';
 
-        setLoggingInFb(false);
+        return getAccount(res['access_token']).then(accountRes => {
+          if (accountRes.status === 'success') {
+            meDispatch(meActions.loadMe(accountRes.data));
+            authDispatch(loginSuccess({ ...res, remembered }));
+          } else {
+            throw 'Unexpected error, try again!';
+          }
+        });
       })
       .catch(err => {
-        if (err === 'wrong') setLoginError('Facebook account is not connected');
-        else setLoginError('Server error');
-
+        if (typeof err !== 'string') {
+          err = 'Server error';
+        }
         setLoggingInFb(false);
+        setLoginError(err);
       });
   };
 

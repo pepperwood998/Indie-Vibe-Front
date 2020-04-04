@@ -60,6 +60,7 @@ function AuthContextProvider(props) {
     }
 
     if (state.token) {
+      clearTimeout(refresher);
       let lastTimeSession = localStorage.getItem('lastTimeSession');
       let btw = 0;
       if (lastTimeSession) {
@@ -101,6 +102,12 @@ const actions = {
     return {
       type: 'SET_LAST_SESSION_TIME'
     };
+  },
+  setRole: role => {
+    return {
+      type: 'SET_ROLE',
+      role
+    };
   }
 };
 
@@ -136,15 +143,21 @@ const reducer = (state, action) => {
         ...state,
         ...initState
       };
-    case 'REFRESH_TOKEN':
+    case 'REFRESH_TOKEN': {
       return {
         ...state,
         ...action.payload
       };
+    }
     case 'SET_LAST_SESSION_TIME':
       return {
         ...state,
         lastSessionTime: Date.now()
+      };
+    case 'SET_ROLE':
+      return {
+        ...state,
+        role: action.role
       };
     default:
       return state;

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { getPlaylistsMeOwn } from '../../apis/API';
 import { CloseIcon } from '../../assets/svgs';
 import { ButtonLoadMore } from '../../components/buttons';
@@ -7,6 +8,7 @@ import { CollectionMain } from '../../components/collections';
 import { ContextSwitch } from '../../components/context-menu';
 import { ArtistRoute, UserRoute } from '../../components/custom-routes';
 import {
+  GroupConfirmDialog,
   GroupPlaylistDialog,
   GroupTrackCredits
 } from '../../components/groups';
@@ -20,7 +22,7 @@ import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
 import Top from './FixedTop';
 import { Library } from './library';
-import { Home, TrackList } from './monopage';
+import { Home, Playlist, Release } from './monopage';
 import { Search } from './search';
 import { Workspace } from './workspace';
 
@@ -52,25 +54,29 @@ function Player(props) {
         <Bottom />
       </div>
       <div className='player__content'>
-        <UserRoute exact path={['/player', '/player/home']} component={Home} />
-        <UserRoute path='/player/browse' component={Browse} />
-        <UserRoute exact path='/player/genre/:id' component={BrowseGenre} />
-        <UserRoute path='/player/genre/:id/:type' component={BrowseGenreType} />
-        <UserRoute path='/player/library/:id' component={Library} />
-        <UserRoute path='/player/account' component={Account} />
-        <UserRoute path='/player/artist/:id' component={Artist} />
-        <UserRoute path='/player/search/:key' component={Search} />
-        <UserRoute
-          path='/player/release/:id'
-          type='release'
-          component={TrackList}
-        />
-        <UserRoute
-          path='/player/playlist/:id'
-          type='playlist'
-          component={TrackList}
-        />
-        <ArtistRoute path='/player/workspace' component={Workspace} />
+        <Switch>
+          <UserRoute
+            exact
+            path={['/player', '/player/home']}
+            component={Home}
+          />
+          <UserRoute path='/player/browse' component={Browse} />
+          <UserRoute exact path='/player/genre/:id' component={BrowseGenre} />
+          <UserRoute
+            path='/player/genre/:id/:type'
+            component={BrowseGenreType}
+          />
+          <UserRoute path='/player/library/:id' component={Library} />
+          <UserRoute path='/player/account' component={Account} />
+          <UserRoute path='/player/artist/:id' component={Artist} />
+          <UserRoute path='/player/search/:key' component={Search} />
+          <UserRoute path='/player/release/:id' component={Release} />
+          <UserRoute path='/player/playlist/:id' component={Playlist} />
+          <ArtistRoute path='/player/workspace' component={Workspace} />
+          <Route path='*'>
+            <Redirect to='/404' />
+          </Route>
+        </Switch>
       </div>
       <div
         ref={menuRef}
@@ -81,7 +87,10 @@ function Player(props) {
         }}
       >
         {libState.ctxMenuOpened ? (
-          <ContextSwitch content={libState.ctxMenuContent} />
+          <ContextSwitch
+            content={libState.ctxMenuContent}
+            pos={libState.ctxMenuPos}
+          />
         ) : (
           ''
         )}
@@ -93,6 +102,7 @@ function Player(props) {
         ''
       )}
       {libState.trackCredits.opened ? <GroupTrackCredits /> : ''}
+      {libState.confirmDialog.opened ? <GroupConfirmDialog /> : ''}
       {libState.notification.opened ? <Notification /> : ''}
     </div>
   );
@@ -146,7 +156,7 @@ function BrowsePlaylist() {
   );
 }
 
-function Notification() {
+export function Notification() {
   const {
     state: libState,
     actions: libActions,

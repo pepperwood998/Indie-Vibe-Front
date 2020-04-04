@@ -26,15 +26,23 @@
     border-bottom: 1px solid $grayDark;
   }
 
-  .upload-cover-wrapper {
-    img {
-      width: 200px;
-      height: 200px;
-      cursor: pointer;
+  .cover-wrapper {
+    width: 170px;
+    height: 170px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
 
-      &:hover {
-        opacity: 0.8;
-      }
+    &:hover {
+      opacity: 0.8;
+    }
+
+    .img {
+      width: inherit;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 

@@ -10,7 +10,7 @@ import { LinkWhiteColor } from '../links';
 import { ContextMenuAccount } from '.';
 
 function ContextSwitch(props) {
-  const { content } = props;
+  const { content, pos } = props;
 
   const { state: authState } = useContext(AuthContext);
   const { actions: streamActions, dispatch: streamDispatch } = useContext(
@@ -25,16 +25,28 @@ function ContextSwitch(props) {
   useEffect(() => {
     if (ref.current) {
       let ctxMenuBoudingRect = ref.current.getBoundingClientRect();
+      let update = false;
+      let newPos = [...pos];
+
       if (
         ctxMenuBoudingRect.y + ctxMenuBoudingRect.height >=
         window.innerHeight
       ) {
-        libDispatch(
-          libActions.updateCtxPos([
-            ctxMenuBoudingRect.x + 30,
-            window.innerHeight - ctxMenuBoudingRect.height - 10
-          ])
-        );
+        update = true;
+        newPos[0] = ctxMenuBoudingRect.x + 30;
+        newPos[1] = window.innerHeight - ctxMenuBoudingRect.height - 10;
+      }
+
+      if (
+        ctxMenuBoudingRect.x + ctxMenuBoudingRect.width >=
+        window.innerWidth
+      ) {
+        update = true;
+        newPos[0] = window.innerWidth - ctxMenuBoudingRect.width - 5;
+      }
+
+      if (update) {
+        libDispatch(libActions.updateCtxPos(newPos));
       }
     }
   }, []);

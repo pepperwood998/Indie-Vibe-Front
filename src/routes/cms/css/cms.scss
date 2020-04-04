@@ -1,0 +1,127 @@
+@import '../../../assets/styles/colors';
+@import '../../../assets/styles/fonts';
+
+@import './inputs';
+@import './buttons';
+@import './top-bar';
+@import './monopage';
+
+.cms-login {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  &__header {
+    padding: 20px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: $blueDark;
+
+    .banner {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo {
+      width: 60px;
+      height: 60px;
+    }
+
+    .title {
+      margin-left: 10px;
+    }
+  }
+
+  &__body {
+    flex: 1;
+
+    .form-wrapper {
+      margin: 50px auto;
+      padding: 20px;
+      max-width: 550px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid $grayLight;
+      border-radius: 5px;
+      background-color: $graySuperLight;
+
+      .header {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}
+
+.cms {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: 'nav-menu top-bar' 'nav-menu body';
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+
+  &__nav-menu {
+    grid-area: nav-menu;
+    width: 200px;
+    background-color: $blueDark;
+
+    .banner {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 0;
+
+      .icon {
+        width: 40px;
+        height: 40px;
+      }
+
+      .title {
+        margin-left: 10px;
+      }
+    }
+
+    .menu {
+      li:not(:last-child) {
+        margin-bottom: 5px;
+      }
+
+      a.link {
+        padding: 10px 30px;
+        display: block;
+        color: $white;
+        font: $shortBig;
+        transition: 0.1s ease;
+        font-weight: bold;
+
+        &:hover {
+          background-color: $white;
+          color: $black;
+        }
+
+        &.active {
+          background-color: $white;
+          color: $black;
+        }
+      }
+    }
+  }
+
+  &__body {
+    grid-area: body;
+    display: flex;
+    overflow: hidden;
+
+    .mono-page-wrapper {
+      flex: 1;
+
+      .mono-page {
+        height: 100%;
+        overflow-y: auto;
+      }
+    }
+  }
+}

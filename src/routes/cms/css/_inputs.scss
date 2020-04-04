@@ -1,0 +1,12 @@
+.input-text-regular {
+  border-radius: 3px;
+  border: 1px solid $grayLight;
+  padding: 10px;
+  font: $shortRegular;
+  width: 100%;
+
+  &.error {
+    border-color: $red;
+    box-shadow: 0px 0px 5px $red;
+  }
+}

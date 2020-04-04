@@ -1,0 +1,61 @@
+.cms {
+  &__top-bar {
+    grid-area: top-bar;
+    padding: 5px 15px;
+    border-bottom: 1px solid $grayLight;
+    background-color: $graySuperLight;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    .user-box {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      border: 1px solid $grayLight;
+      border-radius: 50px;
+      padding: 5px;
+      transition: 0.15s ease;
+
+      &:hover {
+        background-color: $grayLight;
+
+        svg path {
+          fill: $white;
+        }
+      }
+
+      .thumbnail-wrapper {
+        width: 30px;
+        height: 30px;
+        position: relative;
+        border-radius: 50%;
+        overflow: hidden;
+
+        .thumbnail {
+          position: absolute;
+          width: inherit;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      .title {
+        margin-left: 5px;
+        font: $shortRegular;
+      }
+    }
+
+    .account-menu {
+      background-color: $blueDark;
+
+      a,
+      span {
+        display: block;
+        padding: 10px 15px;
+        cursor: pointer;
+      }
+    }
+  }
+}

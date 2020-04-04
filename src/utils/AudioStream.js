@@ -24,10 +24,13 @@ class AudioStream {
     this.onTogglePaused = paused => undefined;
     this.onRecorded = trackId => undefined;
     this.onEnded = () => undefined;
+    this.onLoadStart = () => undefined;
+    this.onLoaded = () => undefined;
 
     this.onInfo = info => undefined;
 
     // internal event
+    this.eventLoadStart = e => undefined
     this.eventDurationChange = e => undefined;
     this.eventCanPlay = e => undefined;
     this.eventTimeUpdate = e => undefined;
@@ -44,11 +47,15 @@ class AudioStream {
     this.onProgress = onProgress;
     this.onDurationChange = onDurationChange;
 
+    this.eventLoadStart = e => {
+      this.onLoadStart();
+    }
     this.eventDurationChange = e => {
       this.onDurationChange(getFormattedTime(this.audio.duration));
     };
     this.eventCanPlay = e => {
       this.ready = true;
+      this.onLoaded();
     };
     this.eventTimeUpdate = e => {
       let currentTime = this.audio.currentTime;
@@ -94,6 +101,7 @@ class AudioStream {
       this.onTogglePaused(true);
     };
 
+    this.audio.addEventListener('loadstart', this.eventLoadStart);
     this.audio.addEventListener('durationchange', this.eventDurationChange);
     this.audio.addEventListener('canplay', this.eventCanPlay);
     this.audio.addEventListener('timeupdate', this.eventTimeUpdate);

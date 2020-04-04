@@ -67,7 +67,10 @@ function Artist(props) {
   return firstRender ? (
     ''
   ) : (
-    <GroupEmpty isEmpty={!artist.id} message='Artist not found.'>
+    <GroupEmpty
+      isEmpty={!artist.id || artist.role.id !== 'r-artist'}
+      message='Artist not found.'
+    >
       <TemplateNavPage
         header={header}
         nav={nav}
