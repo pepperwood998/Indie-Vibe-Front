@@ -10,24 +10,25 @@ function Home() {
   const [data, setData] = useState({
     recent: [],
     most: [],
-    newReleases: [],
     popularReleases: [],
     myPlaylists: [],
-    myArtists: []
+    myArtists: [],
+    newReleases: []
   });
 
   const struct = {
     recent: 'Recently played',
     most: 'Your heavy rotation',
-    newReleases: 'New publised releases',
-    myPlaylists: 'Your created playlists',
     popularReleases: 'Popular release',
-    myArtists: 'Your favorite artists'
+    myPlaylists: 'Your created playlists',
+    myArtists: 'Your favorite artists',
+    newReleases: 'New publised releases'
   };
 
   useEffect(() => {
     getHome(authState.token)
       .then(res => {
+        console.log(res.data);
         setFirstRender(false);
         if (res.status === 'success') {
           setData({ ...data, ...res.data });

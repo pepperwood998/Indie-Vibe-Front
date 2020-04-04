@@ -86,7 +86,18 @@ function StreamContextProvider(props) {
   useEffect(() => {
     stream.onRecorded = trackId => {
       streamCount(authState.token, 'track', trackId);
-      if (!state.collectionRecorded && state.playFromType !== 'favorite') {
+      console.log('stream:', 'track', trackId);
+      if (
+        !state.collectionRecorded &&
+        state.playFromType &&
+        state.playFromType !== 'favorite'
+      ) {
+        console.log(
+          'stream:',
+          'from',
+          state.playFromType,
+          state.playFromId
+        );
         dispatch(actions.recordCollection());
         streamCount(authState.token, state.playFromType, state.playFromId);
       }
