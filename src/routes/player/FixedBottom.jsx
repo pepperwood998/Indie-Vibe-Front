@@ -1,28 +1,27 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { NavLinkUnderline } from '../../components/links';
-import { StreamContext } from '../../contexts/StreamContext';
-
+import { performActionFavorite } from '../../apis/API';
 import Placeholder from '../../assets/imgs/placeholder.png';
 import {
-  UnFavoriteIcon,
-  SkipPreviousIcon,
-  PlayIcon,
-  SkipNextIcon,
-  RepeatOffIcon,
-  ShuffleIcon,
+  FavoriteIcon,
   MusicQueueIcon,
-  UnmuteIcon,
   MuteIcon,
   PauseIcon,
+  PlayIcon,
   RepeatListIcon,
+  RepeatOffIcon,
   RepeatTrackIcon,
-  UnShuffleIcon,
-  FavoriteIcon
+  ShuffleIcon,
+  SkipNextIcon,
+  SkipPreviousIcon,
+  UnFavoriteIcon,
+  UnmuteIcon,
+  UnShuffleIcon
 } from '../../assets/svgs';
-import { performActionFavorite } from '../../apis/API';
-import { AuthContext, LibraryContext } from '../../contexts';
+import { NavLinkUnderline } from '../../components/links';
 import Tooltip from '../../components/tooltips/Tooltip';
+import { AuthContext, LibraryContext, MeContext } from '../../contexts';
+import { StreamContext } from '../../contexts/StreamContext';
 
 function Bottom() {
   return (
@@ -143,6 +142,7 @@ function NowPayingMiddle() {
   const [progressPer, setProgressPer] = useState(0);
 
   const { state: authState } = useContext(AuthContext);
+  const { role } = useContext(MeContext).state;
   const {
     state: streamState,
     actions: streamActions,
@@ -178,7 +178,7 @@ function NowPayingMiddle() {
           <SkipPreviousIcon
             className='svg--big svg--cursor svg--bright'
             onClick={() => {
-              streamDispatch(streamActions.skipBackward(authState.role));
+              streamDispatch(streamActions.skipBackward(role.id));
             }}
           />
         </div>
@@ -210,7 +210,7 @@ function NowPayingMiddle() {
           <SkipNextIcon
             className='svg--big svg--cursor svg--bright'
             onClick={() => {
-              streamDispatch(streamActions.skipForward(authState.role));
+              streamDispatch(streamActions.skipForward(role.id));
             }}
           />
         </div>

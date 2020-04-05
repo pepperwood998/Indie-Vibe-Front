@@ -1,10 +1,11 @@
-import React, { createContext, useReducer, useEffect, useContext } from 'react';
-import AudioStream from '../utils/AudioStream';
-import { getStreamInfo } from '../apis/StreamAPI';
-import { AuthContext } from './AuthContext';
-import { reorder, shuffle, swap, getCircularIndex } from '../utils/Common';
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { streamCount } from '../apis/API';
+import { getStreamInfo } from '../apis/StreamAPI';
+import AudioStream from '../utils/AudioStream';
+import { getCircularIndex, reorder, shuffle, swap } from '../utils/Common';
+import { AuthContext } from './AuthContext';
 import { LibraryContext } from './LibraryContext';
+import { MeContext } from './MeContext';
 
 const StreamContext = createContext();
 
@@ -51,6 +52,7 @@ function StreamContextProvider(props) {
   });
 
   const { state: authState } = useContext(AuthContext);
+  const { role } = useContext(MeContext).state;
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
   );
@@ -92,12 +94,7 @@ function StreamContextProvider(props) {
         state.playFromType &&
         state.playFromType !== 'favorite'
       ) {
-        console.log(
-          'stream:',
-          'from',
-          state.playFromType,
-          state.playFromId
-        );
+        console.log('stream:', 'from', state.playFromType, state.playFromId);
         dispatch(actions.recordCollection());
         streamCount(authState.token, state.playFromType, state.playFromId);
       }
@@ -110,14 +107,14 @@ function StreamContextProvider(props) {
       switch (state.repeat) {
         case 'none':
           if (state.currentSongIndex < state.queue.length - 1) {
-            dispatch(actions.skipForward(authState.role, true));
+            dispatch(actions.skipForward(role.id, true));
           }
           break;
         case 'one':
           dispatch(actions.repeatTrack());
           break;
         case 'all':
-          dispatch(actions.skipForward(authState.role, true));
+          dispatch(actions.skipForward(role.id, true));
           break;
         default:
       }

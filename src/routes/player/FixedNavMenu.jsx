@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { getAccount } from '../../apis/API';
 import { BrowseIcon, HomeIcon, LibraryIcon, Logo } from '../../assets/svgs';
 import { ButtonFrame } from '../../components/buttons';
 import { NavLinkColor } from '../../components/links';
@@ -8,7 +7,7 @@ import { AuthContext, MeContext } from '../../contexts';
 
 function NavMenu() {
   const { state: authState } = useContext(AuthContext);
-  const { state: meState } = useContext(MeContext);
+  const { role } = useContext(MeContext).state;
 
   return (
     <div className='nav-menu'>
@@ -19,7 +18,7 @@ function NavMenu() {
           </a>
         </section>
 
-        {meState.role.id === 'r-free' ? (
+        {role.id === 'r-free' ? (
           <section className='upgrade'>
             <a href='/premium'>
               <ButtonFrame>UPGRADE</ButtonFrame>
@@ -80,7 +79,7 @@ function NavMenu() {
         </Link>
       </div>
       <div className='artist-box'>
-        {meState.role.id === 'r-artist' ? (
+        {role.id === 'r-artist' ? (
           <NavLink to='/player/workspace'>
             <ButtonFrame>Your workspace</ButtonFrame>
           </NavLink>
