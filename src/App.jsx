@@ -21,6 +21,7 @@ import {
 import NotFound from './NotFound';
 import { CMS, CMSLogin } from './routes/cms';
 import { Home, Login, Premium, Purchase, Register } from './routes/landing';
+import Logout from './routes/Logout';
 import { Player } from './routes/player';
 
 class App extends Component {
@@ -42,6 +43,7 @@ class App extends Component {
                     />
                     <GuestRoute exact path='/login' component={Login} />
                     <GuestRoute path='/register' component={Register} />
+                    <UserRoute path='/logout' component={Logout} />
                     <UserRoute path='/player' component={Player} />
                     <CMSRoute path='/cms' component={CMS} />
                     <CMSGuestRoute path='/cms-login' component={CMSLogin} />

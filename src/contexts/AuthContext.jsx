@@ -1,5 +1,5 @@
-import React, { createContext, useEffect, useReducer, useState } from 'react';
 import jwt_decode from 'jwt-decode';
+import React, { createContext, useEffect, useReducer } from 'react';
 import { getNewToken } from '../apis/AuthAPI';
 
 const AuthContext = createContext();
@@ -11,7 +11,8 @@ const initState = {
   refreshToken: '',
   expiry: 0,
   remembered: false,
-  lastSessionTime: 0
+  lastSessionTime: 0,
+  logout: true
 };
 
 let refresher = null;
@@ -73,6 +74,16 @@ function AuthContextProvider(props) {
     }
   }, [state]);
 
+  useEffect(() => {
+    if (state.logout) {
+      clearTimeout(refresher);
+      localStorage.removeItem('lastTimeSession');
+      localStorage.removeItem('credentials');
+      sessionStorage.removeItem('credentials');
+      sessionStorage.removeItem('me');
+    }
+  }, [state.logout]);
+
   return (
     <AuthContext.Provider value={{ state, actions, dispatch }}>
       {props.children}
@@ -131,14 +142,10 @@ const reducer = (state, action) => {
         token: payload['access_token'],
         refreshToken: payload['refresh_token'],
         expiry: payload['expires_in'],
-        remembered: payload.remembered
+        remembered: payload.remembered,
+        logout: false
       };
     case 'LOGOUT':
-      clearTimeout(refresher);
-      localStorage.removeItem('lastTimeSession');
-      localStorage.removeItem('credentials');
-      sessionStorage.removeItem('credentials');
-      sessionStorage.removeItem('me');
       return {
         ...state,
         ...initState
