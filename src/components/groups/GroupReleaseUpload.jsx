@@ -34,9 +34,11 @@ function GroupReleaseUpload(props) {
     actions: meActions,
     dispatch: meDispatch
   } = useContext(MeContext);
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
 
   const [biography, setBiography] = useState('');
   const [release, setRelease] = useState({ title: '', typeId: 're-album' });
@@ -46,31 +48,13 @@ function GroupReleaseUpload(props) {
 
   const [thumbnailSrc, setThumbnailSrc] = useState('');
   const [audioSrc, setAudioSrc] = useState([Object.assign({}, audioModel)]);
-  const [releaseTypeList, setReleaseTypeList] = useState([]);
-  const [genreList, setGenreList] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [publishing, setPublishing] = useState(0);
   const [success, setSuccess] = useState(false);
 
+  const releaseTypes = [...libState.releaseTypes];
+
   const thumbnailRef = useRef();
-
-  useEffect(() => {
-    getGenresList(authState.token)
-      .then(response => response.json())
-      .then(res => {
-        if (res.status === 'success') {
-          setGenreList(res.data);
-        }
-      });
-
-    getReleaseTypeList(authState.token)
-      .then(response => response.json())
-      .then(res => {
-        if (res.status === 'success') {
-          setReleaseTypeList(res.data);
-        }
-      });
-  }, []);
 
   useEffect(() => {
     let successTimeout;
@@ -306,7 +290,7 @@ function GroupReleaseUpload(props) {
                 className='custom-select release-type'
                 onChange={handleReleaseChange}
               >
-                {releaseTypeList.map((releaseType, index) => (
+                {releaseTypes.map((releaseType, index) => (
                   <option value={releaseType.id} key={index}>
                     {releaseType.name}
                   </option>
@@ -323,7 +307,6 @@ function GroupReleaseUpload(props) {
                     info={info[index]}
                     audio={audio[index]}
                     audioSrc={audioSrc[index]}
-                    genreList={genreList}
                     submitted={submitted}
                   />
                 </div>

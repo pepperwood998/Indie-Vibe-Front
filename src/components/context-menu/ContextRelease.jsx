@@ -33,7 +33,7 @@ function Me(props) {
       >
         <LinkWhiteColor
           nav={true}
-          href={`/player/workspace/release/${content.id}`}
+          href={`/player/manage/${content.id}`}
         >
           Manage
         </LinkWhiteColor>

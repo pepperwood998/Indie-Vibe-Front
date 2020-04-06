@@ -10,7 +10,7 @@ function InputForm({
   name = '',
   autocomplete = 'on'
 }) {
-  let classes = 'input-text input-text--clear input-text--full font-white';
+  let classes = 'input-text input-text--clear input-text--full-width font-white';
   if (error) {
     classes = error ? (classes += ' input-text--error') : classes;
     placeholder = errMessage;

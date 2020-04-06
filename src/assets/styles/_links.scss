@@ -7,6 +7,8 @@ a.active .button {
 }
 
 .link {
+  cursor: pointer;
+
   &-bright-blue-main:hover {
     color: $blueMainBright;
     text-decoration: none;
