@@ -126,7 +126,7 @@ function Requests(props) {
                     </div>
                     <div className='requests-table__cell name'>
                       <NavLink
-                        to='/cms/request/1092is0u1s9021u'
+                        to={`/cms/request/${item.id}`}
                         className='link ellipsis one-line'
                       >
                         {item.displayName}
