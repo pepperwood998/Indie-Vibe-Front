@@ -83,10 +83,10 @@ const CheckoutForm = props => {
 
             return getAccount(authState.token).then(accountRes => {
               if (accountRes.status === 'success') {
-                meDispatch(meActions.loadMe(accountRes.data));
                 setTimeout(() => {
+                  meDispatch(meActions.loadMe(accountRes.data));
                   authDispatch(authActions.setRole(accountRes.data.role.id));
-                }, 500);
+                }, 1500);
               } else {
                 throw 'Purchase is proceed, try logout then login again.';
               }

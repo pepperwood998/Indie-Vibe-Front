@@ -19,7 +19,11 @@ function CardProfile(props) {
     dispatch: libDispatch
   } = useContext(LibraryContext);
 
-  const type = content.role.id === 'r-artist' ? 'artist' : 'profile';
+  const type = content.role
+    ? content.role.id === 'r-artist'
+      ? 'artist'
+      : 'profile'
+    : '';
 
   const handleToggleFavorite = action => {
     performActionFavorite(
