@@ -5,11 +5,15 @@ function InputRadioBox({
   value = 'female',
   label = 'Label',
   onChange = () => {},
-  checked
+  checked,
+  className = ''
 }) {
+  let classes = 'ticker-main font-tall-r font-white';
+  if (className) classes += ` ${className}`;
+
   return (
-    <label className='ticker-main font-tall-r font-weight-bold font-white '>
-      {label}
+    <label className={classes}>
+      <span>{label}</span>
       <input
         type='radio'
         className='input-custom'

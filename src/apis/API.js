@@ -20,6 +20,15 @@ export const getReleaseTypeList = token => {
   }).then(response => response.json());
 };
 
+export const getReportTypeList = token => {
+  return fetch(`${host}/report-types`, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
 export const publishRelease = (
   token,
   info,
@@ -450,5 +459,21 @@ export const cancelSubscription = token => {
     headers: {
       Authorization: 'Bearer ' + token
     }
+  }).then(response => response.json());
+};
+
+export const reportArtist = (token, id, data) => {
+  let url = new URL(`${host}/report/${id}`);
+  let formData = new FormData();
+  for (let key in data) {
+    formData.append(key, data[key]);
+  }
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
   }).then(response => response.json());
 };

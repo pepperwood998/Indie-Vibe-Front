@@ -7,7 +7,8 @@ function InputTextarea({
   error = false,
   errMessage = '',
   value = '',
-  name = ''
+  name = '',
+  disabled = false
 }) {
   let classes = 'input-text input-text--full';
   if (error) {
@@ -17,12 +18,14 @@ function InputTextarea({
 
   return (
     <textarea
+      rows='4'
       className={classes}
       type={type}
       name={name}
       placeholder={placeholder}
       onChange={onChange}
       value={value}
+      disabled={disabled}
     />
   );
 }

@@ -103,11 +103,12 @@ textarea.input-text {
 
   .checkmark {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 0;
     height: 15px;
     width: 15px;
     background-color: #eee;
+    transform: translateY(-50%);
 
     &-tick {
       border-radius: 3px;
