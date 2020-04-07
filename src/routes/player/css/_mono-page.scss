@@ -63,3 +63,93 @@
     }
   }
 }
+
+.manage-release {
+  .release-details {
+    margin-bottom: 30px;
+
+    .content {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      position: relative;
+
+      > :not(:last-child) {
+        margin-right: 15px;
+      }
+
+      .thumbnail {
+        width: 150px;
+        height: 150px;
+      }
+
+      .details {
+        .release-type {
+          margin-top: 15px;
+          width: 50%;
+        }
+      }
+      .action {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font: $shortSmall;
+        color: $grayLight;
+      }
+    }
+  }
+
+  .tracks-list {
+    .content {
+      padding: 15px 0;
+
+      .track {
+        background-color: $blackLight;
+        padding: 15px;
+        margin-bottom: 15px;
+        position: relative;
+
+        .label {
+          width: 20%;
+          max-width: 120px;
+          font: $shortRegular;
+          color: $white;
+        }
+
+        .data {
+          font: $shortBig;
+          color: $white;
+        }
+
+        .actions {
+          display: flex;
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          opacity: 0;
+          transition: 0.1s ease;
+
+          .item {
+            font: $shortSmall;
+            color: $grayLight;
+            cursor: pointer;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+
+          > :not(:last-child) {
+            margin-right: 10px;
+          }
+        }
+
+        &:hover {
+          .actions {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}

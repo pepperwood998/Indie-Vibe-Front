@@ -41,6 +41,13 @@ const initState = {
     message: '',
     confirmCb: () => undefined,
     cancelCb: () => undefined
+  },
+  releaseTypes: [],
+  genres: [],
+  genresDialog: {
+    opened: false,
+    selected: [],
+    saveCb: selected => undefined
   }
 };
 
@@ -134,6 +141,22 @@ const actions = {
         message,
         confirmCb,
         cancelCb
+      }
+    };
+  },
+  setReleaseTypes: releaseTypes => {
+    return { type: 'SET_RELEASES_TYPE', releaseTypes };
+  },
+  setGenres: genres => {
+    return { type: 'SET_GENRES', genres };
+  },
+  setGenresDialog: (opened, selected = [], saveCb = selected => undefined) => {
+    return {
+      type: 'SET_GENRES_DIALOG',
+      payload: {
+        opened,
+        selected,
+        saveCb
       }
     };
   }
@@ -284,6 +307,15 @@ const reducer = (state, action) => {
         ...state,
         confirmDialog: { ...action.payload }
       };
+    }
+    case 'SET_RELEASES_TYPE': {
+      return { ...state, releaseTypes: [...action.releaseTypes] };
+    }
+    case 'SET_GENRES': {
+      return { ...state, genres: [...action.genres] };
+    }
+    case 'SET_GENRES_DIALOG': {
+      return { ...state, genresDialog: { ...action.payload } };
     }
     default:
       return state;

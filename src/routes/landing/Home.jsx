@@ -1,17 +1,18 @@
 import React, { useContext } from 'react';
+import cell6 from '../../assets/imgs/ca-hoi-hoang.jpg';
+import cell4 from '../../assets/imgs/kenny-g.jpg';
+import LandingIntro from '../../assets/imgs/landing-intro.png';
+import cell3 from '../../assets/imgs/le-cat-trong-ly.jpg';
+import cell5 from '../../assets/imgs/thinh-suy.jpg';
 import cell1 from '../../assets/imgs/trang.jpg';
 import cell2 from '../../assets/imgs/vu.jpg';
-import cell3 from '../../assets/imgs/le-cat-trong-ly.jpg';
-import cell4 from '../../assets/imgs/kenny-g.jpg';
-import cell5 from '../../assets/imgs/thinh-suy.jpg';
-import cell6 from '../../assets/imgs/ca-hoi-hoang.jpg';
-import LandingIntro from '../../assets/imgs/landing-intro.png';
 import { ButtonFrame, ButtonMain } from '../../components/buttons';
-import { AuthContext } from '../../contexts';
+import { AuthContext, MeContext } from '../../contexts';
 import Landing from './Landing';
 
 function Home() {
   const { state } = useContext(AuthContext);
+  const { role } = useContext(MeContext).state;
 
   const showroom = [
     { id: '9IwDw6tHJMAR90UGvy0o', img: cell1, artist: 'Trang' },
@@ -31,7 +32,7 @@ function Home() {
         </div>
         <div className='intro-text'>
           <div className='info'>
-            {!state.token || state.role === 'r-free' ? (
+            {!state.token || role.id === 'r-free' ? (
               <p className='font-banner font-weight-bold font-white'>
                 Vibe your music freedom
               </p>
@@ -44,7 +45,7 @@ function Home() {
               <span className='font-short-big font-white'>
                 Sign in to explore our collections. No credit card required.
               </span>
-            ) : state.role === 'r-free' ? (
+            ) : role.id === 'r-free' ? (
               <span className='font-short-big font-white'>
                 Upgrade to premium to have full access.
               </span>
@@ -59,7 +60,7 @@ function Home() {
               </a>
             ) : (
               <React.Fragment>
-                {state.role === 'r-free' ? (
+                {role.id === 'r-free' ? (
                   <div className='pb-3'>
                     <a href='/premium'>
                       <ButtonMain>Go Premium</ButtonMain>

@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { getPlaylistsMeOwn } from '../../apis/API';
+import {
+  getPlaylistsMeOwn,
+  getReleaseTypeList,
+  getGenresList
+} from '../../apis/API';
 import { CloseIcon } from '../../assets/svgs';
 import { ButtonLoadMore } from '../../components/buttons';
 import { CardError, CardSuccess } from '../../components/cards';
@@ -10,7 +14,8 @@ import { ArtistRoute, UserRoute } from '../../components/custom-routes';
 import {
   GroupConfirmDialog,
   GroupPlaylistDialog,
-  GroupTrackCredits
+  GroupTrackCredits,
+  GroupGenreDialog
 } from '../../components/groups';
 import { AuthContext, LibraryContext } from '../../contexts';
 import { Account } from './account';
@@ -24,9 +29,10 @@ import Top from './FixedTop';
 import { Library } from './library';
 import { Home, Playlist, Release } from './monopage';
 import { Search } from './search';
-import { Workspace } from './workspace';
+import { Workspace, Manage } from './workspace';
 
 function Player(props) {
+  const { state: authState } = useContext(AuthContext);
   const {
     state: libState,
     actions: libActions,
@@ -37,6 +43,18 @@ function Player(props) {
 
   useEffect(() => {
     libDispatch(libActions.initCtxElem(menuRef.current));
+
+    getReleaseTypeList(authState.token).then(res => {
+      if (res.status === 'success') {
+        libDispatch(libActions.setReleaseTypes(res.data));
+      }
+    });
+
+    getGenresList(authState.token).then(res => {
+      if (res.status === 'success') {
+        libDispatch(libActions.setGenres(res.data));
+      }
+    });
   }, []);
 
   return (
@@ -73,6 +91,7 @@ function Player(props) {
           <UserRoute path='/player/release/:id' component={Release} />
           <UserRoute path='/player/playlist/:id' component={Playlist} />
           <ArtistRoute path='/player/workspace' component={Workspace} />
+          <ArtistRoute exact path='/player/manage/:id' component={Manage} />
           <Route path='*'>
             <Redirect to='/404' />
           </Route>
@@ -103,6 +122,7 @@ function Player(props) {
       )}
       {libState.trackCredits.opened ? <GroupTrackCredits /> : ''}
       {libState.confirmDialog.opened ? <GroupConfirmDialog /> : ''}
+      {libState.genresDialog.opened ? <GroupGenreDialog /> : ''}
       {libState.notification.opened ? <Notification /> : ''}
     </div>
   );

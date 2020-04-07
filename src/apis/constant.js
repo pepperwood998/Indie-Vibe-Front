@@ -1,2 +1,2 @@
-// https://indievibe.us-east-1.elasticbeanstalk.com
-export const host = 'https://indievibe.us-east-1.elasticbeanstalk.com';
+// https://IndieVibe-160871366.ap-southeast-1.elb.amazonaws.com
+export const host = 'https://IndieVibe-160871366.ap-southeast-1.elb.amazonaws.com';

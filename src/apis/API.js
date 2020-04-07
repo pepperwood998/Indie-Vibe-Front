@@ -8,7 +8,7 @@ export const getGenresList = token => {
     headers: {
       Authorization: 'Bearer ' + token
     }
-  });
+  }).then(response => response.json());
 };
 
 export const getReleaseTypeList = token => {
@@ -17,7 +17,7 @@ export const getReleaseTypeList = token => {
     headers: {
       Authorization: 'Bearer ' + token
     }
-  });
+  }).then(response => response.json());
 };
 
 export const publishRelease = (
@@ -422,6 +422,17 @@ export const streamCount = (token, type, id) => {
 
 export const getHome = token => {
   let url = new URL(`${host}/home`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getTrackSimple = (token, id) => {
+  let url = new URL(`${host}/tracks/simple/${id}`);
 
   return fetch(url, {
     method: 'GET',

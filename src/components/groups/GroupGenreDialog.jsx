@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { ButtonMain } from '../buttons';
+import { LibraryContext } from '../../contexts';
 
 const addOrRemove = (array, genre) => {
   const exists = array.some(g => genre.id === g.id);
@@ -14,8 +15,15 @@ const addOrRemove = (array, genre) => {
   }
 };
 function GroupGenreDialog(props) {
-  const { items, handleGenreDialogSaved, handleGenreDialogClosed } = props;
-  const [selected, setSelected] = useState([...props.selected]);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
+
+  const { genres, genresDialog } = libState;
+
+  const [selected, setSelected] = useState([...genresDialog.selected]);
 
   const handleGenreSelected = genre => {
     setSelected(addOrRemove(selected, genre));
@@ -25,14 +33,18 @@ function GroupGenreDialog(props) {
     e.stopPropagation();
   };
 
+  const handleCloseGenresDialog = () => {
+    libDispatch(libActions.setGenresDialog(false));
+  };
+
   return (
     <div
       className='genre-list-dialog-wrapper'
-      onClick={handleGenreDialogClosed}
+      onClick={handleCloseGenresDialog}
     >
       <div className='genre-list-dialog' onClick={handleDialogClick}>
         <ul className='genre-list'>
-          {items.map((genre, index) => {
+          {genres.map((genre, index) => {
             let classes = 'genre-item font-short-regular font-weight-bold';
             if (selected.some(g => genre.id === g.id)) {
               classes += ' selected';
@@ -55,7 +67,8 @@ function GroupGenreDialog(props) {
           className='mt-2 float-right'
           isFitted={true}
           onClick={() => {
-            handleGenreDialogSaved(selected);
+            genresDialog.saveCb(selected);
+            handleCloseGenresDialog();
           }}
         >
           SAVE

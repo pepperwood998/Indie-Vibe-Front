@@ -1,12 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-
-import { InputForm, InputFileLabel, InputGenre } from '../inputs';
-import { GroupGenreDialog } from '.';
-
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { CloseIcon } from '../../assets/svgs';
+import { LibraryContext } from '../../contexts';
+import { InputFileLabel, InputForm, InputGenre } from '../inputs';
 import Tooltip from '../tooltips/Tooltip';
 
 function GroupTrackUpload(props) {
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
+
   const [info, setInfo] = useState({});
   const [audio, setAudio] = useState({});
   const [audioSrc, setAudioSrc] = useState({});
@@ -21,7 +25,7 @@ function GroupTrackUpload(props) {
     audio320: useRef()
   };
 
-  const { genreList, index: trackInd, submitted } = props;
+  const { index: trackInd, submitted } = props;
 
   const handleChange = e => {
     setInfo({
@@ -42,14 +46,6 @@ function GroupTrackUpload(props) {
         [e.target.getAttribute('name')]: file.name
       });
     }
-  };
-
-  const handleOpenGenreDialog = () => {
-    setGenreDialogOpened(true);
-  };
-
-  const handleGenreDialogClosed = e => {
-    setGenreDialogOpened(false);
   };
 
   const handleGenreDialogSaved = selected => {
@@ -116,7 +112,15 @@ function GroupTrackUpload(props) {
                   .reduce((prev, curr) => [prev, ', ', curr])
               : ''}
             <InputGenre
-              onClick={handleOpenGenreDialog}
+              onClick={() => {
+                libDispatch(
+                  libActions.setGenresDialog(
+                    true,
+                    props.info.genres,
+                    handleGenreDialogSaved
+                  )
+                );
+              }}
               error={submitted && props.info.genres.length <= 0}
             />
           </div>
@@ -157,16 +161,6 @@ function GroupTrackUpload(props) {
           />
         </div>
       </div>
-      {genreDialogOpened ? (
-        <GroupGenreDialog
-          items={genreList}
-          selected={props.info.genres}
-          handleGenreDialogSaved={handleGenreDialogSaved}
-          handleGenreDialogClosed={handleGenreDialogClosed}
-        />
-      ) : (
-        ''
-      )}
     </div>
   );
 }
