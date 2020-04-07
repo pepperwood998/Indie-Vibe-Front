@@ -441,3 +441,14 @@ export const getTrackSimple = (token, id) => {
     }
   }).then(response => response.json());
 };
+
+export const cancelSubscription = token => {
+  let url = new URL(`${host}/account/cancel`);
+
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
