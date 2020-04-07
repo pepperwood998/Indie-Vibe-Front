@@ -6,7 +6,8 @@ import { FavoriteIcon, UnFavoriteIcon } from '../../../assets/svgs';
 import {
   ButtonIcon,
   ButtonMain,
-  ButtonMore
+  ButtonMore,
+  ButtonLoadMore
 } from '../../../components/buttons';
 import { TrackTable } from '../../../components/collections/track-table';
 import { GroupEmpty } from '../../../components/groups';
@@ -152,6 +153,35 @@ function Playlist(props) {
       });
   };
 
+  const handleLoadMore = () => {
+    getTrackList(
+      authState.token,
+      id,
+      'playlist',
+      data.tracks.offset + data.tracks.limit
+    )
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const { tracks } = data;
+          const newTracks = res.data.tracks;
+
+          setData({
+            ...data,
+            tracks: {
+              ...tracks,
+              ...newTracks,
+              items: [...tracks.items, ...newTracks.items]
+            }
+          });
+        } else {
+          throw res.data;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
   return firstRender ? (
     ''
   ) : (
@@ -236,6 +266,13 @@ function Playlist(props) {
               type='playlist'
               playlistRelation={data.relation}
             />
+            {data.tracks.total > data.tracks.offset + data.tracks.limit ? (
+              <ButtonLoadMore onClick={handleLoadMore}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>

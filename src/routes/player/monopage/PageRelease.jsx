@@ -5,6 +5,7 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { FavoriteIcon, UnFavoriteIcon } from '../../../assets/svgs';
 import {
   ButtonIcon,
+  ButtonLoadMore,
   ButtonMain,
   ButtonMore
 } from '../../../components/buttons';
@@ -13,7 +14,7 @@ import GroupEmpty from '../../../components/groups/GroupEmpty';
 import { InputForm } from '../../../components/inputs';
 import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
-import { capitalize, getDatePart, useEffectSkip } from '../../../utils/Common';
+import { getDatePart, useEffectSkip } from '../../../utils/Common';
 
 function Release(props) {
   // contexts
@@ -23,11 +24,7 @@ function Release(props) {
     actions: streamAction,
     dispatch: streamDispatch
   } = useContext(StreamContext);
-  const {
-    state: libState,
-    actions: libActions,
-    dispatch: libDispatch
-  } = useContext(LibraryContext);
+  const { state: libState } = useContext(LibraryContext);
 
   // states
   const [firstRender, setFirstRender] = useState(true);
@@ -43,6 +40,7 @@ function Release(props) {
   });
   const [owner, setOwner] = useState({ role: {} });
   const [existed, setExisted] = useState(false);
+  const { tracks } = data;
 
   // props
   const id = props.match.params.id;
@@ -104,6 +102,29 @@ function Release(props) {
     performActionFavorite(authState.token, 'release', id, data.relation, action)
       .then(r => {
         setData({ ...data, relation: r });
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
+  const handleLoadMore = () => {
+    getTrackList(authState.token, id, 'release', tracks.offset + tracks.limit)
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const newTracks = res.data.tracks;
+
+          setData({
+            ...data,
+            tracks: {
+              ...tracks,
+              ...newTracks,
+              items: [...tracks.items, ...newTracks.items]
+            }
+          });
+        } else {
+          throw res.data;
+        }
       })
       .catch(err => {
         console.error(err);
@@ -193,6 +214,13 @@ function Release(props) {
               playFromId={data.id}
               type='release'
             />
+            {tracks.total > tracks.offset + tracks.limit ? (
+              <ButtonLoadMore onClick={handleLoadMore}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>

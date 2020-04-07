@@ -65,7 +65,11 @@ function DelegateCurator(props) {
   };
 
   const handleLoadMore = () => {
-    searchSimpleUsers(authState.token, data.displayName)
+    searchSimpleUsers(
+      authState.token,
+      data.displayName,
+      users.offset + users.limit
+    )
       .then(res => {
         if (res.status === 'success' && res.data) {
           const newUsers = res.data;
