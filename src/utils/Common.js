@@ -161,3 +161,8 @@ const colormap = interpolate(['#ff0000', '#9100ea', '#46a049', '#23aecd']);
 export const mapColor = (amount, total) => {
   return colormap(amount / total);
 };
+
+export const current = {
+  month: new Date().getMonth(),
+  year: new Date().getFullYear()
+};
