@@ -1,4 +1,5 @@
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
+import interpolate from 'color-interpolate';
 
 export const capitalize = str => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -94,4 +95,69 @@ export const fixedPrices = {
   month3: [135000, '3 months'],
   month6: [289000, '6 months'],
   year: [490000, '1 year']
+};
+
+export const months = {
+  short: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ],
+  full: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ]
+};
+
+export const createMonthOptions = () => {
+  let options = [];
+
+  for (let i = 1; i <= 12; i++) {
+    options.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    );
+  }
+
+  return options;
+};
+
+export const createYearOptions = () => {
+  let options = [];
+
+  for (let i = 2019; i <= new Date().getFullYear(); i++) {
+    options.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    );
+  }
+
+  return options;
+};
+
+const colormap = interpolate(['#ff0000', '#9100ea', '#46a049', '#23aecd']);
+
+export const mapColor = (amount, total) => {
+  return colormap(amount / total);
 };

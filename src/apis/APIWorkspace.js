@@ -94,3 +94,38 @@ export const setReleasePrivacy = (token, id, action) => {
     body: formData
   }).then(response => response.json());
 };
+
+export const getStreamTotal = (
+  token,
+  artistId,
+  year = new Date().getFullYear()
+) => {
+  let url = new URL(`${host}/workspace/statistics/${artistId}`);
+  url.search = new URLSearchParams({ year });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getStreamRelease = (
+  token,
+  artistId,
+  month = new Date().getMonth(),
+  year = new Date().getFullYear(),
+  offset = 0,
+  limit = 20
+) => {
+  let url = new URL(`${host}/workspace/statistics/${artistId}/releases`);
+  url.search = new URLSearchParams({ month, year, offset, limit });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};

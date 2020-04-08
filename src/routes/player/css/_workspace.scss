@@ -1,0 +1,56 @@
+.workspace-statistics {
+  .section {
+    padding: 10px 0;
+
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+
+  .chart {
+    border-radius: 5px;
+    background-color: $blackLight;
+    padding: 15px 20px;
+  }
+
+  .label {
+    font: $shortRegular;
+    color: $white;
+  }
+
+  .custom-select {
+    width: auto;
+  }
+
+  section.total {
+    .content {
+      display: flex;
+      flex-direction: row;
+
+      > * {
+        flex: 1;
+      }
+
+      .chart {
+        position: relative;
+
+        .layer {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          background-color: $blackBlurHalf;
+        }
+      }
+
+      .revenue {
+        padding: 0 30px;
+
+        .header {
+          width: 40%;
+        }
+      }
+    }
+  }
+}
