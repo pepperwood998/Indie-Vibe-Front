@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import Tooltip from '../tooltips/Tooltip';
 
 function NavigationTab(props) {
   const { type, items } = props;
@@ -10,7 +11,7 @@ function NavigationTab(props) {
         {items.map((item, index) => {
           if (item.isGone) return '';
 
-          let linkClasses = 'font-short-big font-weight-bold';
+          let linkClasses = 'item font-short-big font-weight-bold';
           if (item.isSpecial) {
             linkClasses += ' special link-blue-main font-blue-main';
           } else {
@@ -22,7 +23,9 @@ function NavigationTab(props) {
 
           return item.isDisabled ? (
             <li key={index}>
-              <span className={linkClasses}>{item.label}</span>
+              <Tooltip tooltip={item.disabledReason} pos='bottom'>
+                <span className={linkClasses}>{item.label}</span>
+              </Tooltip>
             </li>
           ) : (
             <li key={index}>

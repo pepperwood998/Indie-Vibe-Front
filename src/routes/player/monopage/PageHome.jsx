@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getHome } from '../../../apis/API';
 import { CollectionMain } from '../../../components/collections';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { useEffectSkip } from '../../../utils/Common';
 
 function Home() {
+  const { state: libState } = useContext(LibraryContext);
   const { state: authState } = useContext(AuthContext);
 
   const [firstRender, setFirstRender] = useState(true);
@@ -40,6 +42,12 @@ function Home() {
         console.error(err);
       });
   }, []);
+
+  useEffectSkip(() => {
+    Object.keys(data).some(key => {
+      //
+    });
+  }, [libState.ctxFav]);
 
   return firstRender ? (
     ''

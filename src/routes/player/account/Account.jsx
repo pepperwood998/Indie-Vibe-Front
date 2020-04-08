@@ -37,7 +37,7 @@ function Account(props) {
           isSpecial: true,
           isGone:
             role === 'r-artist' || role === 'r-curator' || role === 'r-admin',
-          disabledReason: 'Upgrade to premium to use this feature'
+          disabledReason: 'Upgrade to premium'
         }
       ]}
     />

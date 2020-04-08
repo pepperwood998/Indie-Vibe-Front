@@ -2,7 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getStreamTotal } from '../../../apis/APIWorkspace';
 import { LineWhite } from '../../../components/charts';
 import { AuthContext } from '../../../contexts';
-import { createYearOptions, current, months, formatNumber, mapColor } from '../../../utils/Common';
+import {
+  createYearOptions,
+  current,
+  months,
+  formatNumber,
+  mapColor
+} from '../../../utils/Common';
 
 function StatisticTotal() {
   const { state: authState } = useContext(AuthContext);
@@ -80,7 +86,8 @@ function StatisticTotal() {
               </span>
               <span className='font-short-big font-white'>
                 {months.full[extra.selected]} {form.year}
-                {current.month - 1 === extra.selected ? (
+                {current.month - 1 == extra.selected &&
+                current.year == form.year ? (
                   <span className='font-weight-bold'>(current)</span>
                 ) : (
                   ''

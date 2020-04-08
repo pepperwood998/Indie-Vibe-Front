@@ -27,24 +27,27 @@ label {
   .tab-menu {
     display: flex;
 
-    li a,
-    li span {
-      display: block;
-      padding: 15px 0px 15px;
-      margin: 0px 40px 0px 0px;
-
-      &.active {
-        border-bottom: 2px solid $blueMain;
-        color: $white;
+    li {
+      &:not(:last-child) {
+        margin: 0 30px 0 0;
       }
+      .item {
+        display: block;
+        padding: 15px 0px 15px;
 
-      &.special.active {
-        color: $blueMain;
-      }
+        &.active {
+          border-bottom: 2px solid $blueMain;
+          color: $white;
+        }
 
-      &.disabled {
-        opacity: 0.5;
-        cursor: pointer;
+        &.special.active {
+          color: $blueMain;
+        }
+
+        &.disabled {
+          opacity: 0.5;
+          cursor: pointer;
+        }
       }
     }
   }
