@@ -43,10 +43,24 @@ function Home() {
       });
   }, []);
 
+  // effect-skip: favorite
   useEffectSkip(() => {
+    let mapper = {};
+    const { ctxFav } = libState;
+
     Object.keys(data).some(key => {
-      //
+      const collection = [...data[key]];
+      let existed = collection.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
+
+      if (existed) mapper[key] = [...collection];
     });
+
+    setData({ ...data, ...mapper });
   }, [libState.ctxFav]);
 
   return firstRender ? (
