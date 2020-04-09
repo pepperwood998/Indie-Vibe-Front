@@ -20,7 +20,7 @@ function LineMulTemplate({
       color: '',
       gridColor: ''
     },
-    onClick: (e, arr) => undefined
+    onClick: index => undefined
   }
 }) {
   let datasets = [];
@@ -36,7 +36,9 @@ function LineMulTemplate({
     <Line
       data={{ labels, datasets }}
       options={{
-        onClick: (e, arr) => {},
+        onClick: (e, arr) => {
+          if (arr[0]) options.onClick(arr[0]._index);
+        },
         title: {
           ...options.title,
           display: true,

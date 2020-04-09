@@ -5,7 +5,7 @@ function LineMulBlack({
   labels = [],
   set = [],
   title = '',
-  onClick = (e, arr) => undefined
+  onClick = index => undefined
 }) {
   return (
     <LineMulTemplate
@@ -20,7 +20,7 @@ function LineMulBlack({
           color: '#191922',
           gridColor: '#c9c9c9'
         },
-        onClick: onClick
+        onClick
       }}
     />
   );

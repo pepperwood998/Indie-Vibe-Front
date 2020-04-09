@@ -80,3 +80,27 @@ export const delegateCurator = (token, userId) => {
     body: formData
   }).then(response => response.json());
 };
+
+export const getRevenueYear = (token, start, end) => {
+  let url = new URL(`${host}/cms/revenue/yearly`);
+  url.search = new URLSearchParams({ start, end });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getRevenueMonth = (token, month, year) => {
+  let url = new URL(`${host}/cms/revenue/monthly`);
+  url.search = new URLSearchParams({ month, year });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};

@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
 import interpolate from 'color-interpolate';
+import React, { useEffect, useRef } from 'react';
 
 export const capitalize = str => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -142,10 +142,13 @@ export const createMonthOptions = () => {
   return options;
 };
 
-export const createYearOptions = () => {
+export const createYearOptions = (
+  start = 2019,
+  end = new Date().getFullYear()
+) => {
   let options = [];
 
-  for (let i = 2019; i <= new Date().getFullYear(); i++) {
+  for (let i = start; i <= end; i++) {
     options.push(
       <option value={i} key={i}>
         {i}
@@ -184,3 +187,5 @@ export const model = {
     audio320: null
   }
 };
+
+export const currency = 'VND';
