@@ -1,4 +1,5 @@
 import fetch from 'cross-fetch';
+import { current } from '../utils/Common';
 import { host } from './constant';
 
 export const updateReleaseDetails = (
@@ -114,8 +115,8 @@ export const getStreamTotal = (
 export const getStreamRelease = (
   token,
   artistId,
-  month = new Date().getMonth(),
-  year = new Date().getFullYear(),
+  month = current.month,
+  year = current.year,
   offset = 0,
   limit = 20
 ) => {
