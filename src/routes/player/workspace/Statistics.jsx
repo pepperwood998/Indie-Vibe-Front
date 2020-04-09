@@ -1,6 +1,7 @@
 import React from 'react';
 import StatisticRelease from './StatisticRelease';
 import StatisticTotal from './StatisticTotal';
+import StatisticTrack from './StatisticTrack';
 
 function Statistics(props) {
   return (
@@ -16,7 +17,7 @@ function Statistics(props) {
             <StatisticTotal />
           </div>
         </section>
-        <section className='section'>
+        <section className='section release'>
           <div className='catalog__header'>
             <h3 className='font-short-semi font-weight-bold font-white'>
               Releases stream
@@ -26,13 +27,15 @@ function Statistics(props) {
             <StatisticRelease />
           </div>
         </section>
-        <section className='section'>
+        <section className='section track'>
           <div className='catalog__header'>
             <h3 className='font-short-semi font-weight-bold font-white'>
               Tracks stream
             </h3>
           </div>
-          <div className='catalog__body'></div>
+          <div className='catalog__body'>
+            <StatisticTrack />
+          </div>
         </section>
       </div>
     </div>

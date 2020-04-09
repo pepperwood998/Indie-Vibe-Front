@@ -231,20 +231,11 @@
     &.thumbnail {
       justify-content: center;
 
-      .img-wrapper {
+      .thumbnail__img {
         width: 40px;
         height: 40px;
-        position: relative;
-        overflow: hidden;
         border-radius: 50%;
-
-        .img {
-          width: inherit;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
+        overflow: hidden;
       }
     }
 

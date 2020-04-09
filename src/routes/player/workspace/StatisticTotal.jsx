@@ -5,9 +5,9 @@ import { AuthContext } from '../../../contexts';
 import {
   createYearOptions,
   current,
-  months,
   formatNumber,
-  mapColor
+  mapColor,
+  months
 } from '../../../utils/Common';
 
 function StatisticTotal() {
@@ -78,14 +78,11 @@ function StatisticTotal() {
           {form.submitting ? <div className='layer'></div> : ''}
           <LineWhite {...chartData} />
         </div>
-        <div className='revenue'>
-          <div className='table-layout'>
-            <div className='table-row'>
-              <span className='header font-short-big font-gray-light'>
-                Recorded date
-              </span>
-              <span className='font-short-big font-white'>
-                {months.full[extra.selected]} {form.year}
+        <div className='revenue d-flex flex-column'>
+          <div className='box-details d-flex flex-column mb-3'>
+            <span className='font-short-big font-gray-light'>
+              Recorded date&nbsp;
+              <span>
                 {current.month - 1 == extra.selected &&
                 current.year == form.year ? (
                   <span className='font-weight-bold'>(current)</span>
@@ -93,28 +90,29 @@ function StatisticTotal() {
                   ''
                 )}
               </span>
-            </div>
-            <div className='table-row'>
-              <span className='header font-short-big font-gray-light'>
-                Stream count
-              </span>
-              <span className='font-short-big font-white'>
-                {formatNumber(chartData.data[extra.selected])}
-              </span>
-            </div>
-            <div className='table-row'>
-              <span className='header font-short-big font-gray-light'>
-                Estimated revenue
-              </span>
-              <span
-                className='font-short-extra'
-                style={{
-                  color: mapColor(revenue ? revenue : 0, 2000000)
-                }}
-              >
-                {formatNumber(revenue)} VND
-              </span>
-            </div>
+            </span>
+            <span className='font-short-extra font-white'>
+              {months.full[extra.selected]} {form.year}
+            </span>
+          </div>
+          <div className='box-details d-flex flex-column mb-3'>
+            <span className='font-short-big font-gray-light'>Stream count</span>
+            <span className='font-short-extra font-white'>
+              {formatNumber(chartData.data[extra.selected])}
+            </span>
+          </div>
+          <div className='box-details d-flex flex-column'>
+            <span className='font-short-big font-gray-light'>
+              Estimated revenue
+            </span>
+            <span
+              className='font-short-extra'
+              style={{
+                color: mapColor(revenue ? revenue : 0, 2000000)
+              }}
+            >
+              {formatNumber(revenue)} VND
+            </span>
           </div>
         </div>
       </div>

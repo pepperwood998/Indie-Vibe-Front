@@ -130,3 +130,22 @@ export const getStreamRelease = (
     }
   }).then(response => response.json());
 };
+
+export const getStreamTrack = (
+  token,
+  artistId,
+  month = current.month,
+  year = current.year,
+  offset = 0,
+  limit = 20
+) => {
+  let url = new URL(`${host}/workspace/statistics/${artistId}/tracks`);
+  url.search = new URLSearchParams({ month, year, offset, limit });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};

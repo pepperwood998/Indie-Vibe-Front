@@ -160,13 +160,17 @@ function DelegateCurator(props) {
                       {index + 1}
                     </div>
                     <div className='requests-table__cell thumbnail'>
-                      <div className='img-wrapper'>
-                        <img
-                          className='img'
-                          src={
-                            item.thumbnail ? item.thumbnail : AvatarPlaceholder
-                          }
-                        />
+                      <div className='thumbnail__img'>
+                        <div className='img-wrapper'>
+                          <img
+                            className='img'
+                            src={
+                              item.thumbnail
+                                ? item.thumbnail
+                                : AvatarPlaceholder
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className='requests-table__cell name'>

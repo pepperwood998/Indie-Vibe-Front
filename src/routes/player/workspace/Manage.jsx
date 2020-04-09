@@ -3,9 +3,9 @@ import { getTrackList, getTrackSimple } from '../../../apis/API';
 import {
   deleteRelease,
   deleteTrack,
+  setReleasePrivacy,
   updateReleaseDetails,
-  updateTrack,
-  setReleasePrivacy
+  updateTrack
 } from '../../../apis/APIWorkspace';
 import Placeholder from '../../../assets/imgs/placeholder.png';
 import { ButtonFrame, ButtonMain } from '../../../components/buttons';
@@ -384,26 +384,28 @@ function Manage(props) {
                 keep={true}
                 className='input-custom__label--img'
               >
-                <div className='img-wrapper thumbnail'>
-                  <input
-                    type='file'
-                    name='thumbnail'
-                    id='thumbnail'
-                    ref={ref.thumbnail}
-                    className='input-custom'
-                    accept='image/*'
-                    onChange={handleChangeReleaseThumbnail}
-                  />
-                  <img
-                    src={
-                      releaseDetails.thumbnail[0]
-                        ? extra.thumbnailSrc
+                <div className='thumbnail'>
+                  <div className='img-wrapper'>
+                    <input
+                      type='file'
+                      name='thumbnail'
+                      id='thumbnail'
+                      ref={ref.thumbnail}
+                      className='input-custom'
+                      accept='image/*'
+                      onChange={handleChangeReleaseThumbnail}
+                    />
+                    <img
+                      src={
+                        releaseDetails.thumbnail[0]
                           ? extra.thumbnailSrc
-                          : Placeholder
-                        : releaseDetails.thumbnail[1]
-                    }
-                    className='img'
-                  />
+                            ? extra.thumbnailSrc
+                            : Placeholder
+                          : releaseDetails.thumbnail[1]
+                      }
+                      className='img'
+                    />
+                  </div>
                 </div>
               </InputFileLabel>
               <div className='details'>

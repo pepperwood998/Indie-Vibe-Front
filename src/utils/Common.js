@@ -156,7 +156,7 @@ export const createYearOptions = () => {
   return options;
 };
 
-const colormap = interpolate(['#ff0000', '#9100ea', '#46a049', '#23aecd']);
+const colormap = interpolate(['#4d4d4d', '#9100ea', '#46a049', '#23aecd']);
 
 export const mapColor = (amount, total) => {
   return colormap(amount / total);
@@ -166,3 +166,9 @@ export const current = {
   month: new Date().getMonth() + 1,
   year: new Date().getFullYear()
 };
+
+export const streamCompare = {
+  total: 10,
+  release: 10,
+  track: 20
+}

@@ -22,6 +22,12 @@
     width: auto;
   }
 
+  .box-details {
+    border-radius: 3px;
+    padding: 15px;
+    background-color: $blackLight;
+  }
+
   section.total {
     .content {
       display: flex;
@@ -46,9 +52,58 @@
 
       .revenue {
         padding: 0 30px;
+      }
+    }
+  }
 
-        .header {
-          width: 40%;
+  section.release {
+    .single {
+      .thumbnail {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .list {
+      .table-layout > .table-row {
+        padding: 0 15px;
+        border-bottom: 1px solid $grayDark;
+        cursor: pointer;
+
+        > * {
+          padding: 10px;
+        }
+
+        &:hover {
+          background-color: $blackGray;
+        }
+
+        .thumbnail {
+          width: 40px;
+          height: 40px;
+        }
+
+        .count {
+          min-width: 150px;
+          max-width: 200px;
+        }
+      }
+    }
+  }
+
+  section.track {
+    .list {
+      .table-layout > .table-row {
+        padding: 0 15px;
+        border-bottom: 1px solid $grayDark;
+
+        > * {
+          padding: 10px;
+        }
+
+        .count {
+          min-width: 150px;
+          max-width: 200px;
         }
       }
     }
