@@ -21,7 +21,7 @@ const audioModel = {
   audio128: null,
   audio320: null
 };
-const missingSomething = (info, audio) => {
+export const missingSomething = (info, audio) => {
   return (
     info.some(track => track.title === '' || track.genres.length === 0) ||
     audio.some(a => !a.audio128 || !a.audio320)

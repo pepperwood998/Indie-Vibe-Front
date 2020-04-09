@@ -171,4 +171,16 @@ export const streamCompare = {
   total: 10,
   release: 10,
   track: 20
-}
+};
+
+export const model = {
+  track: {
+    title: '',
+    genres: [],
+    producer: ''
+  },
+  audio: {
+    audio128: null,
+    audio320: null
+  }
+};

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { getTrackList, getTrackSimple } from '../../../apis/API';
 import {
+  addSongsToRelease,
   deleteRelease,
   deleteTrack,
   setReleasePrivacy,
@@ -8,14 +9,20 @@ import {
   updateTrack
 } from '../../../apis/APIWorkspace';
 import Placeholder from '../../../assets/imgs/placeholder.png';
-import { ButtonFrame, ButtonMain } from '../../../components/buttons';
-import { GroupEmpty } from '../../../components/groups';
+import {
+  ButtonFrame,
+  ButtonLoadMore,
+  ButtonMain
+} from '../../../components/buttons';
+import { GroupEmpty, GroupTrackUpload } from '../../../components/groups';
+import { missingSomething } from '../../../components/groups/GroupReleaseUpload';
 import {
   InputFileLabel,
   InputForm,
   InputGenre
 } from '../../../components/inputs';
 import { AuthContext, LibraryContext } from '../../../contexts';
+import { model } from '../../../utils/Common';
 
 const isMissing = (data = {}, exception = []) => {
   return Object.keys(data).some(key => {
@@ -43,7 +50,8 @@ function Manage(props) {
   const [status, setStatus] = useState({
     existed: false,
     currentTrack: -1,
-    submitted: false
+    submitted: false,
+    adding: false
   });
   const [tracks, setTracks] = useState({
     items: [],
@@ -361,6 +369,24 @@ function Manage(props) {
       });
   };
 
+  const handleLoadMore = () => {
+    getTrackList(authState.token, id, 'release', tracks.offset + tracks.limit)
+      .then(res => {
+        if (res.status === 'success') {
+          const newTracks = res.data.tracks;
+
+          setTracks({
+            ...tracks,
+            ...newTracks,
+            items: [...tracks.items, ...newTracks.items]
+          });
+        } else throw res.data;
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
   return firstRender ? (
     ''
   ) : (
@@ -459,206 +485,414 @@ function Manage(props) {
               )}
             </div>
           </section>
-          <section className='tracks-list'>
-            <div className='catalog__header'>
-              <span className='font-short-semi font-weight-bold font-white'>
-                Tracks lists
-              </span>
-            </div>
-            <div className='content catalog__body'>
-              <ul>
-                {tracks.items.map((item, index) => (
-                  <li key={index}>
-                    <div className='track'>
-                      <div className='table-layout'>
-                        {/* input: track title */}
-                        <div className='table-row'>
-                          <span className='label'>Title: </span>
-                          {status.currentTrack === index ? (
-                            <InputForm
-                              placeholder='Enter song title'
-                              name='title'
-                              value={currentTrack.title[1]}
-                              onChange={handleChangeTrackInfo}
-                              error={
-                                status.submitted && currentTrack.title[1] === ''
-                              }
-                              errMessage='Missing song name'
-                            />
-                          ) : (
-                            <span className='data'>{item.title}</span>
-                          )}
-                        </div>
-                        {/* input: track genres */}
-                        <div className='table-row'>
-                          <span className='label'>Genres: </span>
-                          {status.currentTrack === index ? (
-                            <span className='font-short-regular font-gray-light'>
-                              {currentTrack.genres[1].length > 0
-                                ? currentTrack.genres[1]
-                                    .map(g => g.name)
-                                    .reduce((prev, curr) => [prev, ', ', curr])
-                                : ''}
-                              <InputGenre
-                                onClick={() => {
-                                  libDispatch(
-                                    libActions.setGenresDialog(
-                                      true,
-                                      currentTrack.genres[1],
-                                      handleSaveGenresDialog
-                                    )
-                                  );
-                                }}
+
+          {!status.adding ? (
+            <section className='tracks-list catalog'>
+              <div className='catalog__header'>
+                <span className='font-short-semi font-weight-bold font-white'>
+                  Tracks lists
+                </span>
+              </div>
+              <div className='content catalog__body'>
+                <ul>
+                  {tracks.items.map((item, index) => (
+                    <li key={index}>
+                      <div className='track'>
+                        <div className='table-layout'>
+                          {/* input: track title */}
+                          <div className='table-row'>
+                            <span className='label'>Title: </span>
+                            {status.currentTrack === index ? (
+                              <InputForm
+                                placeholder='Enter song title'
+                                name='title'
+                                value={currentTrack.title[1]}
+                                onChange={handleChangeTrackInfo}
                                 error={
                                   status.submitted &&
-                                  currentTrack.genres[1].length <= 0
+                                  currentTrack.title[1] === ''
                                 }
+                                errMessage='Missing song name'
                               />
-                            </span>
+                            ) : (
+                              <span className='data'>{item.title}</span>
+                            )}
+                          </div>
+                          {/* input: track genres */}
+                          <div className='table-row'>
+                            <span className='label'>Genres: </span>
+                            {status.currentTrack === index ? (
+                              <span className='font-short-regular font-gray-light'>
+                                {currentTrack.genres[1].length > 0
+                                  ? currentTrack.genres[1]
+                                      .map(g => g.name)
+                                      .reduce((prev, curr) => [
+                                        prev,
+                                        ', ',
+                                        curr
+                                      ])
+                                  : ''}
+                                <InputGenre
+                                  onClick={() => {
+                                    libDispatch(
+                                      libActions.setGenresDialog(
+                                        true,
+                                        currentTrack.genres[1],
+                                        handleSaveGenresDialog
+                                      )
+                                    );
+                                  }}
+                                  error={
+                                    status.submitted &&
+                                    currentTrack.genres[1].length <= 0
+                                  }
+                                />
+                              </span>
+                            ) : (
+                              <span className='font-short-regular font-gray-light'>
+                                {item.genres.length > 0
+                                  ? item.genres
+                                      .map(g => g.name)
+                                      .reduce((prev, curr) => [
+                                        prev,
+                                        ', ',
+                                        curr
+                                      ])
+                                  : ''}
+                              </span>
+                            )}
+                          </div>
+                          {/* input: track mp3 files */}
+                          {status.currentTrack === index ? (
+                            <React.Fragment>
+                              <div className='table-row'>
+                                <span className='label'>MP3 128:</span>
+                                <InputFileLabel
+                                  for='mp3128'
+                                  keep={false}
+                                  error={
+                                    status.submitted &&
+                                    currentTrack.mp3128[0] &&
+                                    !currentTrack.mp3320[1]
+                                  }
+                                  errMessage='Missing 128kbps mp3 file'
+                                >
+                                  {extra.mp3128Src
+                                    ? extra.mp3128Src
+                                    : 'Choose 128kbps file'}
+                                </InputFileLabel>
+                              </div>
+                              <div className='table-row'>
+                                <span className='label'>MP3 320:</span>
+                                <InputFileLabel
+                                  for='mp3320'
+                                  keep={false}
+                                  error={
+                                    status.submitted &&
+                                    currentTrack.mp3320[0] &&
+                                    !currentTrack.mp3320[1]
+                                  }
+                                  errMessage='Missing 320kbps mp3 file'
+                                >
+                                  {extra.mp3320Src
+                                    ? extra.mp3320Src
+                                    : 'Choose 320kbps file'}
+                                </InputFileLabel>
+                              </div>
+                            </React.Fragment>
                           ) : (
-                            <span className='font-short-regular font-gray-light'>
-                              {item.genres.length > 0
-                                ? item.genres
-                                    .map(g => g.name)
-                                    .reduce((prev, curr) => [prev, ', ', curr])
-                                : ''}
-                            </span>
+                            ''
+                          )}
+                          {/* input: track producer */}
+                          <div className='table-row'>
+                            <span className='label'>Producer: </span>
+                            {status.currentTrack === index ? (
+                              <InputForm
+                                placeholder='Enter producer team'
+                                name='producer'
+                                value={currentTrack.producer[1]}
+                                onChange={handleChangeTrackInfo}
+                              />
+                            ) : (
+                              <span className='data'>{item.producer}</span>
+                            )}
+                          </div>
+                          {/* submit: track save button */}
+                          {status.currentTrack === index ? (
+                            <div className='table-row'>
+                              <span></span>
+                              <span>
+                                <ButtonMain
+                                  isFitted
+                                  onClick={() => {
+                                    handleSaveTrack(item.id);
+                                  }}
+                                >
+                                  SAVE TRACK
+                                </ButtonMain>
+                                <ButtonFrame
+                                  className='ml-2'
+                                  isFitted
+                                  onClick={() => {
+                                    setStatus({
+                                      ...status,
+                                      currentTrack: -1
+                                    });
+                                  }}
+                                >
+                                  CANCEL
+                                </ButtonFrame>
+                              </span>
+                            </div>
+                          ) : (
+                            ''
                           )}
                         </div>
-                        {/* input: track mp3 files */}
                         {status.currentTrack === index ? (
                           <React.Fragment>
-                            <div className='table-row'>
-                              <span className='label'>MP3 128:</span>
-                              <InputFileLabel
-                                for='mp3128'
-                                keep={false}
-                                error={
-                                  status.submitted &&
-                                  currentTrack.mp3128[0] &&
-                                  !currentTrack.mp3320[1]
-                                }
-                                errMessage='Missing 128kbps mp3 file'
-                              >
-                                {extra.mp3128Src
-                                  ? extra.mp3128Src
-                                  : 'Choose 128kbps file'}
-                              </InputFileLabel>
-                            </div>
-                            <div className='table-row'>
-                              <span className='label'>MP3 320:</span>
-                              <InputFileLabel
-                                for='mp3320'
-                                keep={false}
-                                error={
-                                  status.submitted &&
-                                  currentTrack.mp3320[0] &&
-                                  !currentTrack.mp3320[1]
-                                }
-                                errMessage='Missing 320kbps mp3 file'
-                              >
-                                {extra.mp3320Src
-                                  ? extra.mp3320Src
-                                  : 'Choose 320kbps file'}
-                              </InputFileLabel>
-                            </div>
+                            <input
+                              id='mp3128'
+                              type='file'
+                              accept='.mp3'
+                              name='mp3128'
+                              ref={ref.mp3128}
+                              onChange={handleChangeMp3}
+                              className='input-custom'
+                            />
+                            <input
+                              id='mp3320'
+                              type='file'
+                              accept='.mp3'
+                              name='mp3320'
+                              ref={ref.mp3320}
+                              onChange={handleChangeMp3}
+                              className='input-custom'
+                            />
                           </React.Fragment>
                         ) : (
-                          ''
-                        )}
-                        {/* input: track producer */}
-                        <div className='table-row'>
-                          <span className='label'>Producer: </span>
-                          {status.currentTrack === index ? (
-                            <InputForm
-                              placeholder='Enter producer team'
-                              name='producer'
-                              value={currentTrack.producer[1]}
-                              onChange={handleChangeTrackInfo}
-                            />
-                          ) : (
-                            <span className='data'>{item.producer}</span>
-                          )}
-                        </div>
-                        {/* submit: track save button */}
-                        {status.currentTrack === index ? (
-                          <div className='table-row'>
-                            <span></span>
-                            <span>
-                              <ButtonMain
-                                isFitted
-                                onClick={() => {
-                                  handleSaveTrack(item.id);
-                                }}
-                              >
-                                SAVE TRACK
-                              </ButtonMain>
-                              <ButtonFrame
-                                className='ml-2'
-                                isFitted
-                                onClick={() => {
-                                  setStatus({ ...status, currentTrack: -1 });
-                                }}
-                              >
-                                CANCEL
-                              </ButtonFrame>
+                          <div className='actions'>
+                            <span
+                              className='item'
+                              onClick={() => handleEditTrack(index)}
+                            >
+                              Edit
+                            </span>
+                            <span
+                              className='item'
+                              onClick={() => handleDeleteTrack(item.id)}
+                            >
+                              Delete
                             </span>
                           </div>
-                        ) : (
-                          ''
                         )}
                       </div>
-                      {status.currentTrack === index ? (
-                        <React.Fragment>
-                          <input
-                            id='mp3128'
-                            type='file'
-                            accept='.mp3'
-                            name='mp3128'
-                            ref={ref.mp3128}
-                            onChange={handleChangeMp3}
-                            className='input-custom'
-                          />
-                          <input
-                            id='mp3320'
-                            type='file'
-                            accept='.mp3'
-                            name='mp3320'
-                            ref={ref.mp3320}
-                            onChange={handleChangeMp3}
-                            className='input-custom'
-                          />
-                        </React.Fragment>
-                      ) : (
-                        <div className='actions'>
-                          <span
-                            className='item'
-                            onClick={() => handleEditTrack(index)}
-                          >
-                            Edit
-                          </span>
-                          <span
-                            className='item'
-                            onClick={() => handleDeleteTrack(item.id)}
-                          >
-                            Delete
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-          <section>
-            <ButtonMain className='dangerous' onClick={handleDeleteRelease}>
-              DELETE RELEASE
-            </ButtonMain>
-          </section>
+                    </li>
+                  ))}
+                </ul>
+
+                {tracks.total > tracks.offset + tracks.limit ? (
+                  <ButtonLoadMore onClick={handleLoadMore}>
+                    Load more
+                  </ButtonLoadMore>
+                ) : (
+                  ''
+                )}
+                <div className='clearfix'>
+                  <ButtonMain
+                    isFitted
+                    className='float-right'
+                    onClick={() => {
+                      setStatus({ ...status, adding: true });
+                    }}
+                  >
+                    ADD SONGS
+                  </ButtonMain>
+                  <ButtonMain
+                    isFitted
+                    className='dangerous float-left'
+                    onClick={handleDeleteRelease}
+                  >
+                    DELETE RELEASE
+                  </ButtonMain>
+                </div>
+              </div>
+            </section>
+          ) : (
+            <section className='add-songs catalog fadein'>
+              <div className='catalog__header'>
+                <span className='font-short-semi font-weight-bold font-white'>
+                  Add songs
+                </span>
+                <span
+                  className='float-right link link-underline font-short-s font-gray-light'
+                  onClick={() => {
+                    libDispatch(
+                      libActions.setConfirmDialog(
+                        true,
+                        'Cancel adding songs?',
+                        () => {
+                          setStatus({ ...status, adding: false });
+                        }
+                      )
+                    );
+                  }}
+                >
+                  Cancel Add Songs
+                </span>
+              </div>
+              <div className='catalog__body'>
+                <AddSongs releaseId={id} />
+              </div>
+            </section>
+          )}
         </div>
       </div>
     </GroupEmpty>
+  );
+}
+
+function AddSongs({ releaseId = '' }) {
+  const { state: authState } = useContext(AuthContext);
+  const {
+    state: libState,
+    actions: libActions,
+    dispatch: libDispatch
+  } = useContext(LibraryContext);
+
+  const [tracks, setTracks] = useState([
+    {
+      title: '',
+      genres: [],
+      producer: ''
+    }
+  ]);
+  const [audio, setAudio] = useState([{ audio128: null, audio320: null }]);
+  const [audioSrc, setAudioSrc] = useState([
+    { audio128: null, audio320: null }
+  ]);
+  const [status, setStatus] = useState({
+    submitted: false,
+    publishing: false
+  });
+
+  const handleItemChange = (index, newInfo, newAudio, newAudioSrc) => {
+    setTracks(
+      tracks.map((track, i) => {
+        if (index === i) {
+          return {
+            ...track,
+            ...newInfo
+          };
+        }
+
+        return track;
+      })
+    );
+    setAudio(
+      audio.map((item, i) => {
+        if (index === i) {
+          return {
+            ...item,
+            ...newAudio
+          };
+        }
+
+        return item;
+      })
+    );
+    setAudioSrc(
+      audioSrc.map((item, i) => {
+        if (index === i) {
+          return {
+            ...item,
+            ...newAudioSrc
+          };
+        }
+
+        return item;
+      })
+    );
+  };
+
+  const handleItemDelete = index => {
+    setTracks(tracks.filter((item, i) => index !== i));
+    setAudio(audio.filter((item, i) => index !== i));
+    setAudioSrc(audioSrc.filter((item, i) => index !== i));
+  };
+
+  const handleAddSong = () => {
+    setTracks([...tracks, { ...model.track }]);
+    setAudio([...audio, { ...model.audio }]);
+    setAudioSrc([...audioSrc, { ...model.audio }]);
+  };
+
+  const handlePublish = () => {
+    setStatus({ ...status, submitted: true });
+    if (missingSomething(tracks, audio)) {
+      return;
+    }
+
+    libDispatch(
+      libActions.setConfirmDialog(true, 'Confirm adding songs?', () => {
+        setStatus({ ...status, publishing: true });
+        addSongsToRelease(authState.token, releaseId, tracks, audio)
+          .then(res => {
+            if (res.status === 'success') {
+              setStatus({ ...status, publishing: false });
+              libDispatch(
+                libActions.setNotification(true, true, 'New songs added')
+              );
+              setTimeout(() => {
+                window.location.href = `/player/manage/${releaseId}`;
+              }, 500);
+            } else throw res.data;
+          })
+          .catch(err => {
+            setStatus({ ...status, publishing: false });
+            if (typeof err !== 'string') {
+              err = 'Server error';
+            }
+
+            libDispatch(libActions.setNotification(true, false, err));
+          });
+      })
+    );
+  };
+
+  return (
+    <div className='content'>
+      {status.publishing ? (
+        <div className='screen-overlay d-flex justify-content-center align-items-center'>
+          <span className='font-short-extra font-weight-bold font-white'>
+            ADDING SONGS...
+          </span>
+        </div>
+      ) : (
+        ''
+      )}
+      {tracks.map((track, i) => (
+        <div className='upload-item' key={i}>
+          <GroupTrackUpload
+            index={i}
+            handleItemChange={handleItemChange}
+            handleItemDelete={handleItemDelete}
+            info={tracks[i]}
+            audio={audio[i]}
+            audioSrc={audioSrc[i]}
+            submitted={status.submitted}
+          />
+        </div>
+      ))}
+
+      <div className='clearfix mt-3'>
+        <ButtonMain isFitted className='float-right' onClick={handleAddSong}>
+          ADD ITEM
+        </ButtonMain>
+        <ButtonFrame isFitted className='float-left' onClick={handlePublish}>
+          PUBLISH
+        </ButtonFrame>
+      </div>
+    </div>
   );
 }
 

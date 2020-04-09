@@ -149,3 +149,21 @@ export const getStreamTrack = (
     }
   }).then(response => response.json());
 };
+
+export const addSongsToRelease = (token, releaseId, tracks, audio) => {
+  let url = new URL(`${host}/workspace/releases/${releaseId}/track`);
+  let formData = new FormData();
+  formData.append('tracks', tracks);
+  audio.forEach(item => {
+    formData.append('files', item.audio128);
+    formData.append('files', item.audio320);
+  });
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
