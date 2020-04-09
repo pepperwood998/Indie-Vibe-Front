@@ -1,15 +1,15 @@
 import React from 'react';
 
-function Home(props) {
+function Dashboard(props) {
   return (
     <div className='mono-page-wrapper'>
       <div className='mono-page page-home'>
         <span className='font-short-s'>
-          CMS Home Page
+          Dashboard Page
         </span>
       </div>
     </div>
   );
 }
 
-export default Home;
+export default Dashboard;
