@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { searchSimpleUsers, delegateCurator } from '../../../apis/APICms';
+import { delegateCurator, searchSimpleUsers } from '../../../apis/APICms';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
+import { ButtonLoadMore } from '../../../components/buttons';
 import { CardError } from '../../../components/cards';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { ButtonRegular } from '../components/buttons';
 import { InputTextRegular } from '../components/inputs';
-import { ButtonLoadMore } from '../../../components/buttons';
 
 function DelegateCurator(props) {
   const { state: authState } = useContext(AuthContext);
@@ -125,8 +125,10 @@ function DelegateCurator(props) {
   return (
     <div className='mono-page-wrapper'>
       <div className='mono-page page-delegate-curator fadein'>
-        <section className='input-box section'>
-          <div className='header'>Search for simple users</div>
+        <section className='input-box boxy catalog-menu'>
+          <div className='header'>
+            <span className='font-short-big'>Search for simple users</span>
+          </div>
           <div className='content'>
             <form onSubmit={handleSearch}>
               {status.submitErr ? <CardError message={status.submitErr} /> : ''}
@@ -140,7 +142,7 @@ function DelegateCurator(props) {
                 errMessage='Enter display name to search'
               />
               <ButtonRegular
-                className='float-right'
+                className='float-right mt-2'
                 type='submit'
                 disabled={status.submitted}
               >
@@ -149,8 +151,12 @@ function DelegateCurator(props) {
             </form>
           </div>
         </section>
-        <section className='result-box section'>
-          <div className='header'>List of simple users</div>
+        <section className='result-box boxy catalog-menu'>
+          <div className='header'>
+            <span className='font-short-big font-weight-bold'>
+              List of simple users
+            </span>
+          </div>
           <div className='content'>
             {users.total > 0 ? (
               <ul className='requests-table'>

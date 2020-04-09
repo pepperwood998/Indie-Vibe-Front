@@ -155,32 +155,9 @@
   flex-direction: row;
   padding: 20px;
 
-  .section {
-    padding: 15px;
-    border: 1px solid $grayLight;
-    border-radius: 3px;
-
-    .header {
-      font: $shortBig;
-      padding: 0 0 10px;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-  }
-
   .input-box {
     flex: 1;
     margin-right: 15px;
-
-    .header {
-      border-bottom: 1px solid $grayLight;
-    }
-
-    .content {
-      form > * {
-        margin-bottom: 5px;
-      }
-    }
   }
 
   .result-box {
@@ -196,6 +173,12 @@
         background-color: $blueDark;
       }
     }
+  }
+}
+
+.page-revenue {
+  .annual {
+    margin-bottom: 20px;
   }
 }
 
