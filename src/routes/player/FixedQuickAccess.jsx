@@ -1,10 +1,11 @@
 import React, { useContext, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { getPlaylistsMeOwn } from '../../apis/API';
+import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { AddPlaylistIcon, ArrowDown } from '../../assets/svgs';
 import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
 import { LinkWhiteColor } from '../../components/links';
 import { AuthContext, LibraryContext, MeContext } from '../../contexts';
-import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
 function QuickAccess(props) {
   const { state: authState } = useContext(AuthContext);
@@ -60,19 +61,28 @@ function QuickAccess(props) {
   return (
     <div className='quick-access'>
       <div className='quick-access__account'>
-        <div className={userBoxClasses} onClick={handleToggleCtxMenu}>
+        <div className={userBoxClasses}>
           <section className='title'>
-            <span className='font-short-regular font-weight-bold font-white ellipsis one-line'>
-              {meState.displayName}
-            </span>
+            <NavLink to='/player/account'>
+              <span className='font-short-regular font-weight-bold font-white ellipsis one-line'>
+                {meState.displayName}
+              </span>
+            </NavLink>
           </section>
-          <section className='thumbnail'>
-            <img
-              src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
-            />
-          </section>
-          <section>
-            <ArrowDown className='svg--small' />
+          <section onClick={handleToggleCtxMenu} className='d-flex'>
+            <div className='thumbnail'>
+              <div className='img-wrapper'>
+                <img
+                  className='img'
+                  src={
+                    meState.thumbnail ? meState.thumbnail : AvatarPlaceholder
+                  }
+                />
+              </div>
+            </div>
+            <div>
+              <ArrowDown className='svg--small' />
+            </div>
           </section>
         </div>
       </div>

@@ -133,19 +133,10 @@
         }
 
         .thumbnail {
-          position: relative;
           overflow: hidden;
           border-radius: 50%;
           width: 30px;
           height: 30px;
-
-          img {
-            width: 100%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-          }
         }
 
         .title {
