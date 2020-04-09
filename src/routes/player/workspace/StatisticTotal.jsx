@@ -7,7 +7,8 @@ import {
   current,
   formatNumber,
   mapColor,
-  months
+  months,
+  streamCompare
 } from '../../../utils/Common';
 
 function StatisticTotal() {
@@ -108,7 +109,7 @@ function StatisticTotal() {
             <span
               className='font-short-extra'
               style={{
-                color: mapColor(revenue ? revenue : 0, 2000000)
+                color: mapColor(revenue ? revenue : 0, streamCompare.total)
               }}
             >
               {formatNumber(revenue)} VND

@@ -49,7 +49,7 @@ class App extends Component {
                       component={Purchase}
                     />
                     <UserRoute path='/report/:id' component={ReportArtist} />
-                    <GuestRoute exact path='/login' component={Login} />
+                    <GuestRoute path='/login' component={Login} />
                     <GuestRoute path='/register' component={Register} />
                     <UserRoute path='/logout' component={Logout} />
                     <UserRoute path='/player' component={Player} />
