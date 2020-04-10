@@ -5,6 +5,7 @@ function LineMulBlack({
   labels = [],
   set = [],
   title = '',
+  legend,
   onClick = index => undefined
 }) {
   return (
@@ -12,6 +13,7 @@ function LineMulBlack({
       labels={labels}
       set={set}
       options={{
+        legend,
         title: {
           text: title,
           fontColor: '#191922'

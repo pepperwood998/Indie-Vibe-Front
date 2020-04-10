@@ -135,3 +135,27 @@ export const processReport = (token, id, action) => {
     body: formData
   }).then(response => response.json());
 };
+
+export const getStatisticsAnnual = (token, start, end) => {
+  let url = new URL(`${host}/cms/stream/yearly`);
+  url.search = new URLSearchParams({ start, end });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getStatisticsMonthly = (token, year) => {
+  let url = new URL(`${host}/cms/stream/monthly`);
+  url.search = new URLSearchParams({ year });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};

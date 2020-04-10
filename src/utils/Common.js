@@ -173,7 +173,11 @@ export const current = {
 export const streamCompare = {
   total: 10,
   release: 10,
-  track: 20
+  track: 20,
+  cms: {
+    year: 20,
+    month: 5
+  }
 };
 
 export const model = {

@@ -12,6 +12,7 @@ function LineMulTemplate({
     }
   ],
   options = {
+    legend: true,
     title: {
       text: '',
       fontColor: ''
@@ -36,6 +37,9 @@ function LineMulTemplate({
     <Line
       data={{ labels, datasets }}
       options={{
+        legend: {
+          display: options.legend
+        },
         onClick: (e, arr) => {
           if (arr[0]) options.onClick(arr[0]._index);
         },
