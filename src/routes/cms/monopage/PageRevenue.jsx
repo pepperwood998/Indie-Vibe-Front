@@ -120,6 +120,10 @@ function RevenueSection({
   }, [form.start, form.end, form.month, form.year]);
 
   let labels = [];
+  let change = 0;
+  change =
+    (chartTotal[0].data[selectedSum] | 0) -
+    (chartTotal[0].data[selectedSum - 1] | 0);
   if (type === 'year') {
     for (let i = form.start; i <= form.end; i++) {
       labels.push(i);
@@ -127,10 +131,6 @@ function RevenueSection({
   } else {
     labels = [...months.short];
   }
-
-  const handleChangeMonth = e => {
-    setForm({ ...form, month: e.target.value });
-  };
 
   const handleChangeYear = e => {
     const target = e.target;
@@ -223,6 +223,23 @@ function RevenueSection({
                 {chartTotal[0].data[selectedSum]} {currency}
               </span>
             </div>
+            {selectedSum > 0 ? (
+              <div className='box-statistic d-flex flex-column mb-3'>
+                <span className='font-short-big font-gray-dark'>
+                  Change from {labels[selectedSum - 1]}
+                </span>
+                <span
+                  className='font-short-extra'
+                  style={{
+                    color: change > 0 ? 'green' : change !== 0 ? 'red' : 'gray'
+                  }}
+                >
+                  {change > 0 ? '+' : ''} {change}
+                </span>
+              </div>
+            ) : (
+              ''
+            )}
           </div>
         </div>
         {/* Comparison revenue */}

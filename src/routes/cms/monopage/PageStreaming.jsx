@@ -162,20 +162,24 @@ function Annual({ form = { start: 2019, end: current.year } }) {
             </span>
           </div>
         </div>
-        <div className='box-statistic shadow'>
-          <div className='font-short-big font-gray-dark'>
-            <span>Change from {labels[selected - 1]}</span>
+        {selected > 0 ? (
+          <div className='box-statistic shadow'>
+            <div className='font-short-big font-gray-dark'>
+              <span>Change from {labels[selected - 1]}</span>
+            </div>
+            <div className='font-short-extra font-blue-main'>
+              <span
+                style={{
+                  color: change > 0 ? 'green' : change !== 0 ? 'red' : 'gray'
+                }}
+              >
+                {change > 0 ? '+' : ''} {change}
+              </span>
+            </div>
           </div>
-          <div className='font-short-extra font-blue-main'>
-            <span
-              style={{
-                color: change > 0 ? 'green' : change !== 0 ? 'red' : 'gray'
-              }}
-            >
-              {change > 0 ? '+' : ''} {change}
-            </span>
-          </div>
-        </div>
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );
@@ -241,23 +245,27 @@ function Monthly({ form = { year: current.year } }) {
             </span>
           </div>
         </div>
-        <div className='box-statistic shadow'>
-          <div className='font-short-big font-gray-dark'>
-            <span>
-              Change from{' '}
-              {selected === 0 ? `last December` : months.full[selected - 1]}
-            </span>
+        {selected > 0 ? (
+          <div className='box-statistic shadow'>
+            <div className='font-short-big font-gray-dark'>
+              <span>
+                Change from{' '}
+                {selected === 0 ? `last December` : months.full[selected - 1]}
+              </span>
+            </div>
+            <div className='font-short-extra font-blue-main'>
+              <span
+                style={{
+                  color: change > 0 ? 'green' : change !== 0 ? 'red' : 'gray'
+                }}
+              >
+                {change > 0 ? '+' : ''} {change}
+              </span>
+            </div>
           </div>
-          <div className='font-short-extra font-blue-main'>
-            <span
-              style={{
-                color: change > 0 ? 'green' : change !== 0 ? 'red' : 'gray'
-              }}
-            >
-              {change > 0 ? '+' : ''} {change}
-            </span>
-          </div>
-        </div>
+        ) : (
+          ''
+        )}
       </div>
       <div className='flex-1'>
         <LineMulBlack
