@@ -104,3 +104,34 @@ export const getRevenueMonth = (token, month, year) => {
     }
   }).then(response => response.json());
 };
+
+export const getReports = (token, type, status, offset = 0, limit = 20) => {
+  let urlStr = `${host}/cms/reports`;
+  if (type && type !== 'all') urlStr += `/${type}`;
+
+  let url = new URL(urlStr);
+  url.search = new URLSearchParams({ offset, limit });
+
+  if (status && status !== 'all') url.searchParams.append('status', status);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const processReport = (token, id, action) => {
+  let url = new URL(`${host}/cms/reports/${id}`);
+  let formData = new FormData();
+  formData.append('action', action);
+
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};

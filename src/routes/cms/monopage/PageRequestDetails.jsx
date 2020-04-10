@@ -202,11 +202,9 @@ function RequestDetails(props) {
                   </ul>
                 </div>
                 {tracks.total > tracks.offset + tracks.limit ? (
-                  <div className='load-more-wrapper'>
-                    <ButtonLoadMore onClick={handleLoadMore}>
-                      Load more
-                    </ButtonLoadMore>
-                  </div>
+                  <ButtonLoadMore onClick={handleLoadMore}>
+                    Load more
+                  </ButtonLoadMore>
                 ) : (
                   ''
                 )}

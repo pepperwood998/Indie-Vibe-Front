@@ -160,11 +160,7 @@ function Requests(props) {
             )}
           </div>
           {data.total > data.offset + data.limit ? (
-            <div className='load-more-wrapper text-center'>
-              <ButtonLoadMore onClick={handleLoadMore}>
-                Load more
-              </ButtonLoadMore>
-            </div>
+            <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
           ) : (
             ''
           )}

@@ -210,11 +210,9 @@ function DelegateCurator(props) {
               <span className='empty-text'>No users found</span>
             )}
             {users.total > users.offset + users.limit ? (
-              <div className='load-more-wrapper text-center'>
-                <ButtonLoadMore onClick={handleLoadMore}>
-                  Load more
-                </ButtonLoadMore>
-              </div>
+              <ButtonLoadMore onClick={handleLoadMore}>
+                Load more
+              </ButtonLoadMore>
             ) : (
               ''
             )}

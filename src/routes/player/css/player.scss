@@ -87,6 +87,14 @@
     }
   }
 
+  .button-load-more {
+    color: $grayLight;
+
+    &:hover {
+      color: $grayLight!important;
+    }
+  }
+
   .nav-search {
     display: flex;
     align-items: center;

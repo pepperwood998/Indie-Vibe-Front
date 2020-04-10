@@ -22,10 +22,6 @@
     .content {
       padding: 10px 0;
     }
-
-    .load-more-wrapper {
-      background-color: $blueDark;
-    }
   }
 }
 
@@ -80,11 +76,6 @@
       padding: 20px 40px;
 
       .tracks {
-        width: 60%;
-      }
-
-      .load-more-wrapper {
-        background-color: $blueDark;
         width: 60%;
       }
 
@@ -168,10 +159,42 @@
       border-radius: 3px;
       background-color: $graySuperLight;
       padding: 20px;
+    }
+  }
+}
 
-      .load-more-wrapper {
-        background-color: $blueDark;
+.page-reports {
+  .table-layout > .table-row {
+    border-bottom: 1px solid $grayLight;
+
+    & > {
+      .surround {
+        padding: 10px;
       }
+      .over {
+        padding: 10px 0;
+      }
+    }
+
+    .thumbnail-reporter {
+      width: 35px;
+      height: 35px;
+      overflow: hidden;
+      border-radius: 50%;
+    }
+
+    .thumbnail-artist {
+      width: 20px;
+      height: 20px;
+      overflow: hidden;
+      border-radius: 50%;
+    }
+  }
+
+  .report-details {
+    .thumbnail {
+      width: 50px;
+      height: 50px;
     }
   }
 }

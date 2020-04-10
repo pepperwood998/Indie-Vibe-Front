@@ -185,6 +185,21 @@ export const model = {
   audio: {
     audio128: null,
     audio320: null
+  },
+  paging: {
+    items: [],
+    offset: 0,
+    limit: 10,
+    total: 0
+  }
+};
+
+export const statusModel = {
+  report: {
+    all: 'All',
+    pending: 'Pending',
+    proceeded: 'Proceeded',
+    rejected: 'Rejected'
   }
 };
 
