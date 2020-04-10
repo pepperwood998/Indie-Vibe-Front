@@ -4,6 +4,7 @@ import { CollectionMain } from '../../../components/collections';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
 import GroupEmpty from '../../../components/groups/GroupEmpty';
+import { ButtonLoadMore } from '../../../components/buttons';
 
 function BrowseGenreType(props) {
   const { state: authState } = useContext(AuthContext);
@@ -22,6 +23,7 @@ function BrowseGenreType(props) {
 
   const { id, type } = props.match.params;
   const isPlaylist = type === 'playlists';
+  const src = data.data;
 
   // effect: init
   useEffect(() => {
@@ -42,7 +44,7 @@ function BrowseGenreType(props) {
   // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
-    const items = [...data.data.items];
+    const items = [...src.items];
 
     items.some(item => {
       if (ctxFav.id === item.id) {
@@ -54,11 +56,32 @@ function BrowseGenreType(props) {
     setData({
       ...data,
       data: {
-        ...data.data,
+        ...src,
         items
       }
     });
   }, [libState.ctxFav]);
+
+  const handleLoadMore = () => {
+    browseGenreType(authState.token, id, type, src.offset + src.limit)
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const dataPart = res.data.data;
+
+          setData({
+            ...data,
+            data: {
+              ...src,
+              ...dataPart,
+              items: [...src.items, ...dataPart.items]
+            }
+          });
+        } else throw res.data;
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
 
   return firstRender ? (
     ''
@@ -70,15 +93,17 @@ function BrowseGenreType(props) {
         </span>
       </div>
 
-      <GroupEmpty
-        isEmpty={!data.data.items.length}
-        message={`No available ${type}`}
-      >
+      <GroupEmpty isEmpty={!src.items.length} message={`No available ${type}`}>
         <div className='genre-content mono-page content-padding'>
           <CollectionMain
             header={isPlaylist ? "Editor's curated" : 'New releases'}
-            items={data.data.items}
+            items={src.items}
           />
+          {src.total > src.offset + src.limit ? (
+            <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
+          ) : (
+            ''
+          )}
         </div>
       </GroupEmpty>
     </div>

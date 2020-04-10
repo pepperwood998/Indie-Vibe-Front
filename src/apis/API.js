@@ -372,8 +372,9 @@ export const browseGenre = (token, id) => {
   }).then(response => response.json());
 };
 
-export const browseGenreType = (token, id, type) => {
+export const browseGenreType = (token, id, type, offset = 0, limit = 20) => {
   let url = new URL(`${host}/browse/genres/${id}/${type}`);
+  url.search = new URLSearchParams({ offset, limit });
 
   return fetch(url, {
     method: 'GET',
