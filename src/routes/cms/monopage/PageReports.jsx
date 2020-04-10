@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getReportTypeList } from '../../../apis/API';
 import { getReports, processReport } from '../../../apis/APICms';
 import Placeholder from '../../../assets/imgs/placeholder.png';
+import { ButtonLoadMore } from '../../../components/buttons';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { getDatePart, model, statusModel } from '../../../utils/Common';
-import { ButtonLoadMore } from '../../../components/buttons';
 
 function Reports(props) {
   const { state: authState } = useContext(AuthContext);
@@ -189,19 +189,21 @@ function Reports(props) {
                         </div>
                       </div>
                       <div className='info over pl-2'>
-                        <span className='font-short-big font-weight-bold d-block'>
+                        <div className='font-short-big font-weight-bold ellipsis one-line'>
                           {reporter.displayName}
-                        </span>
-                        <span className='font-short-s'>
+                        </div>
+                        <div className='font-short-s'>
                           {getDatePart(report.date)}
-                        </span>
+                        </div>
                       </div>
                       <div className='status content-width'>
                         <ButtonStatus status={report.status} />
                       </div>
                       <div className='artist over pl-2'>
                         <div className='font-short-regular font-weight-bold'>
-                          <span>{report.type.name}</span>
+                          <span className='ellipsis one-line'>
+                            {report.type.name}
+                          </span>
                         </div>
                         <div className='d-flex align-items-center'>
                           <div className='thumbnail-artist'>
@@ -216,7 +218,7 @@ function Reports(props) {
                               />
                             </div>
                           </div>
-                          <span className='pl-1 font-short-s'>
+                          <span className='pl-1 font-short-s ellipsis one-line'>
                             {artist.displayName}
                           </span>
                         </div>
