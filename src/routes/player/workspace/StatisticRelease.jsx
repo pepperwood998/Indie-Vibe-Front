@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getStreamRelease } from '../../../apis/APIWorkspace';
 import Placeholder from '../../../assets/imgs/placeholder.png';
+import { ButtonLoadMore } from '../../../components/buttons';
 import { BarWhite } from '../../../components/charts';
 import { AuthContext } from '../../../contexts';
 import {
@@ -47,8 +48,7 @@ function StatisticRelease() {
       authState.id,
       form.month,
       form.year,
-      releaseSrc.offset,
-      6
+      releaseSrc.offset
     )
       .then(res => {
         if (res.status === 'success' && res.data) {
@@ -61,7 +61,7 @@ function StatisticRelease() {
             labels: items.map(release => release.title),
             data: items.map(release => release.streamCountPerMonth),
             backgroundColor: items.map(release =>
-              mapColor(release.streamCountPerMonth, 50000)
+              mapColor(release.streamCountPerMonth, streamCompare.release)
             )
           });
         } else throw res.data;
@@ -76,6 +76,50 @@ function StatisticRelease() {
       ...form,
       [e.target.getAttribute('name')]: e.target.value
     });
+  };
+
+  const handleLoadMore = () => {
+    getStreamRelease(
+      authState.token,
+      authState.id,
+      form.month,
+      form.year,
+      releaseSrc.offset + releaseSrc.limit
+    )
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const { items } = res.data;
+
+          setExtra({
+            ...extra,
+            src: {
+              ...releaseSrc,
+              ...res.data,
+              items: [...releaseSrc.items, ...items]
+            }
+          });
+          setChartData({
+            ...chartData,
+            labels: [
+              ...chartData.labels,
+              ...items.map(release => release.title)
+            ],
+            data: [
+              ...chartData.data,
+              ...items.map(release => release.streamCountPerMonth)
+            ],
+            backgroundColor: [
+              ...chartData.backgroundColor,
+              ...items.map(release =>
+                mapColor(release.streamCountPerMonth, streamCompare.release)
+              )
+            ]
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   return (
@@ -195,6 +239,13 @@ function StatisticRelease() {
                       </li>
                     ))}
                 </ul>
+                {releaseSrc.total > releaseSrc.offset + releaseSrc.limit ? (
+                  <ButtonLoadMore onClick={handleLoadMore}>
+                    Load more
+                  </ButtonLoadMore>
+                ) : (
+                  ''
+                )}
               </section>
             </React.Fragment>
           )}

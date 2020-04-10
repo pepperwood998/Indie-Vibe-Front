@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getStreamTrack } from '../../../apis/APIWorkspace';
+import { ButtonLoadMore } from '../../../components/buttons';
 import { BarWhite } from '../../../components/charts';
 import { AuthContext } from '../../../contexts';
 import {
@@ -7,7 +8,8 @@ import {
   createYearOptions,
   current,
   formatNumber,
-  mapColor
+  mapColor,
+  streamCompare
 } from '../../../utils/Common';
 
 function StatisticTrack() {
@@ -44,8 +46,7 @@ function StatisticTrack() {
       authState.id,
       form.month,
       form.year,
-      trackSrc.offset,
-      10
+      trackSrc.offset
     )
       .then(res => {
         if (res.status === 'success' && res.data) {
@@ -55,10 +56,10 @@ function StatisticTrack() {
           setExtra({ src: { ...res.data } });
           setChartData({
             ...chartData,
-            labels: items.map(release => release.title),
-            data: items.map(release => release.streamCountPerMonth),
-            backgroundColor: items.map(release =>
-              mapColor(release.streamCountPerMonth, 50000)
+            labels: items.map(track => track.title),
+            data: items.map(track => track.streamCountPerMonth),
+            backgroundColor: items.map(track =>
+              mapColor(track.streamCountPerMonth, streamCompare.track)
             )
           });
         } else throw res.data;
@@ -73,6 +74,46 @@ function StatisticTrack() {
       ...form,
       [e.target.getAttribute('name')]: e.target.value
     });
+  };
+
+  const handleLoadMore = () => {
+    getStreamTrack(
+      authState.token,
+      authState.id,
+      form.month,
+      form.year,
+      trackSrc.offset + trackSrc.limit
+    )
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const { items } = res.data;
+
+          setExtra({
+            src: {
+              ...trackSrc,
+              ...res.data,
+              items: [...trackSrc.items, ...items]
+            }
+          });
+          setChartData({
+            ...chartData,
+            labels: [...chartData.labels, ...items.map(track => track.title)],
+            data: [
+              ...chartData.data,
+              ...items.map(track => track.streamCountPerMonth)
+            ],
+            backgroundColor: [
+              ...chartData.backgroundColor,
+              ...items.map(track =>
+                mapColor(track.streamCountPerMonth, streamCompare.track)
+              )
+            ]
+          });
+        } else throw res.data;
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
 
   return (
@@ -144,6 +185,13 @@ function StatisticTrack() {
                   </li>
                 ))}
               </ul>
+              {trackSrc.total > trackSrc.offset + trackSrc.limit ? (
+                <ButtonLoadMore onClick={handleLoadMore}>
+                  Load more
+                </ButtonLoadMore>
+              ) : (
+                ''
+              )}
             </div>
           )}
         </div>
