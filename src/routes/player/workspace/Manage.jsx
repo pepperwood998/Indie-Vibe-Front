@@ -835,7 +835,12 @@ function AddSongs({ releaseId = '' }) {
     libDispatch(
       libActions.setConfirmDialog(true, 'Confirm adding songs?', () => {
         setStatus({ ...status, publishing: true });
-        addSongsToRelease(authState.token, releaseId, tracks, audio)
+        let processedTracks = tracks.map(track => ({
+          title: track.title,
+          producer: track.producer,
+          genres: track.genres.map(g => g.id)
+        }));
+        addSongsToRelease(authState.token, releaseId, processedTracks, audio)
           .then(res => {
             if (res.status === 'success') {
               setStatus({ ...status, publishing: false });

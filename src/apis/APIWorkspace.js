@@ -153,7 +153,7 @@ export const getStreamTrack = (
 export const addSongsToRelease = (token, releaseId, tracks, audio) => {
   let url = new URL(`${host}/workspace/releases/${releaseId}/track`);
   let formData = new FormData();
-  formData.append('tracks', tracks);
+  formData.append('tracks', JSON.stringify(tracks));
   audio.forEach(item => {
     formData.append('files', item.audio128);
     formData.append('files', item.audio320);
