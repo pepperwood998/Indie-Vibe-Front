@@ -1,0 +1,35 @@
+.table-layout {
+  &.artist-requests {
+    .table-row {
+      border-bottom: 1px solid $grayLight;
+
+      > * {
+        .thumbnail {
+          &__container {
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+
+  &.delegate-curator {
+    .table-row {
+      border-bottom: 1px solid $grayLight;
+
+      > * {
+        .thumbnail {
+          &__container {
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+}

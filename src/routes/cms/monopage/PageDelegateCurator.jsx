@@ -159,14 +159,14 @@ function DelegateCurator(props) {
           </div>
           <div className='content'>
             {users.total > 0 ? (
-              <ul className='requests-table'>
+              <ul className='delegate-curator table-layout table-layout--collapse'>
                 {users.items.map((item, index) => (
-                  <li className='requests-table__row fadein' key={index}>
-                    <div className='requests-table__cell index'>
+                  <li className='table-row fadein' key={index}>
+                    <div className='index content-width center side'>
                       {index + 1}
                     </div>
-                    <div className='requests-table__cell thumbnail'>
-                      <div className='thumbnail__img'>
+                    <div className='thumbnail content-width cover'>
+                      <div className='thumbnail__container'>
                         <div className='img-wrapper'>
                           <img
                             className='img'
@@ -179,17 +179,17 @@ function DelegateCurator(props) {
                         </div>
                       </div>
                     </div>
-                    <div className='requests-table__cell name'>
+                    <div className='name full'>
                       <span className='ellipsis one-line'>
                         {item.displayName}
                       </span>
                     </div>
-                    <div className='requests-table__cell'>
+                    <div className='tier content-width'>
                       <span className='ellipsis one-line'>
                         {item.role.id === 'r-free' ? 'Free Tier' : 'Premium'}
                       </span>
                     </div>
-                    <div className='requests-table__cell action'>
+                    <div className='action side'>
                       {item.delegated ? (
                         <div className='btn-quick regular disabled'>DONE</div>
                       ) : (

@@ -14,6 +14,10 @@
       display: table-cell;
       vertical-align: middle;
 
+      &:not(:first-child):not(:last-child) {
+        padding-left: 10px;
+      }
+
       &.content-width {
         width: 1%;
       }
@@ -21,9 +25,21 @@
       &.right {
         text-align: right;
       }
-  
+
       &.center {
         text-align: center;
+      }
+
+      &.full {
+        width: 100%;
+      }
+
+      &.side {
+        padding: 0 10px;
+      }
+
+      &.cover {
+        padding: 10px 0;
       }
     }
   }
