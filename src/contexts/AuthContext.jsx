@@ -49,24 +49,14 @@ function AuthContextProvider(props) {
 
   useEffect(() => {
     if (state.refreshToken) {
-      getNewToken(state.refreshToken)
-        .then(response => response.json())
-        .then(res => {
-          let { access_token, refresh_token, expires_in } = res;
-          if (access_token) {
-            dispatch(
-              actions.refreshToken({
-                token: access_token,
-                refreshToken: refresh_token,
-                expiry: expires_in
-              })
-            );
-          } else throw 'Sign in again';
-        })
-        .catch(err => {
-          console.error(err);
+      let str = localStorage.getItem('lastTimeSession');
+
+      if (str) {
+        let lastTimeSession = parseInt(str);
+        if (Date.now() - lastTimeSession > state.expiry * 1000) {
           window.location.href = '/logout';
-        });
+        }
+      }
     }
   }, []);
 

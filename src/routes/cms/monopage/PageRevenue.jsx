@@ -88,24 +88,17 @@ function RevenueSection({
 
   useEffect(() => {
     setForm({ ...form, submitting: true });
-    getRevenue(
-      authState.token,
-      type,
-      form.start,
-      form.end,
-      form.month,
-      form.year
-    )
+    getRevenue(authState.token, type, form.start, form.end, form.year)
       .then(res => {
         if (res.status === 'success' && res.data) {
           setForm({ ...form, submitting: false });
           const { data } = res;
 
-          const newChartComparison = [...chartComparison];
+          let newChartComparison = [...chartComparison];
           newChartComparison[0].data = data.fixed;
           newChartComparison[1].data = data.monthly;
 
-          const newChartTotal = [...chartTotal];
+          let newChartTotal = [...chartTotal];
           newChartTotal[0].data = data.fixed.map(
             (num, i) => num + data.monthly[i]
           );
@@ -117,7 +110,7 @@ function RevenueSection({
       .catch(err => {
         console.error(err);
       });
-  }, [form.start, form.end, form.month, form.year]);
+  }, [form.start, form.end, form.year]);
 
   let labels = [];
   let change = 0;
@@ -288,11 +281,11 @@ function RevenueSection({
   );
 }
 
-const getRevenue = (token, type, start, end, month, year) => {
+const getRevenue = (token, type, start, end, year) => {
   if (type === 'year') {
     return getRevenueYear(token, start, end);
   } else {
-    return getRevenueMonth(token, month, year);
+    return getRevenueMonth(token, year);
   }
 };
 

@@ -93,9 +93,9 @@ export const getRevenueYear = (token, start, end) => {
   }).then(response => response.json());
 };
 
-export const getRevenueMonth = (token, month, year) => {
+export const getRevenueMonth = (token, year) => {
   let url = new URL(`${host}/cms/revenue/monthly`);
-  url.search = new URLSearchParams({ month, year });
+  url.search = new URLSearchParams({ year });
 
   return fetch(url, {
     method: 'GET',
