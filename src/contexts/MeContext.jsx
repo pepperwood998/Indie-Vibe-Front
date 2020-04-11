@@ -18,12 +18,12 @@ const initState = {
 
 function MeContextProvider(props) {
   const [state, dispatch] = useReducer(reducer, initState, () => {
-    let me = sessionStorage.getItem('me');
+    let me = localStorage.getItem('me');
     return me ? JSON.parse(me) : initState;
   });
 
   useEffect(() => {
-    sessionStorage.setItem('me', JSON.stringify(state));
+    localStorage.setItem('me', JSON.stringify(state));
   }, [state]);
 
   return (
