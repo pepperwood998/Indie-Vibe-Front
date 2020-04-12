@@ -3,7 +3,7 @@ import { getFormattedTime } from '../../../utils/Common';
 import { NavLinkUnderline } from '../../links';
 import CellAction from './TableCellAction';
 import CellFavorite from './TableCellFavorite';
-import CellTitle from './TableCellTitle';
+import CellExtra from './TableCellExtra';
 
 function RowGeneral(props) {
   const { item, serial } = props;
@@ -12,7 +12,7 @@ function RowGeneral(props) {
     props.playFromType === 'favorite' ? 'favorite' : 'release';
 
   return (
-    <div className='collection-table__row collection-table__row--data'>
+    <div className='table-row content'>
       <CellAction
         serial={serial + 1}
         id={item.id}
@@ -25,9 +25,11 @@ function RowGeneral(props) {
         relation={item.relation}
         collectionKey='track'
       />
-      <CellTitle
+      <div className='title'>
+        <span className='ellipsis one-line'>{item.title}</span>
+      </div>
+      <CellExtra
         id={item.id}
-        title={item.title}
         fromType='release'
         releaseId={item.release.id}
         artistId={item.release.artist ? item.release.artist.id : ''}
@@ -35,8 +37,8 @@ function RowGeneral(props) {
         relation={item.relation}
         collectionKey='track'
       />
-      <div className='collection-table__cell collection-table__cell--artist'>
-        <span className='main'>
+      <div className='artist'>
+        <span className='ellipsis one-line'>
           {item.artists
             ? item.artists
                 .map(artist => (
@@ -52,8 +54,8 @@ function RowGeneral(props) {
             : ''}
         </span>
       </div>
-      <div className='collection-table__cell collection-table__cell--release'>
-        <span className='main'>
+      <div className='release'>
+        <span className='ellipsis one-line'>
           <NavLinkUnderline
             href={`/player/release/${item.release ? item.release.id : ''}`}
             className='font-white'
@@ -62,8 +64,8 @@ function RowGeneral(props) {
           </NavLinkUnderline>
         </span>
       </div>
-      <div className='collection-table__cell collection-table__cell--duration'>
-        <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
+      <div className='duration center side'>
+        <span className='ellipsis one-line'>{getFormattedTime(item.duration / 1000)}</span>
       </div>
     </div>
   );

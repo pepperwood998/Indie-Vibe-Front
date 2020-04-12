@@ -38,7 +38,7 @@ function CellFavorite(props) {
   };
 
   return (
-    <div className='collection-table__cell collection-table__cell--favorite'>
+    <div className='favorite center side'>
       {props.relation.includes('favorite') ? (
         <FavoriteIcon
           className='svg--cursor svg--scale svg--blue'

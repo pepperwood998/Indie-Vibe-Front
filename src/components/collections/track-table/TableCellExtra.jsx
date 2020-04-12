@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { MoreIcon, PlusIcon } from '../../../assets/svgs';
 import { LibraryContext } from '../../../contexts';
 
-function CellTitle(props) {
+function CellExtra(props) {
   const { title } = props;
 
   const {
@@ -38,9 +38,7 @@ function CellTitle(props) {
   };
 
   return (
-    <div className='collection-table__cell collection-table__cell--title'>
-      <span className='main'>{title}</span>
-      <span className='extra'>
+    <div className='extra right'>
         <PlusIcon
           className='svg--cursor svg--gray-light svg--bright'
           onClick={handleBrowsePlaylists}
@@ -49,9 +47,8 @@ function CellTitle(props) {
           className='svg--cursor svg--gray-light svg--bright'
           onClick={handleToggleCtxMenu}
         />
-      </span>
     </div>
   );
 }
 
-export default CellTitle;
+export default CellExtra;

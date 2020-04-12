@@ -9,35 +9,36 @@ function TrackTable(props) {
   const { items } = props;
 
   return (
-    <div className='collection-table'>
+    <div className='collection-table table-layout table-layout--collapse'>
       {/* Track table header */}
-      <div className='collection-table__row collection-table__row--header'>
-        <div className='collection-table__cell collection-table__cell--action'>
+      <div className='table-row header'>
+        <div className='action center'>
           <span>#</span>
         </div>
-        <div className='collection-table__cell collection-table__cell--favorite'></div>
-        <div className='collection-table__cell collection-table__cell--title'>
+        <div className='favorite'></div>
+        <div className='title'>
           <span>TITLE</span>
         </div>
+        <div className='extra'></div>
         {type === 'search' || type === 'favorite' || type === 'playlist' ? (
           <React.Fragment>
-            <div className='collection-table__cell collection-table__cell--artist'>
+            <div className='artist'>
               <span>ARTISTS</span>
             </div>
-            <div className='collection-table__cell collection-table__cell--release'>
+            <div className='release'>
               <span>RELEASE</span>
             </div>
           </React.Fragment>
         ) : (
           ''
         )}
-        <div className='collection-table__cell collection-table__cell--duration'>
+        <div className='duration center'>
           <span>
             <TimerIcon />
           </span>
         </div>
         {type === 'playlist' ? (
-          <div className='collection-table__cell collection-table__cell--added-date'>
+          <div className='added-date side'>
             <span>
               <DateIcon />
             </span>
