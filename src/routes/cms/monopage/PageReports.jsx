@@ -197,7 +197,7 @@ function Reports(props) {
                           {getDatePart(report.date)}
                         </div>
                       </div>
-                      <div className='status content-width'>
+                      <div className='status content-width right'>
                         <ButtonStatus status={report.status} />
                       </div>
                       <div className='artist over pl-2'>
