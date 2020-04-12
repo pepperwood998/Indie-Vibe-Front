@@ -152,7 +152,7 @@ function Login() {
         or
       </div>
       <ButtonFacebook
-        isFitted={false}
+        full
         responseFacebook={responseFacebook}
         onClick={handleLogInFb}
         disabled={loggingInFb}

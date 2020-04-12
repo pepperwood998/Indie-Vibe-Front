@@ -189,7 +189,7 @@ function Register() {
         or
       </div>
       <ButtonFacebook
-        isFitted={false}
+        full
         responseFacebook={responseFacebook}
         disabled={registeringFb}
         onClick={handleRegisterFb}
