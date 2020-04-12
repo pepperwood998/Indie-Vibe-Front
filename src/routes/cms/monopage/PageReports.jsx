@@ -5,6 +5,7 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { ButtonLoadMore } from '../../../components/buttons';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { getDatePart, model, statusModel } from '../../../utils/Common';
+import { ButtonQuick } from '../components/buttons';
 
 function Reports(props) {
   const { state: authState } = useContext(AuthContext);
@@ -280,22 +281,23 @@ function Reports(props) {
                     <ButtonStatus status={selectedReport.status} />
                   ) : (
                     <React.Fragment>
-                      <div
-                        className='btn-quick approve'
+                      <ButtonQuick
+                        type='approve'
                         onClick={() =>
                           handleProcessReport(selectedReport.id, 'proceed')
                         }
+                        className='mr-1'
                       >
                         PROCEED
-                      </div>
-                      <div
-                        className='btn-quick deny ml-1'
-                        onClick={() => {
-                          handleProcessReport(selectedReport.id, 'reject');
-                        }}
+                      </ButtonQuick>
+                      <ButtonQuick
+                        type='deny'
+                        onClick={() =>
+                          handleProcessReport(selectedReport.id, 'reject')
+                        }
                       >
                         REJECT
-                      </div>
+                      </ButtonQuick>
                     </React.Fragment>
                   )}
                 </div>
@@ -325,19 +327,23 @@ function Reports(props) {
 }
 
 function ButtonStatus({ status = 'pending' }) {
-  let classes = 'btn-quick';
+  let type = '';
   switch (status) {
     case 'proceeded':
-      classes += ' approve';
+      type = 'approve';
       break;
     case 'rejected':
-      classes += ' deny';
+      type = 'deny';
       break;
     default:
-      classes += ' regular';
+      type = 'regular';
   }
 
-  return <div className={classes}>{status}</div>;
+  return (
+    <ButtonQuick type={type} disabled={true}>
+      {status}
+    </ButtonQuick>
+  );
 }
 
 export default Reports;

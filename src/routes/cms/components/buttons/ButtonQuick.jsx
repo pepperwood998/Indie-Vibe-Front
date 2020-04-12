@@ -4,6 +4,7 @@ function ButtonQuick({
   type = 'regular',
   className = '',
   children,
+  disabled = false,
   onClick = () => undefined
 }) {
   let classes = 'btn-quick';
@@ -11,7 +12,7 @@ function ButtonQuick({
   classes += className ? ` ${className}` : '';
 
   return (
-    <button className={classes} onClick={onClick}>
+    <button className={classes} onClick={onClick} disabled={disabled}>
       {children}
     </button>
   );

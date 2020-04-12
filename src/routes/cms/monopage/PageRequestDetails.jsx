@@ -4,7 +4,7 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { ButtonLoadMore } from '../../../components/buttons';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { getDatePart, getFormattedTime } from '../../../utils/Common';
-import { ButtonRegular } from '../components/buttons';
+import { ButtonQuick, ButtonRegular } from '../components/buttons';
 
 function RequestDetails(props) {
   const { state: authState } = useContext(AuthContext);
@@ -168,22 +168,22 @@ function RequestDetails(props) {
                             </div>
                             <div className='item-wrapper'>
                               <div className='item audio'>
-                                <div
-                                  className='btn-quick audio'
+                                <ButtonQuick
+                                  type='audio'
                                   onClick={() => {
                                     handleTestPlay(track.mp3128);
                                   }}
                                 >
                                   128
-                                </div>
-                                <div
-                                  className='btn-quick audio'
+                                </ButtonQuick>
+                                <ButtonQuick
+                                  type='audio'
                                   onClick={() => {
                                     handleTestPlay(track.mp3320);
                                   }}
                                 >
                                   320
-                                </div>
+                                </ButtonQuick>
                               </div>
                             </div>
                             {track.producer ? (
