@@ -10,7 +10,7 @@ import { InputFileLabel, InputText } from '../inputs';
 import { ButtonMain } from '../buttons';
 
 import { CloseIcon } from '../../assets/svgs';
-import PlaylistPlaceholder from '../../assets/imgs/playlist-placeholder.png';
+import Placeholder from '../../assets/imgs/placeholder.png';
 
 function GroupPlaylistDialog(props) {
   const { state: authState } = useContext(AuthContext);
@@ -161,7 +161,7 @@ function GroupPlaylistDialog(props) {
                 keep={true}
                 className='input-label--img'
               >
-                <img src={thumbnailSrc ? thumbnailSrc : PlaylistPlaceholder} />
+                <img src={thumbnailSrc ? thumbnailSrc : Placeholder} />
               </InputFileLabel>
             </div>
             <div className='right__button'>
