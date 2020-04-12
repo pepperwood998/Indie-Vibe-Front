@@ -67,8 +67,11 @@ export const searchSimpleUsers = (
   }).then(response => response.json());
 };
 
-export const delegateCurator = (token, userId) => {
-  let url = new URL(`${host}/cms/delegate`);
+export const delegateCurator = (token, userId, action = 'delegate') => {
+  let url;
+  if (action === 'delegate') url = new URL(`${host}/cms/delegate`);
+  else url = new URL(`${host}/cms/undelegate`);
+
   let formData = new FormData();
   formData.append('userId', userId);
 

@@ -4,7 +4,7 @@ import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonLoadMore } from '../../../components/buttons';
 import { CardError } from '../../../components/cards';
 import { AuthContext, LibraryContext } from '../../../contexts';
-import { ButtonRegular } from '../components/buttons';
+import { ButtonQuick, ButtonRegular } from '../components/buttons';
 import { InputTextRegular } from '../components/inputs';
 
 function DelegateCurator(props) {
@@ -49,7 +49,15 @@ function DelegateCurator(props) {
       .then(res => {
         setStatus({ ...status, submitted: false });
         if (res.status === 'success' && res.data) {
-          setUsers({ ...users, ...res.data });
+          const { data } = res;
+          setUsers({
+            ...users,
+            ...data,
+            items: data.items.map(item => ({
+              ...item,
+              delegated: item.role.id === 'r-curator'
+            }))
+          });
         } else {
           throw res.data;
         }
@@ -74,7 +82,13 @@ function DelegateCurator(props) {
         if (res.status === 'success' && res.data) {
           const newUsers = res.data;
           setUsers({
-            items: [...users.items, ...newUsers.items],
+            items: [
+              ...users.items,
+              ...newUsers.items.map(item => ({
+                ...item,
+                delegated: item.role.id === 'r-curator'
+              }))
+            ],
             offset: newUsers.offset,
             limit: newUsers.limit,
             total: newUsers.total
@@ -88,8 +102,8 @@ function DelegateCurator(props) {
       });
   };
 
-  const handleDelegate = userId => {
-    delegateCurator(authState.token, userId)
+  const handleDelegate = (userId, action) => {
+    delegateCurator(authState.token, userId, action)
       .then(res => {
         if (res.status === 'success') {
           libDispatch(
@@ -99,7 +113,7 @@ function DelegateCurator(props) {
           const items = [...users.items];
           let found = items.some(user => {
             if (userId === user.id) {
-              user.delegated = true;
+              user.delegated = action === 'delegate' ? true : false;
               return true;
             }
           });
@@ -190,18 +204,15 @@ function DelegateCurator(props) {
                       </span>
                     </div>
                     <div className='action side'>
-                      {item.delegated ? (
-                        <div className='btn-quick regular disabled'>DONE</div>
-                      ) : (
-                        <div
-                          className='btn-quick approve'
-                          onClick={() => {
-                            handleDelegate(item.id);
-                          }}
-                        >
-                          DELEGATE
-                        </div>
-                      )}
+                      <ButtonDelegate
+                        delegated={item.delegated}
+                        delegate={() => {
+                          handleDelegate(item.id, 'undelegate');
+                        }}
+                        undelegate={() => {
+                          handleDelegate(item.id, 'delegate');
+                        }}
+                      />
                     </div>
                   </li>
                 ))}
@@ -220,6 +231,22 @@ function DelegateCurator(props) {
         </section>
       </div>
     </div>
+  );
+}
+
+function ButtonDelegate({
+  delegated,
+  delegate = () => undefined,
+  undelegate = () => undefined
+}) {
+  return delegated ? (
+    <ButtonQuick type='deny' onClick={delegate}>
+      UNDELEGATE
+    </ButtonQuick>
+  ) : (
+    <ButtonQuick type='approve' onClick={undelegate}>
+      DELEGATE
+    </ButtonQuick>
   );
 }
 
