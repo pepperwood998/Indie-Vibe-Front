@@ -34,6 +34,13 @@
       transform: translateX(-50%);
       margin-top: 5px;
     }
+
+    &.left {
+      top: 50%;
+      transform: translateY(-50%);
+      right: 100%;
+      margin-right: 5px;
+    }
   }
 
   &:hover {

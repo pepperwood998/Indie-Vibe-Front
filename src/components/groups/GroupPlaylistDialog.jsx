@@ -1,16 +1,10 @@
-import React, { useState, useRef, useContext } from 'react';
-
-import { AuthContext, LibraryContext } from '../../contexts';
-import {
-  createPlaylist,
-  getPlaylistSimple,
-  createOrEditPlaylist
-} from '../../apis/API';
-import { InputFileLabel, InputText } from '../inputs';
-import { ButtonMain } from '../buttons';
-
-import { CloseIcon } from '../../assets/svgs';
+import React, { useContext, useRef, useState } from 'react';
+import { createOrEditPlaylist, getPlaylistSimple } from '../../apis/API';
 import Placeholder from '../../assets/imgs/placeholder.png';
+import { CloseIcon } from '../../assets/svgs';
+import { AuthContext, LibraryContext } from '../../contexts';
+import { ButtonMain } from '../buttons';
+import { InputFileLabel, InputText } from '../inputs';
 
 function GroupPlaylistDialog(props) {
   const { state: authState } = useContext(AuthContext);
@@ -166,6 +160,7 @@ function GroupPlaylistDialog(props) {
             </div>
             <div className='right__button'>
               <ButtonMain
+                full
                 onClick={handleSubmit}
                 disabled={submitted === 2 ? true : false}
               >

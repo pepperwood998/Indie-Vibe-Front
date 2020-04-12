@@ -3,8 +3,9 @@ import { NavLink } from 'react-router-dom';
 import { getPlaylistsMeOwn } from '../../apis/API';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { AddPlaylistIcon, ArrowDown } from '../../assets/svgs';
-import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
+import { ButtonLoadMore } from '../../components/buttons';
 import { LinkWhiteColor } from '../../components/links';
+import Tooltip from '../../components/tooltips/Tooltip';
 import { AuthContext, LibraryContext, MeContext } from '../../contexts';
 
 function QuickAccess(props) {
@@ -89,10 +90,12 @@ function QuickAccess(props) {
       <div className='quick-access__playlists'>
         <div className='banner'>
           <span className='font-short-s font-gray-light'>Playlists</span>
-          <AddPlaylistIcon
-            className='svg--regular svg--cursor svg--scale'
-            onClick={handleOpenDialog}
-          />
+          <Tooltip tooltip='New playlist' pos='left'>
+            <AddPlaylistIcon
+              className='svg--regular svg--cursor svg--scale'
+              onClick={handleOpenDialog}
+            />
+          </Tooltip>
         </div>
         <div className='content-wrapper'>
           <ul className='content'>
