@@ -14,7 +14,7 @@ import GroupEmpty from '../../../components/groups/GroupEmpty';
 import { InputForm } from '../../../components/inputs';
 import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
-import { getDatePart, useEffectSkip } from '../../../utils/Common';
+import { contain, getDatePart, useEffectSkip } from '../../../utils/Common';
 
 function Release(props) {
   // contexts
@@ -40,9 +40,12 @@ function Release(props) {
   });
   const [owner, setOwner] = useState({ role: {} });
   const [existed, setExisted] = useState(false);
-  const { tracks } = data;
+  const [extra, setExtra] = useState({
+    filter: ''
+  });
 
   // props
+  const { tracks } = data;
   const id = props.match.params.id;
   let isCurrentList =
     streamState.playFromType === 'release' && id === streamState.playFromId;
@@ -131,6 +134,10 @@ function Release(props) {
       });
   };
 
+  const handleFilter = e => {
+    setExtra({ ...extra, filter: e.target.value });
+  };
+
   return firstRender ? (
     ''
   ) : (
@@ -204,12 +211,22 @@ function Release(props) {
               />
             </div>
             <div className='filter'>
-              <InputForm placeholder='Filter' />
+              <InputForm
+                placeholder='Filter'
+                onChange={handleFilter}
+                value={extra.filter}
+              />
             </div>
           </div>
           <div className='track-list__content'>
             <TrackTable
-              items={data.tracks.items}
+              items={
+                extra.filter
+                  ? data.tracks.items.filter(item =>
+                      contain(extra.filter, item.title)
+                    )
+                  : data.tracks.items
+              }
               releaseArtistId={data.artist ? data.artist.id : ''}
               playFromId={data.id}
               type='release'

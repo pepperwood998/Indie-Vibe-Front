@@ -208,3 +208,10 @@ export const statusModel = {
 };
 
 export const currency = 'VND';
+
+export const contain = (input, str) => {
+  return new RegExp(
+    input.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+    'gi'
+  ).test(str);
+};

@@ -5,16 +5,16 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { FavoriteIcon, UnFavoriteIcon } from '../../../assets/svgs';
 import {
   ButtonIcon,
+  ButtonLoadMore,
   ButtonMain,
-  ButtonMore,
-  ButtonLoadMore
+  ButtonMore
 } from '../../../components/buttons';
 import { TrackTable } from '../../../components/collections/track-table';
 import { GroupEmpty } from '../../../components/groups';
 import { InputForm } from '../../../components/inputs';
 import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
-import { useEffectSkip } from '../../../utils/Common';
+import { contain, useEffectSkip } from '../../../utils/Common';
 
 function Playlist(props) {
   // contexts
@@ -44,6 +44,9 @@ function Playlist(props) {
   });
   const [existed, setExisted] = useState(false);
   const [owner, setOwner] = useState({ role: {} });
+  const [extra, setExtra] = useState({
+    filter: ''
+  });
 
   // props
   const id = props.match.params.id;
@@ -182,6 +185,10 @@ function Playlist(props) {
       });
   };
 
+  const handleFilter = e => {
+    setExtra({ ...extra, filter: e.target.value });
+  };
+
   return firstRender ? (
     ''
   ) : (
@@ -256,12 +263,22 @@ function Playlist(props) {
               />
             </div>
             <div className='filter'>
-              <InputForm placeholder='Filter' />
+              <InputForm
+                placeholder='Filter'
+                onChange={handleFilter}
+                value={extra.filter}
+              />
             </div>
           </div>
           <div className='track-list__content'>
             <TrackTable
-              items={data.tracks.items}
+              items={
+                extra.filter
+                  ? data.tracks.items.filter(item =>
+                      contain(extra.filter, item.track.title)
+                    )
+                  : data.tracks.items
+              }
               playFromId={data.id}
               type='playlist'
               playlistRelation={data.relation}
