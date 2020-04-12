@@ -53,7 +53,7 @@ function NavBar(props) {
         {!authState.token ? (
           <React.Fragment>
             <a href='/register'>
-              <ButtonFrame isFitted={true}>Register</ButtonFrame>
+              <ButtonFrame>Register</ButtonFrame>
             </a>
             <div className='nav-menu__item'>
               <LinkWhiteColor

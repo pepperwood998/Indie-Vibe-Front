@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { performActionFavorite } from '../../apis/API';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { FavoriteIcon, UnFavoriteIcon } from '../../assets/svgs';
@@ -61,11 +61,7 @@ function GroupProfileBox(props) {
           </span>
 
           <div className='action'>
-            {data.type === 'artist' ? (
-              <ButtonMain isFitted={true}>PLAY</ButtonMain>
-            ) : (
-              ''
-            )}
+            {data.type === 'artist' ? <ButtonMain>PLAY</ButtonMain> : ''}
             {data.relation && data.id !== authState.id ? (
               <React.Fragment>
                 {data.relation.includes('favorite') ? (

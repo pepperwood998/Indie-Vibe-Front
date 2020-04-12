@@ -108,7 +108,7 @@ function Login() {
   const logo = () => <LogoSignIn height='60' />;
 
   const inputs = () => (
-    <form onSubmit={handleLogIn}>
+    <React.Fragment>
       {loginError ? <CardError message={loginError} /> : ''}
       <InputForm
         type='text'
@@ -137,13 +137,12 @@ function Login() {
           Forgot your password?
         </a>
       </div>
-      <input type='submit' style={{ display: 'none' }}></input>
-    </form>
+    </React.Fragment>
   );
 
   const submits = () => (
     <React.Fragment>
-      <ButtonMain isFitted={false} onClick={handleLogIn} disabled={loggingIn}>
+      <ButtonMain full={true} type='submit' disabled={loggingIn}>
         Enter
       </ButtonMain>
       <div
@@ -172,7 +171,7 @@ function Login() {
         Not a member yet?
       </div>
       <a href='/register'>
-        <ButtonFrame isFitted={true}>Join Indie Vibe</ButtonFrame>
+        <ButtonFrame>Join Indie Vibe</ButtonFrame>
       </a>
     </React.Fragment>
   );
@@ -183,6 +182,7 @@ function Login() {
       inputs={inputs()}
       submits={submits()}
       addition={addition()}
+      handleSubmit={handleLogIn}
     />
   );
 }

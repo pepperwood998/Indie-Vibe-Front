@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './css/style.scss';
 
 function Authentication(props) {
@@ -12,10 +11,10 @@ function Authentication(props) {
       </div>
       <div className='page-authen__body'>
         <div className='page-authen__body__layer'>
-          <div className='form-authen'>
+          <form onSubmit={props.handleSubmit} className='form-authen'>
             <div className='form-authen__input'>{props.inputs}</div>
             <div className='form-authen__submit'>{props.submits}</div>
-          </div>
+          </form>
           <div className='box-addition'>{props.addition}</div>
         </div>
       </div>

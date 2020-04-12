@@ -1,10 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import {
-  getAccount,
-  getGenresList,
-  getReleaseTypeList,
-  publishRelease
-} from '../../apis/API';
+import { getAccount, publishRelease } from '../../apis/API';
 import Placeholder from '../../assets/imgs/placeholder.png';
 import { AuthContext, LibraryContext, MeContext } from '../../contexts';
 import { ButtonFrame, ButtonMain } from '../buttons';
@@ -297,7 +292,7 @@ function GroupReleaseUpload(props) {
                 ))}
               </select>
             </div>
-            <div className='upload-body'>
+            <div className='upload-body clearfix'>
               {info.map((track, index) => (
                 <div className='upload-item' key={index}>
                   <GroupTrackUpload
@@ -312,7 +307,9 @@ function GroupReleaseUpload(props) {
                 </div>
               ))}
 
-              <ButtonMain onClick={handleAddSong}>ADD SONG</ButtonMain>
+              <ButtonMain className='float-right mt-1' onClick={handleAddSong}>
+                ADD SONG
+              </ButtonMain>
             </div>
           </div>
           <div>

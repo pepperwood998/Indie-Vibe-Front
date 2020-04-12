@@ -45,40 +45,6 @@
   }
 }
 
-.flex-table {
-  &__row {
-    display: flex;
-    flex-direction: row;
-    box-sizing: content-box;
-  }
-
-  &__cell {
-    display: flex;
-    align-items: center;
-    padding: 8px 5px;
-
-    &:not(:first-child) {
-      margin-left: 10px;
-    }
-
-    &.serial {
-      justify-content: center;
-    }
-
-    &.fill {
-      flex: 1;
-    }
-
-    > span {
-      &.ellipsis {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-}
-
 .catalog {
   &__header {
     border-bottom: 1px solid #4d4d4d;

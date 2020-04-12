@@ -65,7 +65,6 @@ function GroupGenreDialog(props) {
         </ul>
         <ButtonMain
           className='mt-2 float-right'
-          isFitted={true}
           onClick={() => {
             genresDialog.saveCb(selected);
             handleCloseGenresDialog();

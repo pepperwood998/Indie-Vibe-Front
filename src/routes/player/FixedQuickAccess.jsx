@@ -119,36 +119,4 @@ function QuickAccess(props) {
   );
 }
 
-function RoleBanner(props) {
-  const { role } = props;
-  switch (role) {
-    case 'r-free':
-      return (
-        <a href='/premium' className='role-free'>
-          <ButtonFrame isFitted={true}>Upgrade</ButtonFrame>
-        </a>
-      );
-    case 'r-premium':
-      return (
-        <div className='role-banner premium font-short-big font-white font-weight-bold'>
-          Premium
-        </div>
-      );
-    case 'r-artist':
-      return (
-        <div className='role-banner artist font-short-big font-white font-weight-bold'>
-          Artist
-        </div>
-      );
-    case 'r-curator':
-      return (
-        <div className='role-banner curator font-short-big font-white font-weight-bold'>
-          Editor
-        </div>
-      );
-    default:
-      return '';
-  }
-}
-
 export default QuickAccess;

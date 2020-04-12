@@ -1,9 +1,8 @@
 import React, { useContext, useRef, useState } from 'react';
 import {
-  getProfile,
-  updateAccount,
+  cancelSubscription,
   getAccount,
-  cancelSubscription
+  updateAccount
 } from '../../../apis/API';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonMain } from '../../../components/buttons';
@@ -251,11 +250,7 @@ function Information(props) {
               <div className='table-row'>
                 <span className='label'></span>
                 <div>
-                  <ButtonMain
-                    isFitted={true}
-                    onClick={handleSubmit}
-                    disabled={status.updating}
-                  >
+                  <ButtonMain onClick={handleSubmit} disabled={status.updating}>
                     Save
                   </ButtonMain>
                 </div>
@@ -273,7 +268,6 @@ function Information(props) {
               </div>
               <ButtonMain
                 className='dangerous'
-                isFitted
                 onClick={handleCancelSubscription}
               >
                 Cancel Subscription

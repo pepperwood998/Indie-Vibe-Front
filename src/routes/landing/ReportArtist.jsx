@@ -126,7 +126,6 @@ function ReportArtist(props) {
           </section>
           <section className='submit-box'>
             <ButtonMain
-              isFitted
               onClick={handleSubmit}
               disabled={status.submitting}
             >

@@ -56,14 +56,14 @@ function Home() {
           <div className='d-flex flex-column w-25'>
             {!state.token ? (
               <a href='/register'>
-                <ButtonMain isFitted={true}>Join free</ButtonMain>
+                <ButtonMain>Join free</ButtonMain>
               </a>
             ) : (
               <React.Fragment>
                 {role.id === 'r-free' ? (
                   <div className='pb-3'>
                     <a href='/premium'>
-                      <ButtonMain>Go Premium</ButtonMain>
+                      <ButtonMain full>Go Premium</ButtonMain>
                     </a>
                   </div>
                 ) : (
@@ -71,7 +71,7 @@ function Home() {
                 )}
                 <div>
                   <a href='/player/home'>
-                    <ButtonFrame>Player</ButtonFrame>
+                    <ButtonFrame full>Player</ButtonFrame>
                   </a>
                 </div>
               </React.Fragment>
@@ -100,7 +100,7 @@ function Home() {
           ) : (
             <div className='action'>
               <a href='/register'>
-                <ButtonFrame isFitted={true}>Sign up</ButtonFrame>
+                <ButtonFrame>Sign up</ButtonFrame>
               </a>
             </div>
           )}

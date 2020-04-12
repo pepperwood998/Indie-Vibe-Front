@@ -21,7 +21,7 @@ function NavMenu() {
         {role.id === 'r-free' ? (
           <section className='upgrade'>
             <a href='/premium'>
-              <ButtonFrame>UPGRADE</ButtonFrame>
+              <ButtonFrame full>UPGRADE</ButtonFrame>
             </a>
           </section>
         ) : (
@@ -81,7 +81,7 @@ function NavMenu() {
       <div className='artist-box'>
         {role.id === 'r-artist' ? (
           <NavLink to='/player/workspace'>
-            <ButtonFrame>Your workspace</ButtonFrame>
+            <ButtonFrame full>Your workspace</ButtonFrame>
           </NavLink>
         ) : (
           ''

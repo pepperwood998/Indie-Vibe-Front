@@ -623,7 +623,6 @@ function Manage(props) {
                               <span></span>
                               <span>
                                 <ButtonMain
-                                  isFitted
                                   onClick={() => {
                                     handleSaveTrack(item.id);
                                   }}
@@ -632,7 +631,6 @@ function Manage(props) {
                                 </ButtonMain>
                                 <ButtonFrame
                                   className='ml-2'
-                                  isFitted
                                   onClick={() => {
                                     setStatus({
                                       ...status,
@@ -699,7 +697,6 @@ function Manage(props) {
                 )}
                 <div className='clearfix'>
                   <ButtonMain
-                    isFitted
                     className='float-right'
                     onClick={() => {
                       setStatus({ ...status, adding: true });
@@ -708,7 +705,6 @@ function Manage(props) {
                     ADD SONGS
                   </ButtonMain>
                   <ButtonMain
-                    isFitted
                     className='dangerous float-left'
                     onClick={handleDeleteRelease}
                   >
@@ -890,10 +886,10 @@ function AddSongs({ releaseId = '' }) {
       ))}
 
       <div className='clearfix mt-3'>
-        <ButtonMain isFitted className='float-right' onClick={handleAddSong}>
+        <ButtonMain className='float-right' onClick={handleAddSong}>
           ADD ITEM
         </ButtonMain>
-        <ButtonFrame isFitted className='float-left' onClick={handlePublish}>
+        <ButtonFrame className='float-left' onClick={handlePublish}>
           PUBLISH
         </ButtonFrame>
       </div>

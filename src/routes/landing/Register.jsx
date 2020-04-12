@@ -105,7 +105,7 @@ function Register() {
   const logo = () => <LogoRegister height='60' />;
 
   const inputs = () => (
-    <form onSubmit={handleRegister}>
+    <React.Fragment>
       {registerError ? <CardError message={registerError} /> : ''}
       {registerSuccess ? <CardSuccess message={registerSuccess} /> : ''}
       <InputForm
@@ -174,16 +174,12 @@ function Register() {
         ''
       )}
       <input type='submit' style={{ display: 'none' }}></input>
-    </form>
+    </React.Fragment>
   );
 
   const submits = () => (
     <React.Fragment>
-      <ButtonMain
-        isFitted={false}
-        onClick={handleRegister}
-        disabled={registering}
-      >
+      <ButtonMain full={true} type='submit' disabled={registering}>
         Register
       </ButtonMain>
       <div
@@ -223,6 +219,7 @@ function Register() {
       inputs={inputs()}
       submits={submits()}
       addition={addition()}
+      handleSubmit={handleRegister}
     />
   );
 }
