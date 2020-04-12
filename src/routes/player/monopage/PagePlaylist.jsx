@@ -274,9 +274,16 @@ function Playlist(props) {
             <TrackTable
               items={
                 extra.filter
-                  ? data.tracks.items.filter(item =>
-                      contain(extra.filter, item.track.title)
-                    )
+                  ? data.tracks.items.filter(item => {
+                      const { track } = item;
+                      return (
+                        contain(extra.filter, track.title) ||
+                        contain(extra.filter, track.release.title) ||
+                        track.artists.some(artist =>
+                          contain(extra.filter, artist.displayName)
+                        )
+                      );
+                    })
                   : data.tracks.items
               }
               playFromId={data.id}
