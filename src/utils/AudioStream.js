@@ -30,7 +30,7 @@ class AudioStream {
     this.onInfo = info => undefined;
 
     // internal event
-    this.eventLoadStart = e => undefined
+    this.eventLoadStart = e => undefined;
     this.eventDurationChange = e => undefined;
     this.eventCanPlay = e => undefined;
     this.eventTimeUpdate = e => undefined;
@@ -49,7 +49,7 @@ class AudioStream {
 
     this.eventLoadStart = e => {
       this.onLoadStart();
-    }
+    };
     this.eventDurationChange = e => {
       this.onDurationChange(getFormattedTime(this.audio.duration));
     };
@@ -160,6 +160,18 @@ class AudioStream {
 
   setSettings(settings) {
     this.settings = { ...this.settings, ...settings };
+  }
+
+  replay() {
+    this.audio.currentTime = 0;
+    this.recorder = {
+      ...this.recorder,
+      started: false,
+      startTime: 0,
+      recorded: false,
+      recordedDur: 0
+    };
+    this.play();
   }
 
   clean() {

@@ -47,7 +47,6 @@ textarea.input-text {
   &--clear {
     background: transparent;
     border: 1.2px solid $white;
-    border-radius: 10px;
   }
 
   &--full-width {
@@ -65,7 +64,7 @@ textarea.input-text {
   }
 
   &::placeholder {
-    font: $shortRegular;
+    font: $shortSmall;
   }
 }
 /* end of INPUT TEXT */

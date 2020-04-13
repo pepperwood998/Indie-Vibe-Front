@@ -310,7 +310,7 @@ const reducer = (state, action) => {
       };
     }
     case 'REPEAT_TRACK': {
-      stream.continue(state.queue[state.currentSongIndex]);
+      stream.replay();
       return state;
     }
     case 'REORDER': {
@@ -323,7 +323,16 @@ const reducer = (state, action) => {
       };
     }
     case 'SKIP_BACKWARD': {
-      if (!state.queue.length && !state.queueExtra.length) return state;
+      const { queue, queueExtra } = state;
+      if (!queue.length && !queueExtra.length) return state;
+      if (
+        queue.length === 1 &&
+        !queueExtra.length &&
+        state.mainQueueMarkIndex === -1
+      ) {
+        stream.replay();
+        return state;
+      }
 
       const { role, autoplay, mannual } = action.payload;
       const { skipStatus } = state;
@@ -339,7 +348,6 @@ const reducer = (state, action) => {
       }
 
       let newState = {};
-      const { queue, queueExtra } = state;
       if (!queue.length) {
         let queueTemp = [...queueExtra];
         let nextTrack = queueTemp.pop();
@@ -352,7 +360,7 @@ const reducer = (state, action) => {
           state.queue.length
         );
 
-        if (backwardId === state.mainQueueMarkIndex) {
+        if (backwardId === state.mainQueueMarkIndex && queueExtra.length) {
           let queueTemp = [...queueExtra];
           let nextTrack = queueTemp.pop();
           stream.start(nextTrack, shouldPlay);
@@ -374,11 +382,21 @@ const reducer = (state, action) => {
 
       return {
         ...state,
-        ...newState
+        ...newState,
+        mainQueueMarkIndex: queueExtra.length ? state.mainQueueMarkIndex : -1
       };
     }
     case 'SKIP_FORWARD': {
-      if (!state.queue.length && !state.queueExtra.length) return state;
+      const { queue, queueExtra } = state;
+      if (!queue.length && !queueExtra.length) return state;
+      if (
+        queue.length === 1 &&
+        !queueExtra.length &&
+        state.mainQueueMarkIndex === -1
+      ) {
+        stream.replay();
+        return state;
+      }
 
       const { role, autoplay, mannual } = action.payload;
       const { skipStatus } = state;
@@ -394,7 +412,6 @@ const reducer = (state, action) => {
       }
 
       let newState = {};
-      const { queue, queueExtra } = state;
       if (queueExtra.length) {
         let queueTemp = [...queueExtra];
         let nextTrack = queueTemp.shift();
@@ -424,7 +441,8 @@ const reducer = (state, action) => {
 
       return {
         ...state,
-        ...newState
+        ...newState,
+        mainQueueMarkIndex: queueExtra.length ? state.mainQueueMarkIndex : -1
       };
     }
     case 'TOGGLE_PAUSED':
