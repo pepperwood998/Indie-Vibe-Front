@@ -92,7 +92,8 @@ function StreamContextProvider(props) {
       if (
         !state.collectionRecorded &&
         state.playFromType &&
-        state.playFromType !== 'favorite'
+        state.playFromType !== 'favorite' &&
+        state.playFromType !== 'artist'
       ) {
         console.log('stream:', 'from', state.playFromType, state.playFromId);
         dispatch(actions.recordCollection());
