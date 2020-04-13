@@ -62,10 +62,10 @@ function CardProfile(props) {
     if (isCurrentList) {
       streamDispatch(streamActions.togglePaused(false));
     } else {
-      streamCollection(authState.token, content.type, content.id).then(res => {
+      streamCollection(authState.token, 'artist', content.id).then(res => {
         if (res.status === 'success' && res.data.length) {
           streamDispatch(
-            streamActions.start(res.data, content.type, content.id)
+            streamActions.start(res.data, 'artist', content.id)
           );
         }
       });
