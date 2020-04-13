@@ -5,7 +5,7 @@ function LineMulBlack({
   labels = [],
   set = [],
   title = '',
-  legend,
+  legend = true,
   onClick = index => undefined
 }) {
   return (

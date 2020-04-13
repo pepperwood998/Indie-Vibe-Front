@@ -32,4 +32,33 @@
       }
     }
   }
+
+  &.report-requests {
+    .table-row {
+      border-bottom: 1px solid $grayLight;
+
+      & > {
+        .surround {
+          padding: 10px;
+        }
+        .over {
+          padding: 10px 0;
+        }
+      }
+
+      .thumbnail-reporter {
+        width: 35px;
+        height: 35px;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+
+      .thumbnail-artist {
+        width: 20px;
+        height: 20px;
+        overflow: hidden;
+        border-radius: 50%;
+      }
+    }
+  }
 }

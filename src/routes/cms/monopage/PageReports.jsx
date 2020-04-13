@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getReportTypeList } from '../../../apis/API';
-import { getReports, processReport } from '../../../apis/APICms';
-import Placeholder from '../../../assets/imgs/placeholder.png';
-import { ButtonLoadMore } from '../../../components/buttons';
+import { processReport } from '../../../apis/APICms';
+import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { AuthContext, LibraryContext } from '../../../contexts';
-import { getDatePart, model, statusModel } from '../../../utils/Common';
+import { getDatePart, statusModel } from '../../../utils/Common';
 import { ButtonQuick } from '../components/buttons';
+import { TableReportRequests } from '../components/tables';
 
 function Reports(props) {
   const { state: authState } = useContext(AuthContext);
@@ -21,13 +21,13 @@ function Reports(props) {
     types: [],
     processStatus: ''
   });
-  const [reports, setReports] = useState({ ...model.paging });
   const [extra, setExtra] = useState({
-    selected: -1
+    selectedReport: null,
+    processedId: '',
+    processedStatus: ''
   });
 
-  const reportItems = reports.items;
-  const selectedReport = reportItems[extra.selected];
+  const { selectedReport } = extra;
 
   useEffect(() => {
     getReportTypeList(authState.token)
@@ -44,23 +44,6 @@ function Reports(props) {
       });
   }, []);
 
-  useEffect(() => {
-    setExtra({ ...extra, selected: -1 });
-    getReports(authState.token, form.type, form.status)
-      .then(res => {
-        if (res.status === 'success' && res.data) {
-          setReports({ ...reports, ...res.data });
-        } else throw res.data;
-      })
-      .catch(err => {
-        if (typeof err !== 'string') {
-          err = 'Error getting reports';
-        }
-
-        libDispatch(libActions.setNotification(true, false, err));
-      });
-  }, [form.type, form.status]);
-
   const handleChangeForm = e => {
     const target = e.target;
     setForm({ ...form, [target.getAttribute('name')]: target.value });
@@ -74,14 +57,11 @@ function Reports(props) {
             libActions.setNotification(true, true, `Report ${action}ed`)
           );
 
-          const items = [...reports.items];
-          items.some(report => {
-            if (id === report.id) {
-              report.status = action + 'ed';
-              return true;
-            }
+          setExtra({
+            ...extra,
+            processedId: id,
+            processedStatus: action + 'ed'
           });
-          setReports({ ...reports, items: [...items] });
         } else throw res.data;
       })
       .catch(err => {
@@ -90,28 +70,6 @@ function Reports(props) {
         }
 
         libDispatch(libActions.setNotification(true, false, err));
-      });
-  };
-
-  const handleLoadMore = () => {
-    getReports(
-      authState.token,
-      form.type,
-      form.status,
-      reports.offset + reports.limit
-    )
-      .then(res => {
-        if (res.status === 'success' && res.data) {
-          const { data } = res;
-          setReports({
-            ...reports,
-            ...data,
-            items: [...reports.items, ...data.items]
-          });
-        } else throw res.data;
-      })
-      .catch(err => {
-        console.error(err);
       });
   };
 
@@ -161,96 +119,34 @@ function Reports(props) {
               </div>
             </div>
 
-            {reports.total <= 0 ? (
-              <div className='font-short-s font-style-italic m-3'>
-                <span>No reports found</span>
-              </div>
-            ) : (
-              <ul className='table-layout table-layout--collapse mt-3'>
-                {reportItems.map((report, i) => {
-                  const { reporter, artist } = report;
-
-                  return (
-                    <li key={i} className='table-row fadein'>
-                      <div className='serial content-width center surround'>
-                        <span>{i + 1}</span>
-                      </div>
-                      <div className='thumbnail-wrapper content-width over'>
-                        <div className='thumbnail-reporter'>
-                          <div className='img-wrapper'>
-                            <img
-                              className='img'
-                              src={
-                                reporter.thumbnail
-                                  ? reporter.thumbnail
-                                  : Placeholder
-                              }
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className='info over pl-2'>
-                        <div className='font-short-big font-weight-bold ellipsis one-line'>
-                          {reporter.displayName}
-                        </div>
-                        <div className='font-short-s'>
-                          {getDatePart(report.date)}
-                        </div>
-                      </div>
-                      <div className='status content-width right'>
-                        <ButtonStatus status={report.status} />
-                      </div>
-                      <div className='artist over pl-2'>
-                        <div className='font-short-regular font-weight-bold'>
-                          <span className='ellipsis one-line'>
-                            {report.type.name}
-                          </span>
-                        </div>
-                        <div className='d-flex align-items-center'>
-                          <div className='thumbnail-artist'>
-                            <div className='img-wrapper'>
-                              <img
-                                className='img'
-                                src={
-                                  artist.thumbnail
-                                    ? artist.thumbnail
-                                    : Placeholder
-                                }
-                              />
-                            </div>
-                          </div>
-                          <span className='pl-1 font-short-s ellipsis one-line'>
-                            {artist.displayName}
-                          </span>
-                        </div>
-                      </div>
-                      <div className='action surround content-width'>
-                        <span
-                          className='link link-underline underline font-short-s'
-                          onClick={() => {
-                            setExtra({ ...extra, selected: i });
-                          }}
-                        >
-                          View
-                        </span>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-            {reports.total > reports.offset + reports.limit ? (
-              <ButtonLoadMore onClick={handleLoadMore}>
-                Load more
-              </ButtonLoadMore>
-            ) : (
-              ''
-            )}
+            <TableReportRequests
+              type={form.type}
+              rptStatus={form.status}
+              onView={report => {
+                setExtra({
+                  ...extra,
+                  selectedReport: { ...report }
+                });
+              }}
+              onProcess={report => {
+                setExtra({
+                  ...extra,
+                  selectedReport: { ...report },
+                  processedId: '',
+                  processedStatus: ''
+                });
+              }}
+              withActions
+              processed={{
+                id: extra.processedId,
+                status: extra.processedStatus
+              }}
+            />
           </div>
         </section>
         <section className='report-details flex-1 boxy catalog-menu'>
           <div className='header'>
-            {extra.selected < 0 ? (
+            {!selectedReport ? (
               <span className='font-short-big'>
                 Select report from browsing
               </span>
@@ -263,7 +159,7 @@ function Reports(props) {
                       src={
                         selectedReport.reporter.thumbnail
                           ? selectedReport.reporter.thumbnail
-                          : Placeholder
+                          : AvatarPlaceholder
                       }
                     />
                   </div>
@@ -304,7 +200,7 @@ function Reports(props) {
               </div>
             )}
           </div>
-          {extra.selected < 0 ? (
+          {!selectedReport ? (
             ''
           ) : (
             <div className='content'>

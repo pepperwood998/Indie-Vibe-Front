@@ -1,5 +1,4 @@
 .page-home {
-  padding: 10px 15px;
 }
 
 .page-requests {
@@ -164,33 +163,6 @@
 }
 
 .page-reports {
-  .table-layout > .table-row {
-    border-bottom: 1px solid $grayLight;
-
-    & > {
-      .surround {
-        padding: 10px;
-      }
-      .over {
-        padding: 10px 0;
-      }
-    }
-
-    .thumbnail-reporter {
-      width: 35px;
-      height: 35px;
-      overflow: hidden;
-      border-radius: 50%;
-    }
-
-    .thumbnail-artist {
-      width: 20px;
-      height: 20px;
-      overflow: hidden;
-      border-radius: 50%;
-    }
-  }
-
   .report-details {
     .thumbnail {
       width: 50px;
