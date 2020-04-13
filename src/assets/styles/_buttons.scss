@@ -18,6 +18,11 @@
         opacity: 0.6;
       }
     }
+
+    &.revert {
+      background-color: $white;
+      color: $blueMain;
+    }
   }
 
   &-frame {

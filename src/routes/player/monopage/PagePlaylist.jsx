@@ -233,7 +233,9 @@ function Playlist(props) {
           <div className='track-list__action'>
             <div className='action'>
               {isCurrentList && !streamState.paused ? (
-                <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
+                <ButtonMain revert onClick={handlePaused}>
+                  PAUSE
+                </ButtonMain>
               ) : (
                 <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
               )}

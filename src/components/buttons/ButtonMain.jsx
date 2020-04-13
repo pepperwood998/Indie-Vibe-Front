@@ -5,6 +5,7 @@ function ButtonMain({
   full = false,
   disabled = false,
   onClick = () => undefined,
+  revert = false,
   children,
   type = 'button'
 }) {
@@ -13,6 +14,7 @@ function ButtonMain({
   classes += className ? ` ${className}` : '';
   classes += full ? ' full' : '';
   classes += disabled ? ' disabled' : '';
+  classes += revert ? ' revert' : '';
 
   return (
     <button className={classes} onClick={onClick} type={type}>
