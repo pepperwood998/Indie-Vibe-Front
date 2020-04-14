@@ -75,6 +75,15 @@ function NowPayingLeft() {
   };
 
   if (id) {
+    let titleLink = '';
+    if (playFromType === 'release' || playFromType === 'playlist') {
+      titleLink = `/player/${playFromType}/${playFromId}`;
+    } else if (playFromType === 'favorite') {
+      titleLink = `/player/library/${authState.id}/tracks`;
+    } else {
+      titleLink = '/player/queue';
+    }
+
     return (
       <div className='now-playing'>
         <div className='now-playing__cover-container'>
@@ -85,13 +94,7 @@ function NowPayingLeft() {
         </div>
         <div className='now-playing__info'>
           <NavLinkUnderline
-            href={
-              playFromType
-                ? playFromType === 'favorite'
-                  ? `/player/library/${authState.id}/tracks`
-                  : `/player/${playFromType}/${playFromId}`
-                : '/player/queue'
-            }
+            href={titleLink}
             className='font-short-regular font-weight-bold font-white ellipsis one-line'
           >
             {title}

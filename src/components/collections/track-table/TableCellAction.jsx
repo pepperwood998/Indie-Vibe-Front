@@ -12,7 +12,10 @@ function CellAction(props) {
     dispatch: streamDispatch
   } = useContext(StreamContext);
 
-  const current = streamState.queue[streamState.currentSongIndex];
+  const current =
+    streamState.currentSongIndex >= 0
+      ? streamState.queue[streamState.currentSongIndex].id
+      : null;
   const { serial, id, playFromId, playFromType } = props;
 
   const handlePause = () => {
@@ -44,12 +47,12 @@ function CellAction(props) {
     id === current &&
     playFromType === streamState.playFromType &&
     playFromId === streamState.playFromId;
-  let classesAction = 'control';
-  classesAction += isCurrent ? ' active' : '';
+  let classes = 'action center side';
+  classes += isCurrent ? ' active' : '';
   return (
-    <div className='action center side'>
+    <div className={classes}>
       <span className='serial ellipsis one-line'>{serial}</span>
-      <div className={classesAction}>
+      <div className='control'>
         <ButtonIcon>
           {isCurrent && !streamState.paused ? (
             <PauseIcon onClick={handlePause} />
