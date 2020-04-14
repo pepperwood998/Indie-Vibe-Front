@@ -16,7 +16,7 @@ function ArtistDefault(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
-  const [firstRender, setFirstRender] = useState(0);
+  const [firstRender, setFirstRender] = useState(true);
   const [albums, setAlbums] = useState({ ...model });
   const [singles, setSingles] = useState({ ...model });
   const [eps, setEps] = useState({ ...model });
@@ -31,10 +31,11 @@ function ArtistDefault(props) {
     !albums.items.length && !singles.items.length && !eps.items.length;
 
   useEffect(() => {
+    setFirstRender(true);
     for (let type in struct) {
-      setFirstRender(firstRender => firstRender + 1);
       getReleasesByType(authState.token, artistId, type)
         .then(res => {
+          setFirstRender(false);
           if (res.status === 'success' && res.data) {
             const value = struct[type];
             value[2]({ ...value[1], ...res.data.releases });
@@ -107,7 +108,7 @@ function ArtistDefault(props) {
       });
   };
 
-  return firstRender < 3 ? (
+  return firstRender ? (
     ''
   ) : (
     <GroupEmpty isEmpty={isEmpty} message='No public releases available'>

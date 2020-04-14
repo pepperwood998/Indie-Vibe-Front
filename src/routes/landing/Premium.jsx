@@ -48,7 +48,7 @@ function Premium(props) {
       body: (
         <div className='payment-body-single'>
           <a href='/purchase/monthly'>
-            <ButtonMain>SUBSCRIBE</ButtonMain>
+            <ButtonMain full>SUBSCRIBE</ButtonMain>
           </a>
         </div>
       )

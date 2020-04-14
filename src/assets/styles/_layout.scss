@@ -3,16 +3,44 @@
   border-spacing: 10px 20px;
   width: 100%;
 
+  &.table-layout--collapse {
+    border-collapse: collapse;
+  }
+
   .table-row {
     display: table-row;
 
     > * {
       display: table-cell;
       vertical-align: middle;
-    }
 
-    .right {
-      text-align: right;
+      &:not(:first-child):not(:last-child) {
+        padding-left: 10px;
+      }
+
+      &.content-width {
+        width: 1%;
+      }
+
+      &.right {
+        text-align: right;
+      }
+
+      &.center {
+        text-align: center;
+      }
+
+      &.full {
+        width: 100%;
+      }
+
+      &.side {
+        padding: 0 10px;
+      }
+
+      &.cover {
+        padding: 10px 0;
+      }
     }
   }
 }
@@ -46,6 +74,8 @@
 .img-wrapper {
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 
   .img {
     position: absolute;
@@ -53,5 +83,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: inherit;
+  }
+}
+
+.d-flex {
+  .flex-1 {
+    flex: 1 !important;
   }
 }

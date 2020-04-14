@@ -20,111 +20,112 @@
     top: 0;
     left: 0;
   }
+}
 
-  .upload-item {
-    padding-bottom: 15px;
-    border-bottom: 1px solid $grayDark;
+.upload-item {
+  padding-bottom: 15px;
+  border-bottom: 1px solid $grayDark;
+}
+
+.cover-wrapper {
+  width: 150px;
+  height: 150px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover {
+    opacity: 0.8;
   }
 
-  .cover-wrapper {
-    width: 170px;
-    height: 170px;
-    position: relative;
+  .img {
+    width: inherit;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.upload-content {
+  padding: 0px 20px;
+  flex: 1;
+
+  .upload-header {
+    display: flex;
+    align-items: center;
+
+    select.release-type {
+      width: 120px;
+      margin-left: 10px;
+    }
+  }
+}
+
+.upload-track-item {
+  display: table;
+  border-spacing: 10px 15px;
+  position: relative;
+  width: 100%;
+  padding-right: 250px;
+  background-color: $blackLight;
+
+  .marker-wrapper {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: $blueMain;
+    color: $white;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    overflow: hidden;
 
+    .close {
+      display: none;
+      path {
+        fill: $white;
+        fill-opacity: 1;
+      }
+    }
     &:hover {
-      opacity: 0.8;
-    }
-
-    .img {
-      width: inherit;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-
-  .upload-content {
-    padding: 0px 20px;
-    flex: 1;
-
-    .upload-header {
-      display: flex;
-      align-items: center;
-
-      select.release-type {
-        width: 120px;
-        margin-left: 10px;
+      .index {
+        display: none;
+      }
+      .close {
+        display: block;
       }
     }
   }
 
-  .upload-track-item {
-    display: table;
-    border-spacing: 10px 15px;
-    position: relative;
-    width: 100%;
-    padding-right: 250px;
+  .upload-field {
+    display: table-row;
 
-    .marker-wrapper {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background-color: $blueMain;
+    > * {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+    .label {
       color: $white;
-      right: 0;
-      top: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font: $shortBig;
+      font-weight: bold;
+    }
+
+    svg {
       cursor: pointer;
 
-      .close {
-        display: none;
-        path {
-          fill: $white;
-          fill-opacity: 1;
-        }
-      }
       &:hover {
-        .index {
-          display: none;
-        }
-        .close {
-          display: block;
-        }
+        transform: scale(1.1);
       }
     }
+  }
 
-    .upload-field {
-      display: table-row;
-
-      > * {
-        display: table-cell;
-        vertical-align: middle;
-      }
-
-      .label {
-        color: $white;
-        font: $shortBig;
-        font-weight: bold;
-      }
-
-      svg {
-        cursor: pointer;
-
-        &:hover {
-          transform: scale(1.1);
-        }
-      }
-    }
-
-    .genre-input-wrapper {
-      max-width: 150px;
-      font: $shortSmall;
-      color: $grayLight;
-    }
+  .genre-input-wrapper {
+    max-width: 150px;
+    font: $shortSmall;
+    color: $grayLight;
   }
 }

@@ -20,7 +20,14 @@ import {
 } from './contexts';
 import NotFound from './NotFound';
 import { CMS, CMSLogin } from './routes/cms';
-import { Home, Login, Premium, Purchase, Register } from './routes/landing';
+import {
+  Home,
+  Login,
+  Premium,
+  Purchase,
+  Register,
+  ReportArtist
+} from './routes/landing';
 import Logout from './routes/Logout';
 import { Player } from './routes/player';
 
@@ -41,7 +48,8 @@ class App extends Component {
                       path='/purchase/:type/:packageType?'
                       component={Purchase}
                     />
-                    <GuestRoute exact path='/login' component={Login} />
+                    <UserRoute path='/report/:id' component={ReportArtist} />
+                    <GuestRoute path='/login' component={Login} />
                     <GuestRoute path='/register' component={Register} />
                     <UserRoute path='/logout' component={Logout} />
                     <UserRoute path='/player' component={Player} />

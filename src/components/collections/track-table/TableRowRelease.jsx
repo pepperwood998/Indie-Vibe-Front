@@ -2,13 +2,13 @@ import React from 'react';
 import { getFormattedTime } from '../../../utils/Common';
 import CellAction from './TableCellAction';
 import CellFavorite from './TableCellFavorite';
-import CellTitle from './TableCellTitle';
+import CellExtra from './TableCellExtra';
 
 function RowRelease(props) {
   const { item, serial } = props;
 
   return (
-    <div className='collection-table__row collection-table__row--data'>
+    <div className='table-row content'>
       <CellAction
         serial={serial + 1}
         id={item.id}
@@ -21,17 +21,21 @@ function RowRelease(props) {
         relation={item.relation}
         collectionKey='release'
       />
-      <CellTitle
+      <div className='title'>
+        <span className='ellipsis one-line'>{item.title}</span>
+      </div>
+      <CellExtra
         id={item.id}
-        title={item.title}
         fromType='release'
         artistId={props.artistId}
         index={serial}
         relation={item.relation}
         collectionKey='release'
       />
-      <div className='collection-table__cell collection-table__cell--duration'>
-        <span className='main'>{getFormattedTime(item.duration / 1000)}</span>
+      <div className='duration center side'>
+        <span className='ellipsis one-line'>
+          {getFormattedTime(item.duration / 1000)}
+        </span>
       </div>
     </div>
   );

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { searchSimpleUsers, delegateCurator } from '../../../apis/APICms';
+import { delegateCurator, searchSimpleUsers } from '../../../apis/APICms';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
+import { ButtonLoadMore } from '../../../components/buttons';
 import { CardError } from '../../../components/cards';
 import { AuthContext, LibraryContext } from '../../../contexts';
-import { ButtonRegular } from '../components/buttons';
+import { ButtonQuick, ButtonRegular } from '../components/buttons';
 import { InputTextRegular } from '../components/inputs';
-import { ButtonLoadMore } from '../../../components/buttons';
 
 function DelegateCurator(props) {
   const { state: authState } = useContext(AuthContext);
@@ -49,7 +49,15 @@ function DelegateCurator(props) {
       .then(res => {
         setStatus({ ...status, submitted: false });
         if (res.status === 'success' && res.data) {
-          setUsers({ ...users, ...res.data });
+          const { data } = res;
+          setUsers({
+            ...users,
+            ...data,
+            items: data.items.map(item => ({
+              ...item,
+              delegated: item.role.id === 'r-curator'
+            }))
+          });
         } else {
           throw res.data;
         }
@@ -65,12 +73,22 @@ function DelegateCurator(props) {
   };
 
   const handleLoadMore = () => {
-    searchSimpleUsers(authState.token, data.displayName)
+    searchSimpleUsers(
+      authState.token,
+      data.displayName,
+      users.offset + users.limit
+    )
       .then(res => {
         if (res.status === 'success' && res.data) {
           const newUsers = res.data;
           setUsers({
-            items: [...users.items, ...newUsers.items],
+            items: [
+              ...users.items,
+              ...newUsers.items.map(item => ({
+                ...item,
+                delegated: item.role.id === 'r-curator'
+              }))
+            ],
             offset: newUsers.offset,
             limit: newUsers.limit,
             total: newUsers.total
@@ -84,8 +102,8 @@ function DelegateCurator(props) {
       });
   };
 
-  const handleDelegate = userId => {
-    delegateCurator(authState.token, userId)
+  const handleDelegate = (userId, action) => {
+    delegateCurator(authState.token, userId, action)
       .then(res => {
         if (res.status === 'success') {
           libDispatch(
@@ -95,7 +113,7 @@ function DelegateCurator(props) {
           const items = [...users.items];
           let found = items.some(user => {
             if (userId === user.id) {
-              user.delegated = true;
+              user.delegated = action === 'delegate' ? true : false;
               return true;
             }
           });
@@ -121,8 +139,10 @@ function DelegateCurator(props) {
   return (
     <div className='mono-page-wrapper'>
       <div className='mono-page page-delegate-curator fadein'>
-        <section className='input-box section'>
-          <div className='header'>Search for simple users</div>
+        <section className='input-box boxy catalog-menu'>
+          <div className='header'>
+            <span className='font-short-big'>Search for simple users</span>
+          </div>
           <div className='content'>
             <form onSubmit={handleSearch}>
               {status.submitErr ? <CardError message={status.submitErr} /> : ''}
@@ -136,7 +156,7 @@ function DelegateCurator(props) {
                 errMessage='Enter display name to search'
               />
               <ButtonRegular
-                className='float-right'
+                className='float-right mt-2'
                 type='submit'
                 disabled={status.submitted}
               >
@@ -145,49 +165,54 @@ function DelegateCurator(props) {
             </form>
           </div>
         </section>
-        <section className='result-box section'>
-          <div className='header'>List of simple users</div>
+        <section className='result-box boxy catalog-menu'>
+          <div className='header'>
+            <span className='font-short-big font-weight-bold'>
+              List of simple users
+            </span>
+          </div>
           <div className='content'>
             {users.total > 0 ? (
-              <ul className='requests-table'>
+              <ul className='delegate-curator table-layout table-layout--collapse'>
                 {users.items.map((item, index) => (
-                  <li className='requests-table__row fadein' key={index}>
-                    <div className='requests-table__cell index'>
+                  <li className='table-row fadein' key={index}>
+                    <div className='index content-width center side'>
                       {index + 1}
                     </div>
-                    <div className='requests-table__cell thumbnail'>
-                      <div className='img-wrapper'>
-                        <img
-                          className='img'
-                          src={
-                            item.thumbnail ? item.thumbnail : AvatarPlaceholder
-                          }
-                        />
+                    <div className='thumbnail content-width cover'>
+                      <div className='thumbnail__container'>
+                        <div className='img-wrapper'>
+                          <img
+                            className='img'
+                            src={
+                              item.thumbnail
+                                ? item.thumbnail
+                                : AvatarPlaceholder
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
-                    <div className='requests-table__cell name'>
+                    <div className='name full'>
                       <span className='ellipsis one-line'>
                         {item.displayName}
                       </span>
                     </div>
-                    <div className='requests-table__cell'>
+                    <div className='tier content-width'>
                       <span className='ellipsis one-line'>
                         {item.role.id === 'r-free' ? 'Free Tier' : 'Premium'}
                       </span>
                     </div>
-                    <div className='requests-table__cell action'>
-                      {item.delegated ? (
-                        <div className='btn-quick regular disabled'>DONE</div>
-                      ) : (
-                        <div
-                          className='btn-quick approve'
-                          onClick={() => {
-                            handleDelegate(item.id);
-                          }}
-                        >
-                          DELEGATE
-                        </div>
-                      )}
+                    <div className='action side'>
+                      <ButtonDelegate
+                        delegated={item.delegated}
+                        delegate={() => {
+                          handleDelegate(item.id, 'undelegate');
+                        }}
+                        undelegate={() => {
+                          handleDelegate(item.id, 'delegate');
+                        }}
+                      />
                     </div>
                   </li>
                 ))}
@@ -196,11 +221,9 @@ function DelegateCurator(props) {
               <span className='empty-text'>No users found</span>
             )}
             {users.total > users.offset + users.limit ? (
-              <div className='load-more-wrapper text-center'>
-                <ButtonLoadMore onClick={handleLoadMore}>
-                  Load more
-                </ButtonLoadMore>
-              </div>
+              <ButtonLoadMore onClick={handleLoadMore}>
+                Load more
+              </ButtonLoadMore>
             ) : (
               ''
             )}
@@ -208,6 +231,22 @@ function DelegateCurator(props) {
         </section>
       </div>
     </div>
+  );
+}
+
+function ButtonDelegate({
+  delegated,
+  delegate = () => undefined,
+  undelegate = () => undefined
+}) {
+  return delegated ? (
+    <ButtonQuick type='deny' onClick={delegate}>
+      UNDELEGATE
+    </ButtonQuick>
+  ) : (
+    <ButtonQuick type='approve' onClick={undelegate}>
+      DELEGATE
+    </ButtonQuick>
   );
 }
 

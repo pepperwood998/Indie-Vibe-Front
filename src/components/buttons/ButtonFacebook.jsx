@@ -1,33 +1,37 @@
 import React from 'react';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
-function ButtonFacebook(props) {
-  let classes = [
-    'button button-fb font-white font-short-regular font-weight-bold',
-    props.className
-  ].join(' ');
-  if (props.isFitted) {
-    classes += ' button--fit';
-  }
-  if (props.disabled) {
-    classes += ' disabled';
-  }
+function ButtonFacebook({
+  className = '',
+  full = false,
+  disabled = false,
+  onClick = () => undefined,
+  children,
+  type = 'button',
+  responseFacebook = () => undefined
+}) {
+  let classes =
+    'button button-fb font-white font-short-regular font-weight-bold';
+  classes += className ? ` ${className}` : '';
+  classes += full ? ' full' : '';
+  classes += disabled ? ' disabled' : '';
 
   return (
     <FacebookLogin
       appId='130595185046801'
       fields='name,email,picture'
-      callback={props.responseFacebook}
+      callback={responseFacebook}
       render={renderProps => (
-        <div
+        <button
           className={classes}
           onClick={() => {
-            if (props.onClick) props.onClick();
+            onClick();
             renderProps.onClick();
           }}
+          type={type}
         >
-          {props.children}
-        </div>
+          {children}
+        </button>
       )}
     />
   );

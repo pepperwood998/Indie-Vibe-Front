@@ -2,7 +2,7 @@
   padding: 12px 20px;
   text-align: center;
   border-radius: 5px;
-  cursor: pointer;
+  border: 0px;
 
   &-main {
     background-color: $blueMain;
@@ -17,6 +17,11 @@
       &:hover {
         opacity: 0.6;
       }
+    }
+
+    &.revert {
+      background-color: $white;
+      color: $blueMain;
     }
   }
 
@@ -37,6 +42,10 @@
   &-load-more {
     display: table;
     margin: auto;
+  }
+
+  &.full {
+    width: 100%;
   }
 
   &--fit {

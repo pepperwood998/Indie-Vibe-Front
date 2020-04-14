@@ -5,6 +5,7 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { FavoriteIcon, UnFavoriteIcon } from '../../../assets/svgs';
 import {
   ButtonIcon,
+  ButtonLoadMore,
   ButtonMain,
   ButtonMore
 } from '../../../components/buttons';
@@ -13,7 +14,7 @@ import GroupEmpty from '../../../components/groups/GroupEmpty';
 import { InputForm } from '../../../components/inputs';
 import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
-import { capitalize, getDatePart, useEffectSkip } from '../../../utils/Common';
+import { contain, getDatePart, useEffectSkip } from '../../../utils/Common';
 
 function Release(props) {
   // contexts
@@ -23,11 +24,7 @@ function Release(props) {
     actions: streamAction,
     dispatch: streamDispatch
   } = useContext(StreamContext);
-  const {
-    state: libState,
-    actions: libActions,
-    dispatch: libDispatch
-  } = useContext(LibraryContext);
+  const { state: libState } = useContext(LibraryContext);
 
   // states
   const [firstRender, setFirstRender] = useState(true);
@@ -43,8 +40,12 @@ function Release(props) {
   });
   const [owner, setOwner] = useState({ role: {} });
   const [existed, setExisted] = useState(false);
+  const [extra, setExtra] = useState({
+    filter: ''
+  });
 
   // props
+  const { tracks } = data;
   const id = props.match.params.id;
   let isCurrentList =
     streamState.playFromType === 'release' && id === streamState.playFromId;
@@ -110,6 +111,33 @@ function Release(props) {
       });
   };
 
+  const handleLoadMore = () => {
+    getTrackList(authState.token, id, 'release', tracks.offset + tracks.limit)
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const newTracks = res.data.tracks;
+
+          setData({
+            ...data,
+            tracks: {
+              ...tracks,
+              ...newTracks,
+              items: [...tracks.items, ...newTracks.items]
+            }
+          });
+        } else {
+          throw res.data;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
+  const handleFilter = e => {
+    setExtra({ ...extra, filter: e.target.value });
+  };
+
   return firstRender ? (
     ''
   ) : (
@@ -152,7 +180,9 @@ function Release(props) {
           <div className='track-list__action'>
             <div className='action'>
               {isCurrentList && !streamState.paused ? (
-                <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
+                <ButtonMain revert onClick={handlePaused}>
+                  PAUSE
+                </ButtonMain>
               ) : (
                 <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
               )}
@@ -183,16 +213,33 @@ function Release(props) {
               />
             </div>
             <div className='filter'>
-              <InputForm placeholder='Filter' />
+              <InputForm
+                placeholder='Filter'
+                onChange={handleFilter}
+                value={extra.filter}
+              />
             </div>
           </div>
           <div className='track-list__content'>
             <TrackTable
-              items={data.tracks.items}
+              items={
+                extra.filter
+                  ? data.tracks.items.filter(item =>
+                      contain(extra.filter, item.title)
+                    )
+                  : data.tracks.items
+              }
               releaseArtistId={data.artist ? data.artist.id : ''}
               playFromId={data.id}
               type='release'
             />
+            {tracks.total > tracks.offset + tracks.limit ? (
+              <ButtonLoadMore onClick={handleLoadMore}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>

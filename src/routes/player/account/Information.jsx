@@ -1,5 +1,9 @@
 import React, { useContext, useRef, useState } from 'react';
-import { getProfile, updateAccount, getAccount } from '../../../apis/API';
+import {
+  cancelSubscription,
+  getAccount,
+  updateAccount
+} from '../../../apis/API';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonMain } from '../../../components/buttons';
 import {
@@ -112,6 +116,42 @@ function Information(props) {
       });
   };
 
+  const handleCancelSubscription = () => {
+    libDispatch(
+      libActions.setConfirmDialog(
+        true,
+        'Confirm cancel the subscription',
+        () => {
+          cancelSubscription(authState.token)
+            .then(res => {
+              if (res.status === 'success') {
+                libDispatch(
+                  libActions.setNotification(
+                    true,
+                    true,
+                    'Successfully cancel subscription. Prepare to be log-out'
+                  )
+                );
+
+                setTimeout(() => {
+                  window.location.href = '/logout';
+                }, 500);
+              } else {
+                throw res.data;
+              }
+            })
+            .catch(err => {
+              if (typeof err !== 'string') {
+                err = 'Server error';
+              }
+
+              libDispatch(libActions.setNotification(true, false, err));
+            });
+        }
+      )
+    );
+  };
+
   return (
     <div className='fadein content-padding'>
       <div className='account-information body__bound'>
@@ -210,17 +250,30 @@ function Information(props) {
               <div className='table-row'>
                 <span className='label'></span>
                 <div>
-                  <ButtonMain
-                    isFitted={true}
-                    onClick={handleSubmit}
-                    disabled={status.updating}
-                  >
+                  <ButtonMain onClick={handleSubmit} disabled={status.updating}>
                     Save
                   </ButtonMain>
                 </div>
               </div>
             </div>
           </section>
+          {account.userPlan.id !== 'p-monthly' ? (
+            ''
+          ) : (
+            <section className='catalog'>
+              <div className='catalog__header'>
+                <span className='font-short-extra font-gray-light'>
+                  Cancel subscription
+                </span>
+              </div>
+              <ButtonMain
+                className='dangerous'
+                onClick={handleCancelSubscription}
+              >
+                Cancel Subscription
+              </ButtonMain>
+            </section>
+          )}
         </div>
       </div>
     </div>

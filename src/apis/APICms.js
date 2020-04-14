@@ -67,8 +67,11 @@ export const searchSimpleUsers = (
   }).then(response => response.json());
 };
 
-export const delegateCurator = (token, userId) => {
-  let url = new URL(`${host}/cms/delegate`);
+export const delegateCurator = (token, userId, action = 'delegate') => {
+  let url;
+  if (action === 'delegate') url = new URL(`${host}/cms/delegate`);
+  else url = new URL(`${host}/cms/undelegate`);
+
   let formData = new FormData();
   formData.append('userId', userId);
 
@@ -78,5 +81,84 @@ export const delegateCurator = (token, userId) => {
       Authorization: 'Bearer ' + token
     },
     body: formData
+  }).then(response => response.json());
+};
+
+export const getRevenueYear = (token, start, end) => {
+  let url = new URL(`${host}/cms/revenue/yearly`);
+  url.search = new URLSearchParams({ start, end });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getRevenueMonth = (token, year) => {
+  let url = new URL(`${host}/cms/revenue/monthly`);
+  url.search = new URLSearchParams({ year });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getReports = (token, type, status, offset = 0, limit = 20) => {
+  let urlStr = `${host}/cms/reports`;
+  if (type && type !== 'all') urlStr += `/${type}`;
+
+  let url = new URL(urlStr);
+  url.search = new URLSearchParams({ offset, limit });
+
+  if (status && status !== 'all') url.searchParams.append('status', status);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const processReport = (token, id, action) => {
+  let url = new URL(`${host}/cms/reports/${id}`);
+  let formData = new FormData();
+  formData.append('action', action);
+
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
+
+export const getStatisticsAnnual = (token, start, end) => {
+  let url = new URL(`${host}/cms/stream/yearly`);
+  url.search = new URLSearchParams({ start, end });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const getStatisticsMonthly = (token, year) => {
+  let url = new URL(`${host}/cms/stream/monthly`);
+  url.search = new URLSearchParams({ year });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
   }).then(response => response.json());
 };

@@ -26,6 +26,8 @@ function Content(props) {
   }
 
   return items.map((item, index) => {
+    if (!item) return '';
+
     switch (item.type) {
       case 'playlist':
       case 'release':

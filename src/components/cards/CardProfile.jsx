@@ -1,25 +1,40 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-
+import { performActionFavorite } from '../../apis/API';
+import { streamCollection } from '../../apis/StreamAPI';
+import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
+import {
+  FavoriteIcon,
+  PauseIcon,
+  PlayIcon,
+  UnFavoriteIcon
+} from '../../assets/svgs';
+import { AuthContext, LibraryContext, StreamContext } from '../../contexts';
 import { ButtonIcon, ButtonMore } from '../buttons';
 import { NavLinkUnderline } from '../links';
-import { AuthContext, LibraryContext } from '../../contexts';
-import { performActionFavorite } from '../../apis/API';
-
-import { FavoriteIcon, PlayIcon, UnFavoriteIcon } from '../../assets/svgs';
-import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 
 function CardProfile(props) {
-  const { content } = props;
-
   const { state: authState } = useContext(AuthContext);
   const {
     state: libState,
     actions: libActions,
     dispatch: libDispatch
   } = useContext(LibraryContext);
+  const {
+    state: streamState,
+    actions: streamActions,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
 
-  const type = content.role.id === 'r-artist' ? 'artist' : 'profile';
+  const { content } = props;
+  const type = content.role
+    ? content.role.id === 'r-artist'
+      ? 'artist'
+      : 'profile'
+    : '';
+  let isCurrentList =
+    content.type === streamState.playFromType &&
+    content.id === streamState.playFromId;
 
   const handleToggleFavorite = action => {
     performActionFavorite(
@@ -43,8 +58,29 @@ function CardProfile(props) {
       });
   };
 
+  const handlePlay = () => {
+    if (isCurrentList) {
+      streamDispatch(streamActions.togglePaused(false));
+    } else {
+      streamCollection(authState.token, 'artist', content.id).then(res => {
+        if (res.status === 'success' && res.data.length) {
+          streamDispatch(
+            streamActions.start(res.data, 'artist', content.id)
+          );
+        }
+      });
+    }
+  };
+
+  const handlePaused = () => {
+    streamDispatch(streamActions.togglePaused(true));
+  };
+
   let ctxClasses = 'action profile';
-  if (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
+  if (
+    isCurrentList ||
+    (libState.ctxMenuOpened && content.id === libState.ctxMenuContent.id)
+  )
     ctxClasses += ' active';
   return (
     <div className='card-main'>
@@ -66,7 +102,11 @@ function CardProfile(props) {
           {type === 'artist' ? (
             <div className='action__play'>
               <ButtonIcon>
-                <PlayIcon />
+                {isCurrentList && !streamState.paused ? (
+                  <PauseIcon onClick={handlePaused} />
+                ) : (
+                  <PlayIcon onClick={handlePlay} />
+                )}
               </ButtonIcon>
             </div>
           ) : (

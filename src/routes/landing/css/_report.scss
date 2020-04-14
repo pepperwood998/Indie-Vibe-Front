@@ -1,0 +1,45 @@
+.success-box {
+  background-color: $green;
+  padding: 30px 20px;
+  border-radius: 4px;
+
+  .header {
+    font: $shortExtra;
+    color: $white;
+    font-weight: bold;
+    margin: 0 0 15px;
+  }
+
+  .content {
+    font: $shortBig;
+    color: $graySuperLight;
+  }
+}
+
+.report-types-box {
+  .header {
+    font: $banner;
+    font-weight: bold;
+    color: $white;
+  }
+
+  .content {
+    padding: 30px 0;
+
+    .type {
+      &:not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      .radio {
+        font: $shortExtra;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.submit-box {
+  padding: 15px 0;
+}

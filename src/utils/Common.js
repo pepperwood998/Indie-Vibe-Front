@@ -1,4 +1,5 @@
-import { useRef, useEffect } from 'react';
+import interpolate from 'color-interpolate';
+import React, { useEffect, useRef } from 'react';
 
 export const capitalize = str => {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -94,4 +95,123 @@ export const fixedPrices = {
   month3: [135000, '3 months'],
   month6: [289000, '6 months'],
   year: [490000, '1 year']
+};
+
+export const months = {
+  short: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ],
+  full: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ]
+};
+
+export const createMonthOptions = () => {
+  let options = [];
+
+  for (let i = 1; i <= 12; i++) {
+    options.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    );
+  }
+
+  return options;
+};
+
+export const createYearOptions = (
+  start = 2019,
+  end = new Date().getFullYear()
+) => {
+  let options = [];
+
+  for (let i = start; i <= end; i++) {
+    options.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    );
+  }
+
+  return options;
+};
+
+const colormap = interpolate(['#4d4d4d', '#9100ea', '#46a049', '#23aecd']);
+
+export const mapColor = (amount, total) => {
+  return colormap(amount / total);
+};
+
+export const current = {
+  month: new Date().getMonth() + 1,
+  year: new Date().getFullYear()
+};
+
+export const streamCompare = {
+  total: 10,
+  release: 10,
+  track: 20,
+  cms: {
+    year: 20,
+    month: 5
+  }
+};
+
+export const model = {
+  track: {
+    title: '',
+    genres: [],
+    producer: ''
+  },
+  audio: {
+    audio128: null,
+    audio320: null
+  },
+  paging: {
+    items: [],
+    offset: 0,
+    limit: 10,
+    total: 0
+  }
+};
+
+export const statusModel = {
+  report: {
+    all: 'All',
+    pending: 'Pending',
+    proceeded: 'Proceeded',
+    rejected: 'Rejected'
+  }
+};
+
+export const currency = 'VND';
+
+export const contain = (input, str) => {
+  return new RegExp(
+    input.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+    'gi'
+  ).test(str);
 };

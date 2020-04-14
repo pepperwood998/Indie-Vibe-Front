@@ -14,7 +14,6 @@ function Genres(props) {
 
   useEffect(() => {
     getGenresList(authState.token)
-      .then(response => response.json())
       .then(res => {
         setFirstRender(false);
         if (res.status === 'success') {

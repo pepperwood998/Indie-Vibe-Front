@@ -44,10 +44,10 @@ function ConfirmDialog(props) {
           />
         </div>
         <div className='confirm-dialog__body'>
-          <ButtonMain className='confirm' onClick={handleConfirm} isFitted>
+          <ButtonMain className='confirm' onClick={handleConfirm}>
             Confirm
           </ButtonMain>
-          <ButtonFrame className='cancel' onClick={handlCancel} isFitted>
+          <ButtonFrame className='cancel' onClick={handlCancel}>
             Cancel
           </ButtonFrame>
         </div>

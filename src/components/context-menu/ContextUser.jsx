@@ -59,7 +59,9 @@ function Other(props) {
       </li>
       {content.type === 'artist' ? (
         <li>
-          <LinkWhiteColor>Report Artist</LinkWhiteColor>
+          <LinkWhiteColor href={`/report/${content.id}`}>
+            Report Artist
+          </LinkWhiteColor>
         </li>
       ) : (
         ''

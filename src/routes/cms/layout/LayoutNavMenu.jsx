@@ -16,13 +16,13 @@ function NavMenu(props) {
           <li>
             <NavLink
               className='link'
-              to='/cms/home'
+              to='/cms/dashboard'
               isActive={(match, location) => {
                 const { pathname } = location;
-                return pathname === '/cms' || pathname === '/cms/home';
+                return pathname === '/cms' || pathname === '/cms/dashboard';
               }}
             >
-              <span>Home</span>
+              <span>Dashboard</span>
             </NavLink>
           </li>
           <li>
@@ -43,6 +43,21 @@ function NavMenu(props) {
           <li>
             <NavLink className='link' to='/cms/delegate-curator'>
               <span className='ellipsis one-line'>Delegate curator</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className='link' to='/cms/reports'>
+              <span className='ellipsis one-line'>Report requests</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className='link' to='/cms/streaming'>
+              <span className='ellipsis one-line'>Streaming statistics</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className='link' to='/cms/revenue'>
+              <span className='ellipsis one-line'>Revenue</span>
             </NavLink>
           </li>
         </ul>

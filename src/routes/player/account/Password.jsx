@@ -122,7 +122,6 @@ function Password(props) {
                 <span className='label'></span>
                 <div>
                   <ButtonMain
-                    isFitted={true}
                     disabled={status.updating}
                     onClick={handleUpdatePassword}
                   >

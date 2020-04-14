@@ -1,5 +1,4 @@
 .page-home {
-  padding: 10px 15px;
 }
 
 .page-requests {
@@ -21,10 +20,6 @@
 
     .content {
       padding: 10px 0;
-    }
-
-    .load-more-wrapper {
-      background-color: $blueDark;
     }
   }
 }
@@ -80,11 +75,6 @@
       padding: 20px 40px;
 
       .tracks {
-        width: 60%;
-      }
-
-      .load-more-wrapper {
-        background-color: $blueDark;
         width: 60%;
       }
 
@@ -155,32 +145,9 @@
   flex-direction: row;
   padding: 20px;
 
-  .section {
-    padding: 15px;
-    border: 1px solid $grayLight;
-    border-radius: 3px;
-
-    .header {
-      font: $shortBig;
-      padding: 0 0 10px;
-      margin-bottom: 15px;
-      font-weight: bold;
-    }
-  }
-
   .input-box {
     flex: 1;
     margin-right: 15px;
-
-    .header {
-      border-bottom: 1px solid $grayLight;
-    }
-
-    .content {
-      form > * {
-        margin-bottom: 5px;
-      }
-    }
   }
 
   .result-box {
@@ -191,80 +158,30 @@
       border-radius: 3px;
       background-color: $graySuperLight;
       padding: 20px;
-
-      .load-more-wrapper {
-        background-color: $blueDark;
-      }
     }
+  }
+}
+
+.page-reports {
+  .report-details {
+    .thumbnail {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+.page-revenue {
+  .annual {
+    margin-bottom: 20px;
+  }
+
+  .box-statistic {
+    box-shadow: 0 0 5px #00000073;
   }
 }
 
 .empty-text {
   font: $shortSmall;
   font-style: italic;
-}
-
-.requests-table {
-  padding: 0 10px;
-
-  &__row {
-    display: flex;
-    flex-direction: row;
-    border-bottom: 1px solid $grayLight;
-    box-sizing: content-box;
-  }
-
-  &__cell {
-    display: flex;
-    align-items: center;
-    padding: 8px 5px;
-
-    &:not(:first-child) {
-      margin-left: 10px;
-    }
-
-    &.index {
-      width: 40px;
-      justify-content: center;
-    }
-
-    &.thumbnail {
-      justify-content: center;
-
-      .img-wrapper {
-        width: 40px;
-        height: 40px;
-        position: relative;
-        overflow: hidden;
-        border-radius: 50%;
-
-        .img {
-          width: inherit;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-      }
-    }
-
-    &.name {
-      flex: 1;
-
-      .link {
-        font: $shortRegular;
-        color: $black;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-
-    &.action {
-      :last-child {
-        margin-left: 3px;
-      }
-    }
-  }
 }

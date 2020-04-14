@@ -1,10 +1,12 @@
-import React from 'react';
-
-import { NavBar, Footer } from './parts';
-
+import React, { useContext } from 'react';
+import { LibraryContext } from '../../contexts';
+import { Notification } from '../player/Player';
 import './css/style.scss';
+import { Footer, NavBar } from './parts';
 
 function Landing(props) {
+  const { state: libState } = useContext(LibraryContext);
+
   return (
     <div className='page-landing'>
       <div className='page-landing__nav side-space'>
@@ -23,6 +25,7 @@ function Landing(props) {
       <div className='page-landing__footer side-space'>
         <Footer short={props.short} />
       </div>
+      {libState.notification.opened ? <Notification /> : ''}
     </div>
   );
 }

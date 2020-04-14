@@ -1,10 +1,12 @@
 import React, { useContext, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { getPlaylistsMeOwn } from '../../apis/API';
-import { AddPlaylistIcon, ArrowDown } from '../../assets/svgs';
-import { ButtonFrame, ButtonLoadMore } from '../../components/buttons';
-import { LinkWhiteColor } from '../../components/links';
-import { AuthContext, LibraryContext, MeContext } from '../../contexts';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
+import { AddPlaylistIcon, ArrowDown } from '../../assets/svgs';
+import { ButtonLoadMore } from '../../components/buttons';
+import { LinkWhiteColor } from '../../components/links';
+import Tooltip from '../../components/tooltips/Tooltip';
+import { AuthContext, LibraryContext, MeContext } from '../../contexts';
 
 function QuickAccess(props) {
   const { state: authState } = useContext(AuthContext);
@@ -60,29 +62,40 @@ function QuickAccess(props) {
   return (
     <div className='quick-access'>
       <div className='quick-access__account'>
-        <div className={userBoxClasses} onClick={handleToggleCtxMenu}>
+        <div className={userBoxClasses}>
           <section className='title'>
-            <span className='font-short-regular font-weight-bold font-white ellipsis one-line'>
-              {meState.displayName}
-            </span>
+            <NavLink to='/player/account'>
+              <span className='font-short-regular font-weight-bold font-white ellipsis one-line'>
+                {meState.displayName}
+              </span>
+            </NavLink>
           </section>
-          <section className='thumbnail'>
-            <img
-              src={meState.thumbnail ? meState.thumbnail : AvatarPlaceholder}
-            />
-          </section>
-          <section>
-            <ArrowDown className='svg--small' />
+          <section onClick={handleToggleCtxMenu} className='d-flex'>
+            <div className='thumbnail'>
+              <div className='img-wrapper'>
+                <img
+                  className='img'
+                  src={
+                    meState.thumbnail ? meState.thumbnail : AvatarPlaceholder
+                  }
+                />
+              </div>
+            </div>
+            <div>
+              <ArrowDown className='svg--small' />
+            </div>
           </section>
         </div>
       </div>
       <div className='quick-access__playlists'>
         <div className='banner'>
           <span className='font-short-s font-gray-light'>Playlists</span>
-          <AddPlaylistIcon
-            className='svg--regular svg--cursor svg--scale'
-            onClick={handleOpenDialog}
-          />
+          <Tooltip tooltip='New playlist' pos='left'>
+            <AddPlaylistIcon
+              className='svg--regular svg--cursor svg--scale'
+              onClick={handleOpenDialog}
+            />
+          </Tooltip>
         </div>
         <div className='content-wrapper'>
           <ul className='content'>
@@ -107,38 +120,6 @@ function QuickAccess(props) {
       </div>
     </div>
   );
-}
-
-function RoleBanner(props) {
-  const { role } = props;
-  switch (role) {
-    case 'r-free':
-      return (
-        <a href='/premium' className='role-free'>
-          <ButtonFrame isFitted={true}>Upgrade</ButtonFrame>
-        </a>
-      );
-    case 'r-premium':
-      return (
-        <div className='role-banner premium font-short-big font-white font-weight-bold'>
-          Premium
-        </div>
-      );
-    case 'r-artist':
-      return (
-        <div className='role-banner artist font-short-big font-white font-weight-bold'>
-          Artist
-        </div>
-      );
-    case 'r-curator':
-      return (
-        <div className='role-banner curator font-short-big font-white font-weight-bold'>
-          Editor
-        </div>
-      );
-    default:
-      return '';
-  }
 }
 
 export default QuickAccess;

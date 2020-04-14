@@ -1,19 +1,27 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { performActionFavorite } from '../../apis/API';
+import { streamCollection } from '../../apis/StreamAPI';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
 import { FavoriteIcon, UnFavoriteIcon } from '../../assets/svgs';
-import { AuthContext, LibraryContext } from '../../contexts';
+import { AuthContext, LibraryContext, StreamContext } from '../../contexts';
 import { formatNumber, useEffectSkip } from '../../utils/Common';
 import { ButtonIcon, ButtonMain, ButtonMore } from '../buttons';
 
 function GroupProfileBox(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
+  const {
+    state: streamState,
+    actions: streamActions,
+    dispatch: streamDispatch
+  } = useContext(StreamContext);
 
   const [data, setData] = useState({});
 
   let wrapperClasses =
     'profile-header-wrapper' + (props.collapsed ? ' collapsed' : '');
+  let isCurrentList =
+    streamState.playFromType === 'artist' && data.id === streamState.playFromId;
 
   // effect: init
   useEffect(() => {
@@ -46,6 +54,25 @@ function GroupProfileBox(props) {
       });
   };
 
+  const handlePaused = () => {
+    streamDispatch(streamActions.togglePaused(true));
+  };
+  const handlePlay = () => {
+    if (isCurrentList) {
+      streamDispatch(streamActions.togglePaused(false));
+    } else {
+      streamCollection(authState.token, 'artist', data.id)
+        .then(res => {
+          if (res.status === 'success' && res.data.length) {
+            streamDispatch(streamActions.start(res.data, 'artist', data.id));
+          }
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  };
+
   return (
     <div className={wrapperClasses}>
       <div className='profile-header fadein'>
@@ -62,7 +89,13 @@ function GroupProfileBox(props) {
 
           <div className='action'>
             {data.type === 'artist' ? (
-              <ButtonMain isFitted={true}>PLAY</ButtonMain>
+              isCurrentList && !streamState.paused ? (
+                <ButtonMain revert onClick={handlePaused}>
+                  PAUSE
+                </ButtonMain>
+              ) : (
+                <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
+              )
             ) : (
               ''
             )}

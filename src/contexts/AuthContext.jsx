@@ -22,12 +22,6 @@ function AuthContextProvider(props) {
     if (credentials) {
       credentials = JSON.parse(credentials);
       if (credentials['token']) return credentials;
-    } else {
-      credentials = sessionStorage.getItem('credentials');
-      if (credentials) {
-        credentials = JSON.parse(credentials);
-        if (credentials['token']) return credentials;
-      }
     }
 
     return initState;
@@ -48,16 +42,27 @@ function AuthContextProvider(props) {
             })
           );
         } else {
-          dispatch(actions.logout());
+          window.location.href = '/logout';
         }
       });
   };
 
   useEffect(() => {
-    if (state.remembered)
-      localStorage.setItem('credentials', JSON.stringify(state));
-    else {
-      sessionStorage.setItem('credentials', JSON.stringify(state));
+    if (state.refreshToken) {
+      let str = localStorage.getItem('lastTimeSession');
+
+      if (str) {
+        let lastTimeSession = parseInt(str);
+        if (Date.now() - lastTimeSession > state.expiry * 1000) {
+          window.location.href = '/logout';
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('credentials', JSON.stringify(state));
+    if (state.remembered) {
     }
 
     if (state.token) {
@@ -79,8 +84,7 @@ function AuthContextProvider(props) {
       clearTimeout(refresher);
       localStorage.removeItem('lastTimeSession');
       localStorage.removeItem('credentials');
-      sessionStorage.removeItem('credentials');
-      sessionStorage.removeItem('me');
+      localStorage.removeItem('me');
     }
   }, [state.logout]);
 

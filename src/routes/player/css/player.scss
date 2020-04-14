@@ -9,6 +9,7 @@
 @import './animation';
 @import './account';
 @import './browse';
+@import './workspace';
 
 .player {
   display: grid;
@@ -86,6 +87,14 @@
     }
   }
 
+  .button-load-more {
+    color: $grayLight;
+
+    &:hover {
+      color: $grayLight!important;
+    }
+  }
+
   .nav-search {
     display: flex;
     align-items: center;
@@ -132,19 +141,10 @@
         }
 
         .thumbnail {
-          position: relative;
           overflow: hidden;
           border-radius: 50%;
           width: 30px;
           height: 30px;
-
-          img {
-            width: 100%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-          }
         }
 
         .title {

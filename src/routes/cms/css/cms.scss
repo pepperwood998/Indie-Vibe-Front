@@ -2,7 +2,9 @@
 @import '../../../assets/styles/fonts';
 
 @import './inputs';
+@import './layout';
 @import './buttons';
+@import './tables';
 @import './top-bar';
 @import './monopage';
 
@@ -64,7 +66,7 @@
 
   &__nav-menu {
     grid-area: nav-menu;
-    width: 200px;
+    width: 210px;
     background-color: $blueDark;
 
     .banner {

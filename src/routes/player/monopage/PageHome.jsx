@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getHome } from '../../../apis/API';
 import { CollectionMain } from '../../../components/collections';
-import { AuthContext } from '../../../contexts';
+import { AuthContext, LibraryContext } from '../../../contexts';
+import { useEffectSkip } from '../../../utils/Common';
 
 function Home() {
+  const { state: libState } = useContext(LibraryContext);
   const { state: authState } = useContext(AuthContext);
 
   const [firstRender, setFirstRender] = useState(true);
@@ -40,6 +42,26 @@ function Home() {
         console.error(err);
       });
   }, []);
+
+  // effect-skip: favorite
+  useEffectSkip(() => {
+    let mapper = {};
+    const { ctxFav } = libState;
+
+    Object.keys(data).some(key => {
+      const collection = [...data[key]];
+      let existed = collection.some(item => {
+        if (ctxFav.id === item.id) {
+          item.relation = [...ctxFav.relation];
+          return true;
+        }
+      });
+
+      if (existed) mapper[key] = [...collection];
+    });
+
+    setData({ ...data, ...mapper });
+  }, [libState.ctxFav]);
 
   return firstRender ? (
     ''

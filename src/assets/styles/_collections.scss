@@ -75,98 +75,78 @@
 }
 
 .collection-table {
-  &__row {
-    display: flex;
-    flex-direction: row;
-    height: 50px;
-    border-bottom: 1px solid $grayDark;
-    box-sizing: content-box;
-    font: $shortRegular;
+  font: $shortRegular;
 
-    &--header {
-      color: $grayLight;
-      border-top: 1px solid $grayDark;
-    }
+  &.table-layout {
+    table-layout: fixed;
 
-    &:hover {
-      &.collection-table__row--data {
-        background-color: $blackLight;
+    .table-row {
+      height: 50px;
+      border-bottom: 1px solid $grayDark;
+
+      &.header {
+        color: $grayLight;
+        border-top: 1px solid $grayDark;
+
+        .action,
+        .favorite {
+          width: 50px;
+        }
+
+        .release {
+          width: 20%;
+        }
+
+        .artist {
+          width: 15%;
+        }
+
+        .extra,
+        .duration,
+        .added-date {
+          width: 10%;
+        }
       }
 
-      .collection-table__cell--action .action {
-        visibility: visible;
+      &.content {
+        color: $white;
+
+        .action {
+          position: relative;
+
+          .control {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            visibility: hidden;
+          }
+        }
+
+        .extra {
+          > * {
+            visibility: hidden;
+          }
+        }
+
+        &:hover {
+          background-color: $blackLight;
+
+          .action > .serial {
+            visibility: hidden;
+          }
+
+          .action > .control {
+            visibility: visible;
+          }
+
+          .extra {
+            > * {
+              visibility: visible;
+            }
+          }
+        }
       }
-
-      .collection-table__cell--title .extra {
-        visibility: visible;
-      }
-    }
-  }
-
-  &__cell {
-    display: flex;
-    align-items: center;
-    color: $white;
-    overflow: hidden;
-
-    .main {
-      min-width: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    &--action {
-      width: 50px;
-      justify-content: center;
-      position: relative;
-
-      .action {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        visibility: hidden;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .action.active {
-        visibility: visible;
-      }
-    }
-    &--favorite {
-      width: 50px;
-      justify-content: center;
-    }
-    &--title {
-      flex: 1;
-      justify-content: space-between;
-      padding-left: 10px;
-
-      .extra {
-        visibility: hidden;
-        display: flex;
-      }
-    }
-    &--artist {
-      width: 20%;
-      padding-left: 10px;
-    }
-    &--release {
-      width: 20%;
-      padding-left: 10px;
-    }
-    &--duration {
-      width: 100px;
-      padding-left: 10px;
-    }
-    &--added-date {
-      width: 100px;
-      padding-left: 10px;
     }
   }
 }

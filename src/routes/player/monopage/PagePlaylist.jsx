@@ -5,6 +5,7 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { FavoriteIcon, UnFavoriteIcon } from '../../../assets/svgs';
 import {
   ButtonIcon,
+  ButtonLoadMore,
   ButtonMain,
   ButtonMore
 } from '../../../components/buttons';
@@ -13,7 +14,7 @@ import { GroupEmpty } from '../../../components/groups';
 import { InputForm } from '../../../components/inputs';
 import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
-import { useEffectSkip } from '../../../utils/Common';
+import { contain, useEffectSkip } from '../../../utils/Common';
 
 function Playlist(props) {
   // contexts
@@ -43,6 +44,9 @@ function Playlist(props) {
   });
   const [existed, setExisted] = useState(false);
   const [owner, setOwner] = useState({ role: {} });
+  const [extra, setExtra] = useState({
+    filter: ''
+  });
 
   // props
   const id = props.match.params.id;
@@ -152,6 +156,39 @@ function Playlist(props) {
       });
   };
 
+  const handleLoadMore = () => {
+    getTrackList(
+      authState.token,
+      id,
+      'playlist',
+      data.tracks.offset + data.tracks.limit
+    )
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const { tracks } = data;
+          const newTracks = res.data.tracks;
+
+          setData({
+            ...data,
+            tracks: {
+              ...tracks,
+              ...newTracks,
+              items: [...tracks.items, ...newTracks.items]
+            }
+          });
+        } else {
+          throw res.data;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
+  const handleFilter = e => {
+    setExtra({ ...extra, filter: e.target.value });
+  };
+
   return firstRender ? (
     ''
   ) : (
@@ -196,7 +233,9 @@ function Playlist(props) {
           <div className='track-list__action'>
             <div className='action'>
               {isCurrentList && !streamState.paused ? (
-                <ButtonMain onClick={handlePaused}>PAUSE</ButtonMain>
+                <ButtonMain revert onClick={handlePaused}>
+                  PAUSE
+                </ButtonMain>
               ) : (
                 <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
               )}
@@ -226,16 +265,40 @@ function Playlist(props) {
               />
             </div>
             <div className='filter'>
-              <InputForm placeholder='Filter' />
+              <InputForm
+                placeholder='Filter'
+                onChange={handleFilter}
+                value={extra.filter}
+              />
             </div>
           </div>
           <div className='track-list__content'>
             <TrackTable
-              items={data.tracks.items}
+              items={
+                extra.filter
+                  ? data.tracks.items.filter(item => {
+                      const { track } = item;
+                      return (
+                        contain(extra.filter, track.title) ||
+                        contain(extra.filter, track.release.title) ||
+                        track.artists.some(artist =>
+                          contain(extra.filter, artist.displayName)
+                        )
+                      );
+                    })
+                  : data.tracks.items
+              }
               playFromId={data.id}
               type='playlist'
               playlistRelation={data.relation}
             />
+            {data.tracks.total > data.tracks.offset + data.tracks.limit ? (
+              <ButtonLoadMore onClick={handleLoadMore}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       </div>
