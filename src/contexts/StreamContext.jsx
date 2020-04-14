@@ -361,22 +361,23 @@ const reducer = (state = { ...initState }, action) => {
         shouldPlay = autoplay;
       }
 
-      let backwardId = getCircularIndex(
+      let skipIndex = getCircularIndex(
         type === 'forward'
           ? state.currentSongIndex + 1
           : state.currentSongIndex - 1,
         queue.length
       );
-      stream.start(queue[backwardId].id, shouldPlay);
+      stream.start(queue[skipIndex].id, shouldPlay);
 
       return mannual && role === 'r-free'
         ? {
             ...state,
-            skipStatus: { ...skipStatus, count: skipStatus.count + 1 }
+            skipStatus: { ...skipStatus, count: skipStatus.count + 1 },
+            currentSongIndex: skipIndex
           }
         : {
             ...state,
-            currentSongIndex: backwardId
+            currentSongIndex: skipIndex
           };
     }
     case 'TOGGLE_PAUSED':
