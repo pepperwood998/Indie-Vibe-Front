@@ -79,9 +79,11 @@ function NowPayingLeft() {
     if (streamState.queue[streamState.currentSongIndex].from === 'queue') {
       titleLink = '/player/queue';
     } else {
-      if (playFromType === 'release' || playFromType === 'playlist') {
+      if (playFromType === 'artist') {
+        titleLink = `/player/release/${release.id}`;
+      } else if (playFromType !== 'favorite') {
         titleLink = `/player/${playFromType}/${playFromId}`;
-      } else if (playFromType === 'favorite') {
+      } else {
         titleLink = `/player/library/${authState.id}/tracks`;
       }
     }
@@ -330,9 +332,11 @@ function NowPayingRight() {
           <ShuffleControl />
         </div>
         <div className='control-wrapper'>
-          <Tooltip tooltip='Play queue'>
-            <MusicQueueIcon className='svg--small svg--cursor svg--bright' />
-          </Tooltip>
+          <Link to='/player/queue'>
+            <Tooltip tooltip='Play queue'>
+              <MusicQueueIcon className='svg--small svg--cursor svg--bright' />
+            </Tooltip>
+          </Link>
         </div>
         <div className='control-wrapper control-volume'>
           {!streamState.muted && streamState.volume !== 0 ? (
