@@ -302,27 +302,34 @@ const reducer = (state = { ...initState }, action) => {
     case 'ADD_TO_QUEUE': {
       if (!action.extra.length) return state;
 
+      let newState = {};
       let extra = action.extra.map(item => ({ id: item, from: 'queue' }));
       let queueSrc = [...state.queueSrc];
       if (!queueSrc.length) {
         stream.start(action.extra[0], stream.settings.shouldPlay);
+        newState.currentSongIndex = 0;
       }
       queueSrc.splice(state.currentSongIndex + 1, 0, ...extra);
 
       if (state.shuffled) {
         let queue = [...state.queue];
         queue.splice(state.currentSongIndex + 1, 0, ...extra);
-        return {
-          ...state,
+        newState = {
+          ...newState,
           queue: [...queue],
+          queueSrc: [...queueSrc]
+        };
+      } else {
+        newState = {
+          ...newState,
+          queue: [...queueSrc],
           queueSrc: [...queueSrc]
         };
       }
 
       return {
         ...state,
-        queue: [...queueSrc],
-        queueSrc: [...queueSrc]
+        ...newState
       };
     }
     case 'REPEAT_TRACK': {

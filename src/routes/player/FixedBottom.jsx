@@ -76,12 +76,14 @@ function NowPayingLeft() {
 
   if (id) {
     let titleLink = '';
-    if (playFromType === 'release' || playFromType === 'playlist') {
-      titleLink = `/player/${playFromType}/${playFromId}`;
-    } else if (playFromType === 'favorite') {
-      titleLink = `/player/library/${authState.id}/tracks`;
-    } else {
+    if (streamState.queue[streamState.currentSongIndex].from === 'queue') {
       titleLink = '/player/queue';
+    } else {
+      if (playFromType === 'release' || playFromType === 'playlist') {
+        titleLink = `/player/${playFromType}/${playFromId}`;
+      } else if (playFromType === 'favorite') {
+        titleLink = `/player/library/${authState.id}/tracks`;
+      }
     }
 
     return (
