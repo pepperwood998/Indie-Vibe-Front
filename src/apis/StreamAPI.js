@@ -1,5 +1,4 @@
 import fetch from 'cross-fetch';
-
 import { host } from './constant';
 
 export const streamCollection = (token, type, id) => {
@@ -23,6 +22,18 @@ export const getStreamInfo = (token, id, bitrate) => {
       Authorization: 'Bearer ' + token
     }
   });
+};
+
+export const getStreamQueue = (token, tracks = []) => {
+  let url = new URL(`${host}/queue-detail`);
+  url.search = new URLSearchParams({ tracks: JSON.stringify(tracks) });
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
 };
 
 // export const getStream = (url, start, end) => {

@@ -18,6 +18,7 @@ function RowGeneral(props) {
         id={item.id}
         playFromId={props.playFromId}
         playFromType={playFromType}
+        inQueue={props.inQueue}
       />
       <CellFavorite
         id={item.id}

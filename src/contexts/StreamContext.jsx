@@ -168,6 +168,9 @@ const actions = {
       extra
     };
   },
+  playInQueue: index => {
+    return { type: 'PLAY_IN_QUEUE', index };
+  },
   repeatTrack: () => {
     return { type: 'REPEAT_TRACK' };
   },
@@ -330,6 +333,13 @@ const reducer = (state = { ...initState }, action) => {
       return {
         ...state,
         ...newState
+      };
+    }
+    case 'PLAY_IN_QUEUE': {
+      stream.continue(state.queue[action.index].id);
+      return {
+        ...state,
+        currentSongIndex: action.index
       };
     }
     case 'REPEAT_TRACK': {
