@@ -121,6 +121,16 @@
             transform: translate(-50%, -50%);
             visibility: hidden;
           }
+
+          &.active {
+            .serial {
+              visibility: hidden;
+            }
+
+            .control {
+              visibility: visible;
+            }
+          }
         }
 
         .extra {

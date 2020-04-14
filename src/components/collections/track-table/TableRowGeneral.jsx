@@ -2,8 +2,8 @@ import React from 'react';
 import { getFormattedTime } from '../../../utils/Common';
 import { NavLinkUnderline } from '../../links';
 import CellAction from './TableCellAction';
-import CellFavorite from './TableCellFavorite';
 import CellExtra from './TableCellExtra';
+import CellFavorite from './TableCellFavorite';
 
 function RowGeneral(props) {
   const { item, serial } = props;
@@ -65,7 +65,9 @@ function RowGeneral(props) {
         </span>
       </div>
       <div className='duration center side'>
-        <span className='ellipsis one-line'>{getFormattedTime(item.duration / 1000)}</span>
+        <span className='ellipsis one-line'>
+          {getFormattedTime(item.duration / 1000)}
+        </span>
       </div>
     </div>
   );
