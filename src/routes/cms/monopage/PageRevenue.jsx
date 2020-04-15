@@ -214,7 +214,7 @@ function RevenueSection({
                 Total revenue
               </span>
               <span className='font-short-extra font-blue-main'>
-                {chartTotal[0].data[selectedSum]} {currency}
+                {formatNumber(chartTotal[0].data[selectedSum])} {currency}
               </span>
             </div>
             {selectedSum > 0 ? (
@@ -264,7 +264,8 @@ function RevenueSection({
                 Fixed revenue
               </span>
               <span className='font-short-extra font-green'>
-                {chartComparison[0].data[selectedComparison]} {currency}
+                {formatNumber(chartComparison[0].data[selectedComparison])}{' '}
+                {currency}
               </span>
             </div>
             <div className='box-statistic d-flex flex-column'>
@@ -272,7 +273,8 @@ function RevenueSection({
                 Monthly subscription revenue
               </span>
               <span className='font-short-extra font-purple'>
-                {chartComparison[1].data[selectedComparison]} {currency}
+                {formatNumber(chartComparison[1].data[selectedComparison])}{' '}
+                {currency}
               </span>
             </div>
           </div>
