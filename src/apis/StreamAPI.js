@@ -26,7 +26,7 @@ export const getStreamInfo = (token, id, bitrate) => {
 
 export const getStreamQueue = (token, tracks = []) => {
   let url = new URL(`${host}/queue-detail`);
-  url.search = new URLSearchParams({ tracks: JSON.stringify(tracks) });
+  url.search = new URLSearchParams({ tracks });
 
   return fetch(url, {
     method: 'GET',

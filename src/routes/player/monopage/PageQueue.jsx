@@ -3,7 +3,7 @@ import { getStreamQueue } from '../../../apis/StreamAPI';
 import { TrackTable } from '../../../components/collections/track-table';
 import { GroupEmpty } from '../../../components/groups';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
-import { useEffectSkip } from '../../../utils/Common';
+import { swapOrigin, useEffectSkip } from '../../../utils/Common';
 
 function Queue() {
   const { state: authState } = useContext(AuthContext);
@@ -52,6 +52,20 @@ function Queue() {
     });
     setTracks([...tracksTmp]);
   }, [libState.ctxFav]);
+
+  useEffectSkip(() => {
+    const tracksTemp = [...tracks];
+    streamState.queue.forEach((item, index) => {
+      let queueId = item.id;
+      let tracksIndex = tracksTemp
+        .slice(index)
+        .findIndex(elem => elem.id === queueId);
+
+      if (tracksIndex >= 0) swapOrigin(tracksTemp, index, tracksIndex + index);
+    });
+
+    setTracks(tracksTemp);
+  }, [streamState.shuffled]);
 
   // effect-skip: remove from queue
   useEffectSkip(() => {
