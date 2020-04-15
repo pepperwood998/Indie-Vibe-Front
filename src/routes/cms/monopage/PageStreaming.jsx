@@ -159,7 +159,7 @@ function Annual({ form = { start: 2019, end: current.year } }) {
                 )
               }}
             >
-              {chartData[0].data[selected]} times
+              {formatNumber(chartData[0].data[selected])} times
             </span>
           </div>
         </div>
@@ -242,7 +242,7 @@ function Monthly({ form = { year: current.year } }) {
                 color: mapColor(data[selected] | 0, streamCompare.cms.month)
               }}
             >
-              {data[selected]} times
+              {formatNumber(data[selected])} times
             </span>
           </div>
         </div>
