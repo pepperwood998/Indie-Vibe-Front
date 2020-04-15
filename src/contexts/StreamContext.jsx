@@ -345,6 +345,8 @@ const reducer = (state = { ...initState }, action) => {
       };
     }
     case 'RM_FROM_QUEUE': {
+      if (action.index === state.currentSongIndex) return state;
+
       const queueTmp = [...state.queue];
       const queueSrcTmp = [...state.queueSrc];
 
