@@ -12,10 +12,8 @@ function CellAction(props) {
     dispatch: streamDispatch
   } = useContext(StreamContext);
 
-  const current =
-    streamState.currentSongIndex >= 0
-      ? streamState.queue[streamState.currentSongIndex].id
-      : null;
+  const queueCurrItem = streamState.queue[streamState.currentSongIndex];
+  const current = queueCurrItem ? queueCurrItem.id : null;
   const { serial, id, playFromId, playFromType } = props;
 
   const handlePause = () => {
