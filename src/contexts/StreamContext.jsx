@@ -32,7 +32,10 @@ const initState = {
     count: 0,
     quota: 6
   },
-  loading: false
+  loading: false,
+  rmQueue: {
+    index: -1
+  }
 };
 
 let skipFailCb = () => undefined;
@@ -166,6 +169,12 @@ const actions = {
     return {
       type: 'ADD_TO_QUEUE',
       extra
+    };
+  },
+  removeFromQueue: index => {
+    return {
+      type: 'RM_FROM_QUEUE',
+      index
     };
   },
   playInQueue: index => {
@@ -333,6 +342,22 @@ const reducer = (state = { ...initState }, action) => {
       return {
         ...state,
         ...newState
+      };
+    }
+    case 'RM_FROM_QUEUE': {
+      const queueTmp = [...state.queue];
+      const queueSrcTmp = [...state.queueSrc];
+
+      let rmId = queueTmp[action.index].id;
+      let rmSrcInd = queueSrcTmp.findIndex(item => rmId === item.id);
+      queueSrcTmp.splice(rmSrcInd, 1);
+      return {
+        ...state,
+        queue: queueTmp.filter((item, i) => i !== action.index),
+        queueSrc: [...queueSrcTmp],
+        rmQueue: {
+          index: action.index
+        }
       };
     }
     case 'PLAY_IN_QUEUE': {

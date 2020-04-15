@@ -37,6 +37,7 @@ function RowGeneral(props) {
         index={serial}
         relation={item.relation}
         collectionKey='track'
+        inQueue={props.inQueue}
       />
       <div className='artist'>
         <span className='ellipsis one-line'>

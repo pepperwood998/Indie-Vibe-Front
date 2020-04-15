@@ -53,6 +53,11 @@ function Queue() {
     setTracks([...tracksTmp]);
   }, [libState.ctxFav]);
 
+  // effect-skip: remove from queue
+  useEffectSkip(() => {
+    setTracks(tracks.filter((item, i) => i !== streamState.rmQueue.index));
+  }, [streamState.rmQueue]);
+
   return firstRender ? (
     ''
   ) : (

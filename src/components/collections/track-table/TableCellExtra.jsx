@@ -25,7 +25,9 @@ function CellExtra(props) {
           releaseId: props.releaseId,
           artistId: props.artistId,
           playlistId: props.playlistId,
-          playlistRelation: props.playlistRelation
+          playlistRelation: props.playlistRelation,
+          inQueue: props.inQueue,
+          queueIndex: props.index
         },
         pos: [x, y + height + 10]
       })
