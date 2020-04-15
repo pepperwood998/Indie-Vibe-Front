@@ -84,14 +84,14 @@ function Reports(props) {
             <div className='d-flex'>
               <label
                 htmlFor='report-type'
-                className='label d-flex align-items-center pr-2'
+                className='label d-flex align-items-center pr-2 font-short-s'
               >
-                Select year
+                Report type
               </label>
               <select
                 id='report-type'
                 name='type'
-                value={form.year}
+                value={form.type}
                 className='custom-select'
                 onChange={handleChangeForm}
               >
