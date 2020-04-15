@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { getTrackFull } from '../../../apis/API';
 import { getStreamQueue } from '../../../apis/StreamAPI';
 import { TrackTable } from '../../../components/collections/track-table';
 import { GroupEmpty } from '../../../components/groups';
@@ -71,6 +72,23 @@ function Queue() {
   useEffectSkip(() => {
     setTracks(tracks.filter((item, i) => i !== streamState.rmQueue.index));
   }, [streamState.rmQueue]);
+
+  useEffectSkip(() => {
+    getTrackFull(authState.token, streamState.addQueue.id)
+      .then(res => {
+        if (res.status === 'success' && res.data) {
+          const tracksTmp = [...tracks];
+          tracksTmp.splice(streamState.currentSongIndex + 1, 0, {
+            ...res.data
+          });
+
+          setTracks(tracksTmp);
+        } else throw res.data;
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [streamState.addQueue]);
 
   return firstRender ? (
     ''

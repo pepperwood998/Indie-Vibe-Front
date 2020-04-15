@@ -204,7 +204,7 @@ class AudioStream {
         if (this.audio.autoplay) this.audio.play();
         this.onInfo(data.info);
       })
-      .catch(error => console.log(error));
+      .catch(error => console.error(error));
   }
 }
 

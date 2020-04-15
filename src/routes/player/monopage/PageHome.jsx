@@ -30,7 +30,6 @@ function Home() {
   useEffect(() => {
     getHome(authState.token)
       .then(res => {
-        console.log(res.data);
         setFirstRender(false);
         if (res.status === 'success') {
           setData({ ...data, ...res.data });

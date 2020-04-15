@@ -35,6 +35,9 @@ const initState = {
   loading: false,
   rmQueue: {
     index: -1
+  },
+  addQueue: {
+    id: ''
   }
 };
 
@@ -341,7 +344,10 @@ const reducer = (state = { ...initState }, action) => {
 
       return {
         ...state,
-        ...newState
+        ...newState,
+        addQueue: {
+          id: action.extra[0]
+        }
       };
     }
     case 'RM_FROM_QUEUE': {
