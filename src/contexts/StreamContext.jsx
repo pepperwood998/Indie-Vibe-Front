@@ -35,6 +35,9 @@ const initState = {
   loading: false,
   rmQueue: {
     index: -1
+  },
+  addQueue: {
+    id: ''
   }
 };
 
@@ -341,10 +344,15 @@ const reducer = (state = { ...initState }, action) => {
 
       return {
         ...state,
-        ...newState
+        ...newState,
+        addQueue: {
+          id: action.extra[0]
+        }
       };
     }
     case 'RM_FROM_QUEUE': {
+      if (action.index === state.currentSongIndex) return state;
+
       const queueTmp = [...state.queue];
       const queueSrcTmp = [...state.queueSrc];
 
