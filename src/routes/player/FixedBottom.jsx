@@ -76,7 +76,8 @@ function NowPayingLeft() {
 
   if (id) {
     let titleLink = '';
-    if (streamState.queue[streamState.currentSongIndex].from === 'queue') {
+    const queueCurrItem = streamState.queue[streamState.currentSongIndex];
+    if (queueCurrItem && queueCurrItem.from === 'queue') {
       titleLink = '/player/queue';
     } else {
       if (playFromType === 'artist') {
