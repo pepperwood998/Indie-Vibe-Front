@@ -5,8 +5,7 @@ import RowPlaylist from './TableRowPlaylist';
 import RowRelease from './TableRowRelease';
 
 function TrackTable(props) {
-  const { type } = props;
-  const { items } = props;
+  const { type, items } = props;
 
   return (
     <div className='collection-table table-layout table-layout--collapse'>
@@ -20,7 +19,10 @@ function TrackTable(props) {
           <span>TITLE</span>
         </div>
         <div className='extra'></div>
-        {type === 'search' || type === 'favorite' || type === 'playlist' ? (
+        {type === 'search' ||
+        type === 'favorite' ||
+        type === 'playlist' ||
+        type === 'queue' ? (
           <React.Fragment>
             <div className='artist'>
               <span>ARTISTS</span>
@@ -86,6 +88,7 @@ function TrackTable(props) {
                   serial={index}
                   playFromType={type}
                   playFromId={item.release ? item.release.id : ''}
+                  inQueue={props.inQueue}
                 />
               );
             }

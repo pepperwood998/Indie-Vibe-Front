@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
-
-import { LinkWhiteColor } from '../links';
-import { LibraryContext, AuthContext } from '../../contexts';
 import { removeTrackFromPlaylist } from '../../apis/API';
+import { AuthContext, LibraryContext, StreamContext } from '../../contexts';
+import { LinkWhiteColor } from '../links';
 
 function ContextTrack(props) {
   const { content, handlers } = props;
@@ -10,6 +9,9 @@ function ContextTrack(props) {
   const { state: authState } = useContext(AuthContext);
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
+  );
+  const { actions: streamActions, dispatch: streamDispatch } = useContext(
+    StreamContext
   );
 
   const playlistRelation = Array.isArray(content.playlistRelation)
@@ -51,10 +53,24 @@ function ContextTrack(props) {
     libDispatch(libActions.setTrackCredits(true, content.id));
   };
 
+  const handleRemoveFromQueue = () => {
+    handlers.handleClose();
+    streamDispatch(streamActions.removeFromQueue(content.queueIndex));
+  };
+
   return (
     <div className='context-menu' ref={props.elemRef}>
       <ul>
         <li>{props.AddToQueue}</li>
+        {content.inQueue ? (
+          <li>
+            <LinkWhiteColor onClick={handleRemoveFromQueue}>
+              Remove from queue
+            </LinkWhiteColor>
+          </li>
+        ) : (
+          ''
+        )}
         <li
           onClick={() => {
             handlers.handleClose();

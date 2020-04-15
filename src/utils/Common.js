@@ -71,6 +71,12 @@ export const swap = (array, a, b) => {
   return res;
 };
 
+export const swapOrigin = (array, a, b) => {
+  const tmp = array[a];
+  array[a] = array[b];
+  array[b] = tmp;
+}
+
 export const getCircularIndex = (index, length) => {
   let diff = length - 1 - index;
   if (diff < 0) return 0;

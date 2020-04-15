@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import {
+  getGenresList,
   getPlaylistsMeOwn,
-  getReleaseTypeList,
-  getGenresList
+  getReleaseTypeList
 } from '../../apis/API';
 import { CloseIcon } from '../../assets/svgs';
 import { ButtonLoadMore } from '../../components/buttons';
@@ -13,9 +13,9 @@ import { ContextSwitch } from '../../components/context-menu';
 import { ArtistRoute, UserRoute } from '../../components/custom-routes';
 import {
   GroupConfirmDialog,
+  GroupGenreDialog,
   GroupPlaylistDialog,
-  GroupTrackCredits,
-  GroupGenreDialog
+  GroupTrackCredits
 } from '../../components/groups';
 import { AuthContext, LibraryContext } from '../../contexts';
 import { Account } from './account';
@@ -27,9 +27,9 @@ import NavMenu from './FixedNavMenu';
 import QuickAccess from './FixedQuickAccess';
 import Top from './FixedTop';
 import { Library } from './library';
-import { Home, Playlist, Release } from './monopage';
+import { Home, Playlist, Queue, Release } from './monopage';
 import { Search } from './search';
-import { Workspace, Manage } from './workspace';
+import { Manage, Workspace } from './workspace';
 
 function Player(props) {
   const { state: authState } = useContext(AuthContext);
@@ -90,6 +90,7 @@ function Player(props) {
           <UserRoute path='/player/search/:key' component={Search} />
           <UserRoute path='/player/release/:id' component={Release} />
           <UserRoute path='/player/playlist/:id' component={Playlist} />
+          <UserRoute path='/player/queue' component={Queue} />
           <ArtistRoute path='/player/workspace' component={Workspace} />
           <ArtistRoute exact path='/player/manage/:id' component={Manage} />
           <Route path='*'>

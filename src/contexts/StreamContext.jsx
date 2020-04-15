@@ -32,7 +32,10 @@ const initState = {
     count: 0,
     quota: 6
   },
-  loading: false
+  loading: false,
+  rmQueue: {
+    index: -1
+  }
 };
 
 let skipFailCb = () => undefined;
@@ -168,6 +171,15 @@ const actions = {
       extra
     };
   },
+  removeFromQueue: index => {
+    return {
+      type: 'RM_FROM_QUEUE',
+      index
+    };
+  },
+  playInQueue: index => {
+    return { type: 'PLAY_IN_QUEUE', index };
+  },
   repeatTrack: () => {
     return { type: 'REPEAT_TRACK' };
   },
@@ -302,27 +314,57 @@ const reducer = (state = { ...initState }, action) => {
     case 'ADD_TO_QUEUE': {
       if (!action.extra.length) return state;
 
+      let newState = {};
       let extra = action.extra.map(item => ({ id: item, from: 'queue' }));
       let queueSrc = [...state.queueSrc];
       if (!queueSrc.length) {
         stream.start(action.extra[0], stream.settings.shouldPlay);
+        newState.currentSongIndex = 0;
       }
       queueSrc.splice(state.currentSongIndex + 1, 0, ...extra);
 
       if (state.shuffled) {
         let queue = [...state.queue];
         queue.splice(state.currentSongIndex + 1, 0, ...extra);
-        return {
-          ...state,
+        newState = {
+          ...newState,
           queue: [...queue],
+          queueSrc: [...queueSrc]
+        };
+      } else {
+        newState = {
+          ...newState,
+          queue: [...queueSrc],
           queueSrc: [...queueSrc]
         };
       }
 
       return {
         ...state,
-        queue: [...queueSrc],
-        queueSrc: [...queueSrc]
+        ...newState
+      };
+    }
+    case 'RM_FROM_QUEUE': {
+      const queueTmp = [...state.queue];
+      const queueSrcTmp = [...state.queueSrc];
+
+      let rmId = queueTmp[action.index].id;
+      let rmSrcInd = queueSrcTmp.findIndex(item => rmId === item.id);
+      queueSrcTmp.splice(rmSrcInd, 1);
+      return {
+        ...state,
+        queue: queueTmp.filter((item, i) => i !== action.index),
+        queueSrc: [...queueSrcTmp],
+        rmQueue: {
+          index: action.index
+        }
+      };
+    }
+    case 'PLAY_IN_QUEUE': {
+      stream.continue(state.queue[action.index].id);
+      return {
+        ...state,
+        currentSongIndex: action.index
       };
     }
     case 'REPEAT_TRACK': {
@@ -361,22 +403,23 @@ const reducer = (state = { ...initState }, action) => {
         shouldPlay = autoplay;
       }
 
-      let backwardId = getCircularIndex(
+      let skipIndex = getCircularIndex(
         type === 'forward'
           ? state.currentSongIndex + 1
           : state.currentSongIndex - 1,
         queue.length
       );
-      stream.start(queue[backwardId].id, shouldPlay);
+      stream.start(queue[skipIndex].id, shouldPlay);
 
       return mannual && role === 'r-free'
         ? {
             ...state,
-            skipStatus: { ...skipStatus, count: skipStatus.count + 1 }
+            skipStatus: { ...skipStatus, count: skipStatus.count + 1 },
+            currentSongIndex: skipIndex
           }
         : {
             ...state,
-            currentSongIndex: backwardId
+            currentSongIndex: skipIndex
           };
     }
     case 'TOGGLE_PAUSED':

@@ -43,10 +43,19 @@ function CellAction(props) {
     }
   };
 
+  const handlePlayInQueue = () => {
+    if (serial - 1 === streamState.currentSongIndex) {
+      streamDispatch(streamAction.togglePaused(false));
+    } else {
+      streamDispatch(streamAction.playInQueue(serial - 1));
+    }
+  };
+
   let isCurrent =
-    id === current &&
-    playFromType === streamState.playFromType &&
-    playFromId === streamState.playFromId;
+    (id === current &&
+      playFromType === streamState.playFromType &&
+      playFromId === streamState.playFromId) ||
+    (props.inQueue && serial - 1 === streamState.currentSongIndex);
   let classes = 'action center side';
   classes += isCurrent ? ' active' : '';
   return (
@@ -57,7 +66,9 @@ function CellAction(props) {
           {isCurrent && !streamState.paused ? (
             <PauseIcon onClick={handlePause} />
           ) : (
-            <PlayIcon onClick={handlePlay} />
+            <PlayIcon
+              onClick={props.inQueue ? handlePlayInQueue : handlePlay}
+            />
           )}
         </ButtonIcon>
       </div>
