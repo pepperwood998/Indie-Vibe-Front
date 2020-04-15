@@ -6,6 +6,7 @@ import {
   createYearOptions,
   currency,
   current,
+  formatNumber,
   months
 } from '../../../utils/Common';
 
@@ -171,7 +172,7 @@ function RevenueSection({
           <div className='d-flex align-items-center pb-3'>
             <div className='ml-3'>
               <label htmlFor='year' className='pr-2'>
-                Select end year
+                Select year
               </label>
             </div>
             <select
@@ -227,7 +228,7 @@ function RevenueSection({
                     color: change > 0 ? 'green' : change !== 0 ? 'red' : 'gray'
                   }}
                 >
-                  {change > 0 ? '+' : ''} {change}
+                  {change > 0 ? '+' : ''} {formatNumber(change)} {currency}
                 </span>
               </div>
             ) : (

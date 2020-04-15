@@ -8,6 +8,7 @@ import { AuthContext } from '../../../contexts';
 import {
   createYearOptions,
   current,
+  formatNumber,
   mapColor,
   months,
   streamCompare
@@ -67,7 +68,7 @@ function StreamingStatistics(props) {
             <Annual form={formAnnual} />
             <div className='d-flex align-items-center mt-5 mb-3'>
               <label htmlFor='year' className='pr-2'>
-                Select end year
+                Select year
               </label>
               <select
                 id='year'
@@ -173,7 +174,7 @@ function Annual({ form = { start: 2019, end: current.year } }) {
                   color: change > 0 ? 'green' : change !== 0 ? 'red' : 'gray'
                 }}
               >
-                {change > 0 ? '+' : ''} {change}
+                {change > 0 ? '+' : ''} {formatNumber(change)} times
               </span>
             </div>
           </div>
@@ -259,7 +260,7 @@ function Monthly({ form = { year: current.year } }) {
                   color: change > 0 ? 'green' : change !== 0 ? 'red' : 'gray'
                 }}
               >
-                {change > 0 ? '+' : ''} {change}
+                {change > 0 ? '+' : ''} {formatNumber(change)} times
               </span>
             </div>
           </div>
