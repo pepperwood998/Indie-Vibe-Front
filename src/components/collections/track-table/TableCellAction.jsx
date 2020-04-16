@@ -14,16 +14,30 @@ function CellAction(props) {
 
   const queueCurrItem = streamState.queue[streamState.currentSongIndex];
   const current = queueCurrItem ? queueCurrItem.id : null;
+  const currentFrom = queueCurrItem ? queueCurrItem.from : null;
   const { serial, id, playFromId, playFromType } = props;
+  let isCurrent = false;
+  if (props.inQueue) {
+    isCurrent = serial - 1 === streamState.currentSongIndex;
+  } else {
+    isCurrent =
+      id === current &&
+      playFromType === streamState.playFromType &&
+      playFromId === streamState.playFromId &&
+      currentFrom === streamState.playFromType;
+  }
 
   const handlePause = () => {
     streamDispatch(streamAction.togglePaused(true));
   };
   const handlePlay = () => {
-    if (id === current && playFromId === streamState.playFromId) {
+    if (isCurrent) {
       streamDispatch(streamAction.togglePaused(false));
     } else {
-      if (playFromId === streamState.playFromId) {
+      if (
+        playFromId === streamState.playFromId &&
+        playFromType === streamState.playFromType
+      ) {
         streamDispatch(streamAction.reorder(id));
       } else {
         streamCollection(authState.token, playFromType, playFromId)
@@ -49,11 +63,6 @@ function CellAction(props) {
     }
   };
 
-  let isCurrent =
-    (id === current &&
-      playFromType === streamState.playFromType &&
-      playFromId === streamState.playFromId) ||
-    (props.inQueue && serial - 1 === streamState.currentSongIndex);
   let classes = 'action center side';
   classes += isCurrent ? ' active' : '';
   return (

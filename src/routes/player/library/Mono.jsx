@@ -82,6 +82,7 @@ function Mono(props) {
             header={data.total + ` ${type}s`}
             items={data.items}
             type='favorite'
+            playFromId={userId}
           />
         ) : (
           <CollectionMain
