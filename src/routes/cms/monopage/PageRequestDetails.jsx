@@ -122,11 +122,13 @@ function RequestDetails(props) {
         <section className='release-box'>
           <div className='left'>
             <div className='info'>
-              <div className='thumbnail-wrapper'>
-                <img
-                  className='thumbnail'
-                  src={release.thumbnail ? release.thumbnail : Placeholder}
-                />
+              <div className='thumbnail'>
+                <div className='img-wrapper'>
+                  <img
+                    className='img'
+                    src={release.thumbnail ? release.thumbnail : Placeholder}
+                  />
+                </div>
               </div>
               <div className='title-wrapper'>
                 <span className='title font-short-big font-weight-bold ellipsis one-line'>
