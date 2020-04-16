@@ -78,25 +78,28 @@ function Register() {
       .then(url => {
         registerWithFb(email, name, url, id, accessToken)
           .then(response => response.json())
-          .then(json => {
-            if (json.status === 'fail') {
+          .then(res => {
+            if (res.status === 'success') {
+              setRegisterSuccess(res.data);
+            } else throw res.data;
+            if (res.status === 'fail') {
               throw {
                 type: 'wrong',
-                msg: json.data
+                msg: res.data
               };
             } else {
-              setRegisterSuccess(json.data);
+              setRegisterSuccess(res.data);
             }
 
             setRegisteringFb(false);
           })
           .catch(err => {
-            if (err.type && err.type === 'wrong') {
-              setRegisterError(err.msg);
+            if (typeof err !== 'string') {
+              err = 'Server error';
             } else {
-              setRegisterError('Server error');
+              err = 'Email of the facebook account not available';
             }
-
+            setRegisterError(err);
             setRegisteringFb(false);
           });
       });
