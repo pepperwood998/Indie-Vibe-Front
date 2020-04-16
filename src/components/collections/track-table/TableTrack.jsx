@@ -87,7 +87,13 @@ function TrackTable(props) {
                   key={index}
                   serial={index}
                   playFromType={type}
-                  playFromId={item.release ? item.release.id : ''}
+                  playFromId={
+                    props.playFromId
+                      ? props.playFromId
+                      : item.release
+                      ? item.release.id
+                      : ''
+                  }
                   inQueue={props.inQueue}
                 />
               );
