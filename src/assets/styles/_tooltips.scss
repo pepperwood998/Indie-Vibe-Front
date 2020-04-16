@@ -7,6 +7,7 @@
   .tooltip-text {
     visibility: hidden;
     min-width: 80px;
+    max-width: 150px;
     background-color: $white;
     color: $black;
     font: $shortSmall;
@@ -16,6 +17,7 @@
     position: absolute;
     z-index: 1;
     box-shadow: 0 0 10px $black;
+    display: table;
 
     /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
     opacity: 0;
@@ -40,6 +42,13 @@
       transform: translateY(-50%);
       right: 100%;
       margin-right: 5px;
+    }
+
+    &.right {
+      top: 50%;
+      transform: translateY(-50%);
+      left: 100%;
+      margin-left: 5px;
     }
   }
 

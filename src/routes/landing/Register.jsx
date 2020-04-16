@@ -4,6 +4,7 @@ import { LogoRegister } from '../../assets/svgs';
 import { ButtonFacebook, ButtonMain } from '../../components/buttons/';
 import { CardError, CardSuccess } from '../../components/cards';
 import { InputForm, InputRadioBox } from '../../components/inputs';
+import Tooltip from '../../components/tooltips/Tooltip';
 import Authentication from './Authentication';
 
 function Register() {
@@ -120,15 +121,20 @@ function Register() {
         value={email}
         name='email'
       />
-      <InputForm
-        type='password'
-        placeholder='Enter your password'
-        onChange={handleInputsChange}
-        error={pwd === '' && submitted}
-        errMessage='Please enter your password'
-        value={pwd}
-        name='pwd'
-      />
+      <Tooltip
+        pos='right'
+        tooltip='At least 8 characters, an uppercase, a number from 0-9'
+      >
+        <InputForm
+          type='password'
+          placeholder='Enter your password'
+          onChange={handleInputsChange}
+          error={pwd === '' && submitted}
+          errMessage='Please enter your password'
+          value={pwd}
+          name='pwd'
+        />
+      </Tooltip>
       <InputForm
         type='password'
         placeholder='Confirm your password'
