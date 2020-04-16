@@ -11,7 +11,9 @@ function Tooltip(props) {
   return (
     <div className='custom-tooltip'>
       {props.children}
-      <span className={tooltipTextClasses}>{props.tooltip}</span>
+      <div className={tooltipTextClasses}>
+        <span>{props.tooltip}</span>
+      </div>
     </div>
   );
 }
