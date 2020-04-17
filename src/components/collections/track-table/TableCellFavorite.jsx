@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { performActionFavorite } from '../../../apis/API';
 import { FavoriteIcon, UnFavoriteIcon } from '../../../assets/svgs';
-import { AuthContext, StreamContext, LibraryContext } from '../../../contexts';
+import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
 
-function CellFavorite(props) {
+function CellFavorite({ id = '', index = 0, relation = [] }) {
   const { state: authState } = useContext(AuthContext);
   const {
     state: streamState,
@@ -15,18 +15,12 @@ function CellFavorite(props) {
   );
 
   const handleToggleFavorite = action => {
-    performActionFavorite(
-      authState.token,
-      'track',
-      props.id,
-      props.relation,
-      action
-    )
+    performActionFavorite(authState.token, 'track', id, relation, action)
       .then(r => {
-        streamDispatch(streamActions.setTrackFavorite(props.id, r));
+        streamDispatch(streamActions.setTrackFavorite(id, r));
         libDispatch(
           libActions.toggleFavorite({
-            id: props.id,
+            id: id,
             type: 'track',
             relation: r
           })
@@ -39,7 +33,7 @@ function CellFavorite(props) {
 
   return (
     <div className='favorite center side'>
-      {props.relation.includes('favorite') ? (
+      {relation.includes('favorite') ? (
         <FavoriteIcon
           className='svg--cursor svg--scale svg--blue'
           onClick={() => {
