@@ -4,7 +4,13 @@ import { PauseIcon, PlayIcon } from '../../../assets/svgs';
 import { AuthContext, StreamContext } from '../../../contexts';
 import { ButtonIcon } from '../../buttons';
 
-function CellAction(props) {
+function CellAction({
+  id = '',
+  serial = 1,
+  playFromId = '',
+  playFromType = '',
+  inQueue = false
+}) {
   const { state: authState } = useContext(AuthContext);
   const {
     state: streamState,
@@ -15,9 +21,8 @@ function CellAction(props) {
   const queueCurrItem = streamState.queue[streamState.currentSongIndex];
   const current = queueCurrItem ? queueCurrItem.id : null;
   const currentFrom = queueCurrItem ? queueCurrItem.from : null;
-  const { serial, id, playFromId, playFromType } = props;
   let isCurrent = false;
-  if (props.inQueue) {
+  if (inQueue) {
     isCurrent = serial - 1 === streamState.currentSongIndex;
   } else {
     isCurrent =
@@ -36,7 +41,8 @@ function CellAction(props) {
     } else {
       if (
         playFromId === streamState.playFromId &&
-        playFromType === streamState.playFromType
+        playFromType === streamState.playFromType &&
+        streamState.queue.findIndex(item => item.id === id) != -1
       ) {
         streamDispatch(streamAction.reorder(id));
       } else {
@@ -73,9 +79,7 @@ function CellAction(props) {
           {isCurrent && !streamState.paused ? (
             <PauseIcon onClick={handlePause} />
           ) : (
-            <PlayIcon
-              onClick={props.inQueue ? handlePlayInQueue : handlePlay}
-            />
+            <PlayIcon onClick={inQueue ? handlePlayInQueue : handlePlay} />
           )}
         </ButtonIcon>
       </div>

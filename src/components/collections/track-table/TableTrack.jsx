@@ -63,9 +63,9 @@ function TrackTable(props) {
               );
               return (
                 <RowPlaylist
-                  item={item}
                   key={index}
-                  serial={index}
+                  index={index}
+                  item={item}
                   playFromId={props.playFromId}
                   playlistRelation={props.playlistRelation}
                 />
@@ -73,20 +73,19 @@ function TrackTable(props) {
             } else if (type === 'release') {
               return (
                 <RowRelease
-                  item={item}
                   key={index}
-                  serial={index}
-                  artistId={props.releaseArtistId}
+                  index={index}
+                  item={item}
                   playFromId={props.playFromId}
+                  artistId={props.releaseArtistId}
                 />
               );
             } else {
               return (
                 <RowGeneral
-                  item={item}
                   key={index}
-                  serial={index}
-                  playFromType={type}
+                  index={index}
+                  item={item}
                   playFromId={
                     props.playFromId
                       ? props.playFromId
@@ -94,6 +93,7 @@ function TrackTable(props) {
                       ? item.release.id
                       : ''
                   }
+                  playFromType={type}
                   inQueue={props.inQueue}
                 />
               );
