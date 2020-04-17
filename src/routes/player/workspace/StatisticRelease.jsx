@@ -72,6 +72,7 @@ function StatisticRelease() {
   }, [form.month, form.year]);
 
   const handleChangeDate = e => {
+    setExtra({ ...extra, src: { ...extra.src, offset: 0 } });
     setForm({
       ...form,
       [e.target.getAttribute('name')]: e.target.value
