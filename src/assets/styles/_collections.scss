@@ -84,6 +84,10 @@
       height: 50px;
       border-bottom: 1px solid $grayDark;
 
+      > * {
+        padding-left: 10px !important;
+      }
+
       &.header {
         color: $grayLight;
         border-top: 1px solid $grayDark;
@@ -101,10 +105,13 @@
           width: 15%;
         }
 
-        .extra,
+        .extra {
+          width: 60px;
+        }
+
         .duration,
         .added-date {
-          width: 10%;
+          width: 120px;
         }
       }
 

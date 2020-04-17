@@ -69,12 +69,12 @@ function RowPlaylist({
           </NavLinkUnderline>
         </span>
       </div>
-      <div className='duration center side'>
+      <div className='duration center'>
         <span className='ellipsis one-line'>
           {getFormattedTime(duration / 1000)}
         </span>
       </div>
-      <div className='added-date side'>
+      <div className='added-date'>
         <span className='ellipsis one-line'>{getDatePart(addedAt)}</span>
       </div>
     </div>

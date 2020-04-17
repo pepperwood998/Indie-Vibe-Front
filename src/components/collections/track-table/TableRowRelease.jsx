@@ -26,7 +26,7 @@ function RowRelease({ index = 0, item = {}, playFromId = '', artistId = '' }) {
         relation={relation}
         fromType='release'
       />
-      <div className='duration center side'>
+      <div className='duration center'>
         <span className='ellipsis one-line'>
           {getFormattedTime(duration / 1000)}
         </span>
