@@ -43,23 +43,28 @@ const initState = {
 
 let skipFailCb = () => undefined;
 function StreamContextProvider(props) {
+  const { state: authState } = useContext(AuthContext);
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
   const [state, dispatch] = useReducer(reducer, initState, () => {
     let settings = localStorage.getItem('settings');
     if (settings) {
+      settings = JSON.parse(settings);
+      if (authState.role === 'r-free') {
+        settings.bitrate = '128';
+        localStorage.setItem('settings', settings);
+      }
       return {
         ...initState,
-        settings: JSON.parse(settings)
+        settings
       };
     }
 
     return initState;
   });
 
-  const { state: authState } = useContext(AuthContext);
   const { role } = useContext(MeContext).state;
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
 
   skipFailCb = () => {
     libDispatch(libActions.setNotification(true, false, 'Reach maximum skips'));
@@ -282,7 +287,8 @@ const reducer = (state = { ...initState }, action) => {
         payload.audio,
         payload.onProgress,
         payload.onDurationChange,
-        state.settings
+        state.settings,
+        payload.onError
       );
       return state;
     }

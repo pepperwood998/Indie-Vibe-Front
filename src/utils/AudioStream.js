@@ -19,6 +19,7 @@ class AudioStream {
     // initial event handler
     this.onProgress = (time, per) => undefined;
     this.onDurationChange = duration => undefined;
+    this.onError = message => undefined;
 
     // manual event handler
     this.onTogglePaused = paused => undefined;
@@ -38,14 +39,22 @@ class AudioStream {
     this.eventEnded = e => undefined;
     this.eventPlaying = e => undefined;
     this.eventPause = e => undefined;
+    this.eventError = e => undefined;
   }
 
-  init(audio, onProgress, onDurationChange, settings) {
+  init(
+    audio,
+    onProgress,
+    onDurationChange,
+    settings,
+    onError = message => undefined
+  ) {
     this.settings = settings;
     this.audio = audio;
     this.audio.autoplay = settings.shouldPlay;
     this.onProgress = onProgress;
     this.onDurationChange = onDurationChange;
+    this.onError = onError;
 
     this.eventLoadStart = e => {
       this.onLoadStart();
@@ -100,6 +109,9 @@ class AudioStream {
       this.isPlaying = false;
       this.onTogglePaused(true);
     };
+    this.eventError = e => {
+      this.onError('Problem loading resource');
+    };
 
     this.audio.addEventListener('loadstart', this.eventLoadStart);
     this.audio.addEventListener('durationchange', this.eventDurationChange);
@@ -109,6 +121,7 @@ class AudioStream {
     this.audio.addEventListener('ended', this.eventEnded);
     this.audio.addEventListener('playing', this.eventPlaying);
     this.audio.addEventListener('pause', this.eventPause);
+    this.audio.addEventListener('error', this.eventError);
   }
 
   seek(per) {
@@ -181,6 +194,7 @@ class AudioStream {
     this.audio.removeEventListener('ended', this.eventEnded);
     this.audio.removeEventListener('playing', this.eventPlaying);
     this.audio.removeEventListener('pause', this.eventPause);
+    this.audio.removeEventListener('error', this.eventError);
   }
 
   fetchInfo() {
@@ -189,22 +203,28 @@ class AudioStream {
 
     return this.api(this.trackId, this.settings.bitrate)
       .then(response => response.json())
-      .then(info => {
-        let { data } = info;
-        if (!data) throw 'Info Not Found';
-
-        this.recorder = {
-          started: false,
-          startTime: 0,
-          recorded: false,
-          recordedDur: 0
-        };
-        this.audio.src = data.url;
-        this.audio.load();
-        if (this.audio.autoplay) this.audio.play();
-        this.onInfo(data.info);
+      .then(res => {
+        const { data } = res;
+        if (res.status === 'success' && data) {
+          this.recorder = {
+            started: false,
+            startTime: 0,
+            recorded: false,
+            recordedDur: 0
+          };
+          this.audio.src = data.url;
+          this.audio.load();
+          if (this.audio.autoplay) this.audio.play();
+          this.onInfo(data.info);
+        } else throw data;
       })
-      .catch(error => console.error(error));
+      .catch(err => {
+        if (typeof err !== 'string') {
+          err = 'Server error';
+        }
+
+        this.onError(err);
+      });
   }
 }
 
