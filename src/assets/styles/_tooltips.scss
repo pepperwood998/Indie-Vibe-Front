@@ -13,11 +13,12 @@
     font: $shortSmall;
     text-align: center;
     border-radius: 6px;
-    padding: 5px;
     position: absolute;
     z-index: 1;
     box-shadow: 0 0 10px $black;
     display: table;
+    border-collapse: collapse;
+    border-spacing: 5px;
 
     /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
     opacity: 0;
