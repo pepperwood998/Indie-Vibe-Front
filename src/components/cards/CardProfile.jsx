@@ -65,7 +65,7 @@ function CardProfile(props) {
       streamCollection(authState.token, 'artist', content.id).then(res => {
         if (res.status === 'success' && res.data.length) {
           streamDispatch(
-            streamActions.start(res.data, 'artist', content.id)
+            streamActions.start(res.data, 'artist', content.id, authState.role)
           );
         }
       });

@@ -16,7 +16,7 @@ function TrackTable(props) {
         </div>
         <div className='favorite'></div>
         <div className='title'>
-          <span>TITLE</span>
+          <span className='ellipsis one-line'>TITLE</span>
         </div>
         <div className='extra'></div>
         {type === 'search' ||
@@ -25,10 +25,10 @@ function TrackTable(props) {
         type === 'queue' ? (
           <React.Fragment>
             <div className='artist'>
-              <span>ARTISTS</span>
+              <span className='ellipsis one-line'>ARTISTS</span>
             </div>
             <div className='release'>
-              <span>RELEASE</span>
+              <span className='ellipsis one-line'>RELEASE</span>
             </div>
           </React.Fragment>
         ) : (
@@ -40,7 +40,7 @@ function TrackTable(props) {
           </span>
         </div>
         {type === 'playlist' ? (
-          <div className='added-date side'>
+          <div className='added-date'>
             <span>
               <DateIcon />
             </span>

@@ -82,7 +82,12 @@ function CardMain(props) {
       streamCollection(authState.token, content.type, content.id).then(res => {
         if (res.status === 'success' && res.data.length) {
           streamDispatch(
-            streamAction.start(res.data, content.type, content.id)
+            streamAction.start(
+              res.data,
+              content.type,
+              content.id,
+              authState.role
+            )
           );
         }
       });

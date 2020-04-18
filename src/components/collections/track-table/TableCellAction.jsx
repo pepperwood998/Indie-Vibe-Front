@@ -50,7 +50,13 @@ function CellAction({
           .then(res => {
             if (res.status === 'success' && res.data.length) {
               streamDispatch(
-                streamAction.start(res.data, playFromType, playFromId, id)
+                streamAction.start(
+                  res.data,
+                  playFromType,
+                  playFromId,
+                  authState.role,
+                  id
+                )
               );
             }
           })
@@ -75,16 +81,68 @@ function CellAction({
     <div className={classes}>
       <span className='serial ellipsis one-line'>{serial}</span>
       <div className='control'>
-        <ButtonIcon>
-          {isCurrent && !streamState.paused ? (
+        <PlayTrack
+          isCurrent={isCurrent}
+          paused={streamState.paused}
+          inQueue={inQueue}
+          role={authState.role}
+          handlers={{
+            handlePause,
+            handlePlay,
+            handlePlayInQueue
+          }}
+        />
+        {/* {isCurrent && !streamState.paused ? (
             <PauseIcon onClick={handlePause} />
           ) : (
             <PlayIcon onClick={inQueue ? handlePlayInQueue : handlePlay} />
-          )}
-        </ButtonIcon>
+          )} */}
       </div>
     </div>
   );
+}
+
+function PlayTrack({
+  isCurrent = false,
+  paused = true,
+  inQueue = false,
+  role = '',
+  handlers = {
+    handlePause: () => undefined,
+    handlePlay: () => undefined,
+    handlePlayInQueue: () => undefined
+  }
+}) {
+  let render = '';
+  if (isCurrent) {
+    render = (
+      <ButtonIcon>
+        {!paused ? (
+          <PauseIcon onClick={handlers.handlePause} />
+        ) : (
+          <PlayIcon
+            onClick={inQueue ? handlers.handlePlayInQueue : handlers.handlePlay}
+          />
+        )}
+      </ButtonIcon>
+    );
+  } else {
+    if (role !== 'r-free') {
+      render = (
+        <ButtonIcon>
+          {
+            <PlayIcon
+              onClick={
+                inQueue ? handlers.handlePlayInQueue : handlers.handlePlay
+              }
+            />
+          }
+        </ButtonIcon>
+      );
+    }
+  }
+
+  return render;
 }
 
 export default CellAction;

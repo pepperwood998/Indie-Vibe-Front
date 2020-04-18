@@ -70,7 +70,7 @@ function RowGeneral({
           </NavLinkUnderline>
         </span>
       </div>
-      <div className='duration center side'>
+      <div className='duration center'>
         <span className='ellipsis one-line'>
           {getFormattedTime(duration / 1000)}
         </span>

@@ -95,7 +95,9 @@ function Release(props) {
     } else {
       streamCollection(authState.token, 'release', id).then(res => {
         if (res.status === 'success' && res.data.length) {
-          streamDispatch(streamAction.start(res.data, 'release', id));
+          streamDispatch(
+            streamAction.start(res.data, 'release', id, authState.role)
+          );
         }
       });
     }

@@ -30,7 +30,8 @@ const initState = {
   },
   skipStatus: {
     count: 0,
-    quota: 6
+    quota: 6,
+    interval: 3600 * 1000
   },
   loading: false,
   rmQueue: {
@@ -43,23 +44,28 @@ const initState = {
 
 let skipFailCb = () => undefined;
 function StreamContextProvider(props) {
+  const { state: authState } = useContext(AuthContext);
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
   const [state, dispatch] = useReducer(reducer, initState, () => {
     let settings = localStorage.getItem('settings');
     if (settings) {
+      settings = JSON.parse(settings);
+      if (authState.role === 'r-free') {
+        settings.bitrate = '128';
+        localStorage.setItem('settings', settings);
+      }
       return {
         ...initState,
-        settings: JSON.parse(settings)
+        settings
       };
     }
 
     return initState;
   });
 
-  const { state: authState } = useContext(AuthContext);
   const { role } = useContext(MeContext).state;
-  const { actions: libActions, dispatch: libDispatch } = useContext(
-    LibraryContext
-  );
 
   skipFailCb = () => {
     libDispatch(libActions.setNotification(true, false, 'Reach maximum skips'));
@@ -132,7 +138,7 @@ function StreamContextProvider(props) {
     if (skipStatus.count >= skipStatus.quota) {
       resetSkipQuota = setTimeout(() => {
         dispatch(actions.resetSkipQuota());
-      }, 5 * 1000);
+      }, skipStatus.interval);
     }
 
     return () => {
@@ -154,13 +160,14 @@ const actions = {
       payload
     };
   },
-  start: (queue = [], playFromType, playFromId, targetTrackId) => {
+  start: (queue = [], playFromType, playFromId, role, targetTrackId) => {
     return {
       type: 'START',
       payload: {
         queue,
         playFromType,
         playFromId,
+        role,
         targetTrackId
       }
     };
@@ -282,7 +289,8 @@ const reducer = (state = { ...initState }, action) => {
         payload.audio,
         payload.onProgress,
         payload.onDurationChange,
-        state.settings
+        state.settings,
+        payload.onError
       );
       return state;
     }
@@ -290,7 +298,11 @@ const reducer = (state = { ...initState }, action) => {
       let { payload } = action;
       if (!payload.queue.length) return state;
 
-      let queue = payload.queue.map(item => ({
+      let queue = payload.queue;
+      if (payload.role === 'r-free') {
+        queue = shuffle(payload.queue);
+      }
+      queue = queue.map(item => ({
         id: item,
         from: payload.playFromType
       }));

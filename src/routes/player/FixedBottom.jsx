@@ -156,6 +156,9 @@ function NowPayingMiddle() {
     actions: streamActions,
     dispatch: streamDispatch
   } = useContext(StreamContext);
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
 
   const audioRef = useRef();
 
@@ -169,6 +172,9 @@ function NowPayingMiddle() {
         },
         onDurationChange: duration => {
           setDuration(duration);
+        },
+        onError: message => {
+          libDispatch(libActions.setNotification(true, false, message))
         }
       })
     );
