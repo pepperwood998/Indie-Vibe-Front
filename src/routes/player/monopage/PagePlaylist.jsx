@@ -134,7 +134,9 @@ function Playlist(props) {
     } else {
       streamCollection(authState.token, 'playlist', id).then(res => {
         if (res.status === 'success' && res.data.length) {
-          streamDispatch(streamAction.start(res.data, 'playlist', id));
+          streamDispatch(
+            streamAction.start(res.data, 'playlist', id, authState.role)
+          );
         }
       });
     }

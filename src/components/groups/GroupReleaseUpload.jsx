@@ -235,7 +235,7 @@ function GroupReleaseUpload(props) {
             <div className='upload-layer'>
               <span className='font-short-extra font-weight-bold font-white'>
                 {publishing === 1 ? (
-                  'Pulbishing...'
+                  'Publishing...'
                 ) : success ? (
                   <CardSuccess message='Your release has been published' />
                 ) : (

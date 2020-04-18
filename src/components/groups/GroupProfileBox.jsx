@@ -64,7 +64,9 @@ function GroupProfileBox(props) {
       streamCollection(authState.token, 'artist', data.id)
         .then(res => {
           if (res.status === 'success' && res.data.length) {
-            streamDispatch(streamActions.start(res.data, 'artist', data.id));
+            streamDispatch(
+              streamActions.start(res.data, 'artist', data.id, authState.role)
+            );
           }
         })
         .catch(err => {

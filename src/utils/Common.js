@@ -75,7 +75,7 @@ export const swapOrigin = (array, a, b) => {
   const tmp = array[a];
   array[a] = array[b];
   array[b] = tmp;
-}
+};
 
 export const getCircularIndex = (index, length) => {
   let diff = length - 1 - index;
@@ -220,4 +220,8 @@ export const contain = (input, str) => {
     input.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
     'gi'
   ).test(str);
+};
+
+export const random = (start, length) => {
+  return Math.floor(Math.random() * length) + start;
 };

@@ -30,7 +30,8 @@ const initState = {
   },
   skipStatus: {
     count: 0,
-    quota: 6
+    quota: 6,
+    interval: 3600 * 1000
   },
   loading: false,
   rmQueue: {
@@ -137,7 +138,7 @@ function StreamContextProvider(props) {
     if (skipStatus.count >= skipStatus.quota) {
       resetSkipQuota = setTimeout(() => {
         dispatch(actions.resetSkipQuota());
-      }, 5 * 1000);
+      }, skipStatus.interval);
     }
 
     return () => {
@@ -159,13 +160,14 @@ const actions = {
       payload
     };
   },
-  start: (queue = [], playFromType, playFromId, targetTrackId) => {
+  start: (queue = [], playFromType, playFromId, role, targetTrackId) => {
     return {
       type: 'START',
       payload: {
         queue,
         playFromType,
         playFromId,
+        role,
         targetTrackId
       }
     };
@@ -296,7 +298,11 @@ const reducer = (state = { ...initState }, action) => {
       let { payload } = action;
       if (!payload.queue.length) return state;
 
-      let queue = payload.queue.map(item => ({
+      let queue = payload.queue;
+      if (payload.role === 'r-free') {
+        queue = shuffle(payload.queue);
+      }
+      queue = queue.map(item => ({
         id: item,
         from: payload.playFromType
       }));
