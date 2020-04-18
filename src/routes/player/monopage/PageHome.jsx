@@ -65,13 +65,13 @@ function Home() {
   return firstRender ? (
     ''
   ) : (
-    <div className='content-page fadein'>
+    <div className='content-page fadein d-flex flex-column'>
       <div className='page-banner'>
         <span className='font-short-extra font-weight-bold font-white'>
           Home
         </span>
       </div>
-      <div className='home-page mono-page content-padding'>
+      <div className='home-page mono-page content-padding flex-1'>
         {Object.keys(struct).map((key, index) => {
           const items = data[key];
           if (!items.length) return '';

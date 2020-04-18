@@ -59,7 +59,7 @@ function BrowseGenre(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='browse-genre-overview content-page fadein'>
+    <div className='browse-genre-overview content-page fadein d-flex flex-column'>
       <div className='page-banner'>
         <span className='font-short-extra font-weight-bold font-white'>
           {data.genre.name}
@@ -67,7 +67,7 @@ function BrowseGenre(props) {
       </div>
 
       <GroupEmpty isEmpty={isEmpty} message='No browsing for this genre'>
-        <div className='genre-content mono-page content-padding'>
+        <div className='genre-content mono-page content-padding flex-1'>
           {!data.playlists.length ? (
             ''
           ) : (
