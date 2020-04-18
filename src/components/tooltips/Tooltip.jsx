@@ -12,7 +12,9 @@ function Tooltip(props) {
     <div className='custom-tooltip'>
       {props.children}
       <div className={tooltipTextClasses}>
-        <span>{props.tooltip}</span>
+        <div className='p-1'>
+          <span>{props.tooltip}</span>
+        </div>
       </div>
     </div>
   );

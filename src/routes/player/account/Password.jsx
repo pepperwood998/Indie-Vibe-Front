@@ -1,8 +1,9 @@
 import React, { useContext, useState } from 'react';
+import { updatePassword } from '../../../apis/API';
 import { ButtonMain } from '../../../components/buttons';
 import { InputForm } from '../../../components/inputs';
+import Tooltip from '../../../components/tooltips/Tooltip';
 import { AuthContext, LibraryContext } from '../../../contexts';
-import { updatePassword } from '../../../apis/API';
 
 function Password(props) {
   const { state: authState } = useContext(AuthContext);
@@ -94,16 +95,23 @@ function Password(props) {
               </div>
               <div className='table-row'>
                 <span className='label'>New password entry</span>
-                <InputForm
-                  type='password'
-                  placeholder='Fresh password'
-                  name='newPwd'
-                  autocomplete='new-password'
-                  value={data.newPwd}
-                  onChange={handleChangeData}
-                  error={status.submitted && !data.newPwd}
-                  errMessage='Please enter your desired new password'
-                />
+                <div>
+                  <Tooltip
+                    pos='right'
+                    tooltip='At least 8 characters, an uppercase, a number from 0-9'
+                  >
+                    <InputForm
+                      type='password'
+                      placeholder='Fresh password'
+                      name='newPwd'
+                      autocomplete='new-password'
+                      value={data.newPwd}
+                      onChange={handleChangeData}
+                      error={status.submitted && !data.newPwd}
+                      errMessage='Please enter your desired new password'
+                    />
+                  </Tooltip>
+                </div>
               </div>
               <div className='table-row'>
                 <span className='label'>Confirm password</span>
