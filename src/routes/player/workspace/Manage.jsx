@@ -90,10 +90,14 @@ function Manage(props) {
   useEffect(() => {
     getTrackList(authState.token, id, 'release')
       .then(res => {
-        setFirstRender(false);
         if (res.status === 'success' && res.data) {
           setStatus({ ...status, existed: true });
           const { data } = res;
+          if (!data.relation.includes('own')) {
+            throw 'limited';
+          }
+
+          setFirstRender(false);
           setReleaseDetails({
             ...releaseDetails,
             title: [false, data.title],
@@ -107,7 +111,12 @@ function Manage(props) {
         }
       })
       .catch(err => {
-        setStatus({ ...status, existed: false });
+        if (err === 'limited') {
+          window.location.href = '/player/workspace';
+        } else {
+          setFirstRender(false);
+          setStatus({ ...status, existed: false });
+        }
       });
   }, []);
 
