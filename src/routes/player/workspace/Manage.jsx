@@ -779,6 +779,7 @@ function AddSongs({ releaseId = '' }) {
     submitted: false,
     publishing: false
   });
+  const [progress, setProgress] = useState(0);
 
   const handleItemChange = (index, newInfo, newAudio, newAudioSrc) => {
     setTracks(
@@ -845,7 +846,15 @@ function AddSongs({ releaseId = '' }) {
           producer: track.producer,
           genres: track.genres.map(g => g.id)
         }));
-        addSongsToRelease(authState.token, releaseId, processedTracks, audio)
+        addSongsToRelease(
+          authState.token,
+          releaseId,
+          processedTracks,
+          audio,
+          per => {
+            setProgress(per);
+          }
+        )
           .then(res => {
             if (res.status === 'success') {
               setStatus({ ...status, publishing: false });
@@ -872,10 +881,13 @@ function AddSongs({ releaseId = '' }) {
   return (
     <div className='content'>
       {status.publishing ? (
-        <div className='screen-overlay d-flex justify-content-center align-items-center'>
+        <div className='screen-overlay adding d-flex flex-column justify-content-center align-items-center'>
           <span className='font-short-extra font-weight-bold font-white'>
-            ADDING SONGS...
+            ADDING SONGS... {Math.round(progress)}%
           </span>
+          <div className='progress-box mt-2'>
+            <div className='progress' style={{ width: progress + '%' }}></div>
+          </div>
         </div>
       ) : (
         ''
