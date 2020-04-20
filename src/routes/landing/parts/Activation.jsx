@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import { resetActivationLink } from '../../../apis/API';
 import Loading from '../../../assets/imgs/loading.gif';
 
-function Activation({ activated = false, tryLogin = false, email = '' }) {
+function Activation({
+  activated = false,
+  activateFail = false,
+  tryLogin = false,
+  email = '',
+  onResent = success => undefined
+}) {
   const [reseted, setReseted] = useState(false);
   const [reseting, setReseting] = useState(false);
   const [resetFailed, setResetFailed] = useState(false);
@@ -16,18 +22,23 @@ function Activation({ activated = false, tryLogin = false, email = '' }) {
         if (res.status === 'success') {
           setReseting(false);
           setReseted(true);
+          onResent(true);
         } else throw res.data;
       })
       .catch(err => {
         setReseting(false);
         setResetFailed(true);
+        onResent(false);
       });
   };
 
   if (activated) {
     return (
-      <div>
-        <span>Your account has been activated successfully.</span>
+      <div className='fadein'>
+        <p>Your account has been successfully activated.</p>
+        <a href='/login' className='link link-underline underline font-white'>
+          Sign in
+        </a>
       </div>
     );
   }
@@ -38,7 +49,9 @@ function Activation({ activated = false, tryLogin = false, email = '' }) {
         {resetFailed ? (
           <span className='font-black'>Failed to send activation link.</span>
         ) : !reseted ? (
-          tryLogin ? (
+          activateFail ? (
+            <span>The activation link has expired, please try a new one.</span>
+          ) : tryLogin ? (
             <span>Need to activate your account before use.</span>
           ) : (
             <span>An activation link has been sent to your email.</span>
