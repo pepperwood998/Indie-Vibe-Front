@@ -1,0 +1,14 @@
+.page-activation {
+  transition: 0.1s ease;
+
+  &.content {
+    padding: 30px 25px;
+    background-color: $green;
+    font: $shortSemi;
+    color: $white;
+  }
+
+  &.fail {
+    background-color: #7283a0;
+  }
+}

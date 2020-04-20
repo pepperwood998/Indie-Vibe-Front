@@ -53,3 +53,15 @@ export const getFbPictureUrl = fbId => {
     `https://graph.facebook.com/${fbId}/picture?type=square&redirect=false`
   );
 };
+
+export const activate = (email, activateToken) => {
+  let url = new URL(`${host}/activate`);
+  let formData = new FormData();
+  formData.append('email', email);
+  formData.append('activateToken', activateToken);
+
+  return fetch(url, {
+    method: 'POST',
+    body: formData
+  }).then(response => response.json());
+};

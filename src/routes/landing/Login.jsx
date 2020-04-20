@@ -12,6 +12,7 @@ import { CardError } from '../../components/cards';
 import { InputCheckbox, InputForm } from '../../components/inputs';
 import { AuthContext, MeContext } from '../../contexts';
 import Authentication from './Authentication';
+import Activation from './parts/Activation';
 
 function Login() {
   const { actions: authActions, dispatch: authDispatch } = useContext(
@@ -50,7 +51,7 @@ function Login() {
     setLoggingIn(true);
     login(email, pwd)
       .then(res => {
-        if (!res['access_token']) throw 'Wrong email or password';
+        if (res.status === 'fail') throw res.data;
 
         return getAccount(res['access_token']).then(accountRes => {
           if (accountRes.status === 'success') {
@@ -64,7 +65,10 @@ function Login() {
       .catch(err => {
         if (typeof err !== 'string') {
           err = 'Server error';
+        } else if (err === 'unactive') {
+          err = <Activation tryLogin email={email} />;
         }
+
         setPwd('');
         setLoggingIn(false);
         setLoginError(err);
@@ -73,6 +77,7 @@ function Login() {
 
   const handleLogInFb = () => {
     setLoggingInFb(true);
+    setLoginError('');
   };
 
   const responseFacebook = response => {
@@ -82,24 +87,25 @@ function Login() {
       return;
     }
 
-    const { id, accessToken } = response;
+    const { id, accessToken, email } = response;
     loginFb(id, accessToken)
       .then(res => {
-        if (!res['access_token']) throw 'Facebook account not connected';
+        if (res.status === 'fail') throw res.data;
 
-        return getAccount(res['access_token']).then(accountRes => {
-          if (accountRes.status === 'success') {
-            meDispatch(meActions.loadMe(accountRes.data));
+        return getAccount(res['access_token']).then(res => {
+          if (res.status === 'success') {
+            meDispatch(meActions.loadMe(res.data));
             authDispatch(loginSuccess({ ...res, remembered }));
-          } else {
-            throw 'Unexpected error, try again!';
-          }
+          } else throw 'Unexpected error, try again!';
         });
       })
       .catch(err => {
         if (typeof err !== 'string') {
           err = 'Server error';
+        } else if (err === 'unactive') {
+          err = <Activation tryLogin email={email} />;
         }
+
         setLoggingInFb(false);
         setLoginError(err);
       });

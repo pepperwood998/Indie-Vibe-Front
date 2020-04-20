@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { resetActivationLink } from '../../apis/API';
 import { getFbPictureUrl, register, registerWithFb } from '../../apis/AuthAPI';
+import Loading from '../../assets/imgs/loading.gif';
 import { LogoRegister } from '../../assets/svgs';
 import { ButtonFacebook, ButtonMain } from '../../components/buttons/';
 import { CardError, CardSuccess } from '../../components/cards';
 import { InputForm, InputRadioBox } from '../../components/inputs';
 import Tooltip from '../../components/tooltips/Tooltip';
 import Authentication from './Authentication';
+import Activation from './parts/Activation';
 
 function Register() {
   const [registerError, setRegisterError] = useState('');
@@ -40,22 +43,19 @@ function Register() {
     setRegistering(true);
     register(email, pwd, cfPwd, displayName, gender)
       .then(response => response.json())
-      .then(json => {
-        if (json.status === 'fail') {
-          throw { type: 'wrong', msg: json.data };
-        } else {
-          setRegisterSuccess(json.data);
-        }
+      .then(res => {
+        if (res.status === 'success') {
+          setRegisterSuccess(<Activation email={email} />);
+        } else throw res.data;
 
         setRegistering(false);
       })
       .catch(err => {
-        if (err.type && err.type === 'wrong') {
-          setRegisterError(err.msg);
-        } else {
-          setRegisterError('Server error');
+        if (typeof err !== 'string') {
+          err = 'Server error';
         }
 
+        setRegisterError(err);
         setRegistering(false);
       });
   };
@@ -81,16 +81,8 @@ function Register() {
           .then(response => response.json())
           .then(res => {
             if (res.status === 'success') {
-              setRegisterSuccess(res.data);
+              setRegisterSuccess(<Activation email={email} />);
             } else throw res.data;
-            if (res.status === 'fail') {
-              throw {
-                type: 'wrong',
-                msg: res.data
-              };
-            } else {
-              setRegisterSuccess(res.data);
-            }
 
             setRegisteringFb(false);
           })
@@ -230,6 +222,58 @@ function Register() {
       addition={addition()}
       handleSubmit={handleRegister}
     />
+  );
+}
+
+function RegisterSuccess({ email = '' }) {
+  const [reseted, setReseted] = useState(false);
+  const [reseting, setReseting] = useState(false);
+  const [resetFailed, setResetFailed] = useState(false);
+
+  const handleResent = () => {
+    setReseting(true);
+    setResetFailed(false);
+
+    resetActivationLink(email)
+      .then(res => {
+        if (res.status === 'success') {
+          setReseting(false);
+          setReseted(true);
+        } else throw res.data;
+      })
+      .catch(err => {
+        setReseting(false);
+        setResetFailed(true);
+      });
+  };
+
+  return !reseting ? (
+    <div className='fadein'>
+      <div className='pb-2'>
+        {resetFailed ? (
+          <span className='font-black'>Failed to send activation link.</span>
+        ) : !reseted ? (
+          <span>An activation link has been sent to your email.</span>
+        ) : (
+          <span>Check email for new activation link.</span>
+        )}
+      </div>
+      <div>
+        <span
+          className='link underline link-underline font-gray-light'
+          onClick={handleResent}
+        >
+          Resent activation link
+        </span>
+      </div>
+    </div>
+  ) : (
+    <div className='d-flex flex-column align-items-center'>
+      <div className='pb-2'>
+        <span>Resending activation link.</span>
+      </div>
+      <img src={Loading} width='25px' height='25px' />
+    </div>
   );
 }
 

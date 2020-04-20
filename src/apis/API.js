@@ -1,5 +1,4 @@
 import fetch from 'cross-fetch';
-
 import { host } from './constant';
 
 export const getGenresList = token => {
@@ -475,6 +474,17 @@ export const reportArtist = (token, id, data) => {
     headers: {
       Authorization: 'Bearer ' + token
     },
+    body: formData
+  }).then(response => response.json());
+};
+
+export const resetActivationLink = email => {
+  let url = new URL(`${host}/reset`);
+  let formData = new FormData();
+  formData.append('email', email);
+
+  return fetch(url, {
+    method: 'POST',
     body: formData
   }).then(response => response.json());
 };

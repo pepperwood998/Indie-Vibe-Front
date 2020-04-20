@@ -48,4 +48,8 @@ a.active .button {
       color: inherit;
     }
   }
+
+  &.underline {
+    text-decoration: underline;
+  }
 }
