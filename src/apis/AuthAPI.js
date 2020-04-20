@@ -54,6 +54,17 @@ export const getFbPictureUrl = fbId => {
   );
 };
 
+export const resetActivationLink = email => {
+  let url = new URL(`${host}/reset`);
+  let formData = new FormData();
+  formData.append('email', email);
+
+  return fetch(url, {
+    method: 'POST',
+    body: formData
+  }).then(response => response.json());
+};
+
 export const activate = (id, activateToken) => {
   let url = new URL(`${host}/activate`);
   let formData = new FormData();
