@@ -54,10 +54,10 @@ export const getFbPictureUrl = fbId => {
   );
 };
 
-export const activate = (email, activateToken) => {
+export const activate = (id, activateToken) => {
   let url = new URL(`${host}/activate`);
   let formData = new FormData();
-  formData.append('email', email);
+  formData.append('id', id);
   formData.append('activateToken', activateToken);
 
   return fetch(url, {

@@ -46,6 +46,7 @@ function GroupReleaseUpload(props) {
   const [submitted, setSubmitted] = useState(false);
   const [publishing, setPublishing] = useState(0);
   const [success, setSuccess] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const releaseTypes = [...libState.releaseTypes];
 
@@ -183,13 +184,18 @@ function GroupReleaseUpload(props) {
             thumbnail,
             audio,
             biography,
-            props.baa
+            props.baa,
+            per => {
+              setProgress(per);
+            }
           )
-            .then(response => response.json())
             .then(res => {
               if (res.status === 'success') {
                 setSuccess(true);
-              }
+                setPublishing(2);
+              } else throw res.data;
+            })
+            .catch(err => {
               setPublishing(2);
             });
         }
@@ -233,15 +239,23 @@ function GroupReleaseUpload(props) {
         <div className='release-upload'>
           {publishing ? (
             <div className='upload-layer'>
-              <span className='font-short-extra font-weight-bold font-white'>
-                {publishing === 1 ? (
-                  'Publishing...'
-                ) : success ? (
-                  <CardSuccess message='Your release has been published' />
-                ) : (
-                  <CardError message='Failed to publish' />
-                )}
-              </span>
+              {publishing === 1 ? (
+                <div className='publishing'>
+                  <span className='font-short-extra font-white'>
+                    Publishing... {Math.round(progress)}%
+                  </span>
+                  <div className='progress-box mt-2'>
+                    <div
+                      className='progress'
+                      style={{ width: progress + '%' }}
+                    ></div>
+                  </div>
+                </div>
+              ) : success ? (
+                <CardSuccess message='Your release has been published' />
+              ) : (
+                <CardError message='Failed to publish' />
+              )}
             </div>
           ) : (
             ''

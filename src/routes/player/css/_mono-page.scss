@@ -152,4 +152,25 @@
       }
     }
   }
+
+  .add-songs {
+    .adding {
+      background: $blackBlurDark;
+
+      .progress-box {
+        width: 40%;
+        border: 2px solid $white;
+        padding: 4px;
+        height: 25px;
+        border-radius: 3px;
+
+        .progress {
+          height: 100%;
+          width: 1%;
+          border-radius: 3px;
+          transition: 0.1s ease;
+        }
+      }
+    }
+  }
 }

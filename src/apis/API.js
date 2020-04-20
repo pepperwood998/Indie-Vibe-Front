@@ -1,3 +1,4 @@
+import axios from 'axios';
 import fetch from 'cross-fetch';
 import { host } from './constant';
 
@@ -34,28 +35,34 @@ export const publishRelease = (
   thumbnail,
   audioFiles,
   biography = '',
-  baa = false
+  baa = false,
+  onProgress = per => undefined
 ) => {
   let url = `${host}/releases`;
   if (baa) url = `${host}/account/baa`;
 
-  let data = new FormData();
-  data.append('info', JSON.stringify(info));
-  data.append('thumbnail', thumbnail);
+  let formData = new FormData();
+  formData.append('info', JSON.stringify(info));
+  formData.append('thumbnail', thumbnail);
 
   audioFiles.forEach(item => {
-    data.append('audioFiles', item.audio128);
-    data.append('audioFiles', item.audio320);
+    formData.append('audioFiles', item.audio128);
+    formData.append('audioFiles', item.audio320);
   });
-  if (biography) data.append('biography', biography);
+  if (biography) formData.append('biography', biography);
 
-  return fetch(url, {
+  return axios({
+    url,
     method: 'POST',
     headers: {
-      Authorization: 'Bearer ' + token
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'multipart/form-data'
     },
-    body: data
-  });
+    data: formData,
+    onUploadProgress: e => {
+      onProgress((e.loaded / e.total) * 100);
+    }
+  }).then(response => response.data);
 };
 
 export const createOrEditPlaylist = (

@@ -9,14 +9,14 @@ function ActivationResult({ match, location }) {
   const [resent, setResent] = useState(false);
 
   const searchParams = new URLSearchParams(location.search);
-  const email = searchParams.get('email');
+  const id = searchParams.get('id');
   const activateToken = searchParams.get('activateToken');
   let classes = 'content page-activation';
   classes += !activated && !resent ? ' fail' : '';
   const intro = (
     <div className={classes}>
       <Activation
-        email={email}
+        email={id}
         activated={activated}
         activateFail={!activated}
         onResent={success => {
@@ -27,7 +27,7 @@ function ActivationResult({ match, location }) {
   );
 
   useEffect(() => {
-    activate(email, activateToken)
+    activate(id, activateToken)
       .then(res => {
         if (res.status === 'success') {
           setActivated(true);

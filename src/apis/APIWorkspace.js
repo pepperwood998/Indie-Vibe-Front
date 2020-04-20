@@ -1,3 +1,4 @@
+import axios from 'axios';
 import fetch from 'cross-fetch';
 import { current } from '../utils/Common';
 import { host } from './constant';
@@ -150,7 +151,13 @@ export const getStreamTrack = (
   }).then(response => response.json());
 };
 
-export const addSongsToRelease = (token, releaseId, tracks, audio) => {
+export const addSongsToRelease = (
+  token,
+  releaseId,
+  tracks,
+  audio,
+  onProgress = per => undefined
+) => {
   let url = new URL(`${host}/workspace/releases/${releaseId}/track`);
   let formData = new FormData();
   formData.append('tracks', JSON.stringify(tracks));
@@ -159,11 +166,16 @@ export const addSongsToRelease = (token, releaseId, tracks, audio) => {
     formData.append('files', item.audio320);
   });
 
-  return fetch(url, {
+  return axios({
+    url,
     method: 'POST',
     headers: {
-      Authorization: 'Bearer ' + token
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'multipart/form-data'
     },
-    body: formData
-  }).then(response => response.json());
+    data: formData,
+    onUploadProgress: e => {
+      onProgress((e.loaded / e.total) * 100);
+    }
+  }).then(response => response.data);
 };
