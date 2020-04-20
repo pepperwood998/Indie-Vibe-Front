@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { CMSRoute } from '../../components/custom-routes';
+import { RouteAuthorized } from '../../components/custom-routes';
 import {} from '../../components/groups';
+import { ROUTES } from '../../config/RoleRouting';
 import { LibraryContext } from '../../contexts';
 import { Notification } from '../player/Player';
 import { NavMenu, TopBar } from './layout';
@@ -28,17 +29,42 @@ function CMS(props) {
       </div>
       <div className='cms__body'>
         <Switch>
-          <CMSRoute
+          <RouteAuthorized
             exact
-            path={['/cms', '/cms/dashboard']}
             component={Dashboard}
+            path={ROUTES.cms.dashboard[0]}
+            roleGroup={ROUTES.cms.dashboard[1]}
           />
-          <CMSRoute path='/cms/requests' component={Requests} />
-          <CMSRoute path='/cms/request/:id' component={RequestDetails} />
-          <CMSRoute path='/cms/delegate-curator' component={DelegateCurator} />
-          <CMSRoute path='/cms/reports' component={Reports} />
-          <CMSRoute path='/cms/streaming' component={StreamingStatistics} />
-          <CMSRoute path='/cms/revenue' component={Revenue} />
+          <RouteAuthorized
+            component={Requests}
+            path={ROUTES.cms.requests[0]}
+            roleGroup={ROUTES.cms.requests[1]}
+          />
+          <RouteAuthorized
+            component={RequestDetails}
+            path={ROUTES.cms.requestDetails[0]}
+            roleGroup={ROUTES.cms.requestDetails[1]}
+          />
+          <RouteAuthorized
+            component={DelegateCurator}
+            path={ROUTES.cms.delegateCurator[0]}
+            roleGroup={ROUTES.cms.delegateCurator[1]}
+          />
+          <RouteAuthorized
+            component={Reports}
+            path={ROUTES.cms.reports[0]}
+            roleGroup={ROUTES.cms.reports[1]}
+          />
+          <RouteAuthorized
+            component={StreamingStatistics}
+            path={ROUTES.cms.streaming[0]}
+            roleGroup={ROUTES.cms.streaming[1]}
+          />
+          <RouteAuthorized
+            component={Revenue}
+            path={ROUTES.cms.revenue[0]}
+            roleGroup={ROUTES.cms.revenue[1]}
+          />
           <Route path='*'>
             <Redirect to='/404' />
           </Route>
