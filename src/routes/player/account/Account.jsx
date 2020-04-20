@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
-import { PremiumRoute, UserRoute } from '../../../components/custom-routes';
+import { RouteAuthorized } from '../../../components/custom-routes';
 import { GroupEmpty } from '../../../components/groups';
 import { NavigationTab } from '../../../components/navigation';
+import { ROUTES } from '../../../config/RoleRouting';
 import { MeContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
 import BecomeArtist from './BecomeArtist';
 import Information from './Information';
 import Password from './Password';
 import Settings from './Settings';
-import Social from './Social';
 
 function Account(props) {
   const { state: meState } = useContext(MeContext);
@@ -43,13 +43,34 @@ function Account(props) {
     />
   );
 
+  const { account } = ROUTES.player;
+
   const body = (
     <React.Fragment>
-      <UserRoute exact path='/player/account' component={Information} />
-      <UserRoute path='/player/account/password' component={Password} />
-      <UserRoute path='/player/account/social' component={Social} />
-      <UserRoute path='/player/account/settings' component={Settings} />
-      <PremiumRoute path='/player/account/baa' component={BecomeArtist} />
+      <RouteAuthorized
+        exact
+        component={Information}
+        path={account.info[0]}
+        roleGroup={account.info[1]}
+      />
+      <RouteAuthorized
+        exact
+        component={Password}
+        path={account.password[0]}
+        roleGroup={account.password[1]}
+      />
+      <RouteAuthorized
+        exact
+        component={Settings}
+        path={account.settings[0]}
+        roleGroup={account.settings[1]}
+      />
+      <RouteAuthorized
+        exact
+        component={BecomeArtist}
+        path={account.baa[0]}
+        roleGroup={account.baa[1]}
+      />
     </React.Fragment>
   );
 

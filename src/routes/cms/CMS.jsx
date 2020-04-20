@@ -30,7 +30,7 @@ function CMS(props) {
         <Switch>
           <CMSRoute
             exact
-            path={['/cms/', '/cms/dashboard']}
+            path={['/cms', '/cms/dashboard']}
             component={Dashboard}
           />
           <CMSRoute path='/cms/requests' component={Requests} />

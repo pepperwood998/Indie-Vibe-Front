@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { resetActivationLink } from '../../apis/API';
 import { getFbPictureUrl, register, registerWithFb } from '../../apis/AuthAPI';
-import Loading from '../../assets/imgs/loading.gif';
 import { LogoRegister } from '../../assets/svgs';
 import { ButtonFacebook, ButtonMain } from '../../components/buttons/';
 import { CardError, CardSuccess } from '../../components/cards';
@@ -222,58 +220,6 @@ function Register() {
       addition={addition()}
       handleSubmit={handleRegister}
     />
-  );
-}
-
-function RegisterSuccess({ email = '' }) {
-  const [reseted, setReseted] = useState(false);
-  const [reseting, setReseting] = useState(false);
-  const [resetFailed, setResetFailed] = useState(false);
-
-  const handleResent = () => {
-    setReseting(true);
-    setResetFailed(false);
-
-    resetActivationLink(email)
-      .then(res => {
-        if (res.status === 'success') {
-          setReseting(false);
-          setReseted(true);
-        } else throw res.data;
-      })
-      .catch(err => {
-        setReseting(false);
-        setResetFailed(true);
-      });
-  };
-
-  return !reseting ? (
-    <div className='fadein'>
-      <div className='pb-2'>
-        {resetFailed ? (
-          <span className='font-black'>Failed to send activation link.</span>
-        ) : !reseted ? (
-          <span>An activation link has been sent to your email.</span>
-        ) : (
-          <span>Check email for new activation link.</span>
-        )}
-      </div>
-      <div>
-        <span
-          className='link underline link-underline font-gray-light'
-          onClick={handleResent}
-        >
-          Resent activation link
-        </span>
-      </div>
-    </div>
-  ) : (
-    <div className='d-flex flex-column align-items-center'>
-      <div className='pb-2'>
-        <span>Resending activation link.</span>
-      </div>
-      <img src={Loading} width='25px' height='25px' />
-    </div>
   );
 }
 

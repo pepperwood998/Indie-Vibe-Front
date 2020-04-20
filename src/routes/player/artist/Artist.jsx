@@ -1,12 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { UserRoute } from '../../../components/custom-routes';
+import { getArtist } from '../../../apis/API';
+import { RouteAuthorized } from '../../../components/custom-routes';
 import { GroupEmpty, GroupProfileBox } from '../../../components/groups';
 import { NavigationTab } from '../../../components/navigation';
+import { ROUTES } from '../../../config/RoleRouting';
 import { AuthContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
 import ArtistAbout from './ArtistAbout';
 import ArtistDefault from './ArtistDefault';
-import { getArtist } from '../../../apis/API';
 
 function Artist(props) {
   const { state: authState } = useContext(AuthContext);
@@ -52,13 +53,21 @@ function Artist(props) {
       ]}
     />
   );
+
+  const { artist: artistRoute } = ROUTES.player;
   const body = (
     <React.Fragment>
-      <UserRoute exact path='/player/artist/:id' component={ArtistDefault} />
-      <UserRoute
+      <RouteAuthorized
         exact
-        path='/player/artist/:id/about'
+        component={ArtistDefault}
+        path={artistRoute.discography[0]}
+        roleGroup={artistRoute.discography[1]}
+      />
+      <RouteAuthorized
+        exact
         component={ArtistAbout}
+        path={artistRoute.about[0]}
+        roleGroup={artistRoute.about[1]}
         artist={artist}
       />
     </React.Fragment>

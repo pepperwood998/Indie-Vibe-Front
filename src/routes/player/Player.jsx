@@ -10,13 +10,14 @@ import { ButtonLoadMore } from '../../components/buttons';
 import { CardError, CardSuccess } from '../../components/cards';
 import { CollectionMain } from '../../components/collections';
 import { ContextSwitch } from '../../components/context-menu';
-import { ArtistRoute, UserRoute } from '../../components/custom-routes';
+import { RouteAuthorized } from '../../components/custom-routes';
 import {
   GroupConfirmDialog,
   GroupGenreDialog,
   GroupPlaylistDialog,
   GroupTrackCredits
 } from '../../components/groups';
+import { ROUTES } from '../../config/RoleRouting';
 import { AuthContext, LibraryContext } from '../../contexts';
 import { Account } from './account';
 import { Artist } from './artist';
@@ -40,6 +41,7 @@ function Player(props) {
   } = useContext(LibraryContext);
 
   const menuRef = useRef();
+  const { player } = ROUTES;
 
   useEffect(() => {
     libDispatch(libActions.initCtxElem(menuRef.current));
@@ -73,26 +75,74 @@ function Player(props) {
       </div>
       <div className='player__content'>
         <Switch>
-          <UserRoute
+          <RouteAuthorized
             exact
-            path={['/player', '/player/home']}
             component={Home}
+            path={player.home[0]}
+            roleGroup={player.home[1]}
           />
-          <UserRoute path='/player/browse' component={Browse} />
-          <UserRoute exact path='/player/genre/:id' component={BrowseGenre} />
-          <UserRoute
-            path='/player/genre/:id/:type'
+          <RouteAuthorized
+            component={Browse}
+            path={player.browse.general[0]}
+            roleGroup={player.browse.general[1]}
+          />
+          <RouteAuthorized
+            component={Library}
+            path={player.library.general[0]}
+            roleGroup={player.library.general[1]}
+          />
+          <RouteAuthorized
+            component={Search}
+            path={player.search.general[0]}
+            roleGroup={player.search.general[1]}
+          />
+          <RouteAuthorized
+            component={Workspace}
+            path={player.workspace.releases[0]}
+            roleGroup={player.workspace.releases[1]}
+          />
+          <RouteAuthorized
+            component={Account}
+            path={player.account.info[0]}
+            roleGroup={player.account.info[1]}
+          />
+          <RouteAuthorized
+            exact
+            component={BrowseGenre}
+            path={player.genre[0]}
+            roleGroup={player.genre[1]}
+          />
+          <RouteAuthorized
+            exact
             component={BrowseGenreType}
+            path={player.genreType[0]}
+            roleGroup={player.genreType[1]}
           />
-          <UserRoute path='/player/library/:id' component={Library} />
-          <UserRoute path='/player/account' component={Account} />
-          <UserRoute path='/player/artist/:id' component={Artist} />
-          <UserRoute path='/player/search/:key' component={Search} />
-          <UserRoute path='/player/release/:id' component={Release} />
-          <UserRoute path='/player/playlist/:id' component={Playlist} />
-          <UserRoute path='/player/queue' component={Queue} />
-          <ArtistRoute path='/player/workspace' component={Workspace} />
-          <ArtistRoute exact path='/player/manage/:id' component={Manage} />
+          <RouteAuthorized
+            component={Artist}
+            path={player.artist.discography[0]}
+            roleGroup={player.artist.discography[1]}
+          />
+          <RouteAuthorized
+            component={Release}
+            path={player.release[0]}
+            roleGroup={player.release[1]}
+          />
+          <RouteAuthorized
+            component={Playlist}
+            path={player.playlist[0]}
+            roleGroup={player.playlist[1]}
+          />
+          <RouteAuthorized
+            component={Queue}
+            path={player.queue[0]}
+            roleGroup={player.queue[1]}
+          />
+          <RouteAuthorized
+            component={Manage}
+            path={player.manage[0]}
+            roleGroup={player.manage[1]}
+          />
           <Route path='*'>
             <Redirect to='/404' />
           </Route>

@@ -1,27 +1,40 @@
 import React from 'react';
-import { UserRoute } from '../../../components/custom-routes';
+import { RouteAuthorized } from '../../../components/custom-routes';
 import { NavigationTab } from '../../../components/navigation';
+import { ROUTES } from '../../../config/RoleRouting';
 import { TemplateNavPage } from '../template';
 import General from './General';
 import Genres from './Genres';
 import Releases from './Releases';
 
 function Browse(props) {
+  const { browse } = ROUTES.player;
+  const tab = {
+    general: ['General', General],
+    genres: ['Genres', Genres],
+    releases: ['New releases', Releases]
+  };
+
   const nav = (
     <NavigationTab
-      items={[
-        { href: '/player/browse', label: 'General' },
-        { href: '/player/browse/genres', label: 'Genres' },
-        { href: '/player/browse/releases', label: 'New releases' }
-      ]}
+      items={Object.keys(tab).map(key => ({
+        href: browse[key][0],
+        label: tab[key][0]
+      }))}
     />
   );
 
   const body = (
     <React.Fragment>
-      <UserRoute exact path='/player/browse' component={General} />
-      <UserRoute exact path='/player/browse/genres' component={Genres} />
-      <UserRoute exact path='/player/browse/releases' component={Releases} />
+      {Object.keys(tab).map((key, index) => (
+        <RouteAuthorized
+          exact
+          component={tab[key][1]}
+          path={browse[key][0]}
+          roleGroup={browse[key][1]}
+          key={index}
+        />
+      ))}
     </React.Fragment>
   );
 

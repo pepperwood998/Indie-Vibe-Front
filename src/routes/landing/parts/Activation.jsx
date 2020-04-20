@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { resetActivationLink } from '../../../apis/API';
+import { resetActivationLink } from '../../../apis/AuthAPI';
 import Loading from '../../../assets/imgs/loading.gif';
 
 function Activation({

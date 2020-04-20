@@ -1,8 +1,8 @@
 import React from 'react';
-
+import { RouteAuthorized } from '../../../components/custom-routes';
 import { NavigationTab } from '../../../components/navigation';
+import { ROUTES } from '../../../config/RoleRouting';
 import { TemplateNavPage } from '../template';
-import { UserRoute } from '../../../components/custom-routes';
 import General from './General';
 import Mono from './Mono';
 
@@ -44,6 +44,8 @@ function Search(props) {
       ]}
     />
   );
+
+  const { search } = ROUTES.player;
   const tabs = [
     'tracks',
     'artists',
@@ -55,12 +57,18 @@ function Search(props) {
 
   const body = (
     <React.Fragment>
-      <UserRoute exact path='/player/search/:key' component={General} />
+      <RouteAuthorized
+        exact
+        component={General}
+        path={search.general[0]}
+        roleGroup={search.general[1]}
+      />
       {tabs.map((value, index) => (
-        <UserRoute
+        <RouteAuthorized
           exact
-          path={`/player/search/:key/${value}`}
           component={Mono}
+          path={search[value][0]}
+          roleGroup={search[value][1]}
           type={value.substr(0, value.length - 1)}
           key={index}
         />

@@ -54,7 +54,7 @@ function StreamContextProvider(props) {
       settings = JSON.parse(settings);
       if (authState.role === 'r-free') {
         settings.bitrate = '128';
-        localStorage.setItem('settings', settings);
+        localStorage.setItem('settings', JSON.stringify(settings));
       }
       return {
         ...initState,

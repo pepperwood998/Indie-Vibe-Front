@@ -6,7 +6,7 @@ const AuthContext = createContext();
 
 const initState = {
   id: '',
-  role: '',
+  role: 'r-guess',
   token: '',
   refreshToken: '',
   expiry: 0,
