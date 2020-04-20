@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getProfile } from '../../../apis/API';
-import { UserRoute } from '../../../components/custom-routes';
-import { GroupProfileBox, GroupEmpty } from '../../../components/groups';
+import { RouteAuthorized } from '../../../components/custom-routes';
+import { GroupEmpty, GroupProfileBox } from '../../../components/groups';
 import { NavigationTab } from '../../../components/navigation';
+import { ROUTES } from '../../../config/RoleRouting';
 import { AuthContext } from '../../../contexts';
 import { TemplateNavPage } from '../template';
 import General from './General';
@@ -75,21 +76,29 @@ function Library(props) {
     />
   );
 
+  const { library } = ROUTES.player;
   const tabs = ['tracks', 'releases', 'artists', 'followings', 'followers'];
 
   const body = (
     <React.Fragment>
-      <UserRoute exact path='/player/library/:id' component={General} />
-      <UserRoute
+      <RouteAuthorized
         exact
-        path='/player/library/:id/playlists'
+        component={General}
+        path={library.general[0]}
+        roleGroup={library.general[1]}
+      />
+      <RouteAuthorized
+        exact
         component={LibraryPlaylists}
+        path={library.playlists[0]}
+        roleGroup={library.playlists[1]}
       />
       {tabs.map((value, index) => (
-        <UserRoute
+        <RouteAuthorized
           exact
-          path={`/player/library/:id/${value}`}
           component={Mono}
+          path={library[value][0]}
+          roleGroup={library[value][1]}
           type={value.substr(0, value.length - 1)}
           key={index}
         />

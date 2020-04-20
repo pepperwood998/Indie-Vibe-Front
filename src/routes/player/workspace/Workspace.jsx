@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-
-import { ArtistRoute } from '../../../components/custom-routes';
+import React from 'react';
+import { RouteAuthorized } from '../../../components/custom-routes';
 import { NavigationTab } from '../../../components/navigation';
+import { ROUTES } from '../../../config/RoleRouting';
 import { TemplateNavPage } from '../template';
-import Upload from './Upload';
 import Releases from './Releases';
 import Statistics from './Statistics';
+import Upload from './Upload';
 
 function Workspace() {
   const nav = (
@@ -27,15 +27,28 @@ function Workspace() {
     />
   );
 
+  const { workspace } = ROUTES.player;
+
   const body = (
     <React.Fragment>
-      <ArtistRoute
+      <RouteAuthorized
         exact
-        path={['/player/workspace', '/player/workspace/releases']}
         component={Releases}
+        path={workspace.releases[0]}
+        roleGroup={workspace.releases[1]}
       />
-      <ArtistRoute path='/player/workspace/statistic' component={Statistics} />
-      <ArtistRoute path='/player/workspace/upload' component={Upload} />
+      <RouteAuthorized
+        exact
+        component={Statistics}
+        path={workspace.statistics[0]}
+        roleGroup={workspace.statistics[1]}
+      />
+      <RouteAuthorized
+        exact
+        component={Upload}
+        path={workspace.upload[0]}
+        roleGroup={workspace.upload[1]}
+      />
     </React.Fragment>
   );
 

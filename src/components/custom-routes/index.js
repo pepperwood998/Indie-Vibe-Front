@@ -5,3 +5,4 @@ export { default as PremiumRoute } from './PremiumRoute';
 export { default as FreeRoute } from './FreeRoute';
 export { default as CMSGuestRoute } from './CMSGuestRoute';
 export { default as CMSRoute } from './CMSRoute';
+export { default as RouteAuthorized } from './RouteAuthorized';
