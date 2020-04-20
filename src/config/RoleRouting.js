@@ -1,6 +1,7 @@
 const ROLE_GROUPS = {
   ALL: { roles: [] },
   GUEST: { roles: ['r-guess'], redirect: '/home' },
+  CMS_GUEST: { roles: ['r-guess'], redirect: '/cms' },
   USER: {
     roles: ['r-free', 'r-premium', 'r-curator', 'r-artist', 'r-admin'],
     redirect: '/login'
@@ -11,7 +12,16 @@ const ROLE_GROUPS = {
   ADMIN: { roles: ['r-admin'], redirect: '/cms-login' }
 };
 
-const { ALL, GUEST, USER, FREE, PREMIUM, ARTIST, ADMIN } = ROLE_GROUPS;
+const {
+  ALL,
+  GUEST,
+  CMS_GUEST,
+  USER,
+  FREE,
+  PREMIUM,
+  ARTIST,
+  ADMIN
+} = ROLE_GROUPS;
 
 export const ROUTES = {
   home: [['/', '/home'], ALL],
@@ -69,7 +79,7 @@ export const ROUTES = {
     playlist: ['/player/playlist/:id', USER],
     queue: ['/player/queue', USER]
   },
-  cmsLogin: ['/cms-login', GUEST],
+  cmsLogin: ['/cms-login', CMS_GUEST],
   cms: {
     dashboard: [['/cms', '/cms/dashboard'], ADMIN],
     requests: ['/cms/requests', ADMIN],
