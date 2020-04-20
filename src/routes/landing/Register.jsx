@@ -8,6 +8,7 @@ import { CardError, CardSuccess } from '../../components/cards';
 import { InputForm, InputRadioBox } from '../../components/inputs';
 import Tooltip from '../../components/tooltips/Tooltip';
 import Authentication from './Authentication';
+import Activation from './parts/Activation';
 
 function Register() {
   const [registerError, setRegisterError] = useState('');
@@ -42,22 +43,19 @@ function Register() {
     setRegistering(true);
     register(email, pwd, cfPwd, displayName, gender)
       .then(response => response.json())
-      .then(json => {
-        if (json.status === 'fail') {
-          throw { type: 'wrong', msg: json.data };
-        } else {
-          setRegisterSuccess(json.data);
-        }
+      .then(res => {
+        if (res.status === 'success') {
+          setRegisterSuccess(<Activation email={email} />);
+        } else throw res.data;
 
         setRegistering(false);
       })
       .catch(err => {
-        if (err.type && err.type === 'wrong') {
-          setRegisterError(err.msg);
-        } else {
-          setRegisterError('Server error');
+        if (typeof err !== 'string') {
+          err = 'Server error';
         }
 
+        setRegisterError(err);
         setRegistering(false);
       });
   };
@@ -83,7 +81,7 @@ function Register() {
           .then(response => response.json())
           .then(res => {
             if (res.status === 'success') {
-              setRegisterSuccess(res.data);
+              setRegisterSuccess(<Activation email={email} />);
             } else throw res.data;
 
             setRegisteringFb(false);
@@ -105,11 +103,7 @@ function Register() {
   const inputs = () => (
     <React.Fragment>
       {registerError ? <CardError message={registerError} /> : ''}
-      {registerSuccess ? (
-        <CardSuccess message={<RegisterSuccess email={email} />} />
-      ) : (
-        ''
-      )}
+      {registerSuccess ? <CardSuccess message={registerSuccess} /> : ''}
       <InputForm
         type='text'
         placeholder='Enter your email address'
