@@ -5,6 +5,7 @@ import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
 import GroupEmpty from '../../../components/groups/GroupEmpty';
 import { ButtonLoadMore } from '../../../components/buttons';
+import TemplateBannerPage from '../template/TemplateBannerPage';
 
 function BrowseGenreType(props) {
   const { state: authState } = useContext(AuthContext);
@@ -86,27 +87,30 @@ function BrowseGenreType(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='browse-genre-type content-page fadein d-flex flex-column'>
-      <div className='page-banner'>
-        <span className='font-short-extra font-weight-bold font-white'>
-          {data.genre.name}
-        </span>
-      </div>
-
-      <GroupEmpty isEmpty={!src.items.length} message={`No available ${type}`}>
-        <div className='genre-content mono-page content-padding flex-1'>
-          <CollectionMain
-            header={isPlaylist ? "Editor's curated" : 'New releases'}
-            items={src.items}
-          />
-          {src.total > src.offset + src.limit ? (
-            <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>
-          ) : (
-            ''
-          )}
-        </div>
-      </GroupEmpty>
-    </div>
+    <TemplateBannerPage
+      title={data.genre.name}
+      bannerBg={data.genre.thumbnail}
+      body={
+        <GroupEmpty
+          isEmpty={!src.items.length}
+          message={`No available ${type}`}
+        >
+          <div className='genre-content content-padding flex-1'>
+            <CollectionMain
+              header={isPlaylist ? "Editor's curated" : 'New releases'}
+              items={src.items}
+            />
+            {src.total > src.offset + src.limit ? (
+              <ButtonLoadMore onClick={handleLoadMore}>
+                Load more
+              </ButtonLoadMore>
+            ) : (
+              ''
+            )}
+          </div>
+        </GroupEmpty>
+      }
+    />
   );
 }
 

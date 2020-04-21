@@ -2,10 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { browseGenre } from '../../../apis/API';
 import { ArrowRight } from '../../../assets/svgs';
 import { CollectionMain } from '../../../components/collections';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 import { NavLinkColor } from '../../../components/links';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
-import GroupEmpty from '../../../components/groups/GroupEmpty';
+import TemplateBannerPage from '../template/TemplateBannerPage';
 
 function BrowseGenre(props) {
   const { state: authState } = useContext(AuthContext);
@@ -59,50 +60,48 @@ function BrowseGenre(props) {
   return firstRender ? (
     ''
   ) : (
-    <div className='browse-genre-overview content-page fadein d-flex flex-column'>
-      <div className='page-banner'>
-        <span className='font-short-extra font-weight-bold font-white'>
-          {data.genre.name}
-        </span>
-      </div>
-
-      <GroupEmpty isEmpty={isEmpty} message='No browsing for this genre'>
-        <div className='genre-content mono-page content-padding flex-1'>
-          {!data.playlists.length ? (
-            ''
-          ) : (
-            <CollectionMain
-              header={
-                <NavLinkColor
-                  href={`/player/genre/${id}/playlists`}
-                  className='header-title font-white'
-                >
-                  Editor's curated
-                  <ArrowRight />
-                </NavLinkColor>
-              }
-              items={data.playlists}
-            />
-          )}
-          {!data.releases.length ? (
-            ''
-          ) : (
-            <CollectionMain
-              header={
-                <NavLinkColor
-                  href={`/player/genre/${id}/releases`}
-                  className='header-title font-white'
-                >
-                  New releases
-                  <ArrowRight />
-                </NavLinkColor>
-              }
-              items={data.releases}
-            />
-          )}
-        </div>
-      </GroupEmpty>
-    </div>
+    <TemplateBannerPage
+      title={data.genre.name}
+      bannerBg={data.genre.thumbnail}
+      body={
+        <GroupEmpty isEmpty={isEmpty} message='No browsing for this genre'>
+          <div className='genre-content content-padding flex-1'>
+            {!data.playlists.length ? (
+              ''
+            ) : (
+              <CollectionMain
+                header={
+                  <NavLinkColor
+                    href={`/player/genre/${id}/playlists`}
+                    className='header-title font-white'
+                  >
+                    Editor's curated
+                    <ArrowRight />
+                  </NavLinkColor>
+                }
+                items={data.playlists}
+              />
+            )}
+            {!data.releases.length ? (
+              ''
+            ) : (
+              <CollectionMain
+                header={
+                  <NavLinkColor
+                    href={`/player/genre/${id}/releases`}
+                    className='header-title font-white'
+                  >
+                    New releases
+                    <ArrowRight />
+                  </NavLinkColor>
+                }
+                items={data.releases}
+              />
+            )}
+          </div>
+        </GroupEmpty>
+      }
+    />
   );
 }
 
