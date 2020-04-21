@@ -1,10 +1,23 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-function TemplateNavPage(props) {
-  let classes = ['content-page compound-page', props.className].join(' ');
-  let handleScrollOver = props.handleScrollOver
-    ? props.handleScrollOver
-    : () => undefined;
+function TemplateNavPage({
+  header = '',
+  nav = '',
+  body = '',
+  className = '',
+  handleScrollOver = scrolled => undefined
+}) {
+  const [paddingTop, setPaddingTop] = useState(0);
+  const headerRef = useRef();
+
+  useEffect(() => {
+    setPaddingTop(headerRef.current.getBoundingClientRect().height);
+  }, []);
+
+  let classes = 'content-page';
+  if (className) {
+    classes += ` ${className}`;
+  }
 
   const handleScroll = e => {
     if (e.target.scrollTop >= 50) {
@@ -16,10 +29,16 @@ function TemplateNavPage(props) {
 
   return (
     <div className={classes}>
-      {props.header}
-      {props.nav}
-      <div className='body-scroll' onScroll={handleScroll}>
-        <div className='body'>{props.body}</div>
+      <div className='content-page__header' ref={headerRef}>
+        {header}
+        {nav}
+      </div>
+      <div
+        className='content-page__content'
+        style={{ paddingTop: paddingTop + 'px' }}
+        onScroll={handleScroll}
+      >
+        {body}
       </div>
     </div>
   );

@@ -27,13 +27,14 @@
     grid-area: body;
     height: 40px;
     background-color: $blackGray;
-    z-index: 2;
+    z-index: 4;
   }
 
   &__nav {
     grid-area: nav-bar;
     width: 200px;
     background-color: $blackLight;
+    z-index: 3
   }
 
   &__quick-access {
@@ -41,12 +42,14 @@
     width: 180px;
     background-color: $blackLight;
     overflow: hidden;
+    z-index: 2
   }
 
   &__bottom {
     grid-area: play-bar;
     height: 70px;
     background-image: $blackPop;
+    z-index: 5;
   }
 
   &__content {
@@ -55,33 +58,35 @@
     margin-top: 40px;
     display: flex;
     overflow: hidden;
+    z-index: 1;
 
     .content-page {
       flex: 1;
+      position: relative;
+
+      &__header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 2;
+        background-color: $blackGray;
+        width: 100%;
+
+        &.scrolled {
+          position: fixed;
+        }
+      }
+
+      &__content {
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+      }
 
       .mono-page {
         height: 100%;
         overflow-y: auto;
-      }
-    }
-
-    .compound-page {
-      display: flex;
-      flex-direction: column;
-
-      .body-scroll {
-        flex: 1;
-        overflow-y: auto;
-
-        .body {
-          height: 100%;
-          min-height: 600px;
-
-          &__bound {
-            background-color: $blackBlueLight;
-            padding: 20px;
-          }
-        }
       }
     }
   }
@@ -90,7 +95,7 @@
     color: $grayLight;
 
     &:hover {
-      color: $grayLight!important;
+      color: $grayLight !important;
     }
   }
 

@@ -125,3 +125,23 @@ label {
   justify-content: center;
   align-items: center;
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $grayDark;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $graySuperLight;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $grayLight;
+}
