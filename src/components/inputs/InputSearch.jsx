@@ -1,8 +1,12 @@
 import React from 'react';
+import { CloseIcon, SearchIcon } from '../../assets/svgs';
 
-import { SearchIcon } from '../../assets/svgs';
-
-function InputSearch({ placeholder = 'Search', onChange = () => {} }) {
+function InputSearch({
+  placeholder = 'Search',
+  onChange = () => {},
+  onEmpty = () => {},
+  value = ''
+}) {
   const handleSearch = e => {
     if (e.key === 'Enter') {
       onChange(e);
@@ -11,14 +15,19 @@ function InputSearch({ placeholder = 'Search', onChange = () => {} }) {
 
   return (
     <div className='input-search'>
-      <SearchIcon />
+      {value ? (
+        <CloseIcon className='svg--cursor svg--small' onClick={onEmpty} />
+      ) : (
+        <SearchIcon />
+      )}
       <input
-        type='search'
-        className='font-white font-short-s'
+        type='text'
+        className='font-white font-short-big'
         placeholder={placeholder}
         onChange={onChange}
         onKeyDown={handleSearch}
         autoComplete='new-password'
+        value={value}
       />
     </div>
   );

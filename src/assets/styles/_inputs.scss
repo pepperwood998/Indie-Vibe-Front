@@ -10,11 +10,9 @@
 
 /* start of INPUT SEARCH */
 .input-search {
-  background-color: $grayDark;
-  border-radius: 5px;
   display: flex;
   align-items: center;
-  height: 25px;
+  height: 100%;
 
   svg {
     height: inherit;
@@ -25,6 +23,8 @@
     height: inherit;
     background-color: transparent;
     outline: none;
+    padding: 0 10px;
+    flex: 1;
   }
 }
 /* end of INPUT SEARCH */
@@ -82,7 +82,7 @@ textarea.input-text {
     cursor: pointer;
 
     &--error {
-      color: $red!important;
+      color: $red !important;
     }
 
     &--img.input-custom__label--error {
