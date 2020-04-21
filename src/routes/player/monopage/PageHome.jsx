@@ -3,6 +3,7 @@ import { getHome } from '../../../apis/API';
 import { CollectionMain } from '../../../components/collections';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
+import TemplateBannerPage from '../template/TemplateBannerPage';
 
 function Home() {
   const { state: libState } = useContext(LibraryContext);
@@ -65,28 +66,26 @@ function Home() {
   return firstRender ? (
     ''
   ) : (
-    <div className='content-page fadein d-flex flex-column'>
-      <div className='page-banner'>
-        <span className='font-short-extra font-weight-bold font-white'>
-          Home
-        </span>
-      </div>
-      <div className='home-page mono-page content-padding flex-1'>
-        {Object.keys(struct).map((key, index) => {
-          const items = data[key];
-          if (!items.length) return '';
+    <TemplateBannerPage
+      title='Home'
+      body={
+        <div className='home-page content-padding flex-1'>
+          {Object.keys(struct).map((key, index) => {
+            const items = data[key];
+            if (!items.length) return '';
 
-          return (
-            <CollectionMain
-              header={struct[key]}
-              items={items}
-              full={true}
-              key={index}
-            />
-          );
-        })}
-      </div>
-    </div>
+            return (
+              <CollectionMain
+                header={struct[key]}
+                items={items}
+                full={true}
+                key={index}
+              />
+            );
+          })}
+        </div>
+      }
+    />
   );
 }
 
