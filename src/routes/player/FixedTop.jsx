@@ -1,5 +1,5 @@
-import React from 'react';
-import { ArrowBack, ArrowForward, LogoIcon } from '../../assets/svgs';
+import React, { useState } from 'react';
+import { ArrowBack, ArrowForward } from '../../assets/svgs';
 import { InputSearch } from '../../components/inputs';
 import Tooltip from '../../components/tooltips/Tooltip';
 
@@ -7,18 +7,28 @@ function Top(props) {
   let { history } = props;
   let searchTimeout;
 
+  const [key, setKey] = useState('');
+
   return (
     <div className='nav-search'>
-      <InputSearch
-        onChange={e => {
-          e.persist();
-          clearTimeout(searchTimeout);
-          searchTimeout = setTimeout(() => {
-            if (e.target.value)
-              history.push(`/player/search/${e.target.value}`);
-          }, 300);
-        }}
-      />
+      <section className='search-box'>
+        <InputSearch
+          onChange={e => {
+            setKey(e.target.value);
+            e.persist();
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+              if (e.target.value) {
+                history.push(`/player/search/${e.target.value}`);
+              }
+            }, 300);
+          }}
+          onEmpty={() => {
+            setKey('');
+          }}
+          value={key}
+        />
+      </section>
       <section className='linear-nav'>
         <Tooltip tooltip='Go back' pos='bottom'>
           <ArrowBack
