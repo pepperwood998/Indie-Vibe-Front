@@ -59,6 +59,8 @@
 
 .custom-grid {
   display: grid;
+  justify-items: center;
+  align-items: center;
 
   &.two-cols {
     grid-template-columns: repeat(2, 1fr);
@@ -68,6 +70,12 @@
 
   &.three-cols {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .custom-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 

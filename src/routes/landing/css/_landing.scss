@@ -9,68 +9,68 @@
     padding-left: 200px;
   }
 
+  @media screen and (max-width: 992px) {
+    .side-space {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .ivb-navbar .user-box-wrapper {
+      display: table;
+      margin: 10px auto;
+    }
+
+    .body-home {
+      flex-direction: column !important;
+
+      .banner {
+        padding: 0 40px !important;
+        margin: 0px auto 50px;
+        width: 100% !important;
+      }
+
+      .showroom {
+        padding: 0 40px;
+
+        .item {
+          max-width: 300px;
+        }
+      }
+    }
+  }
+
   &__nav {
     background-color: $blackLight;
 
-    .content {
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .ivb-navbar {
+      background-color: $blackLight !important;
 
-      .nav-menu__item {
-        a,
-        span {
-          display: block;
-          padding: 20px 20px;
-        }
-
-        a.active,
-        span.active {
-          color: $blueMain;
-        }
+      a.item,
+      span.item {
+        padding: 20px 20px;
+        display: block;
       }
 
-      .nav-left {
-        display: flex;
-        align-items: center;
-
-        &__logo {
-          margin-right: 30px;
-        }
-
-        &__menu {
-          display: flex;
-          align-items: center;
-        }
+      a.active.item,
+      span.item.active {
+        color: $blueMain;
       }
 
-      .nav-right {
+      .toggle {
+        border-color: $white;
+        background-color: $white;
+      }
+
+      .user-box {
+        cursor: pointer;
         display: flex;
+        flex-direction: row;
         align-items: center;
+        max-width: 200px;
 
-        .user-box {
-          cursor: pointer;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          max-width: 200px;
-
-          .thumbnail-wrapper {
-            width: 50px;
-            height: 50px;
-            position: relative;
-            border-radius: 5px;
-            overflow: hidden;
-
-            img {
-              width: 100%;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-          }
+        .thumbnail-wrapper {
+          width: 50px;
+          height: 50px;
         }
       }
     }
@@ -151,11 +151,12 @@
         justify-content: center;
 
         .banner {
-          width: 450px;
+          width: 40%;
           padding: 15px 100px 0 0;
           display: flex;
           flex-direction: column;
           justify-content: center;
+          word-wrap: break-word;
 
           .desc {
             line-height: 1.6;

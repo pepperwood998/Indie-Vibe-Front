@@ -5,51 +5,47 @@ import { ButtonFrame } from '../../../components/buttons';
 import { ContextMenuAccount } from '../../../components/context-menu';
 import { LinkWhiteColor } from '../../../components/links';
 import { AuthContext, MeContext } from '../../../contexts';
+import { Navbar, Nav } from 'react-bootstrap';
 
 function NavBar(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: meState } = useContext(MeContext);
 
   return (
-    <div className='content'>
-      <div className='nav-left'>
-        <div className='nav-left__logo'>
-          <a href='/home'>
-            <Logo />
-          </a>
-        </div>
-        <nav className='nav-left__menu-container'>
-          <ul className='nav-left__menu'>
-            <li className='nav-menu__item'>
-              <LinkWhiteColor
-                href='/home'
-                className='font-short-regular font-weight-bold font-white'
-                active={props.active === 'home'}
-              >
-                Home
-              </LinkWhiteColor>
-            </li>
-            <li className='nav-menu__item'>
-              <LinkWhiteColor
-                href='/premium'
-                className='font-short-regular font-weight-bold font-white'
-                active={props.active === 'premium'}
-              >
-                Premium
-              </LinkWhiteColor>
-            </li>
-            <li className='nav-menu__item'>
-              <LinkWhiteColor
-                href='#'
-                className='font-short-regular font-weight-bold font-white'
-              >
-                About
-              </LinkWhiteColor>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div className='nav-right'>
+    <Navbar bg='light' expand='lg' className='ivb-navbar'>
+      <Navbar.Brand href='/home'>
+        <Logo />
+      </Navbar.Brand>
+      <Navbar.Toggle aria-controls='basic-navbar-nav' className='toggle' />
+      <Navbar.Collapse id='basic-navbar-nav'>
+        <Nav className='mr-auto'>
+          <Nav.Item>
+            <LinkWhiteColor
+              href='/home'
+              className='font-short-regular font-weight-bold font-white item'
+              active={props.active === 'home'}
+            >
+              Home
+            </LinkWhiteColor>
+          </Nav.Item>
+          <Nav.Item>
+            <LinkWhiteColor
+              href='/premium'
+              className='font-short-regular font-weight-bold font-white item'
+              active={props.active === 'premium'}
+            >
+              Premium
+            </LinkWhiteColor>
+          </Nav.Item>
+          <Nav.Item>
+            <LinkWhiteColor
+              href='#'
+              className='font-short-regular font-weight-bold font-white item'
+            >
+              About
+            </LinkWhiteColor>
+          </Nav.Item>
+        </Nav>
         {!authState.token ? (
           <React.Fragment>
             <a href='/register'>
@@ -58,21 +54,24 @@ function NavBar(props) {
             <div className='nav-menu__item'>
               <LinkWhiteColor
                 href='/login'
-                className='font-short-regular font-weight-bold font-white'
+                className='font-short-regular font-weight-bold font-white item'
               >
                 Sign in
               </LinkWhiteColor>
             </div>
           </React.Fragment>
         ) : (
-          <div className='dropdown'>
+          <div className='dropdown user-box-wrapper'>
             <div className='user-box' data-toggle='dropdown'>
               <div className='thumbnail-wrapper'>
-                <img
-                  src={
-                    meState.thumbnail ? meState.thumbnail : AvatarPlaceholder
-                  }
-                />
+                <div className='img-wrapper'>
+                  <img
+                    className='img'
+                    src={
+                      meState.thumbnail ? meState.thumbnail : AvatarPlaceholder
+                    }
+                  />
+                </div>
               </div>
               <span className='ellipsis one-line font-short-regular font-weight-bold font-white pl-2'>
                 {meState.displayName}
@@ -86,8 +85,8 @@ function NavBar(props) {
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </Navbar.Collapse>
+    </Navbar>
   );
 }
 
