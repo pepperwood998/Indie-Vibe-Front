@@ -54,10 +54,11 @@ export const getFbPictureUrl = fbId => {
   );
 };
 
-export const resetActivationLink = email => {
+export const resetActivationLink = (email, password) => {
   let url = new URL(`${host}/reset`);
   let formData = new FormData();
   formData.append('email', email);
+  formData.append('password', password);
 
   return fetch(url, {
     method: 'POST',
