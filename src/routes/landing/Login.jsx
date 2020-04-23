@@ -92,9 +92,9 @@ function Login() {
       .then(res => {
         if (res.status === 'fail') throw res.data;
 
-        return getAccount(res['access_token']).then(res => {
-          if (res.status === 'success') {
-            meDispatch(meActions.loadMe(res.data));
+        return getAccount(res['access_token']).then(accRes => {
+          if (accRes.status === 'success') {
+            meDispatch(meActions.loadMe(accRes.data));
             authDispatch(loginSuccess({ ...res, remembered }));
           } else throw 'Unexpected error, try again!';
         });
