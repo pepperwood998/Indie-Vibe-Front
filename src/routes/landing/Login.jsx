@@ -12,7 +12,7 @@ import { CardError } from '../../components/cards';
 import { InputCheckbox, InputForm } from '../../components/inputs';
 import { AuthContext, MeContext } from '../../contexts';
 import Authentication from './Authentication';
-import Activation from './parts/Activation';
+import { RegisterActivation } from './Register';
 
 function Login() {
   const { actions: authActions, dispatch: authDispatch } = useContext(
@@ -65,8 +65,8 @@ function Login() {
       .catch(err => {
         if (typeof err !== 'string') {
           err = 'Server error';
-        } else if (err === 'unactive') {
-          err = <Activation tryLogin email={email} />;
+        } else if (err === 'inactive') {
+          err = <RegisterActivation tryLogin email={email} password={pwd} />;
         }
 
         setPwd('');
@@ -102,8 +102,6 @@ function Login() {
       .catch(err => {
         if (typeof err !== 'string') {
           err = 'Server error';
-        } else if (err === 'unactive') {
-          err = <Activation tryLogin email={email} />;
         }
 
         setLoggingInFb(false);

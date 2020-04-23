@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { getFbPictureUrl, register, registerWithFb } from '../../apis/AuthAPI';
+import {
+  getFbPictureUrl,
+  register,
+  registerWithFb,
+  resetActivationLink
+} from '../../apis/AuthAPI';
+import Loading from '../../assets/imgs/loading.gif';
 import { LogoRegister } from '../../assets/svgs';
 import { ButtonFacebook, ButtonMain } from '../../components/buttons/';
 import { CardError, CardSuccess } from '../../components/cards';
 import { InputForm, InputRadioBox } from '../../components/inputs';
 import Tooltip from '../../components/tooltips/Tooltip';
 import Authentication from './Authentication';
-import Activation from './parts/Activation';
 
 function Register() {
   const [registerError, setRegisterError] = useState('');
@@ -43,7 +48,9 @@ function Register() {
       .then(response => response.json())
       .then(res => {
         if (res.status === 'success') {
-          setRegisterSuccess(<Activation email={email} />);
+          setRegisterSuccess(
+            <RegisterActivation email={email} password={pwd} />
+          );
         } else throw res.data;
 
         setRegistering(false);
@@ -79,7 +86,7 @@ function Register() {
           .then(response => response.json())
           .then(res => {
             if (res.status === 'success') {
-              setRegisterSuccess(<Activation email={email} />);
+              setRegisterSuccess(res.data);
             } else throw res.data;
 
             setRegisteringFb(false);
@@ -222,5 +229,61 @@ function Register() {
     />
   );
 }
+
+export const RegisterActivation = ({ email, password, login = false }) => {
+  const [resent, setResent] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendFail, setResendFail] = useState(false);
+  const [tryLogin, setTryLogin] = useState(login)
+
+  const handleResend = () => {
+    setResending(true);
+    setResendFail(false);
+    setTryLogin(false);
+
+    resetActivationLink(email, password)
+      .then(res => {
+        if (res.status === 'success') {
+          setResending(false);
+          setResent(true);
+        } else throw res.data;
+      })
+      .catch(err => {
+        setResending(false);
+        setResendFail(true);
+      });
+  };
+
+  return !resending ? (
+    <div className='fadein'>
+      <div className='pb-2'>
+        {tryLogin ? (
+          <span>Your account is not activated</span>
+        ) : resendFail ? (
+          <span className='font-black'>Failed to send activation link.</span>
+        ) : !resent ? (
+          <span>An activation link has been sent to your email.</span>
+        ) : (
+          <span>Check email for your new activation link.</span>
+        )}
+      </div>
+      <div>
+        <span
+          className='link underline link-underline font-gray-light'
+          onClick={handleResend}
+        >
+          Re-send activation link
+        </span>
+      </div>
+    </div>
+  ) : (
+    <div className='d-flex flex-column align-items-center'>
+      <div className='pb-2'>
+        <span>Resending activation link.</span>
+      </div>
+      <img src={Loading} width='25px' height='25px' />
+    </div>
+  );
+};
 
 export default Register;

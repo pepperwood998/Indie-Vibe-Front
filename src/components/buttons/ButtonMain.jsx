@@ -1,4 +1,5 @@
 import React from 'react';
+import Loading from '../../assets/imgs/loading.gif';
 
 function ButtonMain({
   className = '',
@@ -18,7 +19,7 @@ function ButtonMain({
 
   return (
     <button className={classes} onClick={onClick} type={type}>
-      {children}
+      {disabled ? <img src={Loading} width='15px' height='15px' /> : children}
     </button>
   );
 }

@@ -3,12 +3,10 @@
 
   &.content {
     padding: 30px 25px;
-    background-color: $green;
-    font: $shortSemi;
-    color: $white;
-  }
-
-  &.fail {
-    background-color: #7283a0;
+    width: 60%;
+    margin: auto;
+    border: 1px solid $grayDark;
+    border-radius: 3px;
+    background-color: $blackLight;
   }
 }
