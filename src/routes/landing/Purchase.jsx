@@ -195,7 +195,7 @@ const CheckoutForm = props => {
         </div>
       </section>
       <section>
-        <ButtonMain onClick={handleSubmit} disabled={status.purchasing}>
+        <ButtonMain onClick={handleSubmit} disabled={status.purchasing} full>
           Purchase Premium
         </ButtonMain>
       </section>
