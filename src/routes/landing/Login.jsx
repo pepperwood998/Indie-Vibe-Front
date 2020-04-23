@@ -135,7 +135,7 @@ function Login() {
       <div className='input-addition input-addition-span'>
         <InputCheckbox label='Remember me' onChange={handleRememberedChange} />
         <a
-          href='#'
+          href='/reset-password'
           className='font-tall-r font-weight-bold font-blue-main link link-bright-blue-main'
         >
           Forgot your password?

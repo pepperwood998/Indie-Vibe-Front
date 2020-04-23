@@ -22,7 +22,8 @@ import {
   Premium,
   Purchase,
   Register,
-  ReportArtist
+  ReportArtist,
+  ResetPassword
 } from './routes/landing';
 import Logout from './routes/Logout';
 import { Player } from './routes/player';
@@ -79,6 +80,11 @@ class App extends Component {
                       component={ActivationResult}
                       path={ROUTES.activation[0]}
                       roleGroup={ROUTES.activation[1]}
+                    />
+                    <RouteAuthorized
+                      component={ResetPassword}
+                      path={ROUTES.resetPassword[0]}
+                      roleGroup={ROUTES.resetPassword[1]}
                     />
                     <RouteAuthorized
                       component={Player}
