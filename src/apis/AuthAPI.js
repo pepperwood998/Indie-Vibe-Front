@@ -77,3 +77,14 @@ export const activate = (id, activateToken) => {
     body: formData
   }).then(response => response.json());
 };
+
+export const resetPassword = email => {
+  let url = new URL(`${host}/reset-password`);
+  let formData = new FormData();
+  formData.append('email', email);
+
+  return fetch(url, {
+    method: 'POST',
+    body: formData
+  }).then(response => response.json());
+};

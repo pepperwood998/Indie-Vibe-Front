@@ -32,6 +32,7 @@ export const ROUTES = {
   register: ['/register', GUEST],
   logout: ['/logout', USER],
   activation: ['/activation', GUEST],
+  resetPassword: ['/reset-password', GUEST],
   player: {
     home: [['/player', '/player/home'], USER],
     browse: {
