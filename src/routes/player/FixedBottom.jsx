@@ -50,7 +50,13 @@ function NowPayingLeft() {
     LibraryContext
   );
 
-  const { id, title, artists, release, relation } = streamState.info;
+  const {
+    id = '',
+    title = '',
+    artists = [],
+    release = {},
+    relation = []
+  } = streamState.info;
   const { playFromType, playFromId } = streamState;
 
   const artistSeparator = (
@@ -106,18 +112,20 @@ function NowPayingLeft() {
           </NavLinkUnderline>
           <div className='ellipsis one-line'>
             {artists
-              ? artists
-                  .map(artist => (
-                    <NavLinkUnderline
-                      href={`/player/artist/${artist.id}`}
-                      className='font-short-s font-gray-light'
-                      key={artist.id}
-                    >
-                      {artist.displayName}
-                    </NavLinkUnderline>
-                  ))
-                  .reduce((prev, curr) => [prev, artistSeparator, curr])
-              : ''}
+              .map(artist => (
+                <NavLinkUnderline
+                  href={`/player/artist/${artist.id}`}
+                  className='font-short-s font-gray-light'
+                  key={artist.id}
+                >
+                  {artist.displayName}
+                </NavLinkUnderline>
+              ))
+              .reduce(
+                (prev, curr) =>
+                  !prev ? [curr] : [prev, artistSeparator, curr],
+                ''
+              )}
           </div>
         </div>
         <div className='now-playing__action'>
@@ -149,7 +157,6 @@ function NowPayingMiddle() {
   const [duration, setDuration] = useState('0:00');
   const [progressPer, setProgressPer] = useState(0);
 
-  const { state: authState } = useContext(AuthContext);
   const { role } = useContext(MeContext).state;
   const {
     state: streamState,
@@ -174,7 +181,7 @@ function NowPayingMiddle() {
           setDuration(duration);
         },
         onError: message => {
-          libDispatch(libActions.setNotification(true, false, message))
+          libDispatch(libActions.setNotification(true, false, message));
         }
       })
     );

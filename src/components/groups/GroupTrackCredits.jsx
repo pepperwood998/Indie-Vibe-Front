@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { CloseIcon } from '../../assets/svgs';
-import { LibraryContext, AuthContext } from '../../contexts';
 import { getTrackFull } from '../../apis/API';
+import { CloseIcon } from '../../assets/svgs';
+import { AuthContext, LibraryContext } from '../../contexts';
 
 function GroupTrackCredits(props) {
   const { state: authState } = useContext(AuthContext);
@@ -30,7 +30,10 @@ function GroupTrackCredits(props) {
   };
 
   return (
-    <div className='screen-overlay track-credits fadein' onClick={handleCloseDialog}>
+    <div
+      className='screen-overlay track-credits fadein'
+      onClick={handleCloseDialog}
+    >
       <div className='track-credits' onClick={handlePropagateDialog}>
         <div className='track-credits__header'>
           <span className='font-short-big font-weight-bold font-white'>
@@ -54,11 +57,7 @@ function GroupTrackCredits(props) {
                   Artist
                 </div>
                 <div className='font-short-regular font-gray-light'>
-                  {track.artists.length
-                    ? track.artists
-                        .map(artist => artist.displayName)
-                        .reduce((prev, curr) => [prev, ', ', curr])
-                    : ''}
+                  {track.artists.map(artist => artist.displayName).join(', ')}
                 </div>
               </li>
               <li className='info'>

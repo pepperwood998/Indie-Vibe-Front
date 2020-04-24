@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getHome } from '../../../apis/API';
 import { CollectionMain } from '../../../components/collections';
+import { usePageTitle } from '../../../components/hooks';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
 import TemplateBannerPage from '../template/TemplateBannerPage';
@@ -42,6 +43,8 @@ function Home() {
         console.error(err);
       });
   }, []);
+
+  usePageTitle('Home', true);
 
   // effect-skip: favorite
   useEffectSkip(() => {

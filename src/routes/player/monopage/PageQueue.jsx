@@ -5,6 +5,7 @@ import { TrackTable } from '../../../components/collections/track-table';
 import { GroupEmpty } from '../../../components/groups';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
 import { swapOrigin, useEffectSkip } from '../../../utils/Common';
+import usePageTitle from '../../../components/hooks/HookPageTitle';
 
 function Queue() {
   const { state: authState } = useContext(AuthContext);
@@ -40,6 +41,8 @@ function Queue() {
         console.error(err);
       });
   }, []);
+
+  usePageTitle('Play Queue', true);
 
   // effect-skip: favorite
   useEffectSkip(() => {

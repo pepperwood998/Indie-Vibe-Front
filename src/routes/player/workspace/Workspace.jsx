@@ -52,7 +52,7 @@ function Workspace() {
     </React.Fragment>
   );
 
-  return <TemplateNavPage nav={nav} body={body} />;
+  return <TemplateNavPage nav={nav} body={body} title='Your Workspace' />;
 }
 
 export default Workspace;

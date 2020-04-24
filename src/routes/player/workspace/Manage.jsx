@@ -16,6 +16,7 @@ import {
 } from '../../../components/buttons';
 import { GroupEmpty, GroupTrackUpload } from '../../../components/groups';
 import { missingSomething } from '../../../components/groups/GroupReleaseUpload';
+import { usePageTitle } from '../../../components/hooks';
 import {
   InputFileLabel,
   InputForm,
@@ -119,6 +120,8 @@ function Manage(props) {
         }
       });
   }, []);
+
+  usePageTitle('Manage', true);
 
   const handleChangeReleaseThumbnail = () => {
     let file = ref.thumbnail.current.files[0];
@@ -532,15 +535,9 @@ function Manage(props) {
                             <span className='label'>Genres: </span>
                             {status.currentTrack === index ? (
                               <span className='font-short-regular font-gray-light'>
-                                {currentTrack.genres[1].length > 0
-                                  ? currentTrack.genres[1]
-                                      .map(g => g.name)
-                                      .reduce((prev, curr) => [
-                                        prev,
-                                        ', ',
-                                        curr
-                                      ])
-                                  : ''}
+                                {currentTrack.genres[1]
+                                  .map(g => g.name)
+                                  .join(', ')}
                                 <InputGenre
                                   onClick={() => {
                                     libDispatch(
@@ -559,15 +556,7 @@ function Manage(props) {
                               </span>
                             ) : (
                               <span className='font-short-regular font-gray-light'>
-                                {item.genres.length > 0
-                                  ? item.genres
-                                      .map(g => g.name)
-                                      .reduce((prev, curr) => [
-                                        prev,
-                                        ', ',
-                                        curr
-                                      ])
-                                  : ''}
+                                {item.genres.map(g => g.name).join(', ')}
                               </span>
                             )}
                           </div>
