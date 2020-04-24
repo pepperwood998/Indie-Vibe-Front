@@ -47,24 +47,9 @@
   border-bottom: 1px solid $grayDark;
 }
 
-.cover-wrapper {
+.cover {
   width: 150px;
   height: 150px;
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-
-  &:hover {
-    opacity: 0.8;
-  }
-
-  .img {
-    width: inherit;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
 }
 
 .upload-content {

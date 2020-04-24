@@ -423,7 +423,7 @@ function Manage(props) {
                 className='input-custom__label--img'
               >
                 <div className='thumbnail'>
-                  <div className='img-wrapper'>
+                  <div className='img-wrapper edit'>
                     <input
                       type='file'
                       name='thumbnail'

@@ -120,16 +120,8 @@
         .right {
           &__cover {
             margin-bottom: 10px;
-            cursor: pointer;
-
-            &:hover {
-              opacity: 0.5;
-            }
-
-            img {
-              width: 150px;
-              height: 150px;
-            }
+            width: 150px;
+            height: 150px;
           }
         }
       }

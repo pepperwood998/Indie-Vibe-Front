@@ -168,9 +168,12 @@ function Information(props) {
           <InputFileLabel
             for='account-thumbnail'
             keep={true}
-            className='input-label--img'
+            className='input-label--img img-wrapper edit'
           >
-            <img src={thumbnailSrc ? thumbnailSrc : AvatarPlaceholder} />
+            <img
+              className='img'
+              src={thumbnailSrc ? thumbnailSrc : AvatarPlaceholder}
+            />
           </InputFileLabel>
         </div>
         <div className='account-information__info'>
