@@ -153,9 +153,12 @@ function GroupPlaylistDialog(props) {
               <InputFileLabel
                 for='playlist-cover'
                 keep={true}
-                className='input-label--img'
+                className='input-label--img img-wrapper edit'
               >
-                <img src={thumbnailSrc ? thumbnailSrc : Placeholder} />
+                <img
+                  className='img'
+                  src={thumbnailSrc ? thumbnailSrc : Placeholder}
+                />
               </InputFileLabel>
             </div>
             <div className='right__button'>
