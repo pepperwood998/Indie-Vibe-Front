@@ -103,11 +103,7 @@ function GroupTrackUpload(props) {
       <div className='upload-field'>
         <span className='label'>Genres:</span>
         <div className='genre-input-wrapper'>
-          {props.info.genres.length > 0
-            ? props.info.genres
-                .map(g => g.name)
-                .reduce((prev, curr) => [prev, ', ', curr])
-            : ''}
+          {props.info.genres.map(g => g.name).join(', ')}
           <InputGenre
             onClick={() => {
               libDispatch(

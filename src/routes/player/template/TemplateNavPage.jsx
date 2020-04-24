@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { usePageTitle } from '../../../components/hooks';
 
 function TemplateNavPage({
   header = '',
   nav = '',
   body = '',
   className = '',
-  handleScrollOver = scrolled => undefined
+  handleScrollOver = scrolled => undefined,
+  title = ''
 }) {
   const [paddingTop, setPaddingTop] = useState(0);
   const headerRef = useRef();
@@ -13,6 +15,7 @@ function TemplateNavPage({
   useEffect(() => {
     setPaddingTop(headerRef.current.getBoundingClientRect().height);
   }, []);
+  usePageTitle(title, true);
 
   let classes = 'content-page';
   if (className) {

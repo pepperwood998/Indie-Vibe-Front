@@ -56,7 +56,7 @@ function RowPlaylist({
                 {artistTmp.displayName}
               </NavLinkUnderline>
             ))
-            .reduce((prev, curr) => [prev, ', ', curr])}
+            .reduce((prev, curr) => (!prev ? [curr] : [prev, ', ', curr]), '')}
         </div>
       </div>
       <div className='release'>

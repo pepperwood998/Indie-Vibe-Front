@@ -115,6 +115,7 @@ function Library(props) {
         nav={nav}
         body={body}
         handleScrollOver={handleScrollOver}
+        title={`Library - ${profile.displayName}`}
       />
     </GroupEmpty>
   );

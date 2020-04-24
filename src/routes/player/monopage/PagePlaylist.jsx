@@ -11,6 +11,7 @@ import {
 } from '../../../components/buttons';
 import { TrackTable } from '../../../components/collections/track-table';
 import { GroupEmpty } from '../../../components/groups';
+import { usePageTitle } from '../../../components/hooks';
 import { InputForm } from '../../../components/inputs';
 import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
@@ -71,6 +72,8 @@ function Playlist(props) {
         setExisted(false);
       });
   }, [id]);
+
+  usePageTitle(`Playlist - ${data.title}`, data.title);
 
   // effect-skip: favorite
   useEffectSkip(() => {

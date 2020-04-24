@@ -11,6 +11,7 @@ import {
 } from '../../../components/buttons';
 import { TrackTable } from '../../../components/collections/track-table';
 import GroupEmpty from '../../../components/groups/GroupEmpty';
+import { usePageTitle } from '../../../components/hooks';
 import { InputForm } from '../../../components/inputs';
 import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
@@ -36,7 +37,8 @@ function Release(props) {
       total: 0
     },
     relation: [],
-    followersCount: 0
+    followersCount: 0,
+    releaseType: {}
   });
   const [owner, setOwner] = useState({ role: {} });
   const [existed, setExisted] = useState(false);
@@ -68,6 +70,8 @@ function Release(props) {
         setExisted(false);
       });
   }, [id]);
+
+  usePageTitle(`${data.releaseType.name} - ${data.title}`, data.title);
 
   // effect-skip: favorite
   useEffectSkip(() => {

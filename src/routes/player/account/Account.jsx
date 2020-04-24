@@ -76,7 +76,7 @@ function Account(props) {
 
   return (
     <GroupEmpty isEmpty={!meState.id} message='Account not found'>
-      <TemplateNavPage nav={nav} body={body} />;
+      <TemplateNavPage nav={nav} body={body} title={meState.displayName} />;
     </GroupEmpty>
   );
 }

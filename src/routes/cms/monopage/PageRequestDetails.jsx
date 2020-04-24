@@ -165,7 +165,7 @@ function RequestDetails(props) {
                               <div className='item genres'>
                                 {track.genres
                                   .map(genre => genre.name)
-                                  .reduce((prev, curr) => [prev, ', ', curr])}
+                                  .join(', ')}
                               </div>
                             </div>
                             <div className='item-wrapper'>

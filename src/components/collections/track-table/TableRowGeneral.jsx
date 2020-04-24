@@ -57,7 +57,7 @@ function RowGeneral({
                 {artistTmp.displayName}
               </NavLinkUnderline>
             ))
-            .reduce((prev, curr) => [prev, ', ', curr])}
+            .reduce((prev, curr) => (!prev ? [curr] : [prev, ', ', curr]), '')}
         </span>
       </div>
       <div className='release'>

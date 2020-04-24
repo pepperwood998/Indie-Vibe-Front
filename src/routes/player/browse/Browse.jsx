@@ -38,7 +38,7 @@ function Browse(props) {
     </React.Fragment>
   );
 
-  return <TemplateNavPage nav={nav} body={body} />;
+  return <TemplateNavPage nav={nav} body={body} title='Browse' />;
 }
 
 export default Browse;

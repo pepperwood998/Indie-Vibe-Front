@@ -85,6 +85,7 @@ function Artist(props) {
         nav={nav}
         body={body}
         handleScrollOver={handleScrollOver}
+        title={`Artist - ${artist.displayName}`}
       />
     </GroupEmpty>
   );
