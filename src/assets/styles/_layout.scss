@@ -60,7 +60,6 @@
 .custom-grid {
   display: grid;
   justify-items: center;
-  align-items: center;
 
   &.two-cols {
     grid-template-columns: repeat(2, 1fr);
@@ -75,7 +74,7 @@
 
 @media screen and (max-width: 992px) {
   .custom-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
   }
 }
 

@@ -297,6 +297,19 @@
   }
 }
 
+@media screen and (max-width: 992px) {
+  .card-benefit {
+    flex-direction: column;
+    align-items: center;
+
+    .thumbnail {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
 .card-payment {
   border-radius: 5px;
   padding: 5px;

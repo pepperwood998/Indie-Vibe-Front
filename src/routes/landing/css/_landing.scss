@@ -11,8 +11,7 @@
 
   @media screen and (max-width: 992px) {
     .side-space {
-      padding-left: 0;
-      padding-right: 0;
+      padding: 40px !important;
     }
 
     .ivb-navbar .user-box-wrapper {
@@ -21,20 +20,35 @@
     }
 
     .body-home {
-      flex-direction: column !important;
-
-      .banner {
-        padding: 0 40px !important;
-        margin: 0px auto 50px;
-        width: 100% !important;
-      }
-
       .showroom {
-        padding: 0 40px;
-
         .item {
           max-width: 300px;
         }
+      }
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    .intro-body {
+      flex-direction: column !important;
+      align-items: center;
+
+      .intro-thumbnail {
+        max-width: 200px;
+      }
+
+      .intro-text {
+        padding: 40px 0 !important;
+      }
+    }
+
+    .body-home {
+      flex-direction: column !important;
+
+      .banner {
+        margin: 0px auto 50px;
+        padding: 15px 0 !important;
+        width: 100% !important;
       }
     }
   }
