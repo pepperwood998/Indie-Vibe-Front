@@ -66,7 +66,7 @@ function Login() {
         if (typeof err !== 'string') {
           err = 'Server error';
         } else if (err === 'inactive') {
-          err = <RegisterActivation tryLogin email={email} password={pwd} />;
+          err = <RegisterActivation login email={email} password={pwd} />;
         }
 
         setPwd('');
