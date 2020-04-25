@@ -113,7 +113,10 @@ function QuickAccess(props) {
               ))
             ) : (
               <div className='text-center'>
-                <span className='font-tip font-gray-light'>
+                <span
+                  className='link link-underline font-tip font-gray-light'
+                  onClick={handleOpenDialog}
+                >
                   - Create a playlist -
                 </span>
               </div>
