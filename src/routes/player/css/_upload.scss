@@ -40,16 +40,16 @@
       }
     }
   }
+
+  .cover {
+    width: 150px;
+    height: 150px;
+  }
 }
 
 .upload-item {
   padding-bottom: 15px;
   border-bottom: 1px solid $grayDark;
-}
-
-.cover {
-  width: 150px;
-  height: 150px;
 }
 
 .upload-content {
