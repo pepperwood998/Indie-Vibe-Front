@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, { useContext } from 'react';
+import { LibraryContext } from '../../contexts';
 import { CardMain, CardMainMin, CardProfile } from '../cards';
 
 function CollectionMain(props) {
@@ -17,12 +17,30 @@ function CollectionMain(props) {
 }
 
 function Content(props) {
+  const { actions: libActions, dispatch: libDispatch } = useContext(
+    LibraryContext
+  );
+
   let { items } = props;
 
   if (props.generalType === 'browse-playlist') {
-    return items.map((item, index) => (
-      <CardMainMin content={item} key={index} index={index} />
-    ));
+    if (items.length > 0) {
+      return items.map((item, index) => (
+        <CardMainMin content={item} key={index} index={index} />
+      ));
+    }
+
+    // No playlist in library
+    return (
+      <span
+        className='link link-underline font-short-s font-gray-light'
+        onClick={() => {
+          libDispatch(libActions.setEditPlaylist(true));
+        }}
+      >
+        Create a playlist
+      </span>
+    );
   }
 
   return items.map((item, index) => {

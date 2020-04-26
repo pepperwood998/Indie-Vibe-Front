@@ -99,17 +99,28 @@ function QuickAccess(props) {
         </div>
         <div className='content-wrapper'>
           <ul className='content'>
-            {playlists.items.map((item, index) => (
-              <li className='item-wrapper' key={index}>
-                <LinkWhiteColor
-                  href={`/player/playlist/${item.id}`}
-                  className='item font-short-regular font-weight-bold'
-                  nav={true}
+            {playlists.items.length > 0 ? (
+              playlists.items.map((item, index) => (
+                <li className='item-wrapper' key={index}>
+                  <LinkWhiteColor
+                    href={`/player/playlist/${item.id}`}
+                    className='item font-short-regular font-weight-bold'
+                    nav={true}
+                  >
+                    {item.title}
+                  </LinkWhiteColor>
+                </li>
+              ))
+            ) : (
+              <div className='text-center'>
+                <span
+                  className='link link-underline font-tip font-gray-light'
+                  onClick={handleOpenDialog}
                 >
-                  {item.title}
-                </LinkWhiteColor>
-              </li>
-            ))}
+                  - Create a playlist -
+                </span>
+              </div>
+            )}
           </ul>
           {playlists.total > playlists.offset + playlists.limit ? (
             <ButtonLoadMore onClick={handleLoadMore}>Load more</ButtonLoadMore>

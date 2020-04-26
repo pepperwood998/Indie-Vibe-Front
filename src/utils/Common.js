@@ -225,3 +225,7 @@ export const contain = (input, str) => {
 export const random = (start, length) => {
   return Math.floor(Math.random() * length) + start;
 };
+
+export const subarr = (arr = [], start = 0, length = 0) => {
+  return arr.slice(start, start + length);
+};

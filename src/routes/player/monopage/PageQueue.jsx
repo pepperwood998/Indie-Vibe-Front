@@ -4,8 +4,9 @@ import { getStreamQueue } from '../../../apis/StreamAPI';
 import { TrackTable } from '../../../components/collections/track-table';
 import { GroupEmpty } from '../../../components/groups';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
-import { swapOrigin, useEffectSkip } from '../../../utils/Common';
+import { swapOrigin, useEffectSkip, subarr } from '../../../utils/Common';
 import usePageTitle from '../../../components/hooks/HookPageTitle';
+import { ButtonLoadMore } from '../../../components/buttons';
 
 function Queue() {
   const { state: authState } = useContext(AuthContext);
@@ -26,9 +27,11 @@ function Queue() {
   useEffect(() => {
     getStreamQueue(
       authState.token,
-      streamState.queue
-        .map(item => item.id)
-        .slice(extra.offset, extra.offset + extra.limit)
+      subarr(
+        streamState.queue.map(item => item.id),
+        extra.offset,
+        extra.limit
+      )
     )
       .then(res => {
         setFirstRender(false);
@@ -93,6 +96,28 @@ function Queue() {
       });
   }, [streamState.addQueue]);
 
+  const handleLoadMore = () => {
+    getStreamQueue(
+      authState.token,
+      subarr(
+        streamState.queue.map(item => item.id),
+        extra.offset + extra.limit,
+        extra.limit
+      )
+    )
+      .then(res => {
+        setFirstRender(false);
+        if (res.status === 'success') {
+          setTracks([...tracks, ...res.data]);
+          setExtra({ ...extra, offset: extra.offset + extra.limit });
+        } else throw res.data;
+      })
+      .catch(err => {
+        setFirstRender(false);
+        console.error(err);
+      });
+  };
+
   return firstRender ? (
     ''
   ) : (
@@ -106,6 +131,13 @@ function Queue() {
             PLAY QUEUE
           </h3>
           <TrackTable type='queue' inQueue items={tracks} />
+          {streamState.queue.length > extra.offset + extra.limit ? (
+            <ButtonLoadMore onClick={handleLoadMore}>
+              More in Queue
+            </ButtonLoadMore>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </GroupEmpty>
