@@ -17,7 +17,7 @@ function Footer(props) {
         <div className='container more'>
           <div className='row'>
             {Object.keys(footer).map((key, index) => (
-              <div className='col-3' key={index}>
+              <div className='col-lg-3 col-md-12 pb-3' key={index}>
                 <div className='more__header font-short-regular font-weight-bold font-gray-light'>
                   {key}
                 </div>
@@ -31,8 +31,8 @@ function Footer(props) {
                 ))}
               </div>
             ))}
-            <div className='col-3'>
-              <Logo />
+            <div className='col-lg-3 col-md-12'>
+              <Logo style={{ width: '100%' }} />
               <div className='d-flex w-100 pt-5 justify-content-center'>
                 <div className='pr-3'>
                   <Instagram />
