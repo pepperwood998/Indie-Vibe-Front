@@ -47,10 +47,10 @@ const CheckoutForm = props => {
   } = useContext(MeContext);
 
   const [status, setStatus] = useState({
-    purchasing: false,
     error: '',
     success: false
   });
+  const [purchasing, setPurchasing] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -66,7 +66,7 @@ const CheckoutForm = props => {
   // Handle form submission.
   const handleSubmit = async event => {
     event.preventDefault();
-    setStatus({ ...status, purchasing: true });
+    setPurchasing(true);
     const card = elements.getElement(CardElement);
     const result = await stripe.createToken(card);
     if (result.error) {
@@ -79,7 +79,8 @@ const CheckoutForm = props => {
       purchase(authState.token, props.type, result.token.id, props.packageType)
         .then(purchaseRes => {
           if (purchaseRes.status === 'success') {
-            setStatus({ ...status, purchasing: false, success: true });
+            setPurchasing(false);
+            setStatus({ ...status, success: true });
 
             return getAccount(authState.token).then(accountRes => {
               if (accountRes.status === 'success') {
@@ -96,6 +97,7 @@ const CheckoutForm = props => {
           }
         })
         .catch(err => {
+          setPurchasing(false);
           setStatus({
             ...status,
             error: typeof err === 'string' ? err : 'Server Error'
@@ -108,7 +110,7 @@ const CheckoutForm = props => {
   if (status.success) planClasses += ' success';
   return (
     <form className='form-purchase' onSubmit={handleSubmit}>
-      {status.purchasing ? (
+      {purchasing ? (
         <div className='layer'>
           <img src={Loading} />
         </div>
@@ -195,7 +197,7 @@ const CheckoutForm = props => {
         </div>
       </section>
       <section>
-        <ButtonMain onClick={handleSubmit} disabled={status.purchasing} full>
+        <ButtonMain onClick={handleSubmit} disabled={purchasing} full>
           Purchase Premium
         </ButtonMain>
       </section>
