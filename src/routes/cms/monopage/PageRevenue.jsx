@@ -263,7 +263,7 @@ function RevenueSection({
               <span className='font-short-big font-gray-dark'>
                 Fixed revenue
               </span>
-              <span className='font-short-extra font-green'>
+              <span className='font-short-extra font-purple'>
                 {formatNumber(chartComparison[0].data[selectedComparison])}{' '}
                 {currency}
               </span>
@@ -272,7 +272,7 @@ function RevenueSection({
               <span className='font-short-big font-gray-dark'>
                 Monthly subscription revenue
               </span>
-              <span className='font-short-extra font-purple'>
+              <span className='font-short-extra font-green'>
                 {formatNumber(chartComparison[1].data[selectedComparison])}{' '}
                 {currency}
               </span>
