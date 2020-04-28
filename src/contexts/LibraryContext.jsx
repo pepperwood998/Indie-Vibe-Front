@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useEffect } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
 
 const LibraryContext = createContext();
 
@@ -48,6 +48,11 @@ const initState = {
     opened: false,
     selected: [],
     saveCb: selected => undefined
+  },
+  progressDialog: {
+    opened: false,
+    message: '',
+    progress: 0
   }
 };
 
@@ -158,6 +163,22 @@ const actions = {
         selected,
         saveCb
       }
+    };
+  },
+  setProgressDialog: (opened = false, message = '', progress = 0) => {
+    return {
+      type: 'SET_PROGRESS_DIALOG',
+      payload: {
+        opened,
+        message,
+        progress
+      }
+    };
+  },
+  updateProgress: (progress = 0) => {
+    return {
+      type: 'UPDATE_PROGRESS',
+      progress
     };
   }
 };
@@ -316,6 +337,18 @@ const reducer = (state, action) => {
     }
     case 'SET_GENRES_DIALOG': {
       return { ...state, genresDialog: { ...action.payload } };
+    }
+    case 'SET_PROGRESS_DIALOG': {
+      return { ...state, progressDialog: { ...action.payload } };
+    }
+    case 'UPDATE_PROGRESS': {
+      return {
+        ...state,
+        progressDialog: {
+          ...state.progressDialog,
+          progress: action.progress
+        }
+      };
     }
     default:
       return state;

@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { getAccount, publishRelease } from '../../apis/API';
 import Placeholder from '../../assets/imgs/placeholder.png';
 import { AuthContext, LibraryContext, MeContext } from '../../contexts';
 import { ButtonFrame, ButtonMain } from '../buttons';
-import { CardError, CardSuccess } from '../cards';
 import { GroupTrackUpload } from '../groups';
 import { InputFileLabel, InputForm, InputTextarea } from '../inputs';
 
@@ -44,42 +43,10 @@ function GroupReleaseUpload(props) {
   const [thumbnailSrc, setThumbnailSrc] = useState('');
   const [audioSrc, setAudioSrc] = useState([Object.assign({}, audioModel)]);
   const [submitted, setSubmitted] = useState(false);
-  const [publishing, setPublishing] = useState(0);
-  const [success, setSuccess] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const releaseTypes = [...libState.releaseTypes];
 
   const thumbnailRef = useRef();
-
-  useEffect(() => {
-    let successTimeout;
-    let failTimeout;
-    if (publishing === 2) {
-      if (success) {
-        if (props.baa) {
-          getAccount(authState.token).then(res => {
-            if (res.status === 'success') {
-              meDispatch(meActions.loadMe(res.data));
-            }
-          });
-        } else {
-          successTimeout = setTimeout(() => {
-            window.location.href = '/player/workspace';
-          }, 1000);
-        }
-      } else {
-        failTimeout = setTimeout(() => {
-          setPublishing(0);
-        }, 1000);
-      }
-    }
-
-    return () => {
-      clearTimeout(successTimeout);
-      clearTimeout(failTimeout);
-    };
-  }, [publishing]);
 
   const handleBiographyChange = e => {
     setBiography(e.target.value);
@@ -169,6 +136,7 @@ function GroupReleaseUpload(props) {
         true,
         'Confirm publishing this release?',
         () => {
+          libDispatch(libActions.setProgressDialog(true, 'Publishing...', 0));
           let resInfo = { ...release };
           let tracks = info.map(track => ({
             title: track.title,
@@ -177,7 +145,6 @@ function GroupReleaseUpload(props) {
           }));
           resInfo = { ...resInfo, tracks };
 
-          setPublishing(1);
           publishRelease(
             authState.token,
             resInfo,
@@ -186,17 +153,40 @@ function GroupReleaseUpload(props) {
             biography,
             props.baa,
             per => {
-              setProgress(per);
+              libDispatch(libActions.updateProgress(per));
             }
           )
             .then(res => {
+              libDispatch(libActions.setProgressDialog(false, '', 0));
               if (res.status === 'success') {
-                setSuccess(true);
-                setPublishing(2);
+                libDispatch(
+                  libActions.setNotification(
+                    true,
+                    true,
+                    'Your release has been published'
+                  )
+                );
+                if (props.baa) {
+                  return getAccount(authState.token).then(res => {
+                    if (res.status === 'success') {
+                      meDispatch(meActions.loadMe(res.data));
+                    } else throw 'baa';
+                  });
+                } else {
+                  setTimeout(() => {
+                    window.location.href = '/player/workspace';
+                  }, 1000);
+                }
               } else throw res.data;
             })
             .catch(err => {
-              setPublishing(2);
+              if (err === 'baa') {
+                err = 'Your request to sent, try logout and login';
+              } else {
+                err = 'Failed to publish';
+              }
+              libDispatch(libActions.setProgressDialog(false, '', 0));
+              libDispatch(libActions.setNotification(true, false, err));
             });
         }
       )
@@ -237,29 +227,6 @@ function GroupReleaseUpload(props) {
           {props.baa ? 'Your first release' : 'Publish your release'}
         </p>
         <div className='release-upload'>
-          {publishing ? (
-            <div className='upload-layer'>
-              {publishing === 1 ? (
-                <div className='publishing'>
-                  <span className='font-short-extra font-white'>
-                    Publishing... {Math.round(progress)}%
-                  </span>
-                  <div className='progress-box mt-2'>
-                    <div
-                      className='progress'
-                      style={{ width: progress + '%' }}
-                    ></div>
-                  </div>
-                </div>
-              ) : success ? (
-                <CardSuccess message='Your release has been published' />
-              ) : (
-                <CardError message='Failed to publish' />
-              )}
-            </div>
-          ) : (
-            ''
-          )}
           <div className='upload-cover'>
             <InputFileLabel
               for='thumbnail'
