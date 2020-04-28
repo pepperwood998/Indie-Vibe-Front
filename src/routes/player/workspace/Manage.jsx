@@ -712,7 +712,7 @@ function Manage(props) {
               </div>
             </section>
           ) : (
-            <section className='add-songs catalog fadein'>
+            <section className='catalog fadein'>
               <div className='catalog__header'>
                 <span className='font-short-semi font-weight-bold font-white'>
                   Add songs
@@ -765,10 +765,8 @@ function AddSongs({ releaseId = '' }) {
     { audio128: null, audio320: null }
   ]);
   const [status, setStatus] = useState({
-    submitted: false,
-    publishing: false
+    submitted: false
   });
-  const [progress, setProgress] = useState(0);
 
   const handleItemChange = (index, newInfo, newAudio, newAudioSrc) => {
     setTracks(
@@ -829,7 +827,7 @@ function AddSongs({ releaseId = '' }) {
 
     libDispatch(
       libActions.setConfirmDialog(true, 'Confirm adding songs?', () => {
-        setStatus({ ...status, publishing: true });
+        libDispatch(libActions.setProgressDialog(true, 'ADDING SONG...', 0));
         let processedTracks = tracks.map(track => ({
           title: track.title,
           producer: track.producer,
@@ -841,12 +839,12 @@ function AddSongs({ releaseId = '' }) {
           processedTracks,
           audio,
           per => {
-            setProgress(per);
+            libDispatch(libActions.updateProgress(per));
           }
         )
           .then(res => {
+            libDispatch(libActions.setProgressDialog(false, '', 0));
             if (res.status === 'success') {
-              setStatus({ ...status, publishing: false });
               libDispatch(
                 libActions.setNotification(true, true, 'New songs added')
               );
@@ -856,7 +854,7 @@ function AddSongs({ releaseId = '' }) {
             } else throw res.data;
           })
           .catch(err => {
-            setStatus({ ...status, publishing: false });
+            libDispatch(libActions.setProgressDialog(false, '', 0));
             if (typeof err !== 'string') {
               err = 'Server error';
             }
@@ -869,18 +867,6 @@ function AddSongs({ releaseId = '' }) {
 
   return (
     <div className='content'>
-      {status.publishing ? (
-        <div className='screen-overlay adding d-flex flex-column justify-content-center align-items-center'>
-          <span className='font-short-extra font-weight-bold font-white'>
-            ADDING SONGS... {Math.round(progress)}%
-          </span>
-          <div className='progress-box mt-2'>
-            <div className='progress' style={{ width: progress + '%' }}></div>
-          </div>
-        </div>
-      ) : (
-        ''
-      )}
       {tracks.map((track, i) => (
         <div className='upload-item' key={i}>
           <GroupTrackUpload

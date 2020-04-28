@@ -15,6 +15,7 @@ import {
   GroupConfirmDialog,
   GroupGenreDialog,
   GroupPlaylistDialog,
+  GroupProgressDialog,
   GroupTrackCredits
 } from '../../components/groups';
 import { ROUTES } from '../../config/RoleRouting';
@@ -175,6 +176,11 @@ function Player(props) {
       {libState.confirmDialog.opened ? <GroupConfirmDialog /> : ''}
       {libState.genresDialog.opened ? <GroupGenreDialog /> : ''}
       {libState.notification.opened ? <Notification /> : ''}
+      {libState.progressDialog.opened ? (
+        <GroupProgressDialog {...libState.progressDialog} />
+      ) : (
+        ''
+      )}
     </div>
   );
 }
