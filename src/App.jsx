@@ -16,6 +16,7 @@ import {
 import NotFound from './NotFound';
 import { CMS, CMSLogin } from './routes/cms';
 import {
+  About,
   ActivationResult,
   Home,
   Login,
@@ -49,6 +50,12 @@ class App extends Component {
                       component={Premium}
                       path={ROUTES.premium[0]}
                       roleGroup={ROUTES.premium[1]}
+                    />
+                    <RouteAuthorized
+                      exact
+                      component={About}
+                      path={ROUTES.about[0]}
+                      roleGroup={ROUTES.about[1]}
                     />
                     <RouteAuthorized
                       exact

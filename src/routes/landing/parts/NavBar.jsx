@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
+import { Nav, Navbar } from 'react-bootstrap';
 import AvatarPlaceholder from '../../../assets/imgs/avatar-placeholder.jpg';
 import { ArrowDown, Logo } from '../../../assets/svgs';
 import { ButtonFrame } from '../../../components/buttons';
 import { ContextMenuAccount } from '../../../components/context-menu';
 import { LinkWhiteColor } from '../../../components/links';
 import { AuthContext, MeContext } from '../../../contexts';
-import { Navbar, Nav } from 'react-bootstrap';
 
 function NavBar(props) {
   const { state: authState } = useContext(AuthContext);
@@ -39,8 +39,9 @@ function NavBar(props) {
           </Nav.Item>
           <Nav.Item>
             <LinkWhiteColor
-              href='#'
+              href='/about'
               className='font-short-regular font-weight-bold font-white item'
+              active={props.active === 'about'}
             >
               About
             </LinkWhiteColor>

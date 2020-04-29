@@ -26,6 +26,7 @@ const {
 export const ROUTES = {
   home: [['/', '/home'], ALL],
   premium: ['/premium', ALL],
+  about: ['/about', ALL],
   purchase: ['/purchase/:type/:packageType?', FREE],
   report: ['/report/:id', USER],
   login: ['/login', GUEST],
