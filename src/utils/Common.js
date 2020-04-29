@@ -229,3 +229,10 @@ export const random = (start, length) => {
 export const subarr = (arr = [], start = 0, length = 0) => {
   return arr.slice(start, start + length);
 };
+
+export const genOneValueArr = (size, value) => {
+  let arr = [];
+  while (size--) arr[size] = value;
+
+  return arr;
+};

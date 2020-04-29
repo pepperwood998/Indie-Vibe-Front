@@ -8,6 +8,7 @@ import {
   updateReleaseDetails,
   updateTrack
 } from '../../../apis/APIWorkspace';
+import Loading from '../../../assets/imgs/loading.gif';
 import Placeholder from '../../../assets/imgs/placeholder.png';
 import {
   ButtonFrame,
@@ -23,7 +24,7 @@ import {
   InputGenre
 } from '../../../components/inputs';
 import { AuthContext, LibraryContext } from '../../../contexts';
-import { model } from '../../../utils/Common';
+import { model, genOneValueArr } from '../../../utils/Common';
 
 const isMissing = (data = {}, exception = []) => {
   return Object.keys(data).some(key => {
@@ -37,6 +38,18 @@ const isMissing = (data = {}, exception = []) => {
 
     return false;
   });
+};
+
+const refreshUpdating = (index = 0, updating = [], value = false) => {
+  let updatingTmp = [...updating];
+  updatingTmp.some((item, i) => {
+    if (index === i) {
+      updatingTmp[i] = value;
+      return true;
+    }
+  });
+
+  return updatingTmp;
 };
 
 function Manage(props) {
@@ -78,6 +91,7 @@ function Manage(props) {
     mp3320Src: '',
     releaseStatus: 'public'
   });
+  const [updating, setUpdating] = useState([]);
 
   const ref = {
     thumbnail: useRef(),
@@ -106,7 +120,9 @@ function Manage(props) {
             thumbnail: [false, data.thumbnail]
           });
           setExtra({ ...extra, releaseStatus: data.status });
+
           setTracks({ ...data.tracks });
+          setUpdating(genOneValueArr(data.tracks.items.length, false));
         } else {
           throw 'Error viewing release';
         }
@@ -238,6 +254,8 @@ function Manage(props) {
         true,
         'Confirm updating release?',
         () => {
+          setUpdating(refreshUpdating(status.currentTrack, updating, true));
+
           setStatus({ ...status, currentTrack: -1 });
           let trackInfo = { ...currentTrack };
           if (currentTrack.genres[0]) {
@@ -249,6 +267,15 @@ function Manage(props) {
                 libDispatch(
                   libActions.setNotification(true, true, 'Track updated')
                 );
+                let updatedRes = [...updating];
+                updatedRes.some((value, index) => {
+                  if (index === status.currentTrack) {
+                    updatedRes[index] = false;
+                    return true;
+                  }
+                });
+                setUpdating([...updatedRes]);
+
                 return getTrackSimple(authState.token, trackId)
                   .then(getRes => {
                     if (getRes.status === 'success') {
@@ -281,6 +308,9 @@ function Manage(props) {
                 err = 'Server error';
               }
 
+              setUpdating(
+                refreshUpdating(status.currentTrack, updating, false)
+              );
               libDispatch(libActions.setNotification(true, false, err));
             });
         },
@@ -392,6 +422,10 @@ function Manage(props) {
             ...newTracks,
             items: [...tracks.items, ...newTracks.items]
           });
+          setUpdating([
+            ...updating,
+            ...genOneValueArr(newTracks.items.length, false)
+          ]);
         } else throw res.data;
       })
       .catch(err => {
@@ -508,7 +542,14 @@ function Manage(props) {
               <div className='content catalog__body'>
                 <ul>
                   {tracks.items.map((item, index) => (
-                    <li key={index}>
+                    <li key={index} style={{ position: 'relative' }}>
+                      {updating[index] ? (
+                        <div className='updating d-flex justify-content-center align-items-center'>
+                          <img src={Loading} className='loading' />
+                        </div>
+                      ) : (
+                        ''
+                      )}
                       <div className='track'>
                         <div className='table-layout'>
                           {/* input: track title */}
@@ -571,7 +612,7 @@ function Manage(props) {
                                   error={
                                     status.submitted &&
                                     currentTrack.mp3128[0] &&
-                                    !currentTrack.mp3320[1]
+                                    !currentTrack.mp3128[1]
                                   }
                                   errMessage='Missing 128kbps mp3 file'
                                 >
