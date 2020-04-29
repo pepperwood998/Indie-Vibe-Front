@@ -9,6 +9,35 @@
     padding-left: 200px;
   }
 
+  .over-space {
+    padding-top: 150px;
+    padding-bottom: 150px;
+  }
+
+  .side-by-side {
+    display: flex;
+
+    .text {
+      width: 40%;
+    }
+
+    &:nth-child(odd) {
+      flex-direction: row;
+
+      .text {
+        padding-right: 100px;
+      }
+    }
+
+    &:nth-child(even) {
+      flex-direction: row-reverse;
+
+      .text {
+        padding-left: 100px;
+      }
+    }
+  }
+
   @media screen and (max-width: 992px) {
     .side-space {
       padding: 40px !important;
@@ -42,6 +71,15 @@
       }
     }
 
+    .side-by-side {
+      flex-direction: column;
+
+      .text {
+        padding: 15px 0;
+        width: 100% !important;
+      }
+    }
+
     .body-home {
       flex-direction: column !important;
 
@@ -54,10 +92,10 @@
   }
 
   &__nav {
-    background-color: $blackLight;
+    background-color: $black;
 
     .ivb-navbar {
-      background-color: $blackLight !important;
+      background-color: transparent !important;
 
       a.item,
       span.item {
@@ -106,6 +144,10 @@
       top: 0;
       left: 0;
       z-index: -2;
+
+      &.clear {
+        filter: blur(0);
+      }
     }
 
     .intro-layer {
@@ -116,6 +158,11 @@
       height: 100%;
       width: 100%;
       z-index: -1;
+
+      &.clear {
+        background-color: transparent;
+        background-image: radial-gradient(at 50% 0%, #ffffff00, 30%, #121216);
+      }
     }
 
     .content {
@@ -154,11 +201,53 @@
   }
 
   &__body {
-    background-color: $blackGray;
+    background-color: $black;
     padding-top: 100px;
     padding-bottom: 100px;
 
     .content {
+      .showroom {
+        flex: 1;
+        row-gap: 30px;
+        column-gap: 30px;
+
+        .item {
+          position: relative;
+
+          .layer {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: $blackBlurSemi;
+            opacity: 0;
+            transition: 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .img {
+            width: 100%;
+          }
+
+          &:hover {
+            .layer {
+              opacity: 1;
+            }
+          }
+        }
+
+        &.about {
+          display: inline-grid;
+
+          .item {
+            max-width: 200px;
+          }
+        }
+      }
+
       .body-home {
         display: flex;
         flex-direction: row;
@@ -176,40 +265,6 @@
             line-height: 1.6;
           }
         }
-
-        .showroom {
-          flex: 1;
-          row-gap: 30px;
-          column-gap: 30px;
-
-          .item {
-            position: relative;
-
-            .layer {
-              width: 100%;
-              height: 100%;
-              position: absolute;
-              top: 0;
-              left: 0;
-              background-color: $blackBlurSemi;
-              opacity: 0;
-              transition: 0.1s ease;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            }
-
-            .img {
-              width: 100%;
-            }
-
-            &:hover {
-              .layer {
-                opacity: 1;
-              }
-            }
-          }
-        }
       }
 
       .payments {
@@ -221,6 +276,62 @@
           margin-bottom: 40px;
         }
       }
+    }
+  }
+
+  .extra {
+    &__quality {
+      position: relative;
+
+      .background {
+        background-image: url('../../../assets/imgs/speaker.jpg');
+      }
+
+      .layer {
+        background-image: linear-gradient(
+          rgba(0, 0, 0, 0.35),
+          rgba(0, 0, 0, 0.79)
+        );
+      }
+    }
+
+    &__baa {
+      position: relative;
+
+      .background {
+        background-image: url('../../../assets/imgs/baa.jpg');
+      }
+
+      .layer {
+        background-image: linear-gradient(
+          rgba(0, 0, 0, 0.741),
+          rgba(0, 0, 0, 0.646)
+        );
+      }
+    }
+
+    &__wrapup {
+      background-color: #080808;
+    }
+
+    .background,
+    .layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0px;
+      left: 0px;
+    }
+
+    .layer {
+      z-index: -1;
+    }
+
+    .background {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      z-index: -2;
     }
   }
 
