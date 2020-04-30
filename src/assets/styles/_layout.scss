@@ -74,6 +74,10 @@
   &.four-cols {
     grid-template-columns: repeat(4, 1fr);
   }
+
+  &.justify-items-off {
+    justify-items: unset;
+  }
 }
 
 @media screen and (max-width: 992px) {

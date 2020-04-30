@@ -84,7 +84,7 @@ function Premium(props) {
       <div className='font-banner font-weight-bold font-white text-center pb-5'>
         Why <span className='font-green'>Premium</span>?
       </div>
-      <div className='custom-grid two-cols'>
+      <div className='custom-grid two-cols justify-items-off'>
         {benefits.map((item, index) => (
           <CardBenefit {...item} key={index} />
         ))}
