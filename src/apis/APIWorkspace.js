@@ -179,3 +179,17 @@ export const addSongsToRelease = (
     }
   }).then(response => response.data);
 };
+
+export const updateBiography = (token, biography) => {
+  let url = new URL(`${host}/workspace/biography`);
+  let formData = new FormData();
+  formData.append('biography', biography);
+
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
