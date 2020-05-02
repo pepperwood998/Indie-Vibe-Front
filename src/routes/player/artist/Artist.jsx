@@ -34,11 +34,18 @@ function Artist(props) {
         }
       })
       .catch(err => {
+        setFirstRender(false);
         console.error(err);
       });
   }, [id]);
 
-  const header = <GroupProfileBox collapsed={collapsed} data={artist} />;
+  const header = (
+    <GroupProfileBox
+      collapsed={collapsed}
+      data={artist}
+      loading={firstRender}
+    />
+  );
   const nav = (
     <NavigationTab
       items={[
@@ -74,7 +81,7 @@ function Artist(props) {
   );
 
   return firstRender ? (
-    ''
+    <TemplateNavPage header={header} nav={nav} body={body} />
   ) : (
     <GroupEmpty
       isEmpty={!artist.id || artist.role.id !== 'r-artist'}
