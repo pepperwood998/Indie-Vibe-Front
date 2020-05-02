@@ -16,7 +16,7 @@ function ArtistDefault(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
-  const [firstRender, setFirstRender] = useState(true);
+  const [firstRender, setFirstRender] = useState(0);
   const [albums, setAlbums] = useState({ ...model });
   const [singles, setSingles] = useState({ ...model });
   const [eps, setEps] = useState({ ...model });
@@ -35,8 +35,9 @@ function ArtistDefault(props) {
     for (let type in struct) {
       getReleasesByType(authState.token, artistId, type)
         .then(res => {
-          setFirstRender(false);
           if (res.status === 'success' && res.data) {
+            setFirstRender(firstRender => firstRender + 1);
+
             const value = struct[type];
             value[2]({ ...value[1], ...res.data.releases });
           } else {
@@ -44,6 +45,7 @@ function ArtistDefault(props) {
           }
         })
         .catch(err => {
+          setFirstRender(firstRender => firstRender + 1);
           console.error(err);
         });
     }
@@ -108,7 +110,7 @@ function ArtistDefault(props) {
       });
   };
 
-  return firstRender ? (
+  return firstRender < 3 ? (
     <div className='artist-default fadein content-padding'>
       <CollectionMain loading />
     </div>

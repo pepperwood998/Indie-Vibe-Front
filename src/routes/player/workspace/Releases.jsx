@@ -32,8 +32,8 @@ function Releases(props) {
     for (let type in struct) {
       getReleasesByType(authState.token, id, type)
         .then(res => {
-          setFirstRender(firstRender => firstRender + 1);
           if (res.status === 'success' && res.data) {
+            setFirstRender(firstRender => firstRender + 1);
             const value = struct[type];
             value[2]({ ...value[1], ...res.data.releases });
           } else {
@@ -41,6 +41,7 @@ function Releases(props) {
           }
         })
         .catch(err => {
+          setFirstRender(firstRender => firstRender + 1);
           console.error(err);
         });
     }
@@ -73,7 +74,9 @@ function Releases(props) {
   };
 
   return firstRender < 3 ? (
-    ''
+    <div className='workspace-releases fadein content-padding'>
+      <CollectionMain loading />
+    </div>
   ) : (
     <GroupEmpty isEmpty={isEmpty} message='You have no releases.'>
       <div className='workspace-releases fadein content-padding'>
