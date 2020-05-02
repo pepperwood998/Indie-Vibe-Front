@@ -70,7 +70,8 @@ export const ROUTES = {
     workspace: {
       releases: [['/player/workspace', '/player/workspace/releases'], ARTIST],
       statistics: ['/player/workspace/statistic', ARTIST],
-      upload: ['/player/workspace/upload', ARTIST]
+      upload: ['/player/workspace/upload', ARTIST],
+      biography: ['/player/workspace/biography', ARTIST]
     },
     manage: ['/player/manage/:id', ARTIST],
     artist: {

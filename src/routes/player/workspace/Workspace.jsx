@@ -3,6 +3,7 @@ import { RouteAuthorized } from '../../../components/custom-routes';
 import { NavigationTab } from '../../../components/navigation';
 import { ROUTES } from '../../../config/RoleRouting';
 import { TemplateNavPage } from '../template';
+import Biography from './Biography';
 import Releases from './Releases';
 import Statistics from './Statistics';
 import Upload from './Upload';
@@ -22,6 +23,10 @@ function Workspace() {
         {
           href: '/player/workspace/upload',
           label: 'Publish new Release'
+        },
+        {
+          href: '/player/workspace/biography',
+          label: 'Biography'
         }
       ]}
     />
@@ -48,6 +53,12 @@ function Workspace() {
         component={Upload}
         path={workspace.upload[0]}
         roleGroup={workspace.upload[1]}
+      />
+      <RouteAuthorized
+        exact
+        component={Biography}
+        path={workspace.biography[0]}
+        roleGroup={workspace.biography[1]}
       />
     </React.Fragment>
   );
