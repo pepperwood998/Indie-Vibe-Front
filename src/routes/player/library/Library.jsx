@@ -35,11 +35,18 @@ function Library(props) {
         }
       })
       .catch(err => {
+        setFirstRender(false);
         console.error(err);
       });
   }, [id]);
 
-  const header = <GroupProfileBox collapsed={collapsed} data={profile} />;
+  const header = (
+    <GroupProfileBox
+      collapsed={collapsed}
+      data={profile}
+      loading={firstRender}
+    />
+  );
 
   const nav = (
     <NavigationTab
@@ -107,7 +114,7 @@ function Library(props) {
   );
 
   return firstRender ? (
-    ''
+    <TemplateNavPage header={header} nav={nav} body={body} />
   ) : (
     <GroupEmpty isEmpty={!profile.id} message='Profile not found.'>
       <TemplateNavPage

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { performActionFavorite } from '../../apis/API';
 import { streamCollection } from '../../apis/StreamAPI';
 import AvatarPlaceholder from '../../assets/imgs/avatar-placeholder.jpg';
@@ -7,7 +8,7 @@ import { AuthContext, LibraryContext, StreamContext } from '../../contexts';
 import { formatNumber, useEffectSkip } from '../../utils/Common';
 import { ButtonIcon, ButtonMain, ButtonMore } from '../buttons';
 
-function GroupProfileBox(props) {
+function GroupProfileBox({ collapsed = false, data = {}, loading = false }) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
   const {
@@ -16,38 +17,39 @@ function GroupProfileBox(props) {
     dispatch: streamDispatch
   } = useContext(StreamContext);
 
-  const [data, setData] = useState({});
+  const [profile, setData] = useState({});
 
   let wrapperClasses =
-    'profile-header-wrapper' + (props.collapsed ? ' collapsed' : '');
+    'profile-header-wrapper' + (collapsed ? ' collapsed' : '');
   let isCurrentList =
-    streamState.playFromType === 'artist' && data.id === streamState.playFromId;
+    streamState.playFromType === 'artist' &&
+    profile.id === streamState.playFromId;
 
   // effect: init
   useEffect(() => {
-    setData({ ...data, ...props.data });
-  }, [props.data.id]);
+    setData({ ...profile, ...data });
+  }, [data.id]);
 
   // effect-skip: favorite
   useEffectSkip(() => {
     const { ctxFav } = libState;
     if (
       (ctxFav.type === 'profile' || ctxFav.type == 'artist') &&
-      ctxFav.id === data.id
+      ctxFav.id === profile.id
     )
-      setData({ ...data, relation: [...ctxFav.relation] });
+      setData({ ...profile, relation: [...ctxFav.relation] });
   }, [libState.ctxFav]);
 
   const handleToggleFavorite = action => {
     performActionFavorite(
       authState.token,
       'profile',
-      data.id,
-      data.relation,
+      profile.id,
+      profile.relation,
       action
     )
       .then(relation => {
-        setData({ ...data, relation });
+        setData({ ...profile, relation });
       })
       .catch(error => {
         console.error(error);
@@ -61,11 +63,16 @@ function GroupProfileBox(props) {
     if (isCurrentList) {
       streamDispatch(streamActions.togglePaused(false));
     } else {
-      streamCollection(authState.token, 'artist', data.id)
+      streamCollection(authState.token, 'artist', profile.id)
         .then(res => {
           if (res.status === 'success' && res.data.length) {
             streamDispatch(
-              streamActions.start(res.data, 'artist', data.id, authState.role)
+              streamActions.start(
+                res.data,
+                'artist',
+                profile.id,
+                authState.role
+              )
             );
           }
         })
@@ -79,18 +86,34 @@ function GroupProfileBox(props) {
     <div className={wrapperClasses}>
       <div className='profile-header fadein'>
         <div className='profile-header__avatar'>
-          <img src={data.thumbnail ? data.thumbnail : AvatarPlaceholder} />
+          {loading ? (
+            <div className='skeleton'>
+              <Skeleton width='100%' height='100%' circle />
+            </div>
+          ) : (
+            <img
+              src={profile.thumbnail ? profile.thumbnail : AvatarPlaceholder}
+            />
+          )}
         </div>
         <div className='profile-header__info'>
-          <span className='font-short-extra font-weight-bold font-white'>
-            {data.displayName}
-          </span>
-          <span className='followers font-short-regular font-gray-light'>
-            {formatNumber(data.followersCount)} followers
-          </span>
+          {loading ? (
+            <Skeleton width={100} />
+          ) : (
+            <span className='font-short-extra font-weight-bold font-white'>
+              {profile.displayName}
+            </span>
+          )}
+          {loading ? (
+            <Skeleton width={150} />
+          ) : (
+            <span className='followers font-short-regular font-gray-light'>
+              {formatNumber(profile.followersCount)} followers
+            </span>
+          )}
 
           <div className='action'>
-            {data.type === 'artist' ? (
+            {profile.type === 'artist' ? (
               isCurrentList && !streamState.paused ? (
                 <ButtonMain revert onClick={handlePaused}>
                   PAUSE
@@ -101,9 +124,9 @@ function GroupProfileBox(props) {
             ) : (
               ''
             )}
-            {data.relation && data.id !== authState.id ? (
+            {profile.relation && profile.id !== authState.id ? (
               <React.Fragment>
-                {data.relation.includes('favorite') ? (
+                {profile.relation.includes('favorite') ? (
                   <ButtonIcon>
                     <FavoriteIcon
                       className='svg--blue'
@@ -123,9 +146,9 @@ function GroupProfileBox(props) {
                 )}
                 <ButtonMore
                   ctxData={{
-                    type: data.role.id === 'r-artist' ? 'artist' : 'profile',
-                    id: data.id,
-                    relation: data.relation
+                    type: profile.role.id === 'r-artist' ? 'artist' : 'profile',
+                    id: profile.id,
+                    relation: profile.relation
                   }}
                 />
               </React.Fragment>

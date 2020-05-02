@@ -101,7 +101,7 @@ function TrackTable(props) {
           }
         })}
       </div>
-      {loading ? <Skeleton width='100%' height='100%' /> : ''}
+      {loading ? <Skeleton count={5} width='100%' height='100%' /> : ''}
     </div>
   );
 }
