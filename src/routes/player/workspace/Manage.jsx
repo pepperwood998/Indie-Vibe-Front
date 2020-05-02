@@ -25,6 +25,7 @@ import {
 } from '../../../components/inputs';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { model, genOneValueArr } from '../../../utils/Common';
+import Skeleton from 'react-loading-skeleton';
 
 const isMissing = (data = {}, exception = []) => {
   return Object.keys(data).some(key => {
@@ -62,7 +63,7 @@ function Manage(props) {
 
   const [firstRender, setFirstRender] = useState(true);
   const [status, setStatus] = useState({
-    existed: false,
+    existed: true,
     currentTrack: -1,
     submitted: false,
     adding: false
@@ -433,9 +434,7 @@ function Manage(props) {
       });
   };
 
-  return firstRender ? (
-    ''
-  ) : (
+  return (
     <GroupEmpty isEmpty={!status.existed} message='Release not found'>
       <div className='content-page fadein'>
         <div className='manage-release mono-page content-padding'>
@@ -446,71 +445,97 @@ function Manage(props) {
               </span>
             </div>
             <div className='content catalog__body'>
-              <InputFileLabel
-                for='thumbnail'
-                error={
-                  status.submitted &&
-                  releaseDetails.thumbnail[0] &&
-                  !releaseDetails.thumbnail[1]
-                }
-                keep={true}
-                className='input-custom__label--img'
-              >
+              {firstRender ? (
                 <div className='thumbnail'>
-                  <div className='img-wrapper edit'>
-                    <input
-                      type='file'
-                      name='thumbnail'
-                      id='thumbnail'
-                      ref={ref.thumbnail}
-                      className='input-custom'
-                      accept='image/*'
-                      onChange={handleChangeReleaseThumbnail}
-                    />
-                    <img
-                      src={
-                        releaseDetails.thumbnail[0]
-                          ? extra.thumbnailSrc
-                            ? extra.thumbnailSrc
-                            : Placeholder
-                          : releaseDetails.thumbnail[1]
-                      }
-                      className='img'
-                    />
-                  </div>
+                  <Skeleton width='100%' height='100%' />
                 </div>
-              </InputFileLabel>
-              <div className='details'>
-                <InputForm
-                  placeholder='Enter release title'
-                  name='title'
-                  value={releaseDetails.title[1]}
-                  onChange={handleChangeReleaseInfo}
+              ) : (
+                <InputFileLabel
+                  for='thumbnail'
                   error={
                     status.submitted &&
-                    releaseDetails.title[0] &&
-                    releaseDetails.title[1] === ''
+                    releaseDetails.thumbnail[0] &&
+                    !releaseDetails.thumbnail[1]
                   }
-                  errMessage='Missing release title'
-                />
-                <select
-                  name='type'
-                  className='custom-select release-type'
-                  value={releaseDetails.type[1]}
-                  onChange={handleChangeReleaseInfo}
+                  keep={true}
+                  className='input-custom__label--img'
                 >
-                  {releaseTypes.map((type, index) => (
-                    <option value={type.id} key={index}>
-                      {type.name}
-                    </option>
-                  ))}
-                </select>
+                  <div className='thumbnail'>
+                    <div className='img-wrapper edit'>
+                      <input
+                        type='file'
+                        name='thumbnail'
+                        id='thumbnail'
+                        ref={ref.thumbnail}
+                        className='input-custom'
+                        accept='image/*'
+                        onChange={handleChangeReleaseThumbnail}
+                      />
+                      <img
+                        src={
+                          releaseDetails.thumbnail[0]
+                            ? extra.thumbnailSrc
+                              ? extra.thumbnailSrc
+                              : Placeholder
+                            : releaseDetails.thumbnail[1]
+                        }
+                        className='img'
+                      />
+                    </div>
+                  </div>
+                </InputFileLabel>
+              )}
+              <div className='details'>
+                {firstRender ? (
+                  <section>
+                    <Skeleton width={200} />
+                  </section>
+                ) : (
+                  <InputForm
+                    placeholder='Enter release title'
+                    name='title'
+                    value={releaseDetails.title[1]}
+                    onChange={handleChangeReleaseInfo}
+                    error={
+                      status.submitted &&
+                      releaseDetails.title[0] &&
+                      releaseDetails.title[1] === ''
+                    }
+                    errMessage='Missing release title'
+                  />
+                )}
+                {firstRender ? (
+                  <section>
+                    <Skeleton width={150} />
+                  </section>
+                ) : (
+                  <select
+                    name='type'
+                    className='custom-select release-type'
+                    value={releaseDetails.type[1]}
+                    onChange={handleChangeReleaseInfo}
+                  >
+                    {releaseTypes.map((type, index) => (
+                      <option value={type.id} key={index}>
+                        {type.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
               <div className='submit'>
-                <ButtonMain onClick={handleSaveReleaseDetails}>SAVE</ButtonMain>
+                {firstRender ? (
+                  <Skeleton width={100} height={40} />
+                ) : (
+                  <ButtonMain onClick={handleSaveReleaseDetails}>
+                    SAVE
+                  </ButtonMain>
+                )}
               </div>
 
-              {extra.releaseStatus === 'public' ? (
+              {firstRender ? (
+                ''
+              ) : extra.releaseStatus === 'public' ? (
                 <span
                   className='action link link-underline'
                   onClick={() => {
@@ -541,190 +566,194 @@ function Manage(props) {
               </div>
               <div className='content catalog__body'>
                 <ul>
-                  {tracks.items.map((item, index) => (
-                    <li key={index} style={{ position: 'relative' }}>
-                      {updating[index] ? (
-                        <div className='updating d-flex justify-content-center align-items-center'>
-                          <img src={Loading} className='loading' />
-                        </div>
-                      ) : (
-                        ''
-                      )}
-                      <div className='track'>
-                        <div className='table-layout'>
-                          {/* input: track title */}
-                          <div className='table-row'>
-                            <span className='label'>Title: </span>
-                            {status.currentTrack === index ? (
-                              <InputForm
-                                placeholder='Enter song title'
-                                name='title'
-                                value={currentTrack.title[1]}
-                                onChange={handleChangeTrackInfo}
-                                error={
-                                  status.submitted &&
-                                  currentTrack.title[1] === ''
-                                }
-                                errMessage='Missing song name'
-                              />
-                            ) : (
-                              <span className='data'>{item.title}</span>
-                            )}
+                  {firstRender ? (
+                    <Skeleton count={3} height={100} />
+                  ) : (
+                    tracks.items.map((item, index) => (
+                      <li key={index} style={{ position: 'relative' }}>
+                        {updating[index] ? (
+                          <div className='updating d-flex justify-content-center align-items-center'>
+                            <img src={Loading} className='loading' />
                           </div>
-                          {/* input: track genres */}
-                          <div className='table-row'>
-                            <span className='label'>Genres: </span>
-                            {status.currentTrack === index ? (
-                              <span className='font-short-regular font-gray-light'>
-                                {currentTrack.genres[1]
-                                  .map(g => g.name)
-                                  .join(', ')}
-                                <InputGenre
-                                  onClick={() => {
-                                    libDispatch(
-                                      libActions.setGenresDialog(
-                                        true,
-                                        currentTrack.genres[1],
-                                        handleSaveGenresDialog
-                                      )
-                                    );
-                                  }}
+                        ) : (
+                          ''
+                        )}
+                        <div className='track'>
+                          <div className='table-layout'>
+                            {/* input: track title */}
+                            <div className='table-row'>
+                              <span className='label'>Title: </span>
+                              {status.currentTrack === index ? (
+                                <InputForm
+                                  placeholder='Enter song title'
+                                  name='title'
+                                  value={currentTrack.title[1]}
+                                  onChange={handleChangeTrackInfo}
                                   error={
                                     status.submitted &&
-                                    currentTrack.genres[1].length <= 0
+                                    currentTrack.title[1] === ''
                                   }
+                                  errMessage='Missing song name'
                                 />
-                              </span>
+                              ) : (
+                                <span className='data'>{item.title}</span>
+                              )}
+                            </div>
+                            {/* input: track genres */}
+                            <div className='table-row'>
+                              <span className='label'>Genres: </span>
+                              {status.currentTrack === index ? (
+                                <span className='font-short-regular font-gray-light'>
+                                  {currentTrack.genres[1]
+                                    .map(g => g.name)
+                                    .join(', ')}
+                                  <InputGenre
+                                    onClick={() => {
+                                      libDispatch(
+                                        libActions.setGenresDialog(
+                                          true,
+                                          currentTrack.genres[1],
+                                          handleSaveGenresDialog
+                                        )
+                                      );
+                                    }}
+                                    error={
+                                      status.submitted &&
+                                      currentTrack.genres[1].length <= 0
+                                    }
+                                  />
+                                </span>
+                              ) : (
+                                <span className='font-short-regular font-gray-light'>
+                                  {item.genres.map(g => g.name).join(', ')}
+                                </span>
+                              )}
+                            </div>
+                            {/* input: track mp3 files */}
+                            {status.currentTrack === index ? (
+                              <React.Fragment>
+                                <div className='table-row'>
+                                  <span className='label'>MP3 128:</span>
+                                  <InputFileLabel
+                                    for='mp3128'
+                                    keep={false}
+                                    error={
+                                      status.submitted &&
+                                      currentTrack.mp3128[0] &&
+                                      !currentTrack.mp3128[1]
+                                    }
+                                    errMessage='Missing 128kbps mp3 file'
+                                  >
+                                    {extra.mp3128Src
+                                      ? extra.mp3128Src
+                                      : 'Choose 128kbps file'}
+                                  </InputFileLabel>
+                                </div>
+                                <div className='table-row'>
+                                  <span className='label'>MP3 320:</span>
+                                  <InputFileLabel
+                                    for='mp3320'
+                                    keep={false}
+                                    error={
+                                      status.submitted &&
+                                      currentTrack.mp3320[0] &&
+                                      !currentTrack.mp3320[1]
+                                    }
+                                    errMessage='Missing 320kbps mp3 file'
+                                  >
+                                    {extra.mp3320Src
+                                      ? extra.mp3320Src
+                                      : 'Choose 320kbps file'}
+                                  </InputFileLabel>
+                                </div>
+                              </React.Fragment>
                             ) : (
-                              <span className='font-short-regular font-gray-light'>
-                                {item.genres.map(g => g.name).join(', ')}
-                              </span>
+                              ''
+                            )}
+                            {/* input: track producer */}
+                            <div className='table-row'>
+                              <span className='label'>Producer: </span>
+                              {status.currentTrack === index ? (
+                                <InputForm
+                                  placeholder='Enter producer team'
+                                  name='producer'
+                                  value={currentTrack.producer[1]}
+                                  onChange={handleChangeTrackInfo}
+                                />
+                              ) : (
+                                <span className='data'>{item.producer}</span>
+                              )}
+                            </div>
+                            {/* submit: track save button */}
+                            {status.currentTrack === index ? (
+                              <div className='table-row'>
+                                <span></span>
+                                <span>
+                                  <ButtonMain
+                                    onClick={() => {
+                                      handleSaveTrack(item.id);
+                                    }}
+                                  >
+                                    SAVE TRACK
+                                  </ButtonMain>
+                                  <ButtonFrame
+                                    className='ml-2'
+                                    onClick={() => {
+                                      setStatus({
+                                        ...status,
+                                        currentTrack: -1
+                                      });
+                                    }}
+                                  >
+                                    CANCEL
+                                  </ButtonFrame>
+                                </span>
+                              </div>
+                            ) : (
+                              ''
                             )}
                           </div>
-                          {/* input: track mp3 files */}
                           {status.currentTrack === index ? (
                             <React.Fragment>
-                              <div className='table-row'>
-                                <span className='label'>MP3 128:</span>
-                                <InputFileLabel
-                                  for='mp3128'
-                                  keep={false}
-                                  error={
-                                    status.submitted &&
-                                    currentTrack.mp3128[0] &&
-                                    !currentTrack.mp3128[1]
-                                  }
-                                  errMessage='Missing 128kbps mp3 file'
-                                >
-                                  {extra.mp3128Src
-                                    ? extra.mp3128Src
-                                    : 'Choose 128kbps file'}
-                                </InputFileLabel>
-                              </div>
-                              <div className='table-row'>
-                                <span className='label'>MP3 320:</span>
-                                <InputFileLabel
-                                  for='mp3320'
-                                  keep={false}
-                                  error={
-                                    status.submitted &&
-                                    currentTrack.mp3320[0] &&
-                                    !currentTrack.mp3320[1]
-                                  }
-                                  errMessage='Missing 320kbps mp3 file'
-                                >
-                                  {extra.mp3320Src
-                                    ? extra.mp3320Src
-                                    : 'Choose 320kbps file'}
-                                </InputFileLabel>
-                              </div>
+                              <input
+                                id='mp3128'
+                                type='file'
+                                accept='.mp3'
+                                name='mp3128'
+                                ref={ref.mp3128}
+                                onChange={handleChangeMp3}
+                                className='input-custom'
+                              />
+                              <input
+                                id='mp3320'
+                                type='file'
+                                accept='.mp3'
+                                name='mp3320'
+                                ref={ref.mp3320}
+                                onChange={handleChangeMp3}
+                                className='input-custom'
+                              />
                             </React.Fragment>
                           ) : (
-                            ''
-                          )}
-                          {/* input: track producer */}
-                          <div className='table-row'>
-                            <span className='label'>Producer: </span>
-                            {status.currentTrack === index ? (
-                              <InputForm
-                                placeholder='Enter producer team'
-                                name='producer'
-                                value={currentTrack.producer[1]}
-                                onChange={handleChangeTrackInfo}
-                              />
-                            ) : (
-                              <span className='data'>{item.producer}</span>
-                            )}
-                          </div>
-                          {/* submit: track save button */}
-                          {status.currentTrack === index ? (
-                            <div className='table-row'>
-                              <span></span>
-                              <span>
-                                <ButtonMain
-                                  onClick={() => {
-                                    handleSaveTrack(item.id);
-                                  }}
-                                >
-                                  SAVE TRACK
-                                </ButtonMain>
-                                <ButtonFrame
-                                  className='ml-2'
-                                  onClick={() => {
-                                    setStatus({
-                                      ...status,
-                                      currentTrack: -1
-                                    });
-                                  }}
-                                >
-                                  CANCEL
-                                </ButtonFrame>
+                            <div className='actions'>
+                              <span
+                                className='item'
+                                onClick={() => handleEditTrack(index)}
+                              >
+                                Edit
+                              </span>
+                              <span
+                                className='item'
+                                onClick={() => handleDeleteTrack(item.id)}
+                              >
+                                Delete
                               </span>
                             </div>
-                          ) : (
-                            ''
                           )}
                         </div>
-                        {status.currentTrack === index ? (
-                          <React.Fragment>
-                            <input
-                              id='mp3128'
-                              type='file'
-                              accept='.mp3'
-                              name='mp3128'
-                              ref={ref.mp3128}
-                              onChange={handleChangeMp3}
-                              className='input-custom'
-                            />
-                            <input
-                              id='mp3320'
-                              type='file'
-                              accept='.mp3'
-                              name='mp3320'
-                              ref={ref.mp3320}
-                              onChange={handleChangeMp3}
-                              className='input-custom'
-                            />
-                          </React.Fragment>
-                        ) : (
-                          <div className='actions'>
-                            <span
-                              className='item'
-                              onClick={() => handleEditTrack(index)}
-                            >
-                              Edit
-                            </span>
-                            <span
-                              className='item'
-                              onClick={() => handleDeleteTrack(item.id)}
-                            >
-                              Delete
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </li>
-                  ))}
+                      </li>
+                    ))
+                  )}
                 </ul>
 
                 {tracks.total > tracks.offset + tracks.limit ? (
@@ -734,21 +763,33 @@ function Manage(props) {
                 ) : (
                   ''
                 )}
-                <div className='clearfix'>
-                  <ButtonMain
-                    className='float-right'
-                    onClick={() => {
-                      setStatus({ ...status, adding: true });
-                    }}
-                  >
-                    ADD SONGS
-                  </ButtonMain>
-                  <ButtonMain
-                    className='dangerous float-left'
-                    onClick={handleDeleteRelease}
-                  >
-                    DELETE RELEASE
-                  </ButtonMain>
+                <div className='clearfix mt-3'>
+                  {firstRender ? (
+                    <div className='float-right'>
+                      <Skeleton width={150} height={40} />
+                    </div>
+                  ) : (
+                    <ButtonMain
+                      className='float-right'
+                      onClick={() => {
+                        setStatus({ ...status, adding: true });
+                      }}
+                    >
+                      ADD SONGS
+                    </ButtonMain>
+                  )}
+                  {firstRender ? (
+                    <div className='float-left'>
+                      <Skeleton width={150} height={40} />
+                    </div>
+                  ) : (
+                    <ButtonMain
+                      className='dangerous float-left'
+                      onClick={handleDeleteRelease}
+                    >
+                      DELETE RELEASE
+                    </ButtonMain>
+                  )}
                 </div>
               </div>
             </section>
