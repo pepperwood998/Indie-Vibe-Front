@@ -16,6 +16,7 @@ import { InputForm } from '../../../components/inputs';
 import { NavLinkUnderline } from '../../../components/links';
 import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
 import { contain, useEffectSkip } from '../../../utils/Common';
+import Skeleton from 'react-loading-skeleton';
 
 function Playlist(props) {
   // contexts
@@ -43,7 +44,7 @@ function Playlist(props) {
     relation: [],
     followersCount: 0
   });
-  const [existed, setExisted] = useState(false);
+  const [existed, setExisted] = useState(true);
   const [owner, setOwner] = useState({ role: {} });
   const [extra, setExtra] = useState({
     filter: ''
@@ -69,6 +70,7 @@ function Playlist(props) {
         }
       })
       .catch(error => {
+        setFirstRender(false);
         setExisted(false);
       });
   }, [id]);
@@ -194,44 +196,56 @@ function Playlist(props) {
     setExtra({ ...extra, filter: e.target.value });
   };
 
-  return firstRender ? (
-    ''
-  ) : (
+  return (
     <GroupEmpty isEmpty={!existed} message="Playlist doesn't exist.">
       <div className='content-page fadein'>
         <div className='track-list mono-page content-padding'>
           <div className='track-list__header'>
             <div className='avatar'>
-              <img src={data.thumbnail ? data.thumbnail : Placeholder} />
+              {firstRender ? (
+                <Skeleton width='100%' height='100%' />
+              ) : (
+                <img src={data.thumbnail ? data.thumbnail : Placeholder} />
+              )}
             </div>
             <div className='info'>
               <div className='info__top'>
                 <span className='font-short-extra font-weight-bold font-white'>
-                  {data.title}
+                  {data.title || <Skeleton />}
                 </span>
                 <div>
                   <span className='font-short-regular font-gray-light'>
                     by&nbsp;
                   </span>
-                  <NavLinkUnderline
-                    href={`/player/${
-                      owner.role.id === 'r-artist' ? 'artist' : 'library'
-                    }/${owner.id}`}
-                    className='font-short-regular font-white'
-                  >
-                    {owner.displayName}
-                  </NavLinkUnderline>
+                  {firstRender ? (
+                    <Skeleton />
+                  ) : (
+                    <NavLinkUnderline
+                      href={`/player/${
+                        owner.role.id === 'r-artist' ? 'artist' : 'library'
+                      }/${owner.id}`}
+                      className='font-short-regular font-white'
+                    >
+                      {owner.displayName}
+                    </NavLinkUnderline>
+                  )}
                 </div>
                 <p className='description font-short-big font-white'>
                   {data.description}
                 </p>
               </div>
               <div className='info__bottom font-short-regular font-gray-light'>
-                <span>PLAYLIST</span>
-                <span className='dot'>&#8226;</span>
-                <span>{data.tracks.total} tracks</span>
-                <span className='dot'>&#8226;</span>
-                <span>{data.followersCount} followers</span>
+                {firstRender ? (
+                  <Skeleton />
+                ) : (
+                  <React.Fragment>
+                    <span>PLAYLIST</span>
+                    <span className='dot'>&#8226;</span>
+                    <span>{data.tracks.total} tracks</span>
+                    <span className='dot'>&#8226;</span>
+                    <span>{data.followersCount} followers</span>
+                  </React.Fragment>
+                )}
               </div>
             </div>
           </div>
@@ -278,31 +292,37 @@ function Playlist(props) {
             </div>
           </div>
           <div className='track-list__content'>
-            <TrackTable
-              items={
-                extra.filter
-                  ? data.tracks.items.filter(item => {
-                      const { track } = item;
-                      return (
-                        contain(extra.filter, track.title) ||
-                        contain(extra.filter, track.release.title) ||
-                        track.artists.some(artist =>
-                          contain(extra.filter, artist.displayName)
-                        )
-                      );
-                    })
-                  : data.tracks.items
-              }
-              playFromId={data.id}
-              type='playlist'
-              playlistRelation={data.relation}
-            />
-            {data.tracks.total > data.tracks.offset + data.tracks.limit ? (
-              <ButtonLoadMore onClick={handleLoadMore}>
-                Load more
-              </ButtonLoadMore>
+            {firstRender ? (
+              <TrackTable loading={true} />
             ) : (
-              ''
+              <React.Fragment>
+                <TrackTable
+                  items={
+                    extra.filter
+                      ? data.tracks.items.filter(item => {
+                          const { track } = item;
+                          return (
+                            contain(extra.filter, track.title) ||
+                            contain(extra.filter, track.release.title) ||
+                            track.artists.some(artist =>
+                              contain(extra.filter, artist.displayName)
+                            )
+                          );
+                        })
+                      : data.tracks.items
+                  }
+                  playFromId={data.id}
+                  type='playlist'
+                  playlistRelation={data.relation}
+                />
+                {data.tracks.total > data.tracks.offset + data.tracks.limit ? (
+                  <ButtonLoadMore onClick={handleLoadMore}>
+                    Load more
+                  </ButtonLoadMore>
+                ) : (
+                  ''
+                )}
+              </React.Fragment>
             )}
           </div>
         </div>

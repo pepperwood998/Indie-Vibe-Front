@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { getTrackList, performActionFavorite } from '../../../apis/API';
 import { streamCollection } from '../../../apis/StreamAPI';
 import Placeholder from '../../../assets/imgs/placeholder.png';
@@ -41,7 +42,7 @@ function Release(props) {
     releaseType: {}
   });
   const [owner, setOwner] = useState({ role: {} });
-  const [existed, setExisted] = useState(false);
+  const [existed, setExisted] = useState(true);
   const [extra, setExtra] = useState({
     filter: ''
   });
@@ -67,6 +68,7 @@ function Release(props) {
         }
       })
       .catch(error => {
+        setFirstRender(false);
         setExisted(false);
       });
   }, [id]);
@@ -144,42 +146,54 @@ function Release(props) {
     setExtra({ ...extra, filter: e.target.value });
   };
 
-  return firstRender ? (
-    ''
-  ) : (
+  return (
     <GroupEmpty isEmpty={!existed} message="Release doesn't exist.">
       <div className='content-page fadein'>
         <div className='track-list mono-page content-padding'>
           <div className='track-list__header'>
             <div className='avatar'>
-              <img src={data.thumbnail ? data.thumbnail : Placeholder} />
+              {firstRender ? (
+                <Skeleton width='100%' height='100%' />
+              ) : (
+                <img src={data.thumbnail ? data.thumbnail : Placeholder} />
+              )}
             </div>
             <div className='info'>
               <div className='info__top'>
                 <span className='font-short-extra font-weight-bold font-white'>
-                  {data.title}
+                  {data.title || <Skeleton />}
                 </span>
                 <div>
                   <span className='font-short-regular font-gray-light'>
                     by&nbsp;
                   </span>
-                  <NavLinkUnderline
-                    href={`/player/artist/${owner.id}`}
-                    className='font-short-regular font-white'
-                  >
-                    {owner.displayName}
-                  </NavLinkUnderline>
+                  {firstRender ? (
+                    <Skeleton />
+                  ) : (
+                    <NavLinkUnderline
+                      href={`/player/artist/${owner.id}`}
+                      className='font-short-regular font-white'
+                    >
+                      {owner.displayName}
+                    </NavLinkUnderline>
+                  )}
                 </div>
                 <p className='description font-short-big font-white'>
                   {data.description}
                 </p>
               </div>
               <div className='info__bottom font-short-regular font-gray-light'>
-                <span>RELEASE</span>
-                <span className='dot'>&#8226;</span>
-                <span>{data.tracks.total} tracks</span>
-                <span className='dot'>&#8226;</span>
-                <span>{getDatePart(data.date)}</span>
+                {firstRender ? (
+                  <Skeleton />
+                ) : (
+                  <React.Fragment>
+                    <span>RELEASE</span>
+                    <span className='dot'>&#8226;</span>
+                    <span>{data.tracks.total} tracks</span>
+                    <span className='dot'>&#8226;</span>
+                    <span>{getDatePart(data.date)}</span>
+                  </React.Fragment>
+                )}
               </div>
             </div>
           </div>
@@ -227,24 +241,30 @@ function Release(props) {
             </div>
           </div>
           <div className='track-list__content'>
-            <TrackTable
-              items={
-                extra.filter
-                  ? data.tracks.items.filter(item =>
-                      contain(extra.filter, item.title)
-                    )
-                  : data.tracks.items
-              }
-              releaseArtistId={data.artist ? data.artist.id : ''}
-              playFromId={data.id}
-              type='release'
-            />
-            {tracks.total > tracks.offset + tracks.limit ? (
-              <ButtonLoadMore onClick={handleLoadMore}>
-                Load more
-              </ButtonLoadMore>
+            {firstRender ? (
+              <TrackTable loading={true} />
             ) : (
-              ''
+              <React.Fragment>
+                <TrackTable
+                  items={
+                    extra.filter
+                      ? data.tracks.items.filter(item =>
+                          contain(extra.filter, item.title)
+                        )
+                      : data.tracks.items
+                  }
+                  releaseArtistId={data.artist ? data.artist.id : ''}
+                  playFromId={data.id}
+                  type='release'
+                />
+                {tracks.total > tracks.offset + tracks.limit ? (
+                  <ButtonLoadMore onClick={handleLoadMore}>
+                    Load more
+                  </ButtonLoadMore>
+                ) : (
+                  ''
+                )}
+              </React.Fragment>
             )}
           </div>
         </div>
