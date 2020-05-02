@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { getTrackFull } from '../../../apis/API';
 import { getStreamQueue } from '../../../apis/StreamAPI';
+import { ButtonLoadMore } from '../../../components/buttons';
 import { TrackTable } from '../../../components/collections/track-table';
 import { GroupEmpty } from '../../../components/groups';
-import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
-import { swapOrigin, useEffectSkip, subarr } from '../../../utils/Common';
 import usePageTitle from '../../../components/hooks/HookPageTitle';
-import { ButtonLoadMore } from '../../../components/buttons';
+import { AuthContext, LibraryContext, StreamContext } from '../../../contexts';
+import { subarr, swapOrigin, useEffectSkip } from '../../../utils/Common';
 
 function Queue() {
   const { state: authState } = useContext(AuthContext);
@@ -119,7 +119,14 @@ function Queue() {
   };
 
   return firstRender ? (
-    ''
+    <div className='content-page fadein'>
+      <div className='play-queue mono-page content-padding'>
+        <h3 className='font-short-extra font-white font-weight-bold'>
+          PLAY QUEUE
+        </h3>
+        <TrackTable loading={true} />
+      </div>
+    </div>
   ) : (
     <GroupEmpty
       isEmpty={!streamState.queue.length}

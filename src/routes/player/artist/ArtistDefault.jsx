@@ -109,7 +109,9 @@ function ArtistDefault(props) {
   };
 
   return firstRender ? (
-    ''
+    <div className='artist-default fadein content-padding'>
+      <CollectionMain loading />
+    </div>
   ) : (
     <GroupEmpty isEmpty={isEmpty} message='No public releases available'>
       <div className='artist-default fadein content-padding'>

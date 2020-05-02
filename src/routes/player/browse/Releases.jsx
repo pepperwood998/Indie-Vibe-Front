@@ -14,6 +14,8 @@ function Releases(props) {
   const [firstRender, setFirstRender] = useState(true);
   const [data, setData] = useState([]);
 
+  const isEmpty = !data.some(genre => genre.items.length > 0);
+
   // effect: init
   useEffect(() => {
     browseReleases(authState.token)
@@ -49,9 +51,16 @@ function Releases(props) {
   }, [libState.ctxFav]);
 
   return firstRender ? (
-    ''
+    <div className='browse-releases fadein content-padding'>
+      <div className='header'>
+        <span className='font-short-extra font-weight-bold font-white'>
+          New releases by Genres
+        </span>
+      </div>
+      <CollectionMain loading />
+    </div>
   ) : (
-    <GroupEmpty isEmpty={!data.length} message='No new releases available.'>
+    <GroupEmpty isEmpty={isEmpty} message='No new releases available.'>
       <div className='browse-releases fadein content-padding'>
         <div className='header'>
           <span className='font-short-extra font-weight-bold font-white'>

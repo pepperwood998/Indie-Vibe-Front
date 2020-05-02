@@ -6,10 +6,10 @@ import {
   CollectionMain,
   CollectionWide
 } from '../../../components/collections';
+import GroupEmpty from '../../../components/groups/GroupEmpty';
 import { NavLinkColor } from '../../../components/links';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
-import GroupEmpty from '../../../components/groups/GroupEmpty';
 
 function General(props) {
   const { state: authState } = useContext(AuthContext);
@@ -55,7 +55,14 @@ function General(props) {
   }, [libState.ctxFav]);
 
   return firstRender ? (
-    ''
+    <div className='browse-general fadein'>
+      <div className='releases'>
+        <CollectionWide loading />
+      </div>
+      <div className='playlists-collections'>
+        <CollectionMain loading />
+      </div>
+    </div>
   ) : (
     <GroupEmpty isEmpty={isEmpty} message='No available browsing.'>
       <div className='browse-general fadein'>

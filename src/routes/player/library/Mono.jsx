@@ -73,7 +73,13 @@ function Mono(props) {
   };
 
   return firstRender ? (
-    ''
+    <div className='fadein content-padding'>
+      {type === 'track' ? (
+        <CollectionTracks type='favorite' playFromId={userId} loading />
+      ) : (
+        <CollectionMain loading />
+      )}
+    </div>
   ) : (
     <GroupEmpty isEmpty={data.total === 0} message={`No ${type}s in library`}>
       <div className='fadein content-padding'>

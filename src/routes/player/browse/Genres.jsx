@@ -13,17 +13,18 @@ function Genres(props) {
   const isEmpty = !genres.length;
 
   useEffect(() => {
-    getGenresList(authState.token)
-      .then(res => {
-        setFirstRender(false);
-        if (res.status === 'success') {
-          setGenres(res.data);
-        }
-      });
+    getGenresList(authState.token).then(res => {
+      setFirstRender(false);
+      if (res.status === 'success') {
+        setGenres(res.data);
+      }
+    });
   }, []);
 
   return firstRender ? (
-    ''
+    <div className='browse-genres content-padding fadein'>
+      <CollectionGenres header='All genres' loading />
+    </div>
   ) : (
     <GroupEmpty isEmpty={isEmpty} message='No genres available'>
       <div className='browse-genres content-padding fadein'>

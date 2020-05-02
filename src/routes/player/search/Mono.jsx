@@ -105,7 +105,15 @@ function Mono(props) {
   };
 
   return firstRender ? (
-    ''
+    <div className='fadein content-padding'>
+      {type === 'track' ? (
+        <CollectionTracks type='search' loading />
+      ) : type === 'genre' ? (
+        <CollectionGenres loading />
+      ) : (
+        <CollectionMain loading />
+      )}
+    </div>
   ) : (
     <GroupEmpty
       isEmpty={!data.items.length}
