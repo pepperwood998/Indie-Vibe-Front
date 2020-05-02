@@ -1,22 +1,21 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-
-import { NavLinkUnderline } from '../links';
-import { ButtonIcon, ButtonMore } from '../buttons';
-import { performActionFavorite, deleteTrackList } from '../../apis/API';
-import { AuthContext, StreamContext, LibraryContext } from '../../contexts';
+import { deleteTrackList, performActionFavorite } from '../../apis/API';
 import { streamCollection } from '../../apis/StreamAPI';
-
 import Placeholder from '../../assets/imgs/placeholder.png';
 import {
-  PlayIcon,
-  UnFavoriteIcon,
   FavoriteIcon,
+  LogoTinyIcon,
   PauseIcon,
-  LogoTinyIcon
+  PlayIcon,
+  UnFavoriteIcon
 } from '../../assets/svgs';
+import { AuthContext, LibraryContext, StreamContext } from '../../contexts';
+import { ButtonIcon, ButtonMore } from '../buttons';
+import { NavLinkUnderline } from '../links';
+import Skeleton from 'react-loading-skeleton';
 
-function CardMain(props) {
+function CardMain({ content = { relation: [] }, loading = false }) {
   const { state: authState } = useContext(AuthContext);
   const {
     state: streamState,
@@ -29,8 +28,7 @@ function CardMain(props) {
     dispatch: libDispatch
   } = useContext(LibraryContext);
 
-  const { content } = props;
-  const { artist, owner } = content;
+  const { artist = {}, owner = { role: {} } } = content;
   let isCurrentList =
     content.type === streamState.playFromType &&
     content.id === streamState.playFromId;
@@ -104,82 +102,92 @@ function CardMain(props) {
     <div className='card-main'>
       <div className='card-main__cover-wrapper'>
         <div className='dummy'></div>
-        {owner ? (
-          owner.role.id === 'r-curator' ? (
-            <div className='curator'>
-              <LogoTinyIcon className='svg' />
-            </div>
-          ) : (
-            ''
-          )
-        ) : (
-          ''
-        )}
-        <Link to={`/player/${content.type}/${content.id}`}>
-          <img
-            src={content.thumbnail ? content.thumbnail : Placeholder}
-            className='cover'
-          />
-        </Link>
-        <div className={ctxClasses}>
-          <ButtonIcon>
-            {isCurrentList && !streamState.paused ? (
-              <PauseIcon onClick={handlePaused} />
-            ) : (
-              <PlayIcon onClick={handlePlay} />
-            )}
-          </ButtonIcon>
-          <div className='action__extra playlist-release'>
-            {content.relation.includes('own') ? (
-              ''
-            ) : content.relation.includes('favorite') ? (
-              <ButtonIcon>
-                <FavoriteIcon
-                  className='svg--blue'
-                  onClick={() => {
-                    handleToggleFavorite('unfavorite');
-                  }}
-                />
-              </ButtonIcon>
-            ) : (
-              <ButtonIcon>
-                <UnFavoriteIcon
-                  onClick={() => {
-                    handleToggleFavorite('favorite');
-                  }}
-                />
-              </ButtonIcon>
-            )}
-            <ButtonMore
-              ctxData={{
-                type: content.type,
-                id: content.id,
-                relation: content.relation,
-                status: content.status,
-                artistId: artist ? artist.id : ''
-              }}
-              handleToggleFavorite={handleToggleFavorite}
-              handleDeletePlaylist={handleDeletePlaylist}
-            />
+        {loading ? (
+          <div className='skeleton'>
+            <Skeleton width='100%' height='100%' />
           </div>
-        </div>
+        ) : (
+          <React.Fragment>
+            {owner.role.id === 'r-curator' ? (
+              <div className='curator'>
+                <LogoTinyIcon className='svg' />
+              </div>
+            ) : (
+              ''
+            )}
+            <Link to={`/player/${content.type}/${content.id}`}>
+              <img
+                src={content.thumbnail ? content.thumbnail : Placeholder}
+                className='cover'
+              />
+            </Link>
+            <div className={ctxClasses}>
+              <ButtonIcon>
+                {isCurrentList && !streamState.paused ? (
+                  <PauseIcon onClick={handlePaused} />
+                ) : (
+                  <PlayIcon onClick={handlePlay} />
+                )}
+              </ButtonIcon>
+              <div className='action__extra playlist-release'>
+                {content.relation.includes('own') ? (
+                  ''
+                ) : content.relation.includes('favorite') ? (
+                  <ButtonIcon>
+                    <FavoriteIcon
+                      className='svg--blue'
+                      onClick={() => {
+                        handleToggleFavorite('unfavorite');
+                      }}
+                    />
+                  </ButtonIcon>
+                ) : (
+                  <ButtonIcon>
+                    <UnFavoriteIcon
+                      onClick={() => {
+                        handleToggleFavorite('favorite');
+                      }}
+                    />
+                  </ButtonIcon>
+                )}
+                <ButtonMore
+                  ctxData={{
+                    type: content.type,
+                    id: content.id,
+                    relation: content.relation,
+                    status: content.status,
+                    artistId: artist.id
+                  }}
+                  handleToggleFavorite={handleToggleFavorite}
+                  handleDeletePlaylist={handleDeletePlaylist}
+                />
+              </div>
+            </div>
+          </React.Fragment>
+        )}
       </div>
       <div className='card-main__info'>
-        <NavLinkUnderline
-          href={`/player/${content.type}/${content.id}`}
-          className='ellipsis one-line font-short-big font-weight-bold font-white'
-        >
-          {content.title}
-        </NavLinkUnderline>
+        {loading ? (
+          <Skeleton />
+        ) : (
+          <NavLinkUnderline
+            href={`/player/${content.type}/${content.id}`}
+            className='ellipsis one-line font-short-big font-weight-bold font-white'
+          >
+            {content.title}
+          </NavLinkUnderline>
+        )}
         <div className='bottom ellipsis two-line playlist-release font-short-s font-gray-light'>
-          {content.type === 'release' ? (
+          {loading ? (
+            <Skeleton />
+          ) : content.type === 'release' ? (
             <React.Fragment>
               <span>by&nbsp;</span>
               <NavLinkUnderline
-                href={`/player/artist/${artist ? artist.id : ''}`}
+                href={`/player/artist/${artist.id}`}
                 className='font-gray-light'
               >
-                {artist ? artist.displayName : ''}
+                {artist.displayName}
               </NavLinkUnderline>
             </React.Fragment>
           ) : (

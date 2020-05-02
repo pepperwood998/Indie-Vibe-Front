@@ -1,17 +1,27 @@
 import React from 'react';
+import { genOneValueArr } from '../../utils/Common';
 import { CardGenre } from '../cards';
 
-function CollectionGenres(props) {
+function CollectionGenres({
+  full = false,
+  header = '',
+  items = [],
+  loading = false
+}) {
   let headerClasses = 'collection-main__header';
-  headerClasses += props.full ? ' full' : '';
+  headerClasses += full ? ' full' : '';
 
   return (
     <div className='collection-main collection-main--genres'>
-      <div className={headerClasses}>{props.header}</div>
+      <div className={headerClasses}>{header}</div>
       <div className='collection-main__content grid genres'>
-        {props.items.map((item, index) => (
-          <CardGenre content={item} key={index} />
-        ))}
+        {loading
+          ? genOneValueArr(4, true).map((value, index) => (
+              <CardGenre loading key={index} />
+            ))
+          : items.map((item, index) => (
+              <CardGenre content={item} key={index} />
+            ))}
       </div>
     </div>
   );

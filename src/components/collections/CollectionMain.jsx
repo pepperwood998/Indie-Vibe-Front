@@ -1,29 +1,44 @@
 import React, { useContext } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { LibraryContext } from '../../contexts';
 import { CardMain, CardMainMin, CardProfile } from '../cards';
+import { genOneValueArr } from '../../utils/Common';
 
-function CollectionMain(props) {
+function CollectionMain({
+  full = false,
+  header = '',
+  items = [],
+  generalType = '',
+  loading = false
+}) {
   let headerClasses = 'collection-main__header';
-  headerClasses += props.full ? ' full' : '';
+  headerClasses += full ? ' full' : '';
 
   return (
     <div className='collection-main'>
-      <div className={headerClasses}>{props.header}</div>
+      <div className={headerClasses}>{loading ? <Skeleton /> : header}</div>
       <div className='collection-main__content grid crowded'>
-        <Content items={props.items} generalType={props.generalType} />
+        {loading ? (
+          <Content loading />
+        ) : (
+          <Content items={items} generalType={generalType} />
+        )}
       </div>
     </div>
   );
 }
 
-function Content(props) {
+function Content({ items = [], generalType = '', loading = false }) {
   const { actions: libActions, dispatch: libDispatch } = useContext(
     LibraryContext
   );
 
-  let { items } = props;
+  if (loading) {
+    let arr = genOneValueArr(6, true);
+    return arr.map((value, index) => <CardMain key={index} loading />);
+  }
 
-  if (props.generalType === 'browse-playlist') {
+  if (generalType === 'browse-playlist') {
     if (items.length > 0) {
       return items.map((item, index) => (
         <CardMainMin content={item} key={index} index={index} />

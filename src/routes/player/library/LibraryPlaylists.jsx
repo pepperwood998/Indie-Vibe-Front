@@ -144,7 +144,9 @@ function LibraryPlaylists(props) {
   };
 
   return firstRender ? (
-    ''
+    <div className='library-playlists fadein content-padding'>
+      <CollectionMain loading />
+    </div>
   ) : (
     <GroupEmpty isEmpty={isEmpty} message='No playlists in library'>
       <div className='library-playlists fadein content-padding'>

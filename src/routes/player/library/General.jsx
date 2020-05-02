@@ -76,7 +76,9 @@ function General(props) {
   }, [libState.ctxPlaylistPrivate]);
 
   return firstRender ? (
-    ''
+    <div className='fadein content-padding'>
+      <CollectionMain loading />
+    </div>
   ) : (
     <GroupEmpty isEmpty={!exist} message='No playlists or following artists'>
       <div className='fadein content-padding'>

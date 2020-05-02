@@ -96,7 +96,11 @@ function General(props) {
   }, [libState.ctxPlaylistPrivate]);
 
   return firstRender ? (
-    ''
+    <div className='fadein content-padding'>
+      <CollectionTracks type='search' loading />
+      <CollectionMain loading />
+      <CollectionGenres loading />
+    </div>
   ) : (
     <GroupEmpty
       isEmpty={!exist}

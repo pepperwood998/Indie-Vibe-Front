@@ -66,26 +66,28 @@ function Home() {
     setData({ ...data, ...mapper });
   }, [libState.ctxFav]);
 
-  return firstRender ? (
-    ''
-  ) : (
+  return (
     <TemplateBannerPage
       title='Home'
       body={
         <div className='home-page content-padding flex-1'>
-          {Object.keys(struct).map((key, index) => {
-            const items = data[key];
-            if (!items.length) return '';
+          {firstRender ? (
+            <CollectionMain loading />
+          ) : (
+            Object.keys(struct).map((key, index) => {
+              const items = data[key];
+              if (!items.length) return '';
 
-            return (
-              <CollectionMain
-                header={struct[key]}
-                items={items}
-                full={true}
-                key={index}
-              />
-            );
-          })}
+              return (
+                <CollectionMain
+                  header={struct[key]}
+                  items={items}
+                  full={true}
+                  key={index}
+                />
+              );
+            })
+          )}
         </div>
       }
     />
