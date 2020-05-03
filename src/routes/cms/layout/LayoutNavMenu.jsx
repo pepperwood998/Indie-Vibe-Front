@@ -60,6 +60,11 @@ function NavMenu(props) {
               <span className='ellipsis one-line'>Revenue</span>
             </NavLink>
           </li>
+          <li>
+            <NavLink className='link' to='/cms/genres'>
+              <span className='ellipsis one-line'>Manage Genres</span>
+            </NavLink>
+          </li>
         </ul>
       </section>
     </React.Fragment>

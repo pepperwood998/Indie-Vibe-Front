@@ -236,3 +236,23 @@ export const genOneValueArr = (size, value) => {
 
   return arr;
 };
+
+export const isMissing = (data = {}, exception = []) => {
+  return Object.keys(data).some(key => {
+    if (!exception.includes(key)) {
+      const target = data[key];
+      if (Array.isArray(target[1])) {
+        return target[0] && target[1].length <= 0;
+      }
+      return target[0] && !target[1];
+    }
+
+    return false;
+  });
+};
+
+export const isChanged = (data = {}) => {
+  return Object.keys(data).some(key => {
+    if (data[key][0]) return true;
+  });
+};

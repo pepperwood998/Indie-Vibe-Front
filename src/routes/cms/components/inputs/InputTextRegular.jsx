@@ -7,7 +7,8 @@ function InputTextRegular({
   placeholder = '',
   error = false,
   errMessage = '',
-  onChange = e => undefined
+  onChange = e => undefined,
+  area = false
 }) {
   let classes = 'input-text-regular';
   if (error) {
@@ -15,7 +16,16 @@ function InputTextRegular({
     classes += ' error';
   }
 
-  return (
+  return area ? (
+    <textarea
+      rows='4'
+      className={classes}
+      name={name}
+      value={value}
+      placeholder={placeholder}
+      onChange={onChange}
+    />
+  ) : (
     <input
       className={classes}
       type={type}

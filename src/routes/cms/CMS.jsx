@@ -9,6 +9,7 @@ import { NavMenu, TopBar } from './layout';
 import {
   Dashboard,
   DelegateCurator,
+  GenresMgmt,
   Reports,
   RequestDetails,
   Requests,
@@ -64,6 +65,11 @@ function CMS(props) {
             component={Revenue}
             path={ROUTES.cms.revenue[0]}
             roleGroup={ROUTES.cms.revenue[1]}
+          />
+          <RouteAuthorized
+            component={GenresMgmt}
+            path={ROUTES.cms.genres[0]}
+            roleGroup={ROUTES.cms.genres[1]}
           />
           <Route path='*'>
             <Redirect to='/404' />
