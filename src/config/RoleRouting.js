@@ -90,7 +90,8 @@ export const ROUTES = {
     delegateCurator: ['/cms/delegate-curator', ADMIN],
     reports: ['/cms/reports', ADMIN],
     streaming: ['/cms/streaming', ADMIN],
-    revenue: ['/cms/revenue', ADMIN]
+    revenue: ['/cms/revenue', ADMIN],
+    genres: ['/cms/genres', ADMIN]
   },
   notFound: ['/404', ALL]
 };

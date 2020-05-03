@@ -172,6 +172,22 @@
   }
 }
 
+.page-genres {
+  .genres-list {
+    .custom-grid {
+      grid-column-gap: 10px;
+      grid-row-gap: 15px;
+      grid-auto-rows: 130px;
+    }
+  }
+
+  .edit {
+    .thumbnail {
+      width: 20%;
+    }
+  }
+}
+
 .empty-text {
   font: $shortSmall;
   font-style: italic;

@@ -162,3 +162,63 @@ export const getStatisticsMonthly = (token, year) => {
     }
   }).then(response => response.json());
 };
+
+export const addGenre = (token, genre) => {
+  let url = new URL(`${host}/cms/genres`);
+  let formData = new FormData();
+  Object.keys(genre).forEach(key => {
+    if (genre[key]) formData.append(key, genre[key]);
+  });
+
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
+
+export const getGenre = (token, id) => {
+  let url = new URL(`${host}/cms/genres/${id}`);
+
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};
+
+export const editGenre = (
+  token,
+  id,
+  data = { name: '', description: '', thumbnail: null }
+) => {
+  let url = new URL(`${host}/cms/genres/${id}`);
+  let formData = new FormData();
+  for (let key in data) {
+    if (data[key][0]) {
+      formData.append(key, data[key][1]);
+    }
+  }
+
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      Authorization: 'Bearer ' + token
+    },
+    body: formData
+  }).then(response => response.json());
+};
+
+export const deleteGenre = (token, id) => {
+  let url = new URL(`${host}/cms/genres/${id}`);
+
+  return fetch(url, {
+    method: 'DELETE',
+    headers: {
+      Authorization: 'Bearer ' + token
+    }
+  }).then(response => response.json());
+};

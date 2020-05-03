@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import Skeleton from 'react-loading-skeleton';
 import { getTrackList, getTrackSimple } from '../../../apis/API';
 import {
   addSongsToRelease,
@@ -24,22 +25,7 @@ import {
   InputGenre
 } from '../../../components/inputs';
 import { AuthContext, LibraryContext } from '../../../contexts';
-import { model, genOneValueArr } from '../../../utils/Common';
-import Skeleton from 'react-loading-skeleton';
-
-const isMissing = (data = {}, exception = []) => {
-  return Object.keys(data).some(key => {
-    if (!exception.includes(key)) {
-      const target = data[key];
-      if (Array.isArray(target[1])) {
-        return target[0] && target[1].length <= 0;
-      }
-      return target[0] && !target[1];
-    }
-
-    return false;
-  });
-};
+import { genOneValueArr, isMissing, model } from '../../../utils/Common';
 
 const refreshUpdating = (index = 0, updating = [], value = false) => {
   let updatingTmp = [...updating];
