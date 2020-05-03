@@ -250,3 +250,9 @@ export const isMissing = (data = {}, exception = []) => {
     return false;
   });
 };
+
+export const isChanged = (data = {}) => {
+  return Object.keys(data).some(key => {
+    if (data[key][0]) return true;
+  });
+};

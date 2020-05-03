@@ -10,7 +10,7 @@ import Placeholder from '../../../assets/imgs/placeholder.png';
 import { AddIcon } from '../../../assets/svgs';
 import { InputFileLabel } from '../../../components/inputs';
 import { AuthContext, LibraryContext } from '../../../contexts';
-import { isMissing } from '../../../utils/Common';
+import { isMissing, isChanged } from '../../../utils/Common';
 import { ButtonRegular } from '../components/buttons';
 import { InputTextRegular } from '../components/inputs';
 
@@ -256,9 +256,7 @@ function EditGenre({
       })
       .catch(err => {
         setDeleting(false);
-        if (typeof err !== 'string') {
-          err = 'Failed to delete genre';
-        }
+        err = 'Genre\'s maybe in used';
 
         libDispatch(libActions.setNotification(true, false, err));
       });
@@ -295,7 +293,7 @@ function EditGenre({
         </ButtonRegular>
         <ButtonRegular
           className='float-right'
-          disabled={updating}
+          disabled={updating || !isChanged(data)}
           onClick={handleSubmit}
         >
           UPDATE
