@@ -6,7 +6,7 @@ import {
   CollectionMain,
   CollectionTracks
 } from '../../../components/collections';
-import GroupEmpty from '../../../components/groups/GroupEmpty';
+import GroupEmpty, { ICON } from '../../../components/groups/GroupEmpty';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { useEffectSkip } from '../../../utils/Common';
 
@@ -118,6 +118,7 @@ function Mono(props) {
     <GroupEmpty
       isEmpty={!data.items.length}
       message={`No ${type}s for "${searchKey}"`}
+      iconType={ICON.SEARCH}
     >
       <div className='fadein content-padding'>
         {type === 'track' ? (
