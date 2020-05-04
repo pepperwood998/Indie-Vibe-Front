@@ -26,7 +26,7 @@ function Home() {
     popularReleases: 'Popular release',
     myPlaylists: 'Your created playlists',
     myArtists: 'Your favorite artists',
-    newReleases: 'New publised releases'
+    newReleases: 'New published releases'
   };
 
   useEffect(() => {
