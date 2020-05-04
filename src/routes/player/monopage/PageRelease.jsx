@@ -187,7 +187,9 @@ function Release(props) {
                   <Skeleton />
                 ) : (
                   <React.Fragment>
-                    <span>RELEASE</span>
+                    <span className='uppercase'>
+                      {data.releaseType.name || 'release'}
+                    </span>
                     <span className='dot'>&#8226;</span>
                     <span>{data.tracks.total} tracks</span>
                     <span className='dot'>&#8226;</span>
