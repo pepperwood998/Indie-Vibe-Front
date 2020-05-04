@@ -76,7 +76,7 @@ function Search(props) {
     </React.Fragment>
   );
 
-  return <TemplateNavPage nav={nav} body={body} />;
+  return <TemplateNavPage nav={nav} body={body} title='Search' />;
 }
 
 export default Search;
