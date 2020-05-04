@@ -19,7 +19,7 @@ function Biography() {
     getArtist(authState.token, authState.id)
       .then(res => {
         if (res.status === 'success') {
-          setSrcBio(res.data.biography);
+          setSrcBio(res.data.biography || '');
           setBiography([false, res.data.biography]);
         } else throw res.data;
       })
