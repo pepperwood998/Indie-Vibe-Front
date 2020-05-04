@@ -13,7 +13,7 @@ function ArtistAbout(props) {
     >
       <div className='fadein content-padding'>
         <div className='body__bound'>
-          <p className='font-short-big font-white'>{artist.biography}</p>
+          <pre className='font-short-big font-white'>{artist.biography}</pre>
         </div>
       </div>
     </GroupEmpty>
