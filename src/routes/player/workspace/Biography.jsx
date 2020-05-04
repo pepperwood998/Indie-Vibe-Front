@@ -69,7 +69,7 @@ function Biography() {
   };
 
   return (
-    <div className='workspace-biography content-padding'>
+    <div className='workspace-biography content-padding fadein'>
       <section>
         <p className='font-short-semi font-weight-bold font-white'>
           Self biography
