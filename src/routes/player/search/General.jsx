@@ -6,7 +6,7 @@ import {
   CollectionMain,
   CollectionTracks
 } from '../../../components/collections';
-import GroupEmpty from '../../../components/groups/GroupEmpty';
+import GroupEmpty, { ICON } from '../../../components/groups/GroupEmpty';
 import { NavLinkColor } from '../../../components/links';
 import { AuthContext, LibraryContext } from '../../../contexts';
 import { capitalize, useEffectSkip } from '../../../utils/Common';
@@ -105,6 +105,7 @@ function General(props) {
     <GroupEmpty
       isEmpty={!exist}
       message={`No search results for "${searchKey}"`}
+      iconType={ICON.SEARCH}
     >
       <div className='fadein content-padding'>
         {Object.keys(data).map((key, index) => {

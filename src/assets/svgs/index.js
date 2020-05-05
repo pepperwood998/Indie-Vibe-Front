@@ -13,6 +13,7 @@ export { ReactComponent as ArrowRight } from './arrow-right.svg';
 export { ReactComponent as HomeIcon } from './home.svg';
 export { ReactComponent as BrowseIcon } from './browse.svg';
 export { ReactComponent as LibraryIcon } from './library.svg';
+export { ReactComponent as DocumentIcon } from './document.svg';
 export { ReactComponent as SettingIcon } from './settings.svg';
 export { ReactComponent as AddPlaylistIcon } from './add-playlist.svg';
 export { ReactComponent as UnFavoriteIcon } from './un-favorite.svg';

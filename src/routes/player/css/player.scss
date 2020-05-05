@@ -333,12 +333,8 @@
   .empty {
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font: $shortBig;
     font-weight: bold;
     color: $grayLight;
-    background-color: $blackBlueLight;
   }
 }

@@ -19,7 +19,7 @@ function Biography() {
     getArtist(authState.token, authState.id)
       .then(res => {
         if (res.status === 'success') {
-          setSrcBio(res.data.biography);
+          setSrcBio(res.data.biography || '');
           setBiography([false, res.data.biography]);
         } else throw res.data;
       })
@@ -69,7 +69,7 @@ function Biography() {
   };
 
   return (
-    <div className='workspace-biography content-padding'>
+    <div className='workspace-biography content-padding fadein'>
       <section>
         <p className='font-short-semi font-weight-bold font-white'>
           Self biography

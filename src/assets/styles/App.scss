@@ -126,6 +126,10 @@ label {
   align-items: center;
 }
 
+pre {
+  white-space: pre-wrap;
+}
+
 .skeleton {
   position: absolute;
   top: 50%;
