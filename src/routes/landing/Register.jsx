@@ -94,9 +94,8 @@ function Register() {
           .catch(err => {
             if (typeof err !== 'string') {
               err = 'Server error';
-            } else {
-              err = 'Email of the facebook account not available';
             }
+
             setRegisterError(err);
             setRegisteringFb(false);
           });
@@ -234,7 +233,7 @@ export const RegisterActivation = ({ email, password, login = false }) => {
   const [resent, setResent] = useState(false);
   const [resending, setResending] = useState(false);
   const [resendFail, setResendFail] = useState(false);
-  const [tryLogin, setTryLogin] = useState(login)
+  const [tryLogin, setTryLogin] = useState(login);
 
   const handleResend = () => {
     setResending(true);
