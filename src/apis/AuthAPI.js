@@ -50,7 +50,7 @@ export const getNewToken = token => {
 
 export const getFbPictureUrl = fbId => {
   return fetch(
-    `https://graph.facebook.com/${fbId}/picture?type=square&redirect=false`
+    `https://graph.facebook.com/${fbId}/picture?type=large&redirect=false`
   );
 };
 
