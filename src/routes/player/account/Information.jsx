@@ -274,7 +274,7 @@ function Information(props) {
                     <select
                       name='day'
                       className='custom-select'
-                      value={dob.day}
+                      value={parseInt(dob.day)}
                       onChange={handleChangeDob}
                     >
                       {createDayOptions()}
@@ -284,7 +284,7 @@ function Information(props) {
                     <select
                       name='month'
                       className='custom-select'
-                      value={dob.month}
+                      value={parseInt(dob.month)}
                       onChange={handleChangeDob}
                     >
                       {createMonthOptions()}
@@ -294,7 +294,7 @@ function Information(props) {
                     <select
                       name='year'
                       className='custom-select'
-                      value={dob.year}
+                      value={parseInt(dob.year)}
                       onChange={handleChangeDob}
                     >
                       {createYearOptions(1900, new Date().getFullYear() - 1)}
