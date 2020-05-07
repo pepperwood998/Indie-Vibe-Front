@@ -30,6 +30,18 @@
         justify-content: space-around;
         align-items: center;
       }
+
+      .dob {
+        .date-elem {
+          &:not(:first-child) {
+            margin-left: 10px;
+          }
+
+          .custom-select {
+            width: 100%;
+          }
+        }
+      }
     }
   }
 }

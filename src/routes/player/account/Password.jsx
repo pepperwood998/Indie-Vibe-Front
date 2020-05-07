@@ -98,7 +98,7 @@ function Password(props) {
                 <div>
                   <Tooltip
                     pos='right'
-                    tooltip='At least 8 characters, an uppercase, a number from 0-9'
+                    tooltip='At least 8 characters, and a number from 0-9'
                   >
                     <InputForm
                       type='password'
