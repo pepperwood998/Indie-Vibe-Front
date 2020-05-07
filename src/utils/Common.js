@@ -134,6 +134,20 @@ export const months = {
   ]
 };
 
+export const createDayOptions = () => {
+  let options = [];
+
+  for (let i = 1; i <= 31; i++) {
+    options.push(
+      <option value={i} key={i}>
+        {i}
+      </option>
+    );
+  }
+
+  return options;
+};
+
 export const createMonthOptions = () => {
   let options = [];
 

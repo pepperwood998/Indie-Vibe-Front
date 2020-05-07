@@ -12,7 +12,13 @@ import {
   InputRadioBox
 } from '../../../components/inputs';
 import { AuthContext, LibraryContext, MeContext } from '../../../contexts';
-import { getDatePart } from '../../../utils/Common';
+import {
+  createDayOptions,
+  createMonthOptions,
+  createYearOptions,
+  getDatePart,
+  useEffectSkip
+} from '../../../utils/Common';
 
 function Information(props) {
   const { state: authState } = useContext(AuthContext);
@@ -30,18 +36,31 @@ function Information(props) {
   const thumbnailRef = useRef();
 
   const account = meState;
+  const dobArr = getDatePart(account.dob).split('-');
 
+  const [dob, setDob] = useState({
+    day: dobArr[2] || 1,
+    month: dobArr[1] || 1,
+    year: dobArr[0] || 1990
+  });
   const [data, setData] = useState({
     displayName: [false, account.displayName],
     email: [false, account.email],
     gender: [false, account.gender],
-    dob: [false, account.dob]
+    dob: [false, '']
   });
   const [thumbnailSrc, setThumbnailSrc] = useState(account.thumbnail);
   const [status, setStatus] = useState({
     submitted: false,
     updating: false
   });
+
+  useEffectSkip(() => {
+    setData({
+      ...data,
+      dob: [true, dob.year + '-' + dob.month + '-' + dob.day]
+    });
+  }, [dob]);
 
   const handleChangeInfo = e => {
     setData({
@@ -61,6 +80,15 @@ function Information(props) {
         setThumbnailSrc(reader.result);
       };
     }
+  };
+
+  const handleChangeDob = e => {
+    const target = e.target;
+
+    setDob({
+      ...dob,
+      [target.getAttribute('name')]: target.value
+    });
   };
 
   const handleSubmit = () => {
@@ -241,14 +269,38 @@ function Information(props) {
               </div>
               <div className='table-row'>
                 <span className='label'>Date of birth</span>
-                <InputForm
-                  type='date'
-                  placeholder='Your birthday'
-                  name='dob'
-                  value={getDatePart(data.dob[1])}
-                  onChange={handleChangeInfo}
-                  error={status.submitted && data.dob[0] && !data.dob[1]}
-                />
+                <div className='d-flex align-items-center dob'>
+                  <section className='date-elem flex-1'>
+                    <select
+                      name='day'
+                      className='custom-select'
+                      value={dob.day}
+                      onChange={handleChangeDob}
+                    >
+                      {createDayOptions()}
+                    </select>
+                  </section>
+                  <section className='date-elem flex-1'>
+                    <select
+                      name='month'
+                      className='custom-select'
+                      value={dob.month}
+                      onChange={handleChangeDob}
+                    >
+                      {createMonthOptions()}
+                    </select>
+                  </section>
+                  <section className='date-elem flex-1'>
+                    <select
+                      name='year'
+                      className='custom-select'
+                      value={dob.year}
+                      onChange={handleChangeDob}
+                    >
+                      {createYearOptions(1900, new Date().getFullYear() - 1)}
+                    </select>
+                  </section>
+                </div>
               </div>
               <div className='table-row'>
                 <span className='label'></span>

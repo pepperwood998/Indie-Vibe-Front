@@ -8,15 +8,30 @@ function InputForm({
   errMessage = '',
   value = '',
   name = '',
-  autocomplete = 'on'
+  autocomplete = 'on',
+  min = 0,
+  max = 0
 }) {
-  let classes = 'input-text input-text--clear input-text--full-width font-white';
+  let classes =
+    'input-text input-text--clear input-text--full-width font-white';
   if (error) {
     classes = error ? (classes += ' input-text--error') : classes;
     placeholder = errMessage;
   }
 
-  return (
+  return type === 'number' ? (
+    <input
+      className={classes}
+      type={type}
+      name={name}
+      placeholder={placeholder}
+      onChange={onChange}
+      value={value}
+      autoComplete={autocomplete}
+      min={min}
+      max={max}
+    />
+  ) : (
     <input
       className={classes}
       type={type}
