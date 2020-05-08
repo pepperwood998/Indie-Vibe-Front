@@ -270,3 +270,7 @@ export const isChanged = (data = {}) => {
     if (data[key][0]) return true;
   });
 };
+
+export const Common = {
+  BIOGRAPHY_LIMIT: 1500
+};

@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getArtist } from '../../../apis/API';
 import { updateBiography } from '../../../apis/APIWorkspace';
 import { ButtonFrame, ButtonMain } from '../../../components/buttons';
-import { InputTextarea } from '../../../components/inputs';
+import { InputTextLimit } from '../../../components/inputs';
 import { AuthContext, LibraryContext } from '../../../contexts';
+import { Common, useEffectSkip } from '../../../utils/Common';
 
 function Biography() {
   const { state: authState } = useContext(AuthContext);
@@ -14,13 +15,16 @@ function Biography() {
   const [biography, setBiography] = useState([false, '']);
   const [submited, setSubmitted] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [length, setLength] = useState(0);
 
   useEffect(() => {
     getArtist(authState.token, authState.id)
       .then(res => {
         if (res.status === 'success') {
-          setSrcBio(res.data.biography || '');
-          setBiography([false, res.data.biography]);
+          const bio = res.data.biography;
+          setSrcBio(bio || '');
+          setBiography([false, bio]);
+          setLength(bio.length);
         } else throw res.data;
       })
       .catch(err => {
@@ -33,8 +37,13 @@ function Biography() {
       });
   }, []);
 
+  useEffectSkip(() => {
+    setLength(biography[1].length);
+  }, [biography]);
+
   const handleBiographyChange = e => {
-    setBiography([true, e.target.value]);
+    const text = e.target.value;
+    setBiography([true, text.substr(0, Common.BIOGRAPHY_LIMIT)]);
   };
 
   const handleSubmit = () => {
@@ -74,12 +83,14 @@ function Biography() {
         <p className='font-short-semi font-weight-bold font-white'>
           Self biography
         </p>
-        <InputTextarea
+        <InputTextLimit
           placeholder='Enter your biography'
           value={biography[1]}
           onChange={handleBiographyChange}
           error={submited && biography[0] && !biography[1]}
           errMessage='You should provide biography'
+          length={length}
+          limit={Common.BIOGRAPHY_LIMIT}
         />
       </section>
       <section className='mt-3'>
