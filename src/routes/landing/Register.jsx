@@ -36,6 +36,10 @@ function Register() {
     });
   };
 
+  const handleChangeGender = e => {
+    setRegisterInputs({ ...registerInputs, gender: parseInt(e.target.value) });
+  };
+
   const handleRegister = e => {
     e.preventDefault();
     setSubmitted(true);
@@ -156,21 +160,21 @@ function Register() {
           label='Female'
           value='0'
           checked={gender == 0}
-          onChange={handleInputsChange}
+          onChange={handleChangeGender}
         />
         <InputRadioBox
           name='gender'
           label='Male'
           value='1'
           checked={gender == 1}
-          onChange={handleInputsChange}
+          onChange={handleChangeGender}
         />
         <InputRadioBox
           name='gender'
           label='Other'
           value='2'
           checked={gender == 2}
-          onChange={handleInputsChange}
+          onChange={handleChangeGender}
         />
       </div>
       {gender == undefined && submitted ? (

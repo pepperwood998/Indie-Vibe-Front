@@ -82,6 +82,10 @@ function Information(props) {
     }
   };
 
+  const handleChangeGender = e => {
+    setData({ ...data, gender: [true, parseInt(e.target.value)] });
+  };
+
   const handleChangeDob = e => {
     const target = e.target;
 
@@ -249,21 +253,21 @@ function Information(props) {
                     label='Female'
                     value='0'
                     checked={data.gender[1] == 0}
-                    onChange={handleChangeInfo}
+                    onChange={handleChangeGender}
                   />
                   <InputRadioBox
                     name='gender'
                     label='Male'
                     value='1'
                     checked={data.gender[1] == 1}
-                    onChange={handleChangeInfo}
+                    onChange={handleChangeGender}
                   />
                   <InputRadioBox
                     name='gender'
                     label='Other'
                     value='2'
                     checked={data.gender[1] == 2}
-                    onChange={handleChangeInfo}
+                    onChange={handleChangeGender}
                   />
                 </div>
               </div>

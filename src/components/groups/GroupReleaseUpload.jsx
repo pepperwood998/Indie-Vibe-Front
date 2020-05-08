@@ -2,9 +2,10 @@ import React, { useContext, useRef, useState } from 'react';
 import { getAccount, publishRelease } from '../../apis/API';
 import Placeholder from '../../assets/imgs/placeholder.png';
 import { AuthContext, LibraryContext, MeContext } from '../../contexts';
+import { Common, useEffectSkip } from '../../utils/Common';
 import { ButtonFrame, ButtonMain } from '../buttons';
 import { GroupTrackUpload } from '../groups';
-import { InputFileLabel, InputForm, InputTextarea } from '../inputs';
+import { InputFileLabel, InputForm, InputTextLimit } from '../inputs';
 
 const infoModel = {
   title: '',
@@ -43,13 +44,19 @@ function GroupReleaseUpload(props) {
   const [thumbnailSrc, setThumbnailSrc] = useState('');
   const [audioSrc, setAudioSrc] = useState([Object.assign({}, audioModel)]);
   const [submitted, setSubmitted] = useState(false);
+  const [length, setLength] = useState(0);
 
   const releaseTypes = [...libState.releaseTypes];
 
   const thumbnailRef = useRef();
 
+  useEffectSkip(() => {
+    setLength(biography.length);
+  }, [biography]);
+
   const handleBiographyChange = e => {
-    setBiography(e.target.value);
+    const text = e.target.value;
+    setBiography(text.substr(0, Common.BIOGRAPHY_LIMIT));
   };
 
   const handleThumbnailChange = () => {
@@ -213,10 +220,12 @@ function GroupReleaseUpload(props) {
           <p className='font-short-semi font-weight-bold font-white'>
             Self biography
           </p>
-          <InputTextarea
+          <InputTextLimit
             placeholder='Enter your biography'
             value={biography}
             onChange={handleBiographyChange}
+            length={length}
+            limit={Common.BIOGRAPHY_LIMIT}
           />
         </div>
       ) : (
