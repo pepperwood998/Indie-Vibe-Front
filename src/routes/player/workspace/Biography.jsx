@@ -21,8 +21,8 @@ function Biography() {
     getArtist(authState.token, authState.id)
       .then(res => {
         if (res.status === 'success') {
-          const bio = res.data.biography;
-          setSrcBio(bio || '');
+          const bio = res.data.biography || '';
+          setSrcBio(bio);
           setBiography([false, bio]);
           setLength(bio.length);
         } else throw res.data;
