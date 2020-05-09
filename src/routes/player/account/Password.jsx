@@ -62,8 +62,12 @@ function Password(props) {
         }
       })
       .catch(err => {
+        if (typeof err !== 'string') {
+          err = 'Server error';
+        }
+
         setStatus({ ...status, updating: false });
-        libDispatch(libActions.setNotification(true, false, err.toString()));
+        libDispatch(libActions.setNotification(true, false, err));
       });
   };
 
