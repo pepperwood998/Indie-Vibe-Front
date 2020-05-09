@@ -133,7 +133,7 @@ function Information(props) {
             );
             break;
           default:
-            throw null;
+            throw res.data;
         }
       })
       .catch(error => {
