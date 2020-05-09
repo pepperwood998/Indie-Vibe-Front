@@ -4,7 +4,7 @@ import { actionRequest, getPendingUsers } from '../../../../apis/APICms';
 import AvatarPlaceholder from '../../../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonLoadMore } from '../../../../components/buttons';
 import { AuthContext, LibraryContext } from '../../../../contexts';
-import { model } from '../../../../utils/Common';
+import { model, genOneValueArr } from '../../../../utils/Common';
 import ButtonQuick from '../buttons/ButtonQuick';
 
 function TableArtistRequests({ withActions = false }) {
@@ -17,13 +17,16 @@ function TableArtistRequests({ withActions = false }) {
     firstRender: true
   });
   const [data, setData] = useState({ ...model.paging });
+  const [updating, setUpdating] = useState([]);
 
   useEffect(() => {
     getPendingUsers(authState.token)
       .then(res => {
         setStatus({ ...status, firstRender: false });
         if (res.status === 'success') {
-          setData({ ...data, ...res.data });
+          const value = { ...res.data } || { ...model.paging };
+          setData({ ...data, ...value });
+          setUpdating(genOneValueArr(value.total, 0));
         } else throw res.data;
       })
       .catch(err => {
@@ -36,10 +39,22 @@ function TableArtistRequests({ withActions = false }) {
       });
   }, []);
 
-  const handleAction = (action, userId) => {
+  const handleAction = (action, userId, index) => {
+    setUpdating(last => {
+      const lastTmp = [...last];
+      lastTmp[index] = 1;
+      return lastTmp;
+    });
+
     actionRequest(authState.token, userId, action)
       .then(res => {
         if (res.status === 'success') {
+          setUpdating(last => {
+            const lastTmp = [...last];
+            lastTmp[index] = 2;
+            return lastTmp;
+          });
+
           switch (action) {
             case 'approve':
               libDispatch(
@@ -56,12 +71,6 @@ function TableArtistRequests({ withActions = false }) {
                 libActions.setNotification(true, false, 'Action not found.')
               );
           }
-
-          setData({
-            ...data,
-            items: data.items.filter(item => userId !== item.id),
-            total: data.total - 1
-          });
         } else {
           throw 'Failed to perform verify action.';
         }
@@ -71,6 +80,11 @@ function TableArtistRequests({ withActions = false }) {
           err = 'Server error';
         }
 
+        setUpdating(last => {
+          const lastTmp = [...last];
+          lastTmp[index] = 0;
+          return lastTmp;
+        });
         libDispatch(libActions.setNotification(true, false, err));
       });
   };
@@ -86,6 +100,10 @@ function TableArtistRequests({ withActions = false }) {
             limit: requests.limit,
             total: requests.total
           });
+          setUpdating(last => [
+            ...last,
+            ...genOneValueArr(requests.total, 0)
+          ]);
         }
       })
       .catch(err => {
@@ -126,24 +144,32 @@ function TableArtistRequests({ withActions = false }) {
               </div>
               {withActions ? (
                 <div className='actions side'>
-                  <div className='d-flex align-items-center'>
-                    <ButtonQuick
-                      type='approve'
-                      onClick={() => {
-                        handleAction('approve', item.id);
-                      }}
-                      className='mr-1'
-                    >
-                      APPROVE
-                    </ButtonQuick>
-                    <ButtonQuick
-                      type='deny'
-                      onClick={() => {
-                        handleAction('deny', item.id);
-                      }}
-                    >
-                      DENY
-                    </ButtonQuick>
+                  <div className='d-flex align-items-center justify-content-end'>
+                    {updating[index] === 0 ? (
+                      <React.Fragment>
+                        <ButtonQuick
+                          type='approve'
+                          onClick={() => {
+                            handleAction('approve', item.id, index);
+                          }}
+                          className='mr-1'
+                        >
+                          APPROVE
+                        </ButtonQuick>
+                        <ButtonQuick
+                          type='deny'
+                          onClick={() => {
+                            handleAction('deny', item.id, index);
+                          }}
+                        >
+                          DENY
+                        </ButtonQuick>
+                      </React.Fragment>
+                    ) : updating[index] === 1 ? (
+                      <ButtonQuick disabled>processing</ButtonQuick>
+                    ) : (
+                      <ButtonQuick disabled>DONE</ButtonQuick>
+                    )}
                   </div>
                 </div>
               ) : (
