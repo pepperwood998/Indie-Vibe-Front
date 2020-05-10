@@ -16,7 +16,7 @@ function LibraryPlaylists(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
-  const [firstRender, setFirstRender] = useState(true);
+  const [firstRender, setFirstRender] = useState(0);
   const [own, setOwn] = useState({ ...model });
   const [fav, setFav] = useState({ ...model });
 
@@ -28,24 +28,26 @@ function LibraryPlaylists(props) {
     // owned playlists
     getPlaylists(authState.token, authState.id, targetId)
       .then(res => {
-        setFirstRender(false);
         if (res.status === 'success' && res.data) {
+          setFirstRender(last => last + 1);
           setOwn({ ...own, ...res.data });
-        }
+        } else throw res.data;
       })
       .catch(err => {
+        setFirstRender(last => last + 1);
         console.error(err);
       });
 
     // favorite playlists
     getPlaylists(authState.token, authState.id, targetId, 'favorite')
       .then(res => {
-        setFirstRender(false);
         if (res.status === 'success' && res.data) {
+          setFirstRender(last => last + 1);
           setFav({ ...fav, ...res.data });
-        }
+        } else throw res.data;
       })
       .catch(err => {
+        setFirstRender(last => last + 1);
         console.error(err);
       });
   }, [targetId]);
@@ -143,7 +145,7 @@ function LibraryPlaylists(props) {
       });
   };
 
-  return firstRender ? (
+  return firstRender < 2 ? (
     <div className='library-playlists fadein content-padding'>
       <CollectionMain loading />
     </div>
