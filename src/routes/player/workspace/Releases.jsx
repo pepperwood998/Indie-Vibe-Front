@@ -33,7 +33,7 @@ function Releases(props) {
       getReleasesByType(authState.token, id, type)
         .then(res => {
           if (res.status === 'success' && res.data) {
-            setFirstRender(firstRender => firstRender + 1);
+            setFirstRender(last => last + 1);
             const value = struct[type];
             value[2]({ ...value[1], ...res.data.releases });
           } else {
@@ -41,7 +41,7 @@ function Releases(props) {
           }
         })
         .catch(err => {
-          setFirstRender(firstRender => firstRender + 1);
+          setFirstRender(last => last + 1);
           console.error(err);
         });
     }

@@ -4,22 +4,16 @@ import { ButtonLoadMore } from '../../../components/buttons';
 import { CollectionMain } from '../../../components/collections';
 import GroupEmpty from '../../../components/groups/GroupEmpty';
 import { AuthContext, LibraryContext } from '../../../contexts';
-import { useEffectSkip } from '../../../utils/Common';
+import { model, useEffectSkip } from '../../../utils/Common';
 
-const model = {
-  items: [],
-  offset: 0,
-  limit: 0,
-  total: 0
-};
 function ArtistDefault(props) {
   const { state: authState } = useContext(AuthContext);
   const { state: libState } = useContext(LibraryContext);
 
   const [firstRender, setFirstRender] = useState(0);
-  const [albums, setAlbums] = useState({ ...model });
-  const [singles, setSingles] = useState({ ...model });
-  const [eps, setEps] = useState({ ...model });
+  const [albums, setAlbums] = useState({ ...model.paging });
+  const [singles, setSingles] = useState({ ...model.paging });
+  const [eps, setEps] = useState({ ...model.paging });
 
   const { id: artistId } = props.match.params;
   const struct = {
@@ -31,12 +25,11 @@ function ArtistDefault(props) {
     !albums.items.length && !singles.items.length && !eps.items.length;
 
   useEffect(() => {
-    setFirstRender(true);
     for (let type in struct) {
       getReleasesByType(authState.token, artistId, type)
         .then(res => {
           if (res.status === 'success' && res.data) {
-            setFirstRender(firstRender => firstRender + 1);
+            setFirstRender(last => last + 1);
 
             const value = struct[type];
             value[2]({ ...value[1], ...res.data.releases });
@@ -45,7 +38,7 @@ function ArtistDefault(props) {
           }
         })
         .catch(err => {
-          setFirstRender(firstRender => firstRender + 1);
+          setFirstRender(last => last + 1);
           console.error(err);
         });
     }
