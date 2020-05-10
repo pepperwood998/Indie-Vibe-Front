@@ -12,7 +12,8 @@ const initState = {
   expiry: 0,
   remembered: false,
   lastSessionTime: 0,
-  logout: true
+  logout: true,
+  prevLogin: ''
 };
 
 let refresher = null;
@@ -147,7 +148,8 @@ const reducer = (state, action) => {
         refreshToken: payload['refresh_token'],
         expiry: payload['expires_in'],
         remembered: payload.remembered,
-        logout: false
+        logout: false,
+        prevLogin: payload.prevLogin
       };
     case 'LOGOUT':
       return {

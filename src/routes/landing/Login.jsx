@@ -14,7 +14,7 @@ import { AuthContext, MeContext } from '../../contexts';
 import Authentication from './Authentication';
 import { RegisterActivation } from './Register';
 
-function Login() {
+function Login(props) {
   const { actions: authActions, dispatch: authDispatch } = useContext(
     AuthContext
   );
@@ -29,6 +29,8 @@ function Login() {
   const [loggingInFb, setLoggingInFb] = useState(false);
 
   const { loginSuccess } = authActions;
+  const { state = { from: {} } } = props.location;
+  console.log(state);
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
@@ -56,7 +58,13 @@ function Login() {
         return getAccount(res['access_token']).then(accountRes => {
           if (accountRes.status === 'success') {
             meDispatch(meActions.loadMe(accountRes.data));
-            authDispatch(loginSuccess({ ...res, remembered }));
+            authDispatch(
+              loginSuccess({
+                ...res,
+                remembered,
+                prevLogin: state.from.pathname
+              })
+            );
           } else {
             throw 'Unexpected error, try again!';
           }
