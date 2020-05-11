@@ -23,7 +23,11 @@ function RouteAuthorized({
           return <Component {...props} {...rest} />;
         } else {
           let redirect = roleGroup.redirect;
-          if (roleGroup === ROLE_GROUPS.GUEST && authState.prevLogin) {
+          if (
+            roleGroup === ROLE_GROUPS.GUEST &&
+            authState.prevLogin &&
+            authState.prevLogin !== '/logout'
+          ) {
             redirect = authState.prevLogin;
           }
 
