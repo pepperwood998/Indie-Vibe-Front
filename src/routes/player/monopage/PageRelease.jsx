@@ -208,31 +208,37 @@ function Release(props) {
               ) : (
                 <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
               )}
-              {data.relation.includes('own') ? (
+              {firstRender ? (
                 ''
-              ) : data.relation.includes('favorite') ? (
-                <ButtonIcon>
-                  <FavoriteIcon
-                    className='svg--blue'
-                    onClick={() => handleListToggleFavorite('unfavorite')}
-                  />
-                </ButtonIcon>
               ) : (
-                <ButtonIcon>
-                  <UnFavoriteIcon
-                    onClick={() => handleListToggleFavorite('favorite')}
+                <React.Fragment>
+                  {data.relation.includes('own') ? (
+                    ''
+                  ) : data.relation.includes('favorite') ? (
+                    <ButtonIcon>
+                      <FavoriteIcon
+                        className='svg--blue'
+                        onClick={() => handleListToggleFavorite('unfavorite')}
+                      />
+                    </ButtonIcon>
+                  ) : (
+                    <ButtonIcon>
+                      <UnFavoriteIcon
+                        onClick={() => handleListToggleFavorite('favorite')}
+                      />
+                    </ButtonIcon>
+                  )}
+                  <ButtonMore
+                    ctxData={{
+                      type: 'release',
+                      id: id,
+                      relation: data.relation,
+                      status: data.status,
+                      artistId: data.artist ? data.artist.id : ''
+                    }}
                   />
-                </ButtonIcon>
+                </React.Fragment>
               )}
-              <ButtonMore
-                ctxData={{
-                  type: 'release',
-                  id: id,
-                  relation: data.relation,
-                  status: data.status,
-                  artistId: data.artist ? data.artist.id : ''
-                }}
-              />
             </div>
             <div className='filter'>
               <InputForm

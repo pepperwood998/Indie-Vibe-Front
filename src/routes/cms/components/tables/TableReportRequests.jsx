@@ -3,7 +3,12 @@ import { getReports } from '../../../../apis/APICms';
 import AvatarPlaceholder from '../../../../assets/imgs/avatar-placeholder.jpg';
 import { ButtonLoadMore } from '../../../../components/buttons';
 import { AuthContext, LibraryContext } from '../../../../contexts';
-import { getDatePart, model, useEffectSkip } from '../../../../utils/Common';
+import {
+  getDatePart,
+  model,
+  useEffectSkip,
+  genOneValueArr
+} from '../../../../utils/Common';
 import { ButtonQuick } from '../buttons';
 
 function TableReportRequests({
@@ -32,7 +37,8 @@ function TableReportRequests({
       .then(res => {
         setStatus({ ...status, firstRender: false });
         if (res.status === 'success' && res.data) {
-          setData({ ...data, ...res.data });
+          const value = { ...res.data } || { ...model.paging };
+          setData(last => ({ ...last, ...value }));
         } else throw res.data;
       })
       .catch(err => {
@@ -55,7 +61,7 @@ function TableReportRequests({
           return true;
         }
       });
-      setData({ ...data, items: [...items] });
+      setData(last => ({ ...last, items: [...items] }));
     }
   }, [processed]);
 
@@ -63,11 +69,11 @@ function TableReportRequests({
     getReports(authState.token, type, rptStatus, data.offset + data.limit)
       .then(res => {
         if (res.status === 'success' && res.data) {
-          setData({
-            ...data,
+          setData(last => ({
+            ...last,
             ...res.data,
             items: [...data.items, ...res.data.items]
-          });
+          }));
         } else throw res.data;
       })
       .catch(err => {

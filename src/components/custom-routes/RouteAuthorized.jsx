@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { AuthContext } from '../../contexts';
+import { ROLE_GROUPS } from '../../config/RoleRouting';
 
 function RouteAuthorized({
   component: Component,
@@ -21,8 +22,19 @@ function RouteAuthorized({
         ) {
           return <Component {...props} {...rest} />;
         } else {
-          window.location.href = roleGroup.redirect;
-          return '';
+          let redirect = roleGroup.redirect;
+          if (roleGroup === ROLE_GROUPS.GUEST && authState.prevLogin) {
+            redirect = authState.prevLogin;
+          }
+
+          return (
+            <Redirect
+              to={{
+                pathname: redirect,
+                state: { from: props.location }
+              }}
+            />
+          );
         }
       }}
     />

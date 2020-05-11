@@ -28,6 +28,7 @@ function RequestDetails(props) {
       total: 0
     }
   });
+  const [processing, setProcessing] = useState(0);
 
   const audioRef = useRef();
 
@@ -58,8 +59,11 @@ function RequestDetails(props) {
   };
 
   const handleAction = action => {
+    setProcessing(1);
+
     actionRequest(authState.token, userId, action)
       .then(res => {
+        setProcessing(2);
         if (res.status === 'success') {
           switch (action) {
             case 'approve':
@@ -89,6 +93,7 @@ function RequestDetails(props) {
           err = 'Server error';
         }
 
+        setProcessing(0);
         libDispatch(libActions.setNotification(true, false, err));
       });
   };
@@ -212,22 +217,30 @@ function RequestDetails(props) {
                 )}
 
                 <div className='actions'>
-                  <ButtonRegular
-                    className='approve'
-                    onClick={() => {
-                      handleAction('approve');
-                    }}
-                  >
-                    APPROVE
-                  </ButtonRegular>
-                  <ButtonRegular
-                    className='deny'
-                    onClick={() => {
-                      handleAction('deny');
-                    }}
-                  >
-                    DENY
-                  </ButtonRegular>
+                  {processing === 0 ? (
+                    <React.Fragment>
+                      <ButtonRegular
+                        className='approve'
+                        onClick={() => {
+                          handleAction('approve');
+                        }}
+                      >
+                        APPROVE
+                      </ButtonRegular>
+                      <ButtonRegular
+                        className='deny'
+                        onClick={() => {
+                          handleAction('deny');
+                        }}
+                      >
+                        DENY
+                      </ButtonRegular>
+                    </React.Fragment>
+                  ) : processing === 1 ? (
+                    <ButtonRegular disabled>processing</ButtonRegular>
+                  ) : (
+                    <ButtonRegular disabled>DONE</ButtonRegular>
+                  )}
                 </div>
               </React.Fragment>
             )}

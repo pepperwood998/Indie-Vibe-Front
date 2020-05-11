@@ -1,4 +1,4 @@
-const ROLE_GROUPS = {
+export const ROLE_GROUPS = {
   ALL: { roles: [] },
   GUEST: { roles: ['r-guess'], redirect: '/home' },
   CMS_GUEST: { roles: ['r-guess'], redirect: '/cms' },

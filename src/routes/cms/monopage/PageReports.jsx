@@ -50,6 +50,11 @@ function Reports(props) {
   };
 
   const handleProcessReport = (id, action) => {
+    setExtra(last => ({
+      ...last,
+      processedId: id,
+      processedStatus: 'processing'
+    }));
     processReport(authState.token, id, action)
       .then(res => {
         if (res.status === 'success') {
@@ -57,11 +62,11 @@ function Reports(props) {
             libActions.setNotification(true, true, `Report ${action}ed`)
           );
 
-          setExtra({
-            ...extra,
+          setExtra(last => ({
+            ...last,
             processedId: id,
             processedStatus: action + 'ed'
-          });
+          }));
         } else throw res.data;
       })
       .catch(err => {
@@ -69,6 +74,11 @@ function Reports(props) {
           err = 'Error processing report';
         }
 
+        setExtra(last => ({
+          ...last,
+          processedId: id,
+          processedStatus: 'pending'
+        }));
         libDispatch(libActions.setNotification(true, false, err));
       });
   };
@@ -122,19 +132,21 @@ function Reports(props) {
             <TableReportRequests
               type={form.type}
               rptStatus={form.status}
-              onView={report => {
+              onView={(report, pro) => {
                 setExtra({
                   ...extra,
                   selectedReport: { ...report }
                 });
               }}
               onProcess={report => {
-                setExtra({
-                  ...extra,
-                  selectedReport: { ...report },
-                  processedId: '',
-                  processedStatus: ''
-                });
+                if (report.id === selectedReport.id) {
+                  setExtra({
+                    ...extra,
+                    selectedReport: { ...report },
+                    processedId: '',
+                    processedStatus: ''
+                  });
+                }
               }}
               withActions
               processed={{
