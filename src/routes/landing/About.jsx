@@ -64,7 +64,7 @@ function About() {
     </div>
   );
   const extra = [
-    <div className='extra__quality side-by-side side-space over-space'>
+    <div className='extra__quality side-by-side side-space over-space' key='quality'>
       <div className='background'></div>
       <div className='layer'></div>
       <section className='text'>
@@ -82,7 +82,7 @@ function About() {
       </section>
       <section></section>
     </div>,
-    <div className='extra__baa side-by-side side-space over-space'>
+    <div className='extra__baa side-by-side side-space over-space' key='baa'>
       <div className='background'></div>
       <div className='layer'></div>
       <section></section>
@@ -96,7 +96,7 @@ function About() {
         </p>
       </section>
     </div>,
-    <div className='extra__wrapup side-space over-space text-center'>
+    <div className='extra__wrapup side-space over-space text-center' key='wrapup'>
       <p className='font-short-extra font-weight-bold font-white'>
         What are you waiting for?
       </p>
