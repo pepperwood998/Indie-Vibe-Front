@@ -23,8 +23,15 @@ function RouteAuthorized({
           return <Component {...props} {...rest} />;
         } else {
           let redirect = roleGroup.redirect;
+
           if (!authState.token) {
-            redirect = '/login';
+            if (roleGroup === ROLE_GROUPS.ADMIN) {
+              redirect = '/cms-login';
+            } else {
+              redirect = '/login';
+            }
+          } else if (roleGroup === ROLE_GROUPS.ADMIN) {
+            redirect = '/home';
           } else if (
             roleGroup === ROLE_GROUPS.GUEST &&
             authState.prevLogin &&
