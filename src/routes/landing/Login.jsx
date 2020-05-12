@@ -30,7 +30,6 @@ function Login(props) {
 
   const { loginSuccess } = authActions;
   const { state = { from: {} } } = props.location;
-  console.log(state);
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
