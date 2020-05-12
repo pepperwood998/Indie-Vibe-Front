@@ -30,8 +30,8 @@ function RouteAuthorized({
             } else {
               redirect = '/login';
             }
-          } else if (roleGroup === ROLE_GROUPS.ADMIN) {
-            redirect = '/home';
+          } else if (roleGroup === ROLE_GROUPS.CMS_GUEST) {
+            redirect = '/cms';
           } else if (
             roleGroup === ROLE_GROUPS.GUEST &&
             authState.prevLogin &&
