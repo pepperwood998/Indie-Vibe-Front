@@ -1,7 +1,7 @@
 export const ROLE_GROUPS = {
   ALL: { roles: [] },
   GUEST: { roles: ['r-guess'], redirect: '/home', marker: 'normal' },
-  CMS_GUEST: { roles: ['r-guess'], redirect: '/home', marker: 'cms' },
+  CMS_GUEST: { roles: ['r-guess'], redirect: '/cms', marker: 'cms' },
   USER: {
     roles: ['r-free', 'r-premium', 'r-curator', 'r-artist', 'r-admin'],
     redirect: '/login'
