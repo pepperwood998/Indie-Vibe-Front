@@ -71,6 +71,7 @@ const CheckoutForm = props => {
     const result = await stripe.createToken(card);
     if (result.error) {
       // Inform the user if there was an error.
+      setPurchasing(false);
       setStatus({ ...status, error: result.error.message });
     } else {
       setStatus({ ...status, error: '' });
