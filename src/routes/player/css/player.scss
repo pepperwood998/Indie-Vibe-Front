@@ -23,6 +23,25 @@
   overflow: hidden;
   position: relative;
 
+  @media only screen and (min-width: 768px) {
+    &__nav,
+    &__quick-access {
+      display: block !important;
+    }
+
+    &__bottom {
+      height: 70px;
+
+      .mini-player {
+        display: none !important;
+      }
+
+      .mobile-menu {
+        display: none !important;
+      }
+    }
+  }
+
   &__top {
     grid-area: body;
     height: 40px;
@@ -35,6 +54,7 @@
     width: 200px;
     background-color: $blackLight;
     z-index: 3;
+    display: none;
   }
 
   &__quick-access {
@@ -43,13 +63,67 @@
     background-color: $blackLight;
     overflow: hidden;
     z-index: 2;
+    display: none;
   }
 
   &__bottom {
     grid-area: play-bar;
-    height: 70px;
     background-image: $blackPop;
     z-index: 5;
+
+    .play-loading {
+      width: 32px;
+      height: 32px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .loader {
+        position: absolute;
+      }
+    }
+
+    .mini-player {
+      display: block;
+      box-shadow: 0px 6px 10px -8px #000;
+      height: 60px;
+
+      .cover-container {
+        width: 60px;
+        height: 100%;
+      }
+
+      .title-container {
+        position: relative;
+        padding: 15px;
+
+        .side-blur {
+          position: absolute;
+          // box-shadow: 0px 5px 0px 0px $blackLight inset,
+          //   0px -5px 0px 0px $blackLight inset,
+          //   12px 0 15px 5px $blackLight inset,
+          //   -12px 0 15px 5px $blackLight inset;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .action-container {
+        padding: 10px;
+
+        > *:last-child {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    .mobile-menu {
+      display: block;
+      height: 100%;
+    }
   }
 
   &__content {
@@ -288,7 +362,7 @@
         padding: 0 30px;
 
         > :not(:last-child) {
-          padding-bottom: 10px;
+          margin-bottom: 10px;
         }
 
         .action {

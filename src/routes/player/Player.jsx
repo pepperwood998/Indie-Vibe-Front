@@ -32,6 +32,8 @@ import { Library } from './library';
 import { Home, Playlist, Queue, Release } from './monopage';
 import { Search } from './search';
 import { Manage, Workspace } from './workspace';
+import MobileMenu from './FixedMobileMenu';
+import MiniPlayer from './FixedMiniPlayer';
 
 function Player(props) {
   const { state: authState } = useContext(AuthContext);
@@ -73,6 +75,8 @@ function Player(props) {
       </div>
       <div className='player__bottom'>
         <Bottom />
+        <MiniPlayer />
+        <MobileMenu />
       </div>
       <div className='player__content'>
         <Switch>

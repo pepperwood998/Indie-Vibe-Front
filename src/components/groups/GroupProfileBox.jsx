@@ -100,14 +100,14 @@ function GroupProfileBox({ collapsed = false, data = {}, loading = false }) {
           {loading ? (
             <Skeleton width={100} />
           ) : (
-            <span className='font-short-extra font-weight-bold font-white'>
+            <span className='font-short-extra font-weight-bold font-white ellipsis one-line'>
               {profile.displayName}
             </span>
           )}
           {loading ? (
             <Skeleton width={150} />
           ) : (
-            <span className='followers font-short-regular font-gray-light'>
+            <span className='followers font-short-regular font-gray-light ellipsis one-line'>
               {formatNumber(profile.followersCount)} followers
             </span>
           )}

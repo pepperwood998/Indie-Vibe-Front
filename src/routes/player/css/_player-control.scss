@@ -1,10 +1,14 @@
 .now-playing-bar {
-  display: flex;
+  display: none;
   flex-direction: row;
   justify-content: space-between;
   height: inherit;
   max-height: 100px;
   padding: 0px 10px;
+
+  @media only screen and (min-width: 768px) {
+    display: flex !important;
+  }
 
   &__left {
     width: 16%;
@@ -123,18 +127,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      .play-loading {
-        width: 32px;
-        height: 32px;
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        .loader {
-          position: absolute;
-        }
-      }
     }
   }
 
