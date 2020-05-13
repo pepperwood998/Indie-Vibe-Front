@@ -14,7 +14,22 @@ function TemplateNavPage({
 
   useEffect(() => {
     setPaddingTop(headerRef.current.getBoundingClientRect().height);
+
+    const updatePaddingTop = () => {
+      setPaddingTop(headerRef.current.getBoundingClientRect().height);
+    };
+    window.addEventListener('resize', updatePaddingTop);
+
+    return () => window.removeEventListener('resize', updatePaddingTop);
   }, []);
+
+  useEffect(() => {
+    const height = headerRef.current.getBoundingClientRect().height;
+    if (paddingTop < height) {
+      setPaddingTop(height + 20);
+    }
+  }, [paddingTop]);
+
   usePageTitle(title, true);
 
   let classes = 'content-page';

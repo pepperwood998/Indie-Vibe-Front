@@ -23,6 +23,11 @@ label {
 .tab-menu-wrapper {
   padding: 0px 40px;
   border-bottom: 1px solid $grayDark;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar{
+    display: none;
+  }
 
   .tab-menu {
     display: flex;
@@ -34,6 +39,7 @@ label {
       .item {
         display: block;
         padding: 15px 0px 15px;
+        white-space: nowrap;
 
         &.active {
           border-bottom: 2px solid $blueMain;

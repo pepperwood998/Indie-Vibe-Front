@@ -110,7 +110,7 @@ function NowPayingLeft() {
           >
             {title}
           </NavLinkUnderline>
-          <div className='ellipsis one-line'>
+          <div className='ellipsis one-line font-gray-light'>
             {artists
               .map(artist => (
                 <NavLinkUnderline
