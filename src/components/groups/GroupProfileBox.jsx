@@ -113,47 +113,54 @@ function GroupProfileBox({ collapsed = false, data = {}, loading = false }) {
           )}
 
           <div className='action'>
-            {profile.type === 'artist' ? (
-              isCurrentList && !streamState.paused ? (
-                <ButtonMain revert onClick={handlePaused}>
-                  PAUSE
-                </ButtonMain>
-              ) : (
-                <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
-              )
+            {loading ? (
+              <Skeleton height={40} width={150} />
             ) : (
-              ''
-            )}
-            {profile.relation && profile.id !== authState.id ? (
               <React.Fragment>
-                {profile.relation.includes('favorite') ? (
-                  <ButtonIcon>
-                    <FavoriteIcon
-                      className='svg--blue'
-                      onClick={() => {
-                        handleToggleFavorite('unfavorite');
-                      }}
-                    />
-                  </ButtonIcon>
+                {profile.type === 'artist' ? (
+                  isCurrentList && !streamState.paused ? (
+                    <ButtonMain revert onClick={handlePaused}>
+                      PAUSE
+                    </ButtonMain>
+                  ) : (
+                    <ButtonMain onClick={handlePlay}>PLAY</ButtonMain>
+                  )
                 ) : (
-                  <ButtonIcon>
-                    <UnFavoriteIcon
-                      onClick={() => {
-                        handleToggleFavorite('favorite');
+                  ''
+                )}
+                {profile.relation && profile.id !== authState.id ? (
+                  <React.Fragment>
+                    {profile.relation.includes('favorite') ? (
+                      <ButtonIcon>
+                        <FavoriteIcon
+                          className='svg--blue'
+                          onClick={() => {
+                            handleToggleFavorite('unfavorite');
+                          }}
+                        />
+                      </ButtonIcon>
+                    ) : (
+                      <ButtonIcon>
+                        <UnFavoriteIcon
+                          onClick={() => {
+                            handleToggleFavorite('favorite');
+                          }}
+                        />
+                      </ButtonIcon>
+                    )}
+                    <ButtonMore
+                      ctxData={{
+                        type:
+                          profile.role.id === 'r-artist' ? 'artist' : 'profile',
+                        id: profile.id,
+                        relation: profile.relation
                       }}
                     />
-                  </ButtonIcon>
+                  </React.Fragment>
+                ) : (
+                  ''
                 )}
-                <ButtonMore
-                  ctxData={{
-                    type: profile.role.id === 'r-artist' ? 'artist' : 'profile',
-                    id: profile.id,
-                    relation: profile.relation
-                  }}
-                />
               </React.Fragment>
-            ) : (
-              ''
             )}
           </div>
         </div>

@@ -40,6 +40,22 @@
         display: none !important;
       }
     }
+
+    .profile-header-wrapper {
+      .profile-header {
+        flex-direction: row !important;
+        align-items: unset;
+      }
+
+      &.collapsed {
+        .profile-header {
+          &__avatar {
+            width: 40px;
+            height: 40px;
+          }
+        }
+      }
+    }
   }
 
   &__top {
@@ -335,7 +351,8 @@
 
     .profile-header {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
+      align-items: center;
       padding: 0 40px 10px;
 
       &__avatar {
@@ -384,8 +401,8 @@
         padding-bottom: 0px;
 
         &__avatar {
-          width: 40px;
-          height: 40px;
+          height: 0;
+          visibility: hidden;
         }
 
         &__info {
