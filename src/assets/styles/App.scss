@@ -25,7 +25,7 @@ label {
   border-bottom: 1px solid $grayDark;
   overflow-x: auto;
 
-  &::-webkit-scrollbar{
+  &::-webkit-scrollbar {
     display: none;
   }
 
@@ -36,6 +36,29 @@ label {
       &:not(:last-child) {
         margin: 0 30px 0 0;
       }
+
+      .disabled-wrapper {
+        position: relative;
+
+        .item.display,
+        .item.replace {
+          position: absolute;
+          top: 0;
+          left: 0;
+          transition: 0.1s ease;
+        }
+
+        &:hover {
+          .item.display {
+            opacity: 0;
+          }
+
+          .item.replace {
+            opacity: 0.5;
+          }
+        }
+      }
+
       .item {
         display: block;
         padding: 15px 0px 15px;
@@ -53,6 +76,10 @@ label {
         &.disabled {
           opacity: 0.5;
           cursor: pointer;
+
+          &.replace {
+            opacity: 0;
+          }
         }
       }
     }

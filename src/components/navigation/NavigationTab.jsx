@@ -23,9 +23,12 @@ function NavigationTab(props) {
 
           return item.isDisabled ? (
             <li key={index}>
-              <Tooltip tooltip={item.disabledReason} pos='bottom'>
-                <span className={linkClasses}>{item.label}</span>
-              </Tooltip>
+              <div className='disabled-wrapper'>
+                <span className={linkClasses + ' display'}>{item.label}</span>
+                <span className={linkClasses + ' replace'}>
+                  {item.disabledReason}
+                </span>
+              </div>
             </li>
           ) : (
             <li key={index}>

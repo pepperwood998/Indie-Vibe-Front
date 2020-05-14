@@ -186,153 +186,158 @@ function Information(props) {
 
   return (
     <div className='fadein content-padding'>
-      <div className='account-information body__bound'>
-        <div className='account-information__thumbnail'>
-          <input
-            type='file'
-            ref={thumbnailRef}
-            name='thumbnail'
-            id='account-thumbnail'
-            className='input-custom'
-            accept='image/*'
-            onChange={handleChangeThumbnail}
-          />
-          <InputFileLabel
-            for='account-thumbnail'
-            keep={true}
-            className='input-label--img img-wrapper edit'
-          >
-            <img
-              className='img'
-              src={thumbnailSrc ? thumbnailSrc : AvatarPlaceholder}
+      <div className='body__bound'>
+        <div className='account-information'>
+          <div className='account-information__thumbnail'>
+            <input
+              type='file'
+              ref={thumbnailRef}
+              name='thumbnail'
+              id='account-thumbnail'
+              className='input-custom'
+              accept='image/*'
+              onChange={handleChangeThumbnail}
             />
-          </InputFileLabel>
-        </div>
-        <div className='account-information__info'>
-          <section className='plan-tier'>
-            <GroupPlanBox
-              role={account.role.id}
-              plan={{
-                ...account.userPlan,
-                due: account.planDue
-              }}
-            />
-          </section>
-          <section className='account-details catalog'>
-            <div className='catalog__header font-short-extra font-weight-bold font-white'>
-              Details
-            </div>
-            <div className='details table-layout'>
-              <div className='table-row'>
-                <span className='label'>Display name</span>
-                <InputForm
-                  placeholder='Your display name'
-                  name='displayName'
-                  value={data.displayName[1]}
-                  onChange={handleChangeInfo}
-                  error={status.submitted && !data.displayName[1]}
-                  errMessage='What will we call your?'
-                />
-              </div>
-              <div className='table-row'>
-                <span className='label'>Email</span>
-                <InputForm
-                  placeholder='Email address'
-                  name='email'
-                  value={data.email[1]}
-                  onChange={handleChangeInfo}
-                  error={status.submitted && !account.fbId && !data.email[1]}
-                  errMessage='Your account need an email'
-                />
-              </div>
-              <div className='table-row'>
-                <span className='label'>Gender</span>
-                <div className='genders'>
-                  <InputRadioBox
-                    name='gender'
-                    label='Female'
-                    value='0'
-                    checked={data.gender[1] == 0}
-                    onChange={handleChangeGender}
-                  />
-                  <InputRadioBox
-                    name='gender'
-                    label='Male'
-                    value='1'
-                    checked={data.gender[1] == 1}
-                    onChange={handleChangeGender}
-                  />
-                  <InputRadioBox
-                    name='gender'
-                    label='Other'
-                    value='2'
-                    checked={data.gender[1] == 2}
-                    onChange={handleChangeGender}
-                  />
-                </div>
-              </div>
-              <div className='table-row'>
-                <span className='label'>Date of birth</span>
-                <div className='d-flex align-items-center dob'>
-                  <section className='date-elem flex-1'>
-                    <select
-                      name='day'
-                      className='custom-select'
-                      value={parseInt(dob.day)}
-                      onChange={handleChangeDob}
-                    >
-                      {createDayOptions()}
-                    </select>
-                  </section>
-                  <section className='date-elem flex-1'>
-                    <select
-                      name='month'
-                      className='custom-select'
-                      value={parseInt(dob.month)}
-                      onChange={handleChangeDob}
-                    >
-                      {createMonthOptions()}
-                    </select>
-                  </section>
-                  <section className='date-elem flex-1'>
-                    <select
-                      name='year'
-                      className='custom-select'
-                      value={parseInt(dob.year)}
-                      onChange={handleChangeDob}
-                    >
-                      {createYearOptions(1900, new Date().getFullYear() - 1)}
-                    </select>
-                  </section>
-                </div>
-              </div>
-              <div className='table-row'>
-                <span className='label'></span>
-                <div>
-                  <ButtonMain onClick={handleSubmit} disabled={status.updating}>
-                    Save
-                  </ButtonMain>
-                </div>
-              </div>
-            </div>
-          </section>
-          {account.userPlan.id !== 'p-monthly' ? (
-            ''
-          ) : (
-            <section className='catalog'>
-              <div className='catalog__header'>
-                <span className='font-short-extra font-gray-light'>
-                  Cancel subscription
-                </span>
-              </div>
-              <ButtonMain
-                className='dangerous'
-                onClick={handleCancelSubscription}
-              >
-                Cancel Subscription
-              </ButtonMain>
+            <InputFileLabel
+              for='account-thumbnail'
+              keep={true}
+              className='input-label--img img-wrapper edit'
+            >
+              <img
+                className='img'
+                src={thumbnailSrc ? thumbnailSrc : AvatarPlaceholder}
+              />
+            </InputFileLabel>
+          </div>
+          <div className='account-information__info'>
+            <section className='plan-tier'>
+              <GroupPlanBox
+                role={account.role.id}
+                plan={{
+                  ...account.userPlan,
+                  due: account.planDue
+                }}
+              />
             </section>
-          )}
+            <section className='account-details catalog'>
+              <div className='catalog__header font-short-extra font-weight-bold font-white'>
+                Details
+              </div>
+              <div className='details table-layout'>
+                <div className='table-row'>
+                  <span className='label'>Display name</span>
+                  <InputForm
+                    placeholder='Your display name'
+                    name='displayName'
+                    value={data.displayName[1]}
+                    onChange={handleChangeInfo}
+                    error={status.submitted && !data.displayName[1]}
+                    errMessage='What will we call your?'
+                  />
+                </div>
+                <div className='table-row'>
+                  <span className='label'>Email</span>
+                  <InputForm
+                    placeholder='Email address'
+                    name='email'
+                    value={data.email[1]}
+                    onChange={handleChangeInfo}
+                    error={status.submitted && !account.fbId && !data.email[1]}
+                    errMessage='Your account need an email'
+                  />
+                </div>
+                <div className='table-row'>
+                  <span className='label'>Gender</span>
+                  <div className='genders'>
+                    <InputRadioBox
+                      name='gender'
+                      label='Female'
+                      value='0'
+                      checked={data.gender[1] == 0}
+                      onChange={handleChangeGender}
+                    />
+                    <InputRadioBox
+                      name='gender'
+                      label='Male'
+                      value='1'
+                      checked={data.gender[1] == 1}
+                      onChange={handleChangeGender}
+                    />
+                    <InputRadioBox
+                      name='gender'
+                      label='Other'
+                      value='2'
+                      checked={data.gender[1] == 2}
+                      onChange={handleChangeGender}
+                    />
+                  </div>
+                </div>
+                <div className='table-row'>
+                  <span className='label'>Date of birth</span>
+                  <div className='d-flex align-items-center dob'>
+                    <section className='date-elem flex-1'>
+                      <select
+                        name='day'
+                        className='custom-select'
+                        value={parseInt(dob.day)}
+                        onChange={handleChangeDob}
+                      >
+                        {createDayOptions()}
+                      </select>
+                    </section>
+                    <section className='date-elem flex-1'>
+                      <select
+                        name='month'
+                        className='custom-select'
+                        value={parseInt(dob.month)}
+                        onChange={handleChangeDob}
+                      >
+                        {createMonthOptions()}
+                      </select>
+                    </section>
+                    <section className='date-elem flex-1'>
+                      <select
+                        name='year'
+                        className='custom-select'
+                        value={parseInt(dob.year)}
+                        onChange={handleChangeDob}
+                      >
+                        {createYearOptions(1900, new Date().getFullYear() - 1)}
+                      </select>
+                    </section>
+                  </div>
+                </div>
+                <div className='table-row'>
+                  <span className='label'></span>
+                  <div>
+                    <ButtonMain
+                      onClick={handleSubmit}
+                      disabled={status.updating}
+                    >
+                      Save
+                    </ButtonMain>
+                  </div>
+                </div>
+              </div>
+            </section>
+            {account.userPlan.id !== 'p-monthly' ? (
+              ''
+            ) : (
+              <section className='catalog'>
+                <div className='catalog__header'>
+                  <span className='font-short-extra font-gray-light'>
+                    Cancel subscription
+                  </span>
+                </div>
+                <ButtonMain
+                  className='dangerous'
+                  onClick={handleCancelSubscription}
+                >
+                  Cancel Subscription
+                </ButtonMain>
+              </section>
+            )}
+          </div>
         </div>
       </div>
     </div>
