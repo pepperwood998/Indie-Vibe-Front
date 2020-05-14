@@ -38,23 +38,13 @@ label {
       }
 
       .disabled-wrapper {
-        position: relative;
-
-        .item.display,
-        .item.replace {
-          position: absolute;
-          top: 0;
-          left: 0;
-          transition: 0.1s ease;
-        }
-
         &:hover {
           .item.display {
-            opacity: 0;
+            display: none;
           }
 
           .item.replace {
-            opacity: 0.5;
+            display: block;
           }
         }
       }
@@ -78,7 +68,7 @@ label {
           cursor: pointer;
 
           &.replace {
-            opacity: 0;
+            display: none;
           }
         }
       }
