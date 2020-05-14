@@ -15,11 +15,11 @@
 
 .fadein-half {
   opacity: 0.5;
-  animation-name: fadein;
+  animation-name: fadeinhalf;
   animation-duration: 0.5s;
 }
 
-@keyframes fadein {
+@keyframes fadeinhalf {
   from {
     opacity: 0;
   }
